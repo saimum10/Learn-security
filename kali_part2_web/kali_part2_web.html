@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kali Linux Series — Part 2: Web Hacking Tools</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #0d1b2a;
+    --accent: #e63946;
+    --green: #2dc653;
+    --yellow: #ffd60a;
+    --blue: #0077b6;
+    --purple: #7b2d8b;
+    --orange: #f4831f;
+    --red: #e63946;
+    --web: #e63946;
+    --code-bg: #0d1117;
+    --code-border: #30363d;
+    --text: #1a1a2e;
+    --bg: #f0f2f5;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.9; }
+
+  /* COVER */
+  .cover {
+    background: linear-gradient(135deg, #1a0000 0%, #3d0000 40%, #1a0d26 100%);
+    color: white; min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
+    padding: 60px 40px; position: relative; overflow: hidden;
+  }
+  .cover::before {
+    content: ''; position: absolute; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(230,57,70,0.04) 28px, rgba(230,57,70,0.04) 29px);
+  }
+  .cover::after {
+    content: ''; position: absolute; bottom: -80px; left: -80px;
+    width: 350px; height: 350px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(230,57,70,0.1) 0%, transparent 70%);
+  }
+  .cover-badge { background: rgba(230,57,70,0.15); border: 1px solid rgba(230,57,70,0.4); padding: 6px 20px; border-radius: 20px; font-size: 12px; color: #ff6b6b; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px; position: relative; }
+  .cover-icon { font-size: 80px; margin-bottom: 15px; position: relative; }
+  .cover h1 { font-size: 40px; font-weight: 700; color: #ffffff; line-height: 1.2; position: relative; }
+  .cover h1 span { color: #ff6b6b; text-shadow: 0 0 30px rgba(230,57,70,0.6); }
+  .cover h2 { font-size: 18px; font-weight: 400; opacity: 0.7; margin: 12px 0 20px; position: relative; }
+  .cover .divider { width: 100px; height: 3px; background: linear-gradient(90deg, #e63946, #ff6b6b); margin: 20px auto; border-radius: 2px; position: relative; }
+  .cover .desc { font-size: 15px; opacity: 0.65; max-width: 620px; line-height: 2; position: relative; }
+  .cover .terminal { background: rgba(0,0,0,0.65); border: 1px solid rgba(230,57,70,0.3); border-radius: 10px; padding: 18px 28px; margin-top: 28px; font-family: 'Courier New', monospace; font-size: 13px; color: #ff6b6b; text-align: left; max-width: 540px; position: relative; }
+  .cover .terminal .dot-row { display: flex; gap: 6px; margin-bottom: 14px; }
+  .cover .terminal .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .cover .terminal .dot.r { background: #e63946; }
+  .cover .terminal .dot.y { background: #ffd60a; }
+  .cover .terminal .dot.g { background: #2dc653; }
+  .cover .terminal .prompt { color: #89b4fa; }
+  .cover-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 25px; justify-content: center; position: relative; }
+  .cover-tag { background: rgba(230,57,70,0.12); border: 1px solid rgba(230,57,70,0.25); padding: 5px 14px; border-radius: 15px; font-size: 12px; color: #ffb3b3; }
+  .part-num { font-size: 120px; font-weight: 800; color: rgba(255,255,255,0.03); position: absolute; bottom: 20px; right: 40px; line-height: 1; font-family: 'Courier New', monospace; }
+
+  /* TOC */
+  .toc { background: white; padding: 50px 60px; }
+  .toc-header { font-size: 28px; color: var(--primary); border-bottom: 4px solid var(--red); padding-bottom: 15px; margin-bottom: 35px; }
+  .toc-chapter { margin-bottom: 5px; }
+  .toc-main { display: flex; justify-content: space-between; padding: 10px 0; font-weight: 700; font-size: 15px; color: var(--primary); border-bottom: 1px solid #eee; margin-top: 12px; }
+  .toc-main .num { color: var(--red); margin-right: 10px; font-family: 'Courier New', monospace; }
+  .toc-sub { display: flex; padding: 4px 0 4px 30px; color: #666; font-size: 13px; border-bottom: 1px dotted #f0f0f0; }
+  .toc-tool { display: inline-block; background: #fde8ea; color: #c1121f; padding: 1px 8px; border-radius: 8px; font-size: 11.5px; font-family: 'Courier New', monospace; margin: 2px; }
+
+  /* CHAPTERS */
+  .chapter { background: white; margin: 0; page-break-before: always; }
+  .chapter-header { padding: 40px 55px; position: relative; overflow: hidden; }
+  .ch1 .chapter-header { background: linear-gradient(135deg, #1a0000, #4a0000); }
+  .ch2 .chapter-header { background: linear-gradient(135deg, #0d1b2a, #1b3a4b); }
+  .ch3 .chapter-header { background: linear-gradient(135deg, #1a0d00, #4a2800); }
+  .ch4 .chapter-header { background: linear-gradient(135deg, #0d1a0d, #1a3a1a); }
+  .ch5 .chapter-header { background: linear-gradient(135deg, #0a0a1a, #1a1a4a); }
+  .ch6 .chapter-header { background: linear-gradient(135deg, #1a0d26, #3d1f5c); }
+  .ch7 .chapter-header { background: linear-gradient(135deg, #1a1000, #3a2800); }
+  .ch8 .chapter-header { background: linear-gradient(135deg, #001a1a, #003a3a); }
+  .chapter-header::after { content: ''; position: absolute; top: -40px; right: -40px; width: 180px; height: 180px; border-radius: 50%; background: rgba(255,255,255,0.03); }
+  .chapter-label { font-size: 11px; letter-spacing: 4px; color: #ff6b6b; text-transform: uppercase; margin-bottom: 8px; font-family: 'Courier New', monospace; }
+  .chapter-title { font-size: 28px; color: white; font-weight: 700; }
+  .chapter-desc { font-size: 13.5px; color: rgba(255,255,255,0.55); margin-top: 8px; }
+  .chapter-body { padding: 38px 55px; }
+
+  /* HEADINGS */
+  h2.sec { font-size: 21px; color: var(--primary); margin: 35px 0 15px; padding-left: 16px; border-left: 5px solid var(--red); }
+  h3.sub { font-size: 16.5px; color: #4a0000; margin: 25px 0 12px; padding-bottom: 6px; border-bottom: 2px dashed #e0e0e0; }
+  h4.mini { font-size: 14.5px; color: #333; margin: 16px 0 8px; font-weight: 600; }
+  p { margin-bottom: 14px; text-align: justify; }
+
+  /* CODE */
+  .code { background: var(--code-bg); color: #c9d1d9; padding: 18px 22px; border-radius: 10px; font-family: 'Courier New', monospace; font-size: 12.5px; margin: 14px 0; line-height: 1.9; overflow-x: auto; border: 1px solid var(--code-border); border-left: 4px solid var(--red); }
+  .code .c { color: #6e7681; }
+  .code .k { color: #ff7b72; }
+  .code .s { color: #a5d6ff; }
+  .code .p { color: #89b4fa; }
+  .code .g { color: var(--green); }
+  .code .y { color: #e3b341; }
+  .code .r { color: #ff7b72; }
+  .code .cy { color: #00b4d8; }
+  .code .or { color: #f4831f; }
+  code { background: #1b2838; color: #ff9999; padding: 2px 8px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 12.5px; }
+
+  /* CMD TABLE */
+  .cmd-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13px; }
+  .cmd-table thead tr { background: #1a0000; color: white; }
+  .cmd-table th { padding: 10px 14px; text-align: left; font-weight: 600; }
+  .cmd-table td { padding: 9px 14px; border-bottom: 1px solid #eee; vertical-align: top; }
+  .cmd-table tr:nth-child(even) { background: #fdf8f8; }
+  .cmd-table tr:hover { background: #fde8ea; }
+  .cmd-table .cmd-cell { font-family: 'Courier New', monospace; color: #c1121f; font-weight: 600; font-size: 12px; white-space: nowrap; }
+  .cmd-table .flag-cell { font-family: 'Courier New', monospace; color: #7b2d8b; font-size: 12px; }
+  .cmd-table .desc-cell { color: #444; }
+  .cmd-table .ex-cell { font-family: 'Courier New', monospace; font-size: 11.5px; color: #2dc653; background: #f0fff4; padding: 2px 6px; border-radius: 4px; }
+
+  /* BOXES */
+  .box { padding: 16px 20px; border-radius: 10px; margin: 18px 0; border-left: 5px solid; }
+  .info { background: #e8f4fd; border-color: #0077b6; color: #023e8a; }
+  .warn { background: #fff8e6; border-color: #f4831f; color: #7b3f00; }
+  .danger { background: #fde8ea; border-color: #e63946; color: #9b1d20; }
+  .success { background: #e8f8ed; border-color: #2dc653; color: #1a4731; }
+  .purple-box { background: #f3e8ff; border-color: #7b2d8b; color: #4a0072; }
+  .box-t { font-weight: 700; margin-bottom: 8px; font-size: 14px; }
+
+  /* TABLES */
+  table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 13px; }
+  thead tr { background: #1a0000; color: white; }
+  th { padding: 11px 14px; text-align: left; font-weight: 600; }
+  td { padding: 9px 14px; border-bottom: 1px solid #eee; }
+  tr:nth-child(even) { background: #fdf8f8; }
+  tr:hover { background: #fde8ea; }
+
+  /* BADGE */
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11.5px; font-weight: 600; margin: 2px; }
+  .badge-g { background: #d1e7dd; color: #0f5132; }
+  .badge-r { background: #fde8ea; color: #c1121f; }
+  .badge-y { background: #fff3cd; color: #856404; }
+  .badge-b { background: #cfe2ff; color: #084298; }
+  .badge-p { background: #f3e8ff; color: #4a0072; }
+  .badge-c { background: #e0f7fa; color: #005f73; }
+
+  /* GRID */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 18px 0; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin: 16px 0; }
+  .card { background: #fdf8f8; border: 1px solid #f0d0d0; border-radius: 10px; padding: 16px; }
+  .card h4 { color: var(--primary); margin-bottom: 10px; font-size: 14px; border-bottom: 2px solid var(--red); padding-bottom: 5px; }
+  .card.success-card { background: #f0fff4; border-color: var(--green); }
+  .card.success-card h4 { color: #1a4731; border-color: var(--green); }
+  .card.blue-card { background: #e8f4fd; border-color: var(--blue); }
+  .card.blue-card h4 { color: #023e8a; border-color: var(--blue); }
+
+  /* TOOL HEADER */
+  .tool-header { display: flex; align-items: center; gap: 16px; background: linear-gradient(135deg, #1a0000, #3d1a00); color: white; padding: 18px 22px; border-radius: 12px; margin: 25px 0 18px; }
+  .tool-icon { font-size: 36px; }
+  .tool-name { font-size: 22px; font-weight: 700; font-family: 'Courier New', monospace; color: #ff6b6b; }
+  .tool-desc { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+  .tool-badges { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+  .tool-badge { padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .tb-web { background: rgba(230,57,70,0.25); color: #ff6b6b; }
+  .tb-scan { background: rgba(45,198,83,0.2); color: #2dc653; }
+  .tb-sqli { background: rgba(244,131,31,0.2); color: #f4831f; }
+  .tb-fuzz { background: rgba(123,45,139,0.25); color: #c77dff; }
+  .tb-brute { background: rgba(255,214,10,0.2); color: #e3b341; }
+  .tb-wp { background: rgba(0,119,182,0.2); color: #90cdf4; }
+
+  .hl { background: linear-gradient(135deg, #fff9c4, #fff3e0); border: 1px solid #ffd60a; padding: 14px 18px; border-radius: 8px; margin: 16px 0; }
+  .chapter-summary { background: linear-gradient(135deg, #1a0000, #2d0000); color: white; border-radius: 12px; padding: 24px 28px; margin-top: 40px; }
+  .chapter-summary h3 { color: #ff6b6b; margin-bottom: 14px; font-size: 17px; }
+  .chapter-summary li { color: rgba(255,255,255,0.82); margin-bottom: 5px; }
+
+  .diagram { background: #0d1117; border: 1px solid #30363d; border-radius: 10px; padding: 20px; font-family: 'Courier New', monospace; font-size: 12.5px; line-height: 1.9; margin: 16px 0; color: #c9d1d9; overflow-x: auto; }
+  .diagram .dg { color: var(--green); }
+  .diagram .dy { color: #e3b341; }
+  .diagram .db { color: #79c0ff; }
+  .diagram .dr { color: #ff7b72; }
+
+  ul, ol { margin: 10px 0 10px 24px; line-height: 2; }
+  li { margin-bottom: 3px; }
+
+  /* DARK MODE */
+  body.light-mode { --bg: #f0f2f5; --text: #1a1a2e; }
+  body.dark-mode { --bg: #0a0f1a; --text: #e2e8f0; }
+  body { background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; }
+  body.dark-mode .toc { background: #111827; color: var(--text); }
+  body.dark-mode .chapter { background: #111827; }
+  body.dark-mode .chapter-body { background: #111827; }
+  body.dark-mode h2.sec { color: #fca5a5; }
+  body.dark-mode h3.sub { color: #fca5a5; border-color: #2d3748; }
+  body.dark-mode p { color: var(--text); }
+  body.dark-mode .toc-main { color: #e2e8f0; border-color: #2d3748; }
+  body.dark-mode .toc-header { color: #e2e8f0; }
+  body.dark-mode .toc-sub { color: #94a3b8; }
+  body.dark-mode .toc-tool { background: #2a0a0a; color: #fca5a5; }
+  body.dark-mode table { color: var(--text); }
+  body.dark-mode td { border-color: #2d3748; color: var(--text); }
+  body.dark-mode tr:nth-child(even) { background: #1a1520; }
+  body.dark-mode tr:hover { background: #2a0a0a; }
+  body.dark-mode thead tr { background: #2a0000; }
+  body.dark-mode .card { background: #1a1520; border-color: #3d2020; color: var(--text); }
+  body.dark-mode .card h4 { color: #fca5a5; }
+  body.dark-mode .card.success-card { background: #0a2a15; border-color: #2dc653; }
+  body.dark-mode .card.success-card h4 { color: #6ee7b7; }
+  body.dark-mode .card.blue-card { background: #0c2340; border-color: #0077b6; }
+  body.dark-mode .card.blue-card h4 { color: #90cdf4; }
+  body.dark-mode .info { background: #0c2340; color: #90cdf4; }
+  body.dark-mode .warn { background: #2a1a00; color: #fbbf24; }
+  body.dark-mode .danger { background: #2a0a0a; color: #fc8181; }
+  body.dark-mode .success { background: #0a2a15; color: #6ee7b7; }
+  body.dark-mode .purple-box { background: #1a0a2a; color: #d8b4fe; }
+  body.dark-mode .hl { background: #2a2000; border-color: #854d0e; color: #fbbf24; }
+  body.dark-mode code { background: #1e293b; color: #fca5a5; }
+  body.dark-mode .cmd-table td { border-color: #2d3748; }
+  body.dark-mode .cmd-table tr:nth-child(even) { background: #1a1520; }
+  body.dark-mode .cmd-table tr:hover { background: #2a0a0a; }
+  body.dark-mode .cmd-table .cmd-cell { color: #fca5a5; }
+  body.dark-mode .cmd-table .desc-cell { color: #cbd5e0; }
+  body.dark-mode .cmd-table .ex-cell { background: #0a2a15; color: #6ee7b7; }
+  body.dark-mode .cmd-table thead tr { background: #2a0000; }
+
+  /* BILINGUAL */
+  .en-text { display: none; }
+  .bn-text { display: inline; }
+  body.lang-en .bn-text { display: none; }
+  body.lang-en .en-text { display: inline; }
+  .en-block { display: none; }
+  .bn-block { display: block; }
+  body.lang-en .bn-block { display: none; }
+  body.lang-en .en-block { display: block; }
+
+  /* TOP CONTROLS */
+  .top-controls { position: fixed; top: 18px; right: 18px; display: flex; gap: 8px; z-index: 9999; align-items: center; }
+  .ctrl-btn { border: none; padding: 9px 16px; border-radius: 8px; font-size: 13px; font-family: inherit; cursor: pointer; transition: all 0.3s; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+  .lang-btn { background: #0077b6; color: white; }
+  .theme-btn { background: #2dc653; color: #0d1b2a; }
+  .print-btn { background: var(--red); color: white; }
+  .ctrl-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+
+  @media print {
+    .top-controls { display: none; }
+    body { background: white; }
+    .cover, .chapter-header, thead tr { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .code, .diagram { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+  @media (max-width: 768px) { .grid2, .grid3 { grid-template-columns: 1fr; } .chapter-body { padding: 24px 20px; } .toc { padding: 30px 24px; } }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+</style>
+</head>
+<body class="light-mode">
+
+<div class="top-controls">
+  <button class="print-btn ctrl-btn" onclick="window.print()">🖨️ PDF</button>
+  <button class="theme-btn ctrl-btn" onclick="toggleTheme()" id="themeBtn">🌙 Dark Mode</button>
+  <button class="lang-btn ctrl-btn" onclick="toggleLang()" id="langBtn">🇬🇧 English</button>
+</div>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-badge">KALI LINUX SERIES</div>
+  <div class="cover-icon">🌐</div>
+  <h1>Kali Linux — <span>Part 2</span></h1>
+  <h2>
+    <span class="bn-text">Web Hacking Tools — সম্পূর্ণ বাংলা গাইড</span>
+    <span class="en-text">Web Hacking Tools — Complete Guide</span>
+  </h2>
+  <div class="divider"></div>
+  <p class="desc">
+    <span class="bn-text">Burp Suite, Nikto, SQLmap, Gobuster, Dirb, WPScan, Wfuzz, Curl — Web Application Hacking-এর সব প্রয়োজনীয় tool-এর সম্পূর্ণ command reference, প্রতিটি flag-এর বাংলা ব্যাখ্যা সহ।</span>
+    <span class="en-text">Burp Suite, Nikto, SQLmap, Gobuster, Dirb, WPScan, Wfuzz, Curl — complete command reference for all Web Application Hacking tools with explanations for every flag.</span>
+  </p>
+  <div class="terminal">
+    <div class="dot-row"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+    <div><span class="prompt">root@kali</span>:~# <span style="color:#fff">sqlmap -u "http://target.com/page?id=1" --dbs</span></div>
+    <div><span class="prompt">root@kali</span>:~# <span style="color:#fff">gobuster dir -u http://target.com -w /usr/share/wordlists/dirb/common.txt</span></div>
+    <div><span class="prompt">root@kali</span>:~# <span style="color:#fff">nikto -h http://target.com -o scan.html</span></div>
+    <div style="animation: blink 1s infinite; color: #ff6b6b;">█</div>
+  </div>
+  <div class="cover-tags">
+    <span class="cover-tag">🔫 Burp Suite</span>
+    <span class="cover-tag">🔍 Nikto</span>
+    <span class="cover-tag">💉 SQLmap</span>
+    <span class="cover-tag">📂 Gobuster</span>
+    <span class="cover-tag">📁 Dirb</span>
+    <span class="cover-tag">🔑 WPScan</span>
+    <span class="cover-tag">🌀 Wfuzz</span>
+    <span class="cover-tag">📡 Curl / Wget</span>
+  </div>
+  <div class="part-num">02</div>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <div class="toc-header">📋 <span class="bn-text">বিষয়সূচি — Part 2</span><span class="en-text">Table of Contents — Part 2</span></div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">01</span> Burp Suite — <span class="bn-text">Web Proxy Framework</span><span class="en-text">Web Proxy Framework</span></span></div>
+    <div class="toc-sub"><span class="bn-text">Proxy, Intercept, Repeater, Intruder, Scanner, Decoder, Comparer</span></div>
+    <div class="toc-sub"><span class="bn-text">Shortcuts, FoxyProxy setup, HTTPS certificate install</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">02</span> Nikto — <span class="bn-text">Web Server Scanner</span><span class="en-text">Web Server Scanner</span></span></div>
+    <div class="toc-sub"><span class="bn-text">সব flags, Output formats, Plugin ব্যবহার</span><span class="en-text">All flags, Output formats, Plugin usage</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">03</span> SQLmap — <span class="bn-text">SQL Injection Automation</span><span class="en-text">SQL Injection Automation</span></span></div>
+    <div class="toc-sub"><span class="bn-text">Basic injection, Database dump, File read/write, OS shell, সব flags</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">04</span> Gobuster — <span class="bn-text">Directory & Subdomain Brute Force</span><span class="en-text">Directory & Subdomain Brute Force</span></span></div>
+    <div class="toc-sub"><span>dir, dns, vhost mode — <span class="bn-text">সব flags</span><span class="en-text">all flags</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">05</span> Dirb / Dirbuster — <span class="bn-text">Directory Scanner</span><span class="en-text">Directory Scanner</span></span></div>
+    <div class="toc-sub"><span class="bn-text">Recursive scan, Custom wordlist, Output options</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">06</span> WPScan — WordPress Scanner</span></div>
+    <div class="toc-sub"><span class="bn-text">Plugin/Theme vulnerability, User enumeration, Password brute force</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">07</span> Wfuzz — <span class="bn-text">Web Fuzzer</span><span class="en-text">Web Fuzzer</span></span></div>
+    <div class="toc-sub"><span class="bn-text">Parameter fuzzing, Header fuzzing, Auth bypass, Filter options</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">08</span> Curl & Wget — <span class="bn-text">HTTP Manipulation</span><span class="en-text">HTTP Manipulation</span></span></div>
+    <div class="toc-sub"><span class="bn-text">Header manipulation, Cookie, Auth, Request method, File download</span></div>
+  </div>
+</div>
+
+<!-- CH1: BURP SUITE -->
+<div class="chapter ch1">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 01</div>
+    <div class="chapter-title">🔫 Burp Suite — <span class="bn-text">Web Proxy Framework সম্পূর্ণ গাইড</span><span class="en-text">Web Proxy Framework Complete Guide</span></div>
+    <div class="chapter-desc"><span class="bn-text">Web traffic intercept, modify, replay — Web App Hacking-এর সবচেয়ে গুরুত্বপূর্ণ টুল</span><span class="en-text">Intercept, modify, replay web traffic — the most important web app hacking tool</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <div class="tool-header">
+      <div class="tool-icon">🔫</div>
+      <div>
+        <div class="tool-name">Burp Suite</div>
+        <div class="tool-desc"><span class="bn-text">PortSwigger-এর তৈরি industry-standard web security testing framework — Community ও Professional দুটো version আছে</span><span class="en-text">Industry-standard web security testing framework by PortSwigger — Community and Professional versions available</span></div>
+        <div class="tool-badges">
+          <span class="tool-badge tb-web">Web Proxy</span>
+          <span class="tool-badge tb-scan">Vulnerability Scanner</span>
+          <span class="tool-badge tb-fuzz">Fuzzer</span>
+          <span class="tool-badge tb-brute">Brute Force</span>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec">🚀 <span class="bn-text">Burp Suite চালু করা</span><span class="en-text">Launching Burp Suite</span></h2>
+    <div class="code">
+<span class="c"># Terminal থেকে চালু করো</span>
+<span class="p">root@kali</span>:~# <span class="g">burpsuite</span>
+
+<span class="c"># অথবা GUI থেকে: Applications → Web Application Analysis → burpsuite</span>
+
+<span class="c"># Java manually দিয়ে চালু করো (যদি লাগে)</span>
+<span class="p">root@kali</span>:~# <span class="g">java -jar /usr/bin/burpsuite</span>
+    </div>
+
+    <h2 class="sec">⚙️ <span class="bn-text">Proxy Setup — Browser Configure করা</span><span class="en-text">Proxy Setup — Configure Browser</span></h2>
+    <div class="box info">
+      <div class="box-t">💡 <span class="bn-text">Burp-এর Proxy কীভাবে কাজ করে?</span><span class="en-text">How Burp Proxy Works?</span></div>
+      <span class="bn-text">Browser → Burp Proxy (127.0.0.1:8080) → Internet। Browser-এর সব traffic Burp-এর মধ্য দিয়ে যায়, তুমি intercept, modify করতে পারো।</span>
+      <span class="en-text">Browser → Burp Proxy (127.0.0.1:8080) → Internet. All browser traffic flows through Burp, so you can intercept and modify it.</span>
+    </div>
+    <table>
+      <thead><tr><th><span class="bn-text">ধাপ</span><span class="en-text">Step</span></th><th><span class="bn-text">কাজ</span><span class="en-text">Action</span></th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><span class="bn-text">Burp Suite চালু করো → Proxy → Options → 127.0.0.1:8080 চেক করো</span><span class="en-text">Launch Burp → Proxy → Options → Verify 127.0.0.1:8080</span></td></tr>
+        <tr><td>2</td><td><span class="bn-text">Firefox-এ FoxyProxy install করো (recommended) অথবা Manual Proxy → HTTP: 127.0.0.1, Port: 8080</span><span class="en-text">Install FoxyProxy in Firefox (recommended) or set Manual Proxy → HTTP: 127.0.0.1, Port: 8080</span></td></tr>
+        <tr><td>3</td><td><span class="bn-text">HTTPS intercept-এর জন্য: http://burp → Download certificate → Firefox Cert Manager-এ import করো</span><span class="en-text">For HTTPS: go to http://burp → Download certificate → Import in Firefox Cert Manager</span></td></tr>
+        <tr><td>4</td><td><span class="bn-text">Proxy → Intercept → "Intercept is on" করো</span><span class="en-text">Proxy → Intercept → Enable "Intercept is on"</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🎯 <span class="bn-text">Burp Suite-এর Module গুলো</span><span class="en-text">Burp Suite Modules</span></h2>
+
+    <h3 class="sub">📡 Proxy — <span class="bn-text">Traffic Intercept</span><span class="en-text">Traffic Intercept</span></h3>
+    <table class="cmd-table">
+      <thead><tr><th><span class="bn-text">কাজ</span><span class="en-text">Action</span></th><th><span class="bn-text">কীভাবে করব</span><span class="en-text">How to</span></th></tr></thead>
+      <tbody>
+        <tr><td class="desc-cell"><span class="bn-text">Request intercept করো</span><span class="en-text">Intercept request</span></td><td class="cmd-cell">Proxy → Intercept → Intercept is on</td></tr>
+        <tr><td class="desc-cell"><span class="bn-text">Request forward করো</span><span class="en-text">Forward request</span></td><td class="cmd-cell">Forward button / Ctrl+F</td></tr>
+        <tr><td class="desc-cell"><span class="bn-text">Request drop করো</span><span class="en-text">Drop request</span></td><td class="cmd-cell">Drop button</td></tr>
+        <tr><td class="desc-cell"><span class="bn-text">Request history দেখো</span><span class="en-text">View request history</span></td><td class="cmd-cell">Proxy → HTTP history</td></tr>
+        <tr><td class="desc-cell"><span class="bn-text">Request Repeater-এ পাঠাও</span><span class="en-text">Send to Repeater</span></td><td class="cmd-cell">Right click → Send to Repeater / Ctrl+R</td></tr>
+        <tr><td class="desc-cell"><span class="bn-text">Request Intruder-এ পাঠাও</span><span class="en-text">Send to Intruder</span></td><td class="cmd-cell">Right click → Send to Intruder / Ctrl+I</td></tr>
+        <tr><td class="desc-cell"><span class="bn-text">Match & Replace rule যোগ করো</span><span class="en-text">Add Match & Replace rule</span></td><td class="cmd-cell">Proxy → Options → Match and Replace</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub">🔁 Repeater — <span class="bn-text">Request Replay</span><span class="en-text">Request Replay</span></h3>
+    <table class="cmd-table">
+      <thead><tr><th><span class="bn-text">কাজ</span><span class="en-text">Action</span></th><th><span class="bn-text">কীভাবে</span><span class="en-text">How</span></th></tr></thead>
+      <tbody>
+        <tr><td class="desc-cell"><span class="bn-text">Request পাঠাও</span><span class="en-text">Send request</span></td><td class="cmd-cell">Send button / Ctrl+Enter</td></tr>
+        <tr><td class="desc-cell"><span class="bn-text">Request manually edit করো</span><span class="en-text">Manually edit request</span></td><td class="cmd-cell"><span class="bn-text">Request panel-এ সরাসরি edit করো</span><span class="en-text">Directly edit in request panel</span></td></tr>
+        <tr><td class="desc-cell"><span class="bn-text">Response দেখো</span><span class="en-text">View response</span></td><td class="cmd-cell">Response panel (right side)</td></tr>
+        <tr><td class="desc-cell"><span class="bn-text">History navigate করো</span><span class="en-text">Navigate history</span></td><td class="cmd-cell">← → buttons</td></tr>
+        <tr><td class="desc-cell"><span class="bn-text">নতুন tab খোলো</span><span class="en-text">Open new tab</span></td><td class="cmd-cell">+ button</td></tr>
+        <tr><td class="desc-cell"><span class="bn-text">Render করে দেখো</span><span class="en-text">Render view</span></td><td class="cmd-cell">Response → Render tab</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub">🎲 Intruder — <span class="bn-text">Automated Attack</span><span class="en-text">Automated Attack</span></h3>
+    <div class="box warn">
+      <div class="box-t">⚠️ <span class="bn-text">Community Edition-এ Intruder throttled (ধীর) — Professional-এ দ্রুত</span><span class="en-text">Intruder is throttled in Community Edition — fast in Professional</span></div>
+    </div>
+    <table class="cmd-table">
+      <thead><tr><th><span class="bn-text">Attack Type</span></th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th><th><span class="bn-text">ব্যবহার</span><span class="en-text">Use Case</span></th></tr></thead>
+      <tbody>
+        <tr><td class="flag-cell">Sniper</td><td class="desc-cell"><span class="bn-text">একটি payload set, একটি position-এ iterate করে</span><span class="en-text">One payload set iterates through one position</span></td><td class="ex-cell"><span class="bn-text">Single field fuzzing</span></td></tr>
+        <tr><td class="flag-cell">Battering Ram</td><td class="desc-cell"><span class="bn-text">একই payload সব position-এ একসাথে দেয়</span><span class="en-text">Same payload inserted into all positions simultaneously</span></td><td class="ex-cell"><span class="bn-text">Username=Password test</span></td></tr>
+        <tr><td class="flag-cell">Pitchfork</td><td class="desc-cell"><span class="bn-text">একাধিক payload set, সমান্তরালে iterate করে</span><span class="en-text">Multiple payload sets iterate in parallel</span></td><td class="ex-cell"><span class="bn-text">Username:Password list</span></td></tr>
+        <tr><td class="flag-cell">Cluster Bomb</td><td class="desc-cell"><span class="bn-text">সব payload-এর সব combination চেষ্টা করে</span><span class="en-text">Tries all combinations of all payload sets</span></td><td class="ex-cell"><span class="bn-text">Brute force</span></td></tr>
+      </tbody>
+    </table>
+    <div class="code">
+<span class="c"># Intruder workflow:</span>
+<span class="c"># 1. Request intercept করো → Send to Intruder (Ctrl+I)</span>
+<span class="c"># 2. Positions tab → Attack Type বেছে নাও</span>
+<span class="c"># 3. যেখানে payload বসাবে সেখানে § mark করো (Add § button)</span>
+<span class="c"># 4. Payloads tab → Payload type বেছে নাও (Simple list / Wordlist)</span>
+<span class="c"># 5. Start Attack button চাপো</span>
+<span class="c"># 6. Results-এ Status code / Length দেখে anomaly খোঁজো</span>
+    </div>
+
+    <h3 class="sub">🔬 Scanner <span class="bn-text">(Professional Only)</span></h3>
+    <table class="cmd-table">
+      <thead><tr><th><span class="bn-text">কাজ</span><span class="en-text">Action</span></th><th><span class="bn-text">কীভাবে</span><span class="en-text">How</span></th></tr></thead>
+      <tbody>
+        <tr><td class="desc-cell"><span class="bn-text">Active scan চালাও</span><span class="en-text">Run active scan</span></td><td class="cmd-cell">Target → Site map → Right click → Actively scan</td></tr>
+        <tr><td class="desc-cell"><span class="bn-text">Passive scan দেখো</span><span class="en-text">View passive scan results</span></td><td class="cmd-cell">Dashboard → Issue activity</td></tr>
+        <tr><td class="desc-cell"><span class="bn-text">Scan config করো</span><span class="en-text">Configure scan</span></td><td class="cmd-cell">Scanner → Scan configuration</td></tr>
+        <tr><td class="desc-cell"><span class="bn-text">Vulnerability report বের করো</span><span class="en-text">Export vulnerability report</span></td><td class="cmd-cell">Target → Site map → Issues → Right click → Report</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub">🔎 Other Tools</h3>
+    <table class="cmd-table">
+      <thead><tr><th>Tool</th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th><th><span class="bn-text">কীভাবে ব্যবহার</span><span class="en-text">How to Use</span></th></tr></thead>
+      <tbody>
+        <tr><td class="flag-cell">Decoder</td><td class="desc-cell"><span class="bn-text">Base64, URL, HTML, Hex encode/decode করো</span><span class="en-text">Encode/decode Base64, URL, HTML, Hex</span></td><td class="ex-cell">Decoder tab → paste → select encoding</td></tr>
+        <tr><td class="flag-cell">Comparer</td><td class="desc-cell"><span class="bn-text">দুটো request/response compare করো</span><span class="en-text">Compare two requests/responses</span></td><td class="ex-cell">Right click → Send to Comparer</td></tr>
+        <tr><td class="flag-cell">Sequencer</td><td class="desc-cell"><span class="bn-text">Session token randomness analyze করো</span><span class="en-text">Analyze session token randomness</span></td><td class="ex-cell">Right click on token → Send to Sequencer</td></tr>
+        <tr><td class="flag-cell">Target → Site Map</td><td class="desc-cell"><span class="bn-text">পুরো target-এর structure দেখো</span><span class="en-text">View entire target structure</span></td><td class="ex-cell">Target tab → Site map</td></tr>
+        <tr><td class="flag-cell">Logger</td><td class="desc-cell"><span class="bn-text">সব HTTP request log করো</span><span class="en-text">Log all HTTP requests</span></td><td class="ex-cell">Logger tab (BApp Store)</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">⌨️ <span class="bn-text">Burp Suite Keyboard Shortcuts</span><span class="en-text">Burp Suite Keyboard Shortcuts</span></h2>
+    <div class="grid2">
+      <table class="cmd-table">
+        <thead><tr><th>Shortcut</th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th></tr></thead>
+        <tbody>
+          <tr><td class="flag-cell">Ctrl + R</td><td class="desc-cell"><span class="bn-text">Repeater-এ পাঠাও</span><span class="en-text">Send to Repeater</span></td></tr>
+          <tr><td class="flag-cell">Ctrl + I</td><td class="desc-cell"><span class="bn-text">Intruder-এ পাঠাও</span><span class="en-text">Send to Intruder</span></td></tr>
+          <tr><td class="flag-cell">Ctrl + F</td><td class="desc-cell"><span class="bn-text">Forward intercepted request</span><span class="en-text">Forward intercepted request</span></td></tr>
+          <tr><td class="flag-cell">Ctrl + Enter</td><td class="desc-cell"><span class="bn-text">Request send (Repeater)</span><span class="en-text">Send request (Repeater)</span></td></tr>
+        </tbody>
+      </table>
+      <table class="cmd-table">
+        <thead><tr><th>Shortcut</th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th></tr></thead>
+        <tbody>
+          <tr><td class="flag-cell">Ctrl + Z</td><td class="desc-cell"><span class="bn-text">Undo (request editor)</span><span class="en-text">Undo in request editor</span></td></tr>
+          <tr><td class="flag-cell">Ctrl + A</td><td class="desc-cell"><span class="bn-text">Select all text</span><span class="en-text">Select all text</span></td></tr>
+          <tr><td class="flag-cell">Ctrl + S</td><td class="desc-cell"><span class="bn-text">Project save</span><span class="en-text">Save project</span></td></tr>
+          <tr><td class="flag-cell">Ctrl + Shift + B</td><td class="desc-cell"><span class="bn-text">Base64 encode (selected)</span><span class="en-text">Base64 encode selection</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="sec">🧩 <span class="bn-text">দরকারী BApp Extensions</span><span class="en-text">Useful BApp Extensions</span></h2>
+    <table>
+      <thead><tr><th>Extension</th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th></tr></thead>
+      <tbody>
+        <tr><td><strong>Logger++</strong></td><td><span class="bn-text">Advanced request logging</span><span class="en-text">Advanced request logging</span></td></tr>
+        <tr><td><strong>Autorize</strong></td><td><span class="bn-text">Authorization bypass testing (IDOR)</span><span class="en-text">Authorization bypass testing (IDOR)</span></td></tr>
+        <tr><td><strong>J2EEScan</strong></td><td><span class="bn-text">Java application vulnerability scanning</span><span class="en-text">Java application vulnerability scanning</span></td></tr>
+        <tr><td><strong>SQLiPy</strong></td><td><span class="bn-text">SQLmap integration</span><span class="en-text">SQLmap integration</span></td></tr>
+        <tr><td><strong>Turbo Intruder</strong></td><td><span class="bn-text">High-speed Intruder (Race condition testing)</span><span class="en-text">High-speed Intruder (Race condition testing)</span></td></tr>
+        <tr><td><strong>Active Scan++</strong></td><td><span class="bn-text">Extra active scan checks</span><span class="en-text">Extra active scan checks</span></td></tr>
+        <tr><td><strong>Param Miner</strong></td><td><span class="bn-text">Hidden parameter discovery</span><span class="en-text">Hidden parameter discovery</span></td></tr>
+        <tr><td><strong>Upload Scanner</strong></td><td><span class="bn-text">File upload vulnerability testing</span><span class="en-text">File upload vulnerability testing</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- CH2: NIKTO -->
+<div class="chapter ch2">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 02</div>
+    <div class="chapter-title">🔍 Nikto — <span class="bn-text">Web Server Vulnerability Scanner</span><span class="en-text">Web Server Vulnerability Scanner</span></div>
+    <div class="chapter-desc"><span class="bn-text">Web server misconfiguration, outdated software, dangerous files — সব scan করো automatically</span><span class="en-text">Automatically scan for web server misconfigs, outdated software, dangerous files</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <div class="tool-header">
+      <div class="tool-icon">🔍</div>
+      <div>
+        <div class="tool-name">nikto</div>
+        <div class="tool-desc"><span class="bn-text">Open-source web server scanner — ৬৭০০+ vulnerability ও misconfiguration check করতে পারে</span><span class="en-text">Open-source web server scanner — can check for 6700+ vulnerabilities and misconfigurations</span></div>
+        <div class="tool-badges">
+          <span class="tool-badge tb-scan">Web Scanner</span>
+          <span class="tool-badge tb-web">Active Recon</span>
+        </div>
+      </div>
+    </div>
+
+    <table class="cmd-table">
+      <thead><tr><th>Flag</th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th><th><span class="bn-text">উদাহরণ</span><span class="en-text">Example</span></th></tr></thead>
+      <tbody>
+        <tr><td class="flag-cell">-h host</td><td class="desc-cell"><span class="bn-text">Target host বা IP specify করো</span><span class="en-text">Specify target host or IP</span></td><td class="ex-cell">nikto -h target.com</td></tr>
+        <tr><td class="flag-cell">-p port</td><td class="desc-cell"><span class="bn-text">নির্দিষ্ট port scan করো (default: 80)</span><span class="en-text">Scan specific port (default: 80)</span></td><td class="ex-cell">nikto -h target.com -p 8080</td></tr>
+        <tr><td class="flag-cell">-p 80,443,8080</td><td class="desc-cell"><span class="bn-text">Multiple port scan করো</span><span class="en-text">Scan multiple ports</span></td><td class="ex-cell">nikto -h target.com -p 80,443</td></tr>
+        <tr><td class="flag-cell">-ssl</td><td class="desc-cell"><span class="bn-text">SSL/HTTPS force করো</span><span class="en-text">Force SSL/HTTPS scan</span></td><td class="ex-cell">nikto -h target.com -ssl</td></tr>
+        <tr><td class="flag-cell">-o file</td><td class="desc-cell"><span class="bn-text">Output file-এ save করো</span><span class="en-text">Save output to file</span></td><td class="ex-cell">nikto -h target.com -o scan.html</td></tr>
+        <tr><td class="flag-cell">-Format html</td><td class="desc-cell"><span class="bn-text">Output format — html, csv, xml, txt, json</span><span class="en-text">Output format — html, csv, xml, txt, json</span></td><td class="ex-cell">nikto -h target -o r.html -Format html</td></tr>
+        <tr><td class="flag-cell">-Tuning x</td><td class="desc-cell"><span class="bn-text">Scan category filter করো (নিচে দেখো)</span><span class="en-text">Filter scan categories (see below)</span></td><td class="ex-cell">nikto -h target -Tuning 9</td></tr>
+        <tr><td class="flag-cell">-useproxy</td><td class="desc-cell"><span class="bn-text">Proxy দিয়ে scan করো (Burp-এর সাথে)</span><span class="en-text">Scan through proxy (use with Burp)</span></td><td class="ex-cell">nikto -h target -useproxy http://127.0.0.1:8080</td></tr>
+        <tr><td class="flag-cell">-id user:pass</td><td class="desc-cell"><span class="bn-text">HTTP Basic Auth দিয়ে scan করো</span><span class="en-text">Scan with HTTP Basic Auth</span></td><td class="ex-cell">nikto -h target -id admin:password</td></tr>
+        <tr><td class="flag-cell">-C all</td><td class="desc-cell"><span class="bn-text">CGI directory সব check করো</span><span class="en-text">Check all CGI directories</span></td><td class="ex-cell">nikto -h target -C all</td></tr>
+        <tr><td class="flag-cell">-nossl</td><td class="desc-cell"><span class="bn-text">SSL disable করো</span><span class="en-text">Disable SSL</span></td><td class="ex-cell">nikto -h target -nossl</td></tr>
+        <tr><td class="flag-cell">-timeout sec</td><td class="desc-cell"><span class="bn-text">Request timeout set করো</span><span class="en-text">Set request timeout</span></td><td class="ex-cell">nikto -h target -timeout 10</td></tr>
+        <tr><td class="flag-cell">-Plugins list</td><td class="desc-cell"><span class="bn-text">Available plugins দেখাও</span><span class="en-text">Show available plugins</span></td><td class="ex-cell">nikto -list-plugins</td></tr>
+        <tr><td class="flag-cell">-update</td><td class="desc-cell"><span class="bn-text">Nikto database update করো</span><span class="en-text">Update Nikto database</span></td><td class="ex-cell">nikto -update</td></tr>
+        <tr><td class="flag-cell">-Display V</td><td class="desc-cell"><span class="bn-text">Verbose output দেখাও</span><span class="en-text">Show verbose output</span></td><td class="ex-cell">nikto -h target -Display V</td></tr>
+        <tr><td class="flag-cell">-nolookup</td><td class="desc-cell"><span class="bn-text">DNS lookup বন্ধ করো (দ্রুত)</span><span class="en-text">Disable DNS lookup (faster)</span></td><td class="ex-cell">nikto -h 192.168.1.1 -nolookup</td></tr>
+        <tr><td class="flag-cell">-evasion x</td><td class="desc-cell"><span class="bn-text">IDS evasion technique ব্যবহার করো</span><span class="en-text">Use IDS evasion technique</span></td><td class="ex-cell">nikto -h target -evasion 1</td></tr>
+        <tr><td class="flag-cell">-iL hosts.txt</td><td class="desc-cell"><span class="bn-text">File থেকে multiple host scan করো</span><span class="en-text">Scan multiple hosts from file</span></td><td class="ex-cell">nikto -iL hosts.txt</td></tr>
+        <tr><td class="flag-cell">-maxtime 1h</td><td class="desc-cell"><span class="bn-text">Maximum scan time set করো</span><span class="en-text">Set maximum scan time</span></td><td class="ex-cell">nikto -h target -maxtime 30m</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🎯 <span class="bn-text">Tuning Options — কোন category scan করব</span><span class="en-text">Tuning Options — What to Scan</span></h2>
+    <table>
+      <thead><tr><th><span class="bn-text">নম্বর</span><span class="en-text">Number</span></th><th><span class="bn-text">Category</span></th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td><span class="bn-text">File Upload vulnerability</span></td></tr>
+        <tr><td>1</td><td><span class="bn-text">Interesting file / Seen in logs</span></td></tr>
+        <tr><td>2</td><td><span class="bn-text">Misconfiguration / Default file</span></td></tr>
+        <tr><td>3</td><td><span class="bn-text">Information Disclosure</span></td></tr>
+        <tr><td>4</td><td><span class="bn-text">Injection (XSS/Script/HTML)</span></td></tr>
+        <tr><td>5</td><td><span class="bn-text">Remote File Retrieval — Inside Web Root</span></td></tr>
+        <tr><td>6</td><td><span class="bn-text">Denial of Service</span></td></tr>
+        <tr><td>7</td><td><span class="bn-text">Remote File Retrieval — Server Wide</span></td></tr>
+        <tr><td>8</td><td><span class="bn-text">Command Execution / Remote Shell</span></td></tr>
+        <tr><td>9</td><td><span class="bn-text">SQL Injection</span></td></tr>
+        <tr><td>a</td><td><span class="bn-text">Authentication Bypass</span></td></tr>
+        <tr><td>b</td><td><span class="bn-text">Software Identification</span></td></tr>
+        <tr><td>c</td><td><span class="bn-text">Remote Source Inclusion</span></td></tr>
+        <tr><td>x</td><td><span class="bn-text">Reverse Tuning options (exclude chosen)</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="code">
+<span class="c"># Basic scan</span>
+<span class="p">root@kali</span>:~# <span class="g">nikto -h http://target.com</span>
+
+<span class="c"># Full scan with HTML report</span>
+<span class="p">root@kali</span>:~# <span class="g">nikto -h http://target.com -o report.html -Format html</span>
+
+<span class="c"># HTTPS scan</span>
+<span class="p">root@kali</span>:~# <span class="g">nikto -h https://target.com -ssl</span>
+
+<span class="c"># Burp proxy দিয়ে (traffic capture করতে)</span>
+<span class="p">root@kali</span>:~# <span class="g">nikto -h target.com -useproxy http://127.0.0.1:8080</span>
+
+<span class="c"># SQL injection ও auth bypass check করো</span>
+<span class="p">root@kali</span>:~# <span class="g">nikto -h target.com -Tuning 9a</span>
+
+<span class="c"># নির্দিষ্ট port-এ scan করো ও save করো</span>
+<span class="p">root@kali</span>:~# <span class="g">nikto -h target.com -p 8080 -o scan_8080.txt -Format txt</span>
+    </div>
+  </div>
+</div>
+
+<!-- CH3: SQLMAP -->
+<div class="chapter ch3">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 03</div>
+    <div class="chapter-title">💉 SQLmap — <span class="bn-text">SQL Injection Automation</span><span class="en-text">SQL Injection Automation</span></div>
+    <div class="chapter-desc"><span class="bn-text">Automatic SQL injection detection ও exploitation — database dump থেকে OS shell পর্যন্ত</span><span class="en-text">Automatic SQL injection detection and exploitation — from database dump to OS shell</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <div class="tool-header">
+      <div class="tool-icon">💉</div>
+      <div>
+        <div class="tool-name">sqlmap</div>
+        <div class="tool-desc"><span class="bn-text">World-এর সবচেয়ে powerful open-source SQL injection tool — automatic detection, exploitation ও data extraction করে</span><span class="en-text">World's most powerful open-source SQL injection tool — automatic detection, exploitation, and data extraction</span></div>
+        <div class="tool-badges">
+          <span class="tool-badge tb-sqli">SQL Injection</span>
+          <span class="tool-badge tb-web">Web Hacking</span>
+          <span class="tool-badge tb-scan">Auto Exploit</span>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec">🎯 <span class="bn-text">Target Specification</span><span class="en-text">Target Specification</span></h2>
+    <table class="cmd-table">
+      <thead><tr><th>Flag</th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th><th><span class="bn-text">উদাহরণ</span><span class="en-text">Example</span></th></tr></thead>
+      <tbody>
+        <tr><td class="flag-cell">-u URL</td><td class="desc-cell"><span class="bn-text">Target URL specify করো (GET parameter)</span><span class="en-text">Specify target URL (GET parameter)</span></td><td class="ex-cell">-u "http://target.com/page?id=1"</td></tr>
+        <tr><td class="flag-cell">--data "params"</td><td class="desc-cell"><span class="bn-text">POST data দাও</span><span class="en-text">Provide POST data</span></td><td class="ex-cell">--data "user=a&pass=b"</td></tr>
+        <tr><td class="flag-cell">-r file.txt</td><td class="desc-cell"><span class="bn-text">Burp থেকে save করা HTTP request file দাও</span><span class="en-text">Provide saved HTTP request file from Burp</span></td><td class="ex-cell">-r request.txt</td></tr>
+        <tr><td class="flag-cell">--cookie "c=v"</td><td class="desc-cell"><span class="bn-text">Cookie সহ request পাঠাও</span><span class="en-text">Send request with cookie</span></td><td class="ex-cell">--cookie "PHPSESSID=abc123"</td></tr>
+        <tr><td class="flag-cell">-p param</td><td class="desc-cell"><span class="bn-text">নির্দিষ্ট parameter test করো</span><span class="en-text">Test a specific parameter</span></td><td class="ex-cell">-p "id"</td></tr>
+        <tr><td class="flag-cell">--headers "H: V"</td><td class="desc-cell"><span class="bn-text">Custom header যোগ করো</span><span class="en-text">Add custom headers</span></td><td class="ex-cell">--headers "X-Forwarded-For: 127.0.0.1"</td></tr>
+        <tr><td class="flag-cell">--user-agent "UA"</td><td class="desc-cell"><span class="bn-text">Custom User-Agent সেট করো</span><span class="en-text">Set custom User-Agent</span></td><td class="ex-cell">--user-agent "Mozilla/5.0"</td></tr>
+        <tr><td class="flag-cell">--random-agent</td><td class="desc-cell"><span class="bn-text">Random User-Agent ব্যবহার করো</span><span class="en-text">Use random User-Agent</span></td><td class="ex-cell">--random-agent</td></tr>
+        <tr><td class="flag-cell">--proxy</td><td class="desc-cell"><span class="bn-text">Proxy দিয়ে scan করো</span><span class="en-text">Route through proxy</span></td><td class="ex-cell">--proxy "http://127.0.0.1:8080"</td></tr>
+        <tr><td class="flag-cell">--tor</td><td class="desc-cell"><span class="bn-text">Tor নেটওয়ার্ক ব্যবহার করো</span><span class="en-text">Use Tor network</span></td><td class="ex-cell">--tor</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🔍 <span class="bn-text">Detection Options</span><span class="en-text">Detection Options</span></h2>
+    <table class="cmd-table">
+      <thead><tr><th>Flag</th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th></tr></thead>
+      <tbody>
+        <tr><td class="flag-cell">--level=1-5</td><td class="desc-cell"><span class="bn-text">Test level (1=basic, 5=maximum) — level বাড়লে বেশি test হয় কিন্তু ধীর</span><span class="en-text">Test level (1=basic, 5=maximum) — higher = more tests but slower</span></td></tr>
+        <tr><td class="flag-cell">--risk=1-3</td><td class="desc-cell"><span class="bn-text">Risk level — 3 মানে সব ধরনের injection, data modify হতে পারে</span><span class="en-text">Risk level — 3 means all injections including potentially harmful</span></td></tr>
+        <tr><td class="flag-cell">--technique=BEUSTQ</td><td class="desc-cell"><span class="bn-text">SQLi technique specify করো: B=Boolean, E=Error, U=Union, S=Stacked, T=Time, Q=Inline</span><span class="en-text">Specify SQLi technique: B=Boolean, E=Error, U=Union, S=Stacked, T=Time, Q=Inline</span></td></tr>
+        <tr><td class="flag-cell">--dbms=mysql</td><td class="desc-cell"><span class="bn-text">Database type force করো (mysql, mssql, oracle, postgresql, sqlite)</span><span class="en-text">Force database type (mysql, mssql, oracle, postgresql, sqlite)</span></td></tr>
+        <tr><td class="flag-cell">--string "text"</td><td class="desc-cell"><span class="bn-text">True response-এ থাকা unique string দাও</span><span class="en-text">Provide unique string present in true response</span></td></tr>
+        <tr><td class="flag-cell">--not-string</td><td class="desc-cell"><span class="bn-text">False response-এ থাকা string দাও</span><span class="en-text">Provide string present in false response</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🗄️ <span class="bn-text">Database Enumeration</span><span class="en-text">Database Enumeration</span></h2>
+    <table class="cmd-table">
+      <thead><tr><th>Flag</th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th><th><span class="bn-text">উদাহরণ</span><span class="en-text">Example</span></th></tr></thead>
+      <tbody>
+        <tr><td class="flag-cell">--dbs</td><td class="desc-cell"><span class="bn-text">সব database-এর নাম বের করো</span><span class="en-text">List all databases</span></td><td class="ex-cell">sqlmap -u "url?id=1" --dbs</td></tr>
+        <tr><td class="flag-cell">-D dbname --tables</td><td class="desc-cell"><span class="bn-text">নির্দিষ্ট database-এর সব table দেখাও</span><span class="en-text">List all tables in specific database</span></td><td class="ex-cell">-D mydb --tables</td></tr>
+        <tr><td class="flag-cell">-D db -T table --columns</td><td class="desc-cell"><span class="bn-text">Table-এর সব column দেখাও</span><span class="en-text">List all columns in table</span></td><td class="ex-cell">-D mydb -T users --columns</td></tr>
+        <tr><td class="flag-cell">-D db -T table --dump</td><td class="desc-cell"><span class="bn-text">পুরো table dump করো</span><span class="en-text">Dump entire table</span></td><td class="ex-cell">-D mydb -T users --dump</td></tr>
+        <tr><td class="flag-cell">--dump-all</td><td class="desc-cell"><span class="bn-text">সব database-এর সব table dump করো</span><span class="en-text">Dump all tables from all databases</span></td><td class="ex-cell">--dump-all</td></tr>
+        <tr><td class="flag-cell">-C col1,col2 --dump</td><td class="desc-cell"><span class="bn-text">নির্দিষ্ট column dump করো</span><span class="en-text">Dump specific columns only</span></td><td class="ex-cell">-C "username,password" --dump</td></tr>
+        <tr><td class="flag-cell">--current-db</td><td class="desc-cell"><span class="bn-text">বর্তমান database-এর নাম দেখাও</span><span class="en-text">Show current database name</span></td><td class="ex-cell">--current-db</td></tr>
+        <tr><td class="flag-cell">--current-user</td><td class="desc-cell"><span class="bn-text">বর্তমান DB user দেখাও</span><span class="en-text">Show current DB user</span></td><td class="ex-cell">--current-user</td></tr>
+        <tr><td class="flag-cell">--users</td><td class="desc-cell"><span class="bn-text">সব DB user দেখাও</span><span class="en-text">List all DB users</span></td><td class="ex-cell">--users</td></tr>
+        <tr><td class="flag-cell">--passwords</td><td class="desc-cell"><span class="bn-text">DB user password hash বের করো</span><span class="en-text">Extract DB user password hashes</span></td><td class="ex-cell">--passwords</td></tr>
+        <tr><td class="flag-cell">--privileges</td><td class="desc-cell"><span class="bn-text">DB user-এর privilege দেখাও</span><span class="en-text">Show DB user privileges</span></td><td class="ex-cell">--privileges</td></tr>
+        <tr><td class="flag-cell">--is-dba</td><td class="desc-cell"><span class="bn-text">Current user DBA কিনা check করো</span><span class="en-text">Check if current user is DBA</span></td><td class="ex-cell">--is-dba</td></tr>
+        <tr><td class="flag-cell">--count</td><td class="desc-cell"><span class="bn-text">Table-এ row count দেখাও</span><span class="en-text">Show row count in table</span></td><td class="ex-cell">-T users --count</td></tr>
+        <tr><td class="flag-cell">--where "cond"</td><td class="desc-cell"><span class="bn-text">Condition দিয়ে filter করো</span><span class="en-text">Filter data with condition</span></td><td class="ex-cell">--where "id > 5"</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">💻 <span class="bn-text">File & OS Operations</span><span class="en-text">File & OS Operations</span></h2>
+    <table class="cmd-table">
+      <thead><tr><th>Flag</th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th><th><span class="bn-text">উদাহরণ</span><span class="en-text">Example</span></th></tr></thead>
+      <tbody>
+        <tr><td class="flag-cell">--file-read</td><td class="desc-cell"><span class="bn-text">Server-এর file পড়ো (যদি permission থাকে)</span><span class="en-text">Read file from server (if permissions allow)</span></td><td class="ex-cell">--file-read "/etc/passwd"</td></tr>
+        <tr><td class="flag-cell">--file-write</td><td class="desc-cell"><span class="bn-text">Server-এ file লেখো (webshell upload!)</span><span class="en-text">Write file to server (webshell upload!)</span></td><td class="ex-cell">--file-write "shell.php"</td></tr>
+        <tr><td class="flag-cell">--file-dest</td><td class="desc-cell"><span class="bn-text">Server-এ file লেখার destination path</span><span class="en-text">Destination path on server for file write</span></td><td class="ex-cell">--file-dest "/var/www/html/shell.php"</td></tr>
+        <tr><td class="flag-cell">--os-shell</td><td class="desc-cell"><span class="bn-text">Interactive OS shell পাও (DBA হলে)</span><span class="en-text">Get interactive OS shell (if DBA)</span></td><td class="ex-cell">--os-shell</td></tr>
+        <tr><td class="flag-cell">--os-cmd "cmd"</td><td class="desc-cell"><span class="bn-text">Single OS command execute করো</span><span class="en-text">Execute a single OS command</span></td><td class="ex-cell">--os-cmd "whoami"</td></tr>
+        <tr><td class="flag-cell">--sql-shell</td><td class="desc-cell"><span class="bn-text">Interactive SQL shell পাও</span><span class="en-text">Get interactive SQL shell</span></td><td class="ex-cell">--sql-shell</td></tr>
+        <tr><td class="flag-cell">--sql-query "q"</td><td class="desc-cell"><span class="bn-text">Custom SQL query চালাও</span><span class="en-text">Execute custom SQL query</span></td><td class="ex-cell">--sql-query "SELECT version()"</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">⚡ <span class="bn-text">Performance & Evasion</span><span class="en-text">Performance & Evasion</span></h2>
+    <table class="cmd-table">
+      <thead><tr><th>Flag</th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th></tr></thead>
+      <tbody>
+        <tr><td class="flag-cell">--threads=10</td><td class="desc-cell"><span class="bn-text">Concurrent threads বাড়াও (দ্রুত হবে)</span><span class="en-text">Increase concurrent threads (faster)</span></td></tr>
+        <tr><td class="flag-cell">--time-sec=5</td><td class="desc-cell"><span class="bn-text">Time-based injection-এ delay সেট করো</span><span class="en-text">Set delay for time-based injection</span></td></tr>
+        <tr><td class="flag-cell">--tamper=space2comment</td><td class="desc-cell"><span class="bn-text">WAF bypass tamper script ব্যবহার করো</span><span class="en-text">Use WAF bypass tamper script</span></td></tr>
+        <tr><td class="flag-cell">--tamper=charencode</td><td class="desc-cell"><span class="bn-text">Character encoding দিয়ে WAF bypass</span><span class="en-text">Bypass WAF with character encoding</span></td></tr>
+        <tr><td class="flag-cell">--flush-session</td><td class="desc-cell"><span class="bn-text">Previous session data মুছে নতুন করো</span><span class="en-text">Clear previous session and start fresh</span></td></tr>
+        <tr><td class="flag-cell">--fresh-queries</td><td class="desc-cell"><span class="bn-text">Cache ignore করো, নতুন query করো</span><span class="en-text">Ignore cache, make fresh queries</span></td></tr>
+        <tr><td class="flag-cell">--batch</td><td class="desc-cell"><span class="bn-text">সব prompt-এ default answer দিয়ে auto-run করো</span><span class="en-text">Auto-run with default answers to all prompts</span></td></tr>
+        <tr><td class="flag-cell">-v 3</td><td class="desc-cell"><span class="bn-text">Verbose level — 0-6 (3 = payload দেখা যায়)</span><span class="en-text">Verbose level 0-6 (3 = see payloads)</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="code">
+<span class="c"># Basic GET parameter injection check</span>
+<span class="p">root@kali</span>:~# <span class="g">sqlmap -u "http://target.com/item?id=1" --dbs</span>
+
+<span class="c"># POST request injection (login form)</span>
+<span class="p">root@kali</span>:~# <span class="g">sqlmap -u "http://target.com/login" --data="user=a&pass=b" --dbs</span>
+
+<span class="c"># Burp request file দিয়ে (সবচেয়ে ভালো পদ্ধতি)</span>
+<span class="p">root@kali</span>:~# <span class="g">sqlmap -r burp_request.txt --dbs --batch</span>
+
+<span class="c"># Cookie-based injection</span>
+<span class="p">root@kali</span>:~# <span class="g">sqlmap -u "http://target.com/" --cookie "id=1" -p id --dbs</span>
+
+<span class="c"># সব user dump করো</span>
+<span class="p">root@kali</span>:~# <span class="g">sqlmap -u "url?id=1" -D webapp -T users --dump</span>
+
+<span class="c"># OS shell পাও (high privilege দরকার)</span>
+<span class="p">root@kali</span>:~# <span class="g">sqlmap -u "url?id=1" --os-shell</span>
+
+<span class="c"># WAF bypass করে scan করো</span>
+<span class="p">root@kali</span>:~# <span class="g">sqlmap -u "url?id=1" --tamper="space2comment,charencode" --dbs --random-agent</span>
+
+<span class="c"># /etc/passwd পড়ো</span>
+<span class="p">root@kali</span>:~# <span class="g">sqlmap -u "url?id=1" --file-read="/etc/passwd"</span>
+    </div>
+  </div>
+</div>
+
+<!-- CH4: GOBUSTER -->
+<div class="chapter ch4">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 04</div>
+    <div class="chapter-title">📂 Gobuster — <span class="bn-text">Directory & DNS Brute Forcer</span><span class="en-text">Directory & DNS Brute Forcer</span></div>
+    <div class="chapter-desc"><span class="bn-text">Hidden directory, file, subdomain, virtual host খোঁজো wordlist দিয়ে — দ্রুততম tool</span><span class="en-text">Find hidden directories, files, subdomains, vhosts with wordlists — one of the fastest tools</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <div class="tool-header">
+      <div class="tool-icon">📂</div>
+      <div>
+        <div class="tool-name">gobuster</div>
+        <div class="tool-desc"><span class="bn-text">Go দিয়ে লেখা fast brute force tool — dir, dns, vhost, fuzz, s3 mode আছে</span><span class="en-text">Fast brute force tool written in Go — supports dir, dns, vhost, fuzz, s3 modes</span></div>
+        <div class="tool-badges">
+          <span class="tool-badge tb-brute">Dir Brute</span>
+          <span class="tool-badge tb-web">DNS Enum</span>
+          <span class="tool-badge tb-fuzz">VHost Scan</span>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec">📁 dir mode — <span class="bn-text">Directory & File Brute Force</span><span class="en-text">Directory & File Brute Force</span></h2>
+    <table class="cmd-table">
+      <thead><tr><th>Flag</th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th><th><span class="bn-text">উদাহরণ</span><span class="en-text">Example</span></th></tr></thead>
+      <tbody>
+        <tr><td class="flag-cell">-u URL</td><td class="desc-cell"><span class="bn-text">Target URL specify করো</span><span class="en-text">Specify target URL</span></td><td class="ex-cell">-u http://target.com</td></tr>
+        <tr><td class="flag-cell">-w wordlist</td><td class="desc-cell"><span class="bn-text">Wordlist file দাও</span><span class="en-text">Provide wordlist file</span></td><td class="ex-cell">-w /usr/share/wordlists/dirb/common.txt</td></tr>
+        <tr><td class="flag-cell">-x ext</td><td class="desc-cell"><span class="bn-text">File extension check করো</span><span class="en-text">Check file extensions</span></td><td class="ex-cell">-x php,html,txt,bak</td></tr>
+        <tr><td class="flag-cell">-t threads</td><td class="desc-cell"><span class="bn-text">Thread count বাড়াও (default: 10)</span><span class="en-text">Increase thread count (default: 10)</span></td><td class="ex-cell">-t 50</td></tr>
+        <tr><td class="flag-cell">-o file</td><td class="desc-cell"><span class="bn-text">Output save করো</span><span class="en-text">Save output to file</span></td><td class="ex-cell">-o results.txt</td></tr>
+        <tr><td class="flag-cell">-s codes</td><td class="desc-cell"><span class="bn-text">কোন status code দেখাবে (default: 200,204,301,302,307)</span><span class="en-text">Which status codes to show (default: 200,204,301,302,307)</span></td><td class="ex-cell">-s 200,301</td></tr>
+        <tr><td class="flag-cell">-b codes</td><td class="desc-cell"><span class="bn-text">কোন status code hide করবে (blacklist)</span><span class="en-text">Blacklist status codes to hide</span></td><td class="ex-cell">-b 404,403</td></tr>
+        <tr><td class="flag-cell">-k</td><td class="desc-cell"><span class="bn-text">SSL certificate verify skip করো</span><span class="en-text">Skip SSL certificate verification</span></td><td class="ex-cell">-k</td></tr>
+        <tr><td class="flag-cell">-c cookie</td><td class="desc-cell"><span class="bn-text">Cookie যোগ করো (auth-এর পরে scan)</span><span class="en-text">Add cookie (scan after auth)</span></td><td class="ex-cell">-c "PHPSESSID=abc123"</td></tr>
+        <tr><td class="flag-cell">-H header</td><td class="desc-cell"><span class="bn-text">Custom header যোগ করো</span><span class="en-text">Add custom header</span></td><td class="ex-cell">-H "Authorization: Bearer token"</td></tr>
+        <tr><td class="flag-cell">-a agent</td><td class="desc-cell"><span class="bn-text">Custom User-Agent সেট করো</span><span class="en-text">Set custom User-Agent</span></td><td class="ex-cell">-a "Mozilla/5.0"</td></tr>
+        <tr><td class="flag-cell">-e</td><td class="desc-cell"><span class="bn-text">Full URL print করো</span><span class="en-text">Print full URL in output</span></td><td class="ex-cell">-e</td></tr>
+        <tr><td class="flag-cell">-r</td><td class="desc-cell"><span class="bn-text">Redirect follow করো</span><span class="en-text">Follow redirects</span></td><td class="ex-cell">-r</td></tr>
+        <tr><td class="flag-cell">--timeout</td><td class="desc-cell"><span class="bn-text">Request timeout সেট করো</span><span class="en-text">Set request timeout</span></td><td class="ex-cell">--timeout 5s</td></tr>
+        <tr><td class="flag-cell">-z</td><td class="desc-cell"><span class="bn-text">Progress দেখাও না (quiet mode)</span><span class="en-text">Don't show progress (quiet mode)</span></td><td class="ex-cell">-z</td></tr>
+        <tr><td class="flag-cell">--wildcard</td><td class="desc-cell"><span class="bn-text">Wildcard response আসলেও চালিয়ে যাও</span><span class="en-text">Continue even with wildcard responses</span></td><td class="ex-cell">--wildcard</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🌐 dns mode — <span class="bn-text">Subdomain Brute Force</span><span class="en-text">Subdomain Brute Force</span></h2>
+    <table class="cmd-table">
+      <thead><tr><th>Flag</th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th><th><span class="bn-text">উদাহরণ</span><span class="en-text">Example</span></th></tr></thead>
+      <tbody>
+        <tr><td class="flag-cell">-d domain</td><td class="desc-cell"><span class="bn-text">Target domain specify করো</span><span class="en-text">Specify target domain</span></td><td class="ex-cell">-d target.com</td></tr>
+        <tr><td class="flag-cell">-w wordlist</td><td class="desc-cell"><span class="bn-text">Subdomain wordlist দাও</span><span class="en-text">Provide subdomain wordlist</span></td><td class="ex-cell">-w subdomains.txt</td></tr>
+        <tr><td class="flag-cell">-r resolver</td><td class="desc-cell"><span class="bn-text">Custom DNS resolver ব্যবহার করো</span><span class="en-text">Use custom DNS resolver</span></td><td class="ex-cell">-r 8.8.8.8</td></tr>
+        <tr><td class="flag-cell">--show-cname</td><td class="desc-cell"><span class="bn-text">CNAME records দেখাও</span><span class="en-text">Show CNAME records</span></td><td class="ex-cell">--show-cname</td></tr>
+        <tr><td class="flag-cell">--show-ips</td><td class="desc-cell"><span class="bn-text">IP address দেখাও</span><span class="en-text">Show IP addresses</span></td><td class="ex-cell">--show-ips</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🏠 vhost mode — <span class="bn-text">Virtual Host Discovery</span><span class="en-text">Virtual Host Discovery</span></h2>
+    <table class="cmd-table">
+      <thead><tr><th>Flag</th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th><th><span class="bn-text">উদাহরণ</span><span class="en-text">Example</span></th></tr></thead>
+      <tbody>
+        <tr><td class="flag-cell">-u URL</td><td class="desc-cell"><span class="bn-text">Base URL specify করো</span><span class="en-text">Specify base URL</span></td><td class="ex-cell">-u http://target.com</td></tr>
+        <tr><td class="flag-cell">-w wordlist</td><td class="desc-cell"><span class="bn-text">Virtual host wordlist দাও</span><span class="en-text">Provide virtual host wordlist</span></td><td class="ex-cell">-w vhosts.txt</td></tr>
+        <tr><td class="flag-cell">--append-domain</td><td class="desc-cell"><span class="bn-text">Domain suffix automatically যোগ করো</span><span class="en-text">Automatically append domain suffix</span></td><td class="ex-cell">--append-domain</td></tr>
+      </tbody>
+    </table>
+
+    <div class="code">
+<span class="c"># Basic directory scan</span>
+<span class="p">root@kali</span>:~# <span class="g">gobuster dir -u http://target.com -w /usr/share/wordlists/dirb/common.txt</span>
+
+<span class="c"># File extension সহ scan করো</span>
+<span class="p">root@kali</span>:~# <span class="g">gobuster dir -u http://target.com -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php,html,txt,bak,zip -t 50</span>
+
+<span class="c"># HTTPS scan (cert skip)</span>
+<span class="p">root@kali</span>:~# <span class="g">gobuster dir -u https://target.com -w common.txt -k -t 30</span>
+
+<span class="c"># Cookie দিয়ে authenticated scan</span>
+<span class="p">root@kali</span>:~# <span class="g">gobuster dir -u http://target.com/admin -w common.txt -c "session=abc123" -t 40</span>
+
+<span class="c"># DNS subdomain brute force</span>
+<span class="p">root@kali</span>:~# <span class="g">gobuster dns -d target.com -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt -t 30 --show-ips</span>
+
+<span class="c"># VHost discovery</span>
+<span class="p">root@kali</span>:~# <span class="g">gobuster vhost -u http://target.com -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt --append-domain</span>
+
+<span class="c"># Output save করো</span>
+<span class="p">root@kali</span>:~# <span class="g">gobuster dir -u http://target.com -w common.txt -o gobuster_results.txt -t 50 -e</span>
+    </div>
+
+    <div class="box info">
+      <div class="box-t">💡 <span class="bn-text">Best Wordlists for Gobuster</span></div>
+      <ul>
+        <li><code>/usr/share/wordlists/dirb/common.txt</code> — <span class="bn-text">Small, fast</span></li>
+        <li><code>/usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt</code> — <span class="bn-text">Medium, comprehensive</span></li>
+        <li><code>/usr/share/seclists/Discovery/Web-Content/big.txt</code> — <span class="bn-text">Large</span></li>
+        <li><code>/usr/share/seclists/Discovery/Web-Content/raft-large-words.txt</code> — <span class="bn-text">Very large</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CH5: DIRB -->
+<div class="chapter ch5">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 05</div>
+    <div class="chapter-title">📁 Dirb — <span class="bn-text">Web Content Scanner</span><span class="en-text">Web Content Scanner</span></div>
+    <div class="chapter-desc"><span class="bn-text">Recursive directory scanning — সহজ এবং কার্যকর</span><span class="en-text">Recursive directory scanning — simple and effective</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <div class="tool-header">
+      <div class="tool-icon">📁</div>
+      <div>
+        <div class="tool-name">dirb</div>
+        <div class="tool-desc"><span class="bn-text">Web content scanner — HTTP response এর উপর ভিত্তি করে hidden files ও directories খোঁজে</span><span class="en-text">Web content scanner — finds hidden files and directories based on HTTP responses</span></div>
+        <div class="tool-badges">
+          <span class="tool-badge tb-brute">Dir Scan</span>
+          <span class="tool-badge tb-web">Web Recon</span>
+        </div>
+      </div>
+    </div>
+
+    <table class="cmd-table">
+      <thead><tr><th>Flag</th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th><th><span class="bn-text">উদাহরণ</span><span class="en-text">Example</span></th></tr></thead>
+      <tbody>
+        <tr><td class="cmd-cell">dirb http://target.com</td><td class="desc-cell"><span class="bn-text">Default wordlist দিয়ে scan করো</span><span class="en-text">Scan with default wordlist</span></td><td class="ex-cell">dirb http://target.com</td></tr>
+        <tr><td class="cmd-cell">dirb url wordlist.txt</td><td class="desc-cell"><span class="bn-text">Custom wordlist দিয়ে scan করো</span><span class="en-text">Scan with custom wordlist</span></td><td class="ex-cell">dirb http://target.com /usr/share/wordlists/dirb/big.txt</td></tr>
+        <tr><td class="flag-cell">-o file</td><td class="desc-cell"><span class="bn-text">Output file-এ save করো</span><span class="en-text">Save output to file</span></td><td class="ex-cell">-o results.txt</td></tr>
+        <tr><td class="flag-cell">-r</td><td class="desc-cell"><span class="bn-text">Non-recursive mode (subdirectory scan বন্ধ)</span><span class="en-text">Non-recursive mode (no subdirectory scan)</span></td><td class="ex-cell">-r</td></tr>
+        <tr><td class="flag-cell">-S</td><td class="desc-cell"><span class="bn-text">Silent mode — found result শুধু দেখাও</span><span class="en-text">Silent mode — show only found results</span></td><td class="ex-cell">-S</td></tr>
+        <tr><td class="flag-cell">-X ext</td><td class="desc-cell"><span class="bn-text">Extension suffix যোগ করো</span><span class="en-text">Append file extension</span></td><td class="ex-cell">-X .php,.html</td></tr>
+        <tr><td class="flag-cell">-z ms</td><td class="desc-cell"><span class="bn-text">Request-এর মধ্যে millisecond delay</span><span class="en-text">Millisecond delay between requests</span></td><td class="ex-cell">-z 100</td></tr>
+        <tr><td class="flag-cell">-c cookie</td><td class="desc-cell"><span class="bn-text">Cookie সেট করো</span><span class="en-text">Set cookie</span></td><td class="ex-cell">-c "session=abc"</td></tr>
+        <tr><td class="flag-cell">-u user:pass</td><td class="desc-cell"><span class="bn-text">HTTP auth username:password দাও</span><span class="en-text">Set HTTP auth username:password</span></td><td class="ex-cell">-u admin:password</td></tr>
+        <tr><td class="flag-cell">-H header</td><td class="desc-cell"><span class="bn-text">Custom header যোগ করো</span><span class="en-text">Add custom header</span></td><td class="ex-cell">-H "X-Custom: value"</td></tr>
+        <tr><td class="flag-cell">-p proxy</td><td class="desc-cell"><span class="bn-text">Proxy দিয়ে scan করো</span><span class="en-text">Scan through proxy</span></td><td class="ex-cell">-p http://127.0.0.1:8080</td></tr>
+        <tr><td class="flag-cell">-N code</td><td class="desc-cell"><span class="bn-text">নির্দিষ্ট HTTP code ignore করো</span><span class="en-text">Ignore specific HTTP response code</span></td><td class="ex-cell">-N 302</td></tr>
+        <tr><td class="flag-cell">-w</td><td class="desc-cell"><span class="bn-text">Warning message দেখাও না</span><span class="en-text">Don't show warning messages</span></td><td class="ex-cell">-w</td></tr>
+        <tr><td class="flag-cell">-f</td><td class="desc-cell"><span class="bn-text">Fine tuning — 404 response এর উপর ভিত্তি করে</span><span class="en-text">Fine tune based on 404 responses</span></td><td class="ex-cell">-f</td></tr>
+      </tbody>
+    </table>
+
+    <div class="code">
+<span class="c"># Default wordlist দিয়ে scan</span>
+<span class="p">root@kali</span>:~# <span class="g">dirb http://target.com</span>
+
+<span class="c"># Custom wordlist + PHP extension + output save</span>
+<span class="p">root@kali</span>:~# <span class="g">dirb http://target.com /usr/share/wordlists/dirb/big.txt -X .php,.bak -o dirb_results.txt</span>
+
+<span class="c"># Cookie দিয়ে authenticated scan</span>
+<span class="p">root@kali</span>:~# <span class="g">dirb http://target.com/admin -c "PHPSESSID=abc123" -S</span>
+
+<span class="c"># Burp proxy দিয়ে</span>
+<span class="p">root@kali</span>:~# <span class="g">dirb http://target.com -p http://127.0.0.1:8080</span>
+    </div>
+
+    <h2 class="sec">🆚 <span class="bn-text">Gobuster vs Dirb vs Dirsearch</span><span class="en-text">Gobuster vs Dirb vs Dirsearch</span></h2>
+    <table>
+      <thead><tr><th>Tool</th><th><span class="bn-text">গতি</span><span class="en-text">Speed</span></th><th><span class="bn-text">সুবিধা</span><span class="en-text">Advantage</span></th><th><span class="bn-text">ব্যবহার</span><span class="en-text">Best for</span></th></tr></thead>
+      <tbody>
+        <tr><td><strong>Gobuster</strong></td><td><span class="badge badge-g">দ্রুততম</span></td><td><span class="bn-text">Multi-threaded, Go দিয়ে লেখা</span><span class="en-text">Multi-threaded, written in Go</span></td><td><span class="bn-text">CTF, Bug Bounty</span></td></tr>
+        <tr><td><strong>Dirb</strong></td><td><span class="badge badge-y">মাঝারি</span></td><td><span class="bn-text">Simple, Recursive, Built-in wordlist</span><span class="en-text">Simple, recursive, built-in wordlist</span></td><td><span class="bn-text">Quick scan</span></td></tr>
+        <tr><td><strong>Dirsearch</strong></td><td><span class="badge badge-g">দ্রুত</span></td><td><span class="bn-text">Python, Extension support, Beautiful output</span><span class="en-text">Python, extension support, nice output</span></td><td><span class="bn-text">Comprehensive scan</span></td></tr>
+        <tr><td><strong>Feroxbuster</strong></td><td><span class="badge badge-g">সবচেয়ে দ্রুত</span></td><td><span class="bn-text">Rust, Recursive, Smart filtering</span><span class="en-text">Rust, recursive, smart filtering</span></td><td><span class="bn-text">Large targets</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- CH6: WPSCAN -->
+<div class="chapter ch6">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 06</div>
+    <div class="chapter-title">🔑 WPScan — WordPress Security Scanner</div>
+    <div class="chapter-desc"><span class="bn-text">WordPress plugin, theme, user, vulnerability — সব কিছু scan করো</span><span class="en-text">Scan WordPress for plugins, themes, users, and vulnerabilities</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <div class="tool-header">
+      <div class="tool-icon">🔑</div>
+      <div>
+        <div class="tool-name">wpscan</div>
+        <div class="tool-desc"><span class="bn-text">WordPress-specific black box security scanner — WPVulnDB থেকে vulnerability data নেয়</span><span class="en-text">WordPress-specific black box security scanner — pulls vulnerability data from WPVulnDB</span></div>
+        <div class="tool-badges">
+          <span class="tool-badge tb-wp">WordPress</span>
+          <span class="tool-badge tb-scan">CMS Scanner</span>
+          <span class="tool-badge tb-brute">Brute Force</span>
+        </div>
+      </div>
+    </div>
+
+    <table class="cmd-table">
+      <thead><tr><th>Flag</th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th><th><span class="bn-text">উদাহরণ</span><span class="en-text">Example</span></th></tr></thead>
+      <tbody>
+        <tr><td class="flag-cell">--url URL</td><td class="desc-cell"><span class="bn-text">Target WordPress site URL দাও</span><span class="en-text">Provide target WordPress URL</span></td><td class="ex-cell">--url http://wp-target.com</td></tr>
+        <tr><td class="flag-cell">--enumerate u</td><td class="desc-cell"><span class="bn-text">User enumerate করো</span><span class="en-text">Enumerate users</span></td><td class="ex-cell">--enumerate u</td></tr>
+        <tr><td class="flag-cell">--enumerate p</td><td class="desc-cell"><span class="bn-text">Plugin enumerate করো</span><span class="en-text">Enumerate plugins</span></td><td class="ex-cell">--enumerate p</td></tr>
+        <tr><td class="flag-cell">--enumerate t</td><td class="desc-cell"><span class="bn-text">Theme enumerate করো</span><span class="en-text">Enumerate themes</span></td><td class="ex-cell">--enumerate t</td></tr>
+        <tr><td class="flag-cell">--enumerate vp</td><td class="desc-cell"><span class="bn-text">Vulnerable plugins খোঁজো</span><span class="en-text">Find vulnerable plugins</span></td><td class="ex-cell">--enumerate vp</td></tr>
+        <tr><td class="flag-cell">--enumerate vt</td><td class="desc-cell"><span class="bn-text">Vulnerable themes খোঁজো</span><span class="en-text">Find vulnerable themes</span></td><td class="ex-cell">--enumerate vt</td></tr>
+        <tr><td class="flag-cell">--enumerate ap</td><td class="desc-cell"><span class="bn-text">সব plugin enumerate করো</span><span class="en-text">Enumerate all plugins</span></td><td class="ex-cell">--enumerate ap</td></tr>
+        <tr><td class="flag-cell">--enumerate at</td><td class="desc-cell"><span class="bn-text">সব theme enumerate করো</span><span class="en-text">Enumerate all themes</span></td><td class="ex-cell">--enumerate at</td></tr>
+        <tr><td class="flag-cell">--enumerate cb</td><td class="desc-cell"><span class="bn-text">Config backup file খোঁজো</span><span class="en-text">Find config backup files</span></td><td class="ex-cell">--enumerate cb</td></tr>
+        <tr><td class="flag-cell">--enumerate dbe</td><td class="desc-cell"><span class="bn-text">DB export file খোঁজো</span><span class="en-text">Find DB export files</span></td><td class="ex-cell">--enumerate dbe</td></tr>
+        <tr><td class="flag-cell">-P wordlist.txt</td><td class="desc-cell"><span class="bn-text">Password brute force করো</span><span class="en-text">Brute force passwords</span></td><td class="ex-cell">-P /usr/share/wordlists/rockyou.txt</td></tr>
+        <tr><td class="flag-cell">-U username</td><td class="desc-cell"><span class="bn-text">নির্দিষ্ট username brute force করো</span><span class="en-text">Brute force specific username</span></td><td class="ex-cell">-U admin</td></tr>
+        <tr><td class="flag-cell">--api-token TOKEN</td><td class="desc-cell"><span class="bn-text">WPVulnDB API token দাও (বেশি info)</span><span class="en-text">Provide WPVulnDB API token (more info)</span></td><td class="ex-cell">--api-token YOUR_TOKEN</td></tr>
+        <tr><td class="flag-cell">--detection-mode</td><td class="desc-cell"><span class="bn-text">Detection mode: passive/aggressive/mixed</span><span class="en-text">Set detection mode: passive/aggressive/mixed</span></td><td class="ex-cell">--detection-mode aggressive</td></tr>
+        <tr><td class="flag-cell">--throttle ms</td><td class="desc-cell"><span class="bn-text">Request-এর মধ্যে millisecond delay</span><span class="en-text">Millisecond delay between requests</span></td><td class="ex-cell">--throttle 200</td></tr>
+        <tr><td class="flag-cell">-o file</td><td class="desc-cell"><span class="bn-text">Output save করো</span><span class="en-text">Save output to file</span></td><td class="ex-cell">-o wp_scan.txt</td></tr>
+        <tr><td class="flag-cell">--format json</td><td class="desc-cell"><span class="bn-text">JSON format-এ output</span><span class="en-text">Output in JSON format</span></td><td class="ex-cell">--format json -o output.json</td></tr>
+        <tr><td class="flag-cell">--proxy</td><td class="desc-cell"><span class="bn-text">Proxy দিয়ে scan করো</span><span class="en-text">Scan through proxy</span></td><td class="ex-cell">--proxy http://127.0.0.1:8080</td></tr>
+        <tr><td class="flag-cell">--update</td><td class="desc-cell"><span class="bn-text">WPScan database update করো</span><span class="en-text">Update WPScan database</span></td><td class="ex-cell">wpscan --update</td></tr>
+      </tbody>
+    </table>
+
+    <div class="code">
+<span class="c"># Basic scan</span>
+<span class="p">root@kali</span>:~# <span class="g">wpscan --url http://wp-target.com</span>
+
+<span class="c"># User, Plugin, Theme সব enumerate করো</span>
+<span class="p">root@kali</span>:~# <span class="g">wpscan --url http://wp-target.com --enumerate u,vp,vt,cb</span>
+
+<span class="c"># User enumerate করে brute force করো</span>
+<span class="p">root@kali</span>:~# <span class="g">wpscan --url http://wp-target.com --enumerate u -P /usr/share/wordlists/rockyou.txt</span>
+
+<span class="c"># Aggressive mode — সব plugin check করো</span>
+<span class="p">root@kali</span>:~# <span class="g">wpscan --url http://wp-target.com --enumerate ap --detection-mode aggressive</span>
+
+<span class="c"># API token সহ full scan</span>
+<span class="p">root@kali</span>:~# <span class="g">wpscan --url http://wp-target.com --enumerate u,ap,at,cb,dbe --api-token YOUR_TOKEN -o wp_full.json --format json</span>
+
+<span class="c"># নির্দিষ্ট user-এ brute force</span>
+<span class="p">root@kali</span>:~# <span class="g">wpscan --url http://wp-target.com -U admin -P /usr/share/wordlists/rockyou.txt --throttle 200</span>
+    </div>
+  </div>
+</div>
+
+<!-- CH7: WFUZZ -->
+<div class="chapter ch7">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 07</div>
+    <div class="chapter-title">🌀 Wfuzz — <span class="bn-text">Web Application Fuzzer</span><span class="en-text">Web Application Fuzzer</span></div>
+    <div class="chapter-desc"><span class="bn-text">URL, parameter, header, cookie — যেকোনো জায়গায় payload inject করো ও response analyze করো</span><span class="en-text">Inject payloads anywhere — URL, parameters, headers, cookies — and analyze responses</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <div class="tool-header">
+      <div class="tool-icon">🌀</div>
+      <div>
+        <div class="tool-name">wfuzz</div>
+        <div class="tool-desc"><span class="bn-text">Flexible web fuzzer — FUZZ keyword দিয়ে যেকোনো জায়গায় payload দাও, filter করে interesting response বের করো</span><span class="en-text">Flexible web fuzzer — place FUZZ keyword anywhere and filter to find interesting responses</span></div>
+        <div class="tool-badges">
+          <span class="tool-badge tb-fuzz">Fuzzing</span>
+          <span class="tool-badge tb-web">Web Testing</span>
+          <span class="tool-badge tb-brute">Brute Force</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="box info">
+      <div class="box-t">💡 FUZZ keyword</div>
+      <span class="bn-text">Wfuzz-এ <code>FUZZ</code> লিখলে সেখানে wordlist-এর প্রতিটি word replace হয়। একাধিক FUZZ position-এ FUZZ, FUZ2Z, FUZ3Z ব্যবহার করো।</span>
+      <span class="en-text">In Wfuzz, wherever you write <code>FUZZ</code>, each word from the wordlist gets substituted. For multiple positions use FUZZ, FUZ2Z, FUZ3Z.</span>
+    </div>
+
+    <h2 class="sec">🎯 <span class="bn-text">Basic Fuzzing</span><span class="en-text">Basic Fuzzing</span></h2>
+    <table class="cmd-table">
+      <thead><tr><th>Flag</th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th><th><span class="bn-text">উদাহরণ</span><span class="en-text">Example</span></th></tr></thead>
+      <tbody>
+        <tr><td class="flag-cell">-w wordlist</td><td class="desc-cell"><span class="bn-text">Wordlist file দাও</span><span class="en-text">Provide wordlist file</span></td><td class="ex-cell">-w /usr/share/wordlists/dirb/common.txt</td></tr>
+        <tr><td class="flag-cell">-u URL/FUZZ</td><td class="desc-cell"><span class="bn-text">FUZZ position সহ URL দাও</span><span class="en-text">Provide URL with FUZZ position</span></td><td class="ex-cell">-u http://target.com/FUZZ</td></tr>
+        <tr><td class="flag-cell">-z payload</td><td class="desc-cell"><span class="bn-text">Payload type specify করো (file, list, range, alphanum)</span><span class="en-text">Specify payload type</span></td><td class="ex-cell">-z file,wordlist.txt</td></tr>
+        <tr><td class="flag-cell">-d "data"</td><td class="desc-cell"><span class="bn-text">POST data দাও FUZZ সহ</span><span class="en-text">Provide POST data with FUZZ</span></td><td class="ex-cell">-d "user=FUZZ&pass=test"</td></tr>
+        <tr><td class="flag-cell">-b cookie</td><td class="desc-cell"><span class="bn-text">Cookie সেট করো</span><span class="en-text">Set cookie</span></td><td class="ex-cell">-b "session=abc"</td></tr>
+        <tr><td class="flag-cell">-H header</td><td class="desc-cell"><span class="bn-text">Custom header সেট করো</span><span class="en-text">Set custom header</span></td><td class="ex-cell">-H "Host: FUZZ.target.com"</td></tr>
+        <tr><td class="flag-cell">-X method</td><td class="desc-cell"><span class="bn-text">HTTP method সেট করো</span><span class="en-text">Set HTTP method</span></td><td class="ex-cell">-X POST</td></tr>
+        <tr><td class="flag-cell">-t threads</td><td class="desc-cell"><span class="bn-text">Concurrent threads</span><span class="en-text">Number of concurrent threads</span></td><td class="ex-cell">-t 40</td></tr>
+        <tr><td class="flag-cell">-s secs</td><td class="desc-cell"><span class="bn-text">Request-এর মধ্যে delay</span><span class="en-text">Delay between requests</span></td><td class="ex-cell">-s 0.5</td></tr>
+        <tr><td class="flag-cell">-p proxy</td><td class="desc-cell"><span class="bn-text">Proxy দিয়ে route করো</span><span class="en-text">Route through proxy</span></td><td class="ex-cell">-p 127.0.0.1:8080</td></tr>
+        <tr><td class="flag-cell">-o file</td><td class="desc-cell"><span class="bn-text">Output save করো</span><span class="en-text">Save output to file</span></td><td class="ex-cell">-o results.html</td></tr>
+        <tr><td class="flag-cell">-f file,html</td><td class="desc-cell"><span class="bn-text">Format সহ output save করো</span><span class="en-text">Save output with format</span></td><td class="ex-cell">-f output.html,html</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🔎 <span class="bn-text">Filter Options — Response Filter করা</span><span class="en-text">Filter Options — Filtering Responses</span></h2>
+    <table class="cmd-table">
+      <thead><tr><th>Flag</th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th><th><span class="bn-text">উদাহরণ</span><span class="en-text">Example</span></th></tr></thead>
+      <tbody>
+        <tr><td class="flag-cell">--hc codes</td><td class="desc-cell"><span class="bn-text">নির্দিষ্ট HTTP code hide করো (hide code)</span><span class="en-text">Hide specific HTTP codes</span></td><td class="ex-cell">--hc 404,403</td></tr>
+        <tr><td class="flag-cell">--sc codes</td><td class="desc-cell"><span class="bn-text">শুধু নির্দিষ্ট HTTP code দেখাও (show code)</span><span class="en-text">Show only specific HTTP codes</span></td><td class="ex-cell">--sc 200,301</td></tr>
+        <tr><td class="flag-cell">--hl lines</td><td class="desc-cell"><span class="bn-text">নির্দিষ্ট line count-এর response hide করো</span><span class="en-text">Hide responses with specific line count</span></td><td class="ex-cell">--hl 9</td></tr>
+        <tr><td class="flag-cell">--sl lines</td><td class="desc-cell"><span class="bn-text">নির্দিষ্ট line count-এর response দেখাও</span><span class="en-text">Show responses with specific line count</span></td><td class="ex-cell">--sl 50</td></tr>
+        <tr><td class="flag-cell">--hw words</td><td class="desc-cell"><span class="bn-text">নির্দিষ্ট word count-এর response hide করো</span><span class="en-text">Hide responses with specific word count</span></td><td class="ex-cell">--hw 240</td></tr>
+        <tr><td class="flag-cell">--sw words</td><td class="desc-cell"><span class="bn-text">নির্দিষ্ট word count-এর response দেখাও</span><span class="en-text">Show responses with specific word count</span></td><td class="ex-cell">--sw 100</td></tr>
+        <tr><td class="flag-cell">--hs string</td><td class="desc-cell"><span class="bn-text">নির্দিষ্ট string আছে এমন response hide করো</span><span class="en-text">Hide responses containing specific string</span></td><td class="ex-cell">--hs "Not Found"</td></tr>
+        <tr><td class="flag-cell">--ss string</td><td class="desc-cell"><span class="bn-text">নির্দিষ্ট string আছে এমন response দেখাও</span><span class="en-text">Show responses containing specific string</span></td><td class="ex-cell">--ss "Welcome"</td></tr>
+      </tbody>
+    </table>
+
+    <div class="code">
+<span class="c"># Directory brute force</span>
+<span class="p">root@kali</span>:~# <span class="g">wfuzz -c -w /usr/share/wordlists/dirb/common.txt --hc 404 http://target.com/FUZZ</span>
+
+<span class="c"># GET parameter fuzzing</span>
+<span class="p">root@kali</span>:~# <span class="g">wfuzz -c -w params.txt --hc 404 "http://target.com/page?FUZZ=value"</span>
+
+<span class="c"># POST login brute force (username fixed, password fuzz)</span>
+<span class="p">root@kali</span>:~# <span class="g">wfuzz -c -w /usr/share/wordlists/rockyou.txt --hc 302 -d "user=admin&pass=FUZZ" http://target.com/login</span>
+
+<span class="c"># VHost fuzzing (subdomain discovery)</span>
+<span class="p">root@kali</span>:~# <span class="g">wfuzz -c -w subdomains.txt --sc 200 -H "Host: FUZZ.target.com" http://target.com</span>
+
+<span class="c"># Cookie-based auth scan</span>
+<span class="p">root@kali</span>:~# <span class="g">wfuzz -c -w wordlist.txt --hc 404 -b "session=FUZZ" http://target.com/profile</span>
+
+<span class="c"># Multiple FUZZ (username:password combination)</span>
+<span class="p">root@kali</span>:~# <span class="g">wfuzz -c -z file,users.txt -z file,passwords.txt --hc 302 -d "user=FUZZ&pass=FUZ2Z" http://target.com/login</span>
+
+<span class="c"># File extension fuzzing</span>
+<span class="p">root@kali</span>:~# <span class="g">wfuzz -c -w extensions.txt --sc 200 "http://target.com/config.FUZZ"</span>
+    </div>
+  </div>
+</div>
+
+<!-- CH8: CURL & WGET -->
+<div class="chapter ch8">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 08</div>
+    <div class="chapter-title">📡 Curl & Wget — <span class="bn-text">HTTP Request Manipulation</span><span class="en-text">HTTP Request Manipulation</span></div>
+    <div class="chapter-desc"><span class="bn-text">Manual HTTP request পাঠানো, header manipulation, cookie, auth — command line থেকে পুরো control</span><span class="en-text">Send manual HTTP requests, manipulate headers, cookies, auth — full control from command line</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <div class="tool-header">
+      <div class="tool-icon">📡</div>
+      <div>
+        <div class="tool-name">curl</div>
+        <div class="tool-desc"><span class="bn-text">Client URL — HTTP/HTTPS/FTP সহ ২৫+ protocol support করে। Web security testing-এর জন্য অপরিহার্য</span><span class="en-text">Client URL — supports 25+ protocols including HTTP/HTTPS/FTP. Indispensable for web security testing</span></div>
+        <div class="tool-badges">
+          <span class="tool-badge tb-web">HTTP Client</span>
+          <span class="tool-badge tb-scan">API Testing</span>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec">🌐 <span class="bn-text">Curl — Basic Usage</span><span class="en-text">Curl — Basic Usage</span></h2>
+    <table class="cmd-table">
+      <thead><tr><th>Flag</th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th><th><span class="bn-text">উদাহরণ</span><span class="en-text">Example</span></th></tr></thead>
+      <tbody>
+        <tr><td class="flag-cell">curl URL</td><td class="desc-cell"><span class="bn-text">Basic GET request পাঠাও</span><span class="en-text">Send basic GET request</span></td><td class="ex-cell">curl http://target.com</td></tr>
+        <tr><td class="flag-cell">-I / --head</td><td class="desc-cell"><span class="bn-text">শুধু HTTP header দেখাও (response body ছাড়া)</span><span class="en-text">Show only HTTP headers (no body)</span></td><td class="ex-cell">curl -I http://target.com</td></tr>
+        <tr><td class="flag-cell">-v</td><td class="desc-cell"><span class="bn-text">Verbose — request ও response সব দেখাও</span><span class="en-text">Verbose — show all request and response details</span></td><td class="ex-cell">curl -v http://target.com</td></tr>
+        <tr><td class="flag-cell">-o file</td><td class="desc-cell"><span class="bn-text">Response file-এ save করো</span><span class="en-text">Save response to file</span></td><td class="ex-cell">curl -o page.html http://target.com</td></tr>
+        <tr><td class="flag-cell">-O</td><td class="desc-cell"><span class="bn-text">Remote filename দিয়ে save করো</span><span class="en-text">Save with remote filename</span></td><td class="ex-cell">curl -O http://target.com/file.zip</td></tr>
+        <tr><td class="flag-cell">-L</td><td class="desc-cell"><span class="bn-text">Redirect follow করো</span><span class="en-text">Follow redirects</span></td><td class="ex-cell">curl -L http://target.com</td></tr>
+        <tr><td class="flag-cell">-k / --insecure</td><td class="desc-cell"><span class="bn-text">SSL certificate check skip করো</span><span class="en-text">Skip SSL certificate verification</span></td><td class="ex-cell">curl -k https://target.com</td></tr>
+        <tr><td class="flag-cell">-s</td><td class="desc-cell"><span class="bn-text">Silent mode — progress bar দেখাবে না</span><span class="en-text">Silent mode — no progress bar</span></td><td class="ex-cell">curl -s http://target.com</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🔧 <span class="bn-text">Request Manipulation</span><span class="en-text">Request Manipulation</span></h2>
+    <table class="cmd-table">
+      <thead><tr><th>Flag</th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th><th><span class="bn-text">উদাহরণ</span><span class="en-text">Example</span></th></tr></thead>
+      <tbody>
+        <tr><td class="flag-cell">-X METHOD</td><td class="desc-cell"><span class="bn-text">HTTP method specify করো</span><span class="en-text">Specify HTTP method</span></td><td class="ex-cell">curl -X POST http://target.com/api</td></tr>
+        <tr><td class="flag-cell">-X DELETE</td><td class="desc-cell"><span class="bn-text">DELETE request পাঠাও</span><span class="en-text">Send DELETE request</span></td><td class="ex-cell">curl -X DELETE http://api/resource/1</td></tr>
+        <tr><td class="flag-cell">-X PUT</td><td class="desc-cell"><span class="bn-text">PUT request পাঠাও</span><span class="en-text">Send PUT request</span></td><td class="ex-cell">curl -X PUT -d '{"k":"v"}' http://api/</td></tr>
+        <tr><td class="flag-cell">-d "data"</td><td class="desc-cell"><span class="bn-text">POST data পাঠাও</span><span class="en-text">Send POST data</span></td><td class="ex-cell">curl -d "user=admin&pass=1234" http://target.com/login</td></tr>
+        <tr><td class="flag-cell">-d @file</td><td class="desc-cell"><span class="bn-text">File থেকে POST data পাঠাও</span><span class="en-text">Send POST data from file</span></td><td class="ex-cell">curl -d @payload.txt http://target.com</td></tr>
+        <tr><td class="flag-cell">-H "Header: Value"</td><td class="desc-cell"><span class="bn-text">Custom header যোগ করো</span><span class="en-text">Add custom header</span></td><td class="ex-cell">curl -H "X-Admin: true" http://target.com</td></tr>
+        <tr><td class="flag-cell">-H "Content-Type: application/json"</td><td class="desc-cell"><span class="bn-text">JSON content type set করো</span><span class="en-text">Set JSON content type</span></td><td class="ex-cell">curl -H "Content-Type: application/json" -d '{"id":1}' url</td></tr>
+        <tr><td class="flag-cell">-H "Authorization: Bearer TOKEN"</td><td class="desc-cell"><span class="bn-text">Bearer token authentication</span><span class="en-text">Bearer token authentication</span></td><td class="ex-cell">curl -H "Authorization: Bearer eyJ..." url</td></tr>
+        <tr><td class="flag-cell">-u user:pass</td><td class="desc-cell"><span class="bn-text">Basic HTTP Authentication</span><span class="en-text">Basic HTTP Authentication</span></td><td class="ex-cell">curl -u admin:password http://target.com</td></tr>
+        <tr><td class="flag-cell">-b "cookie=value"</td><td class="desc-cell"><span class="bn-text">Cookie পাঠাও</span><span class="en-text">Send cookie</span></td><td class="ex-cell">curl -b "PHPSESSID=abc123" http://target.com</td></tr>
+        <tr><td class="flag-cell">-c cookie.txt</td><td class="desc-cell"><span class="bn-text">Response cookie file-এ save করো</span><span class="en-text">Save response cookies to file</span></td><td class="ex-cell">curl -c cookies.txt http://target.com/login</td></tr>
+        <tr><td class="flag-cell">-b cookie.txt</td><td class="desc-cell"><span class="bn-text">File থেকে cookie পাঠাও</span><span class="en-text">Send cookies from file</span></td><td class="ex-cell">curl -b cookies.txt http://target.com</td></tr>
+        <tr><td class="flag-cell">-A "agent"</td><td class="desc-cell"><span class="bn-text">Custom User-Agent সেট করো</span><span class="en-text">Set custom User-Agent</span></td><td class="ex-cell">curl -A "Mozilla/5.0" http://target.com</td></tr>
+        <tr><td class="flag-cell">-e "referer"</td><td class="desc-cell"><span class="bn-text">Referer header সেট করো</span><span class="en-text">Set Referer header</span></td><td class="ex-cell">curl -e "http://google.com" http://target.com</td></tr>
+        <tr><td class="flag-cell">-x proxy</td><td class="desc-cell"><span class="bn-text">Proxy দিয়ে request করো</span><span class="en-text">Send request through proxy</span></td><td class="ex-cell">curl -x http://127.0.0.1:8080 http://target.com</td></tr>
+        <tr><td class="flag-cell">--data-urlencode</td><td class="desc-cell"><span class="bn-text">URL encode করে data পাঠাও</span><span class="en-text">URL-encode data before sending</span></td><td class="ex-cell">curl --data-urlencode "q=hello world" url</td></tr>
+        <tr><td class="flag-cell">-F "file=@path"</td><td class="desc-cell"><span class="bn-text">File upload করো (multipart/form-data)</span><span class="en-text">Upload file (multipart/form-data)</span></td><td class="ex-cell">curl -F "upload=@shell.php" http://target.com/upload</td></tr>
+        <tr><td class="flag-cell">--max-time sec</td><td class="desc-cell"><span class="bn-text">Maximum request time সেট করো</span><span class="en-text">Set maximum request time</span></td><td class="ex-cell">curl --max-time 10 http://target.com</td></tr>
+      </tbody>
+    </table>
+
+    <div class="code">
+<span class="c"># Server header information দেখো</span>
+<span class="p">root@kali</span>:~# <span class="g">curl -I http://target.com</span>
+
+<span class="c"># POST login request পাঠাও</span>
+<span class="p">root@kali</span>:~# <span class="g">curl -X POST -d "username=admin&password=test" -v http://target.com/login</span>
+
+<span class="c"># JSON API request</span>
+<span class="p">root@kali</span>:~# <span class="g">curl -X POST -H "Content-Type: application/json" -d '{"username":"admin","password":"pass"}' http://target.com/api/login</span>
+
+<span class="c"># Session cookie save করো তারপর ব্যবহার করো</span>
+<span class="p">root@kali</span>:~# <span class="g">curl -c cookies.txt -d "user=admin&pass=123" http://target.com/login</span>
+<span class="p">root@kali</span>:~# <span class="g">curl -b cookies.txt http://target.com/admin</span>
+
+<span class="c"># File upload test করো (webshell)</span>
+<span class="p">root@kali</span>:~# <span class="g">curl -F "file=@shell.php" -b "session=abc" http://target.com/upload.php -v</span>
+
+<span class="c"># Burp proxy দিয়ে route করো</span>
+<span class="p">root@kali</span>:~# <span class="g">curl -x http://127.0.0.1:8080 -k -v http://target.com/api/users</span>
+
+<span class="c"># Authorization header bypass test করো</span>
+<span class="p">root@kali</span>:~# <span class="g">curl -H "X-Forwarded-For: 127.0.0.1" -H "X-Real-IP: 127.0.0.1" http://target.com/admin</span>
+    </div>
+
+    <h2 class="sec">📥 Wget — <span class="bn-text">File Download ও Mirroring</span><span class="en-text">File Download & Mirroring</span></h2>
+    <table class="cmd-table">
+      <thead><tr><th>Flag</th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th><th><span class="bn-text">উদাহরণ</span><span class="en-text">Example</span></th></tr></thead>
+      <tbody>
+        <tr><td class="cmd-cell">wget URL</td><td class="desc-cell"><span class="bn-text">File download করো</span><span class="en-text">Download file</span></td><td class="ex-cell">wget http://target.com/file.zip</td></tr>
+        <tr><td class="flag-cell">-O file</td><td class="desc-cell"><span class="bn-text">নির্দিষ্ট নামে save করো</span><span class="en-text">Save with specific filename</span></td><td class="ex-cell">wget -O output.zip http://target.com/a.zip</td></tr>
+        <tr><td class="flag-cell">-q</td><td class="desc-cell"><span class="bn-text">Quiet mode — output দেখাবে না</span><span class="en-text">Quiet mode — no output</span></td><td class="ex-cell">wget -q http://target.com/file</td></tr>
+        <tr><td class="flag-cell">-r</td><td class="desc-cell"><span class="bn-text">Recursive download করো</span><span class="en-text">Recursive download</span></td><td class="ex-cell">wget -r http://target.com</td></tr>
+        <tr><td class="flag-cell">--mirror</td><td class="desc-cell"><span class="bn-text">পুরো website mirror করো</span><span class="en-text">Mirror entire website</span></td><td class="ex-cell">wget --mirror http://target.com</td></tr>
+        <tr><td class="flag-cell">--no-check-certificate</td><td class="desc-cell"><span class="bn-text">SSL check skip করো</span><span class="en-text">Skip SSL check</span></td><td class="ex-cell">wget --no-check-certificate https://target.com</td></tr>
+        <tr><td class="flag-cell">--header "H: V"</td><td class="desc-cell"><span class="bn-text">Custom header যোগ করো</span><span class="en-text">Add custom header</span></td><td class="ex-cell">wget --header "Cookie: session=abc" url</td></tr>
+        <tr><td class="flag-cell">--post-data "d"</td><td class="desc-cell"><span class="bn-text">POST data পাঠাও</span><span class="en-text">Send POST data</span></td><td class="ex-cell">wget --post-data "user=a&pass=b" url</td></tr>
+        <tr><td class="flag-cell">--user-agent "UA"</td><td class="desc-cell"><span class="bn-text">Custom User-Agent সেট করো</span><span class="en-text">Set custom User-Agent</span></td><td class="ex-cell">wget --user-agent "Googlebot" url</td></tr>
+        <tr><td class="flag-cell">-c</td><td class="desc-cell"><span class="bn-text">Incomplete download continue করো</span><span class="en-text">Continue incomplete download</span></td><td class="ex-cell">wget -c http://target.com/bigfile.iso</td></tr>
+        <tr><td class="flag-cell">-i urls.txt</td><td class="desc-cell"><span class="bn-text">File থেকে multiple URL download করো</span><span class="en-text">Download multiple URLs from file</span></td><td class="ex-cell">wget -i urls.txt</td></tr>
+        <tr><td class="flag-cell">--spider</td><td class="desc-cell"><span class="bn-text">File download না করে check শুধু করো</span><span class="en-text">Check URLs without downloading</span></td><td class="ex-cell">wget --spider http://target.com</td></tr>
+      </tbody>
+    </table>
+
+    <div class="chapter-summary">
+      <h3>🌐 <span class="bn-text">Web Hacking Workflow — সঠিক পদ্ধতি</span><span class="en-text">Web Hacking Workflow — Correct Approach</span></h3>
+      <ul>
+        <li>1️⃣ <span class="bn-text"><strong>Recon:</strong> Nikto দিয়ে server scan, Gobuster দিয়ে hidden directory খোঁজো</span><span class="en-text"><strong>Recon:</strong> Scan server with Nikto, find hidden dirs with Gobuster</span></li>
+        <li>2️⃣ <span class="bn-text"><strong>Proxy:</strong> Burp Suite চালু করে সব traffic intercept করো</span><span class="en-text"><strong>Proxy:</strong> Start Burp Suite and intercept all traffic</span></li>
+        <li>3️⃣ <span class="bn-text"><strong>Manual Test:</strong> Burp Repeater দিয়ে manually request modify করো</span><span class="en-text"><strong>Manual Test:</strong> Modify requests manually with Burp Repeater</span></li>
+        <li>4️⃣ <span class="bn-text"><strong>SQLi:</strong> Parameter-এ SQLmap চালাও (Burp request file দিয়ে)</span><span class="en-text"><strong>SQLi:</strong> Run SQLmap on parameters (using Burp request file)</span></li>
+        <li>5️⃣ <span class="bn-text"><strong>Brute Force:</strong> Login-এ Burp Intruder বা Wfuzz ব্যবহার করো</span><span class="en-text"><strong>Brute Force:</strong> Use Burp Intruder or Wfuzz on login</span></li>
+        <li>6️⃣ <span class="bn-text"><strong>WordPress:</strong> WPScan দিয়ে plugin vulnerability ও user খোঁজো</span><span class="en-text"><strong>WordPress:</strong> Use WPScan to find plugin vulns and users</span></li>
+      </ul>
+    </div>
+
+    <div style="text-align:center; margin-top:50px; padding:28px; background:#1a0000; border-radius:12px; color:rgba(255,255,255,0.7);">
+      <p style="font-size:17px; color:#ff6b6b; margin-bottom:10px;">🌐 "The web is the largest attack surface — know your tools well."</p>
+      <p><span class="bn-text">সব কিছু authorized environment-এ practice করো। অন্যের web application-এ permission ছাড়া কোনো কিছু করা illegal।</span>
+         <span class="en-text">Practice everything in authorized environments only. Testing web applications without permission is illegal.</span></p>
+      <p style="margin-top:12px; font-size:12px; color:#2dc653;">Kali Linux Series — Part 2 | v1.0 | Web Hacking Tools</p>
+      <p style="font-size:11px; color:rgba(255,255,255,0.35); margin-top:6px;">Part 3: Exploitation Tools (Metasploit, Searchsploit, msfvenom) →</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const body = document.body;
+body.classList.add('light-mode');
+
+function toggleTheme() {
+  const btn = document.getElementById('themeBtn');
+  if (body.classList.contains('light-mode')) {
+    body.classList.replace('light-mode', 'dark-mode');
+    btn.textContent = '☀️ Light Mode';
+    btn.style.background = '#ffd60a';
+    btn.style.color = '#0d1b2a';
+    localStorage.setItem('theme', 'dark');
+  } else {
+    body.classList.replace('dark-mode', 'light-mode');
+    btn.textContent = '🌙 Dark Mode';
+    btn.style.background = '#2dc653';
+    btn.style.color = '#0d1b2a';
+    localStorage.setItem('theme', 'light');
+  }
+}
+
+function toggleLang() {
+  const btn = document.getElementById('langBtn');
+  if (body.classList.contains('lang-en')) {
+    body.classList.remove('lang-en');
+    btn.textContent = '🇬🇧 English';
+    btn.style.background = '#0077b6';
+    localStorage.setItem('lang', 'bn');
+  } else {
+    body.classList.add('lang-en');
+    btn.textContent = '🇧🇩 বাংলা';
+    btn.style.background = '#e63946';
+    localStorage.setItem('lang', 'en');
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('theme');
+  const savedLang = localStorage.getItem('lang');
+  if (savedTheme === 'dark') {
+    body.classList.replace('light-mode', 'dark-mode');
+    const btn = document.getElementById('themeBtn');
+    if (btn) { btn.textContent = '☀️ Light Mode'; btn.style.background = '#ffd60a'; btn.style.color = '#0d1b2a'; }
+  }
+  if (savedLang === 'en') {
+    body.classList.add('lang-en');
+    const btn = document.getElementById('langBtn');
+    if (btn) { btn.textContent = '🇧🇩 বাংলা'; btn.style.background = '#e63946'; }
+  }
+});
+</script>
+</body>
+</html>

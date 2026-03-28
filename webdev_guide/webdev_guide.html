@@ -1,0 +1,1947 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Development — সম্পূর্ণ গাইড (HTML + CSS + JS)</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #0f172a;
+    --accent-html: #e34c26;
+    --accent-css: #264de4;
+    --accent-js: #f7df1e;
+    --accent-js-dark: #b5a900;
+    --green: #22c55e;
+    --teal: #06b6d4;
+    --purple: #a855f7;
+    --pink: #ec4899;
+    --orange: #f97316;
+    --code-bg: #0a0f1e;
+    --code-border: #1e3a5f;
+    --text: #0f172a;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+    background: var(--bg); color: var(--text);
+    font-size: 14.5px; line-height: 1.9;
+  }
+
+  /* ══ COVER ══ */
+  .cover {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    color: white; min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 60px 40px;
+    page-break-after: always; position: relative; overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 20% 50%, rgba(227,76,38,0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(38,77,228,0.08) 0%, transparent 50%),
+      radial-gradient(circle at 60% 80%, rgba(247,223,30,0.06) 0%, transparent 50%);
+  }
+  .cover-trio { font-size: 70px; margin-bottom: 15px; display: flex; gap: 20px; justify-content: center; position: relative; }
+  .cover-trio span { animation: bounce 2s ease-in-out infinite; }
+  .cover-trio span:nth-child(2) { animation-delay: 0.3s; }
+  .cover-trio span:nth-child(3) { animation-delay: 0.6s; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  .cover h1 { font-size: 46px; font-weight: 700; position: relative; }
+  .cover h1 .html-c { color: var(--accent-html); }
+  .cover h1 .css-c  { color: #5b8ef7; }
+  .cover h1 .js-c   { color: var(--accent-js); }
+  .cover h2 { font-size: 20px; font-weight: 400; opacity: 0.7; margin: 10px 0 20px; }
+  .cover .divider { width: 150px; height: 3px; background: linear-gradient(90deg, var(--accent-html), var(--accent-css), var(--accent-js)); margin: 18px auto; border-radius: 2px; }
+  .cover .desc { font-size: 15px; opacity: 0.7; max-width: 650px; line-height: 2; position: relative; }
+  .cover .badges { margin-top: 25px; position: relative; }
+  .cover .badge-cv { display: inline-block; padding: 6px 16px; border-radius: 20px; margin: 4px; font-size: 13px; }
+  .b-html { background: rgba(227,76,38,0.15); border: 1px solid rgba(227,76,38,0.4); color: #fca5a5; }
+  .b-css  { background: rgba(38,77,228,0.15); border: 1px solid rgba(38,77,228,0.4); color: #93c5fd; }
+  .b-js   { background: rgba(247,223,30,0.12); border: 1px solid rgba(247,223,30,0.35); color: #fde68a; }
+  .b-gen  { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: #e2e8f0; }
+  .cover .browser-mock {
+    background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px; padding: 0; margin-top: 28px; max-width: 480px; text-align:left;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; overflow:hidden;
+  }
+  .browser-bar { background: #1e293b; padding: 10px 16px; display:flex; gap:6px; align-items:center; }
+  .browser-bar .dot { width:10px; height:10px; border-radius:50%; }
+  .browser-bar .url { background: #0f172a; border-radius:4px; padding:3px 12px; font-size:11px; color:#64748b; margin-left:8px; flex:1; }
+  .browser-body { padding: 16px 20px; }
+
+  /* ══ TOC ══ */
+  .toc { background: white; padding: 50px 60px; page-break-after: always; }
+  .toc-header { font-size: 30px; color: var(--primary); border-bottom: 4px solid; padding-bottom: 15px; margin-bottom: 30px; }
+  .toc-section-label { font-size: 12px; letter-spacing: 4px; text-transform: uppercase; margin: 22px 0 8px; font-weight: 700; }
+  .toc-chapter { margin-bottom: 4px; }
+  .toc-main { display: flex; justify-content: space-between; padding: 9px 0; font-weight: 700; font-size: 15px; color: var(--primary); border-bottom: 1px solid #f0f0f0; margin-top: 4px; }
+  .toc-sub { display: flex; justify-content: space-between; padding: 4px 0 4px 28px; color: #64748b; font-size: 13px; border-bottom: 1px dotted #f5f5f5; }
+
+  /* ══ CHAPTERS ══ */
+  .chapter { background: white; margin: 0; page-break-before: always; }
+  .chapter-header { padding: 40px 55px; position: relative; overflow: hidden; }
+  /* HTML chapters */
+  .ch1  .chapter-header { background: linear-gradient(135deg, #7b1a07, #b42d10); }
+  .ch2  .chapter-header { background: linear-gradient(135deg, #92280f, #c0361a); }
+  .ch3  .chapter-header { background: linear-gradient(135deg, #6b1a0a, #a02812); }
+  /* CSS chapters */
+  .ch4  .chapter-header { background: linear-gradient(135deg, #0a1a6b, #1433b4); }
+  .ch5  .chapter-header { background: linear-gradient(135deg, #0d1f80, #1a40cc); }
+  .ch6  .chapter-header { background: linear-gradient(135deg, #0a1560, #1228a0); }
+  .ch7  .chapter-header { background: linear-gradient(135deg, #0f1870, #1830b8); }
+  /* JS chapters */
+  .ch8  .chapter-header { background: linear-gradient(135deg, #3d3200, #6b5500); }
+  .ch9  .chapter-header { background: linear-gradient(135deg, #4a3c00, #7a6400); }
+  .ch10 .chapter-header { background: linear-gradient(135deg, #352b00, #5c4c00); }
+  .ch11 .chapter-header { background: linear-gradient(135deg, #3f3600, #6e5e00); }
+  /* Advanced */
+  .ch12 .chapter-header { background: linear-gradient(135deg, #1a0a3d, #3d1a80); }
+  .ch13 .chapter-header { background: linear-gradient(135deg, #0a2a1a, #1a5c3d); }
+  .ch14 .chapter-header { background: linear-gradient(135deg, #1a0a28, #3d1a5c); }
+
+  .chapter-header::after {
+    content: ''; position: absolute; top:-40px; right:-40px;
+    width:160px; height:160px; border-radius:50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .chapter-label { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 8px; opacity: 0.7; }
+  .chapter-tag { display: inline-block; padding: 3px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-bottom: 10px; letter-spacing: 1px; }
+  .tag-html { background: var(--accent-html); color: white; }
+  .tag-css  { background: var(--accent-css); color: white; }
+  .tag-js   { background: var(--accent-js); color: #1a1a00; }
+  .tag-adv  { background: var(--purple); color: white; }
+  .chapter-title { font-size: 28px; color: white; font-weight: 700; }
+  .chapter-desc { font-size: 14px; color: rgba(255,255,255,0.6); margin-top: 8px; }
+  .chapter-body { padding: 40px 55px; }
+
+  /* ══ HEADINGS ══ */
+  h2.sec { font-size: 21px; color: var(--primary); margin: 32px 0 14px; padding-left: 16px; border-left: 5px solid; }
+  .sec-html { border-color: var(--accent-html); }
+  .sec-css  { border-color: var(--accent-css); }
+  .sec-js   { border-color: var(--accent-js-dark); }
+  .sec-adv  { border-color: var(--purple); }
+  h3.sub { font-size: 17px; color: #1e293b; margin: 22px 0 11px; padding-bottom: 6px; border-bottom: 2px dashed #e2e8f0; }
+  p { margin-bottom: 14px; text-align: justify; }
+
+  /* ══ CODE ══ */
+  .code {
+    background: var(--code-bg); color: #e2e8f0;
+    padding: 20px 25px; border-radius: 10px;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    margin: 16px 0; line-height: 1.85; overflow-x: auto;
+    border: 1px solid var(--code-border);
+  }
+  .code.html-code { border-left: 4px solid var(--accent-html); }
+  .code.css-code  { border-left: 4px solid var(--accent-css); }
+  .code.js-code   { border-left: 4px solid var(--accent-js-dark); }
+  .code.adv-code  { border-left: 4px solid var(--purple); }
+
+  /* Syntax highlighting */
+  .ht  { color: #f38ba8; } /* html tag */
+  .ha  { color: #89b4fa; } /* html attr */
+  .hv  { color: #a6e3a1; } /* html value */
+  .hc  { color: #45475a; font-style: italic; } /* comment */
+  .ct  { color: #cba6f7; } /* css selector */
+  .cp  { color: #89b4fa; } /* css property */
+  .cv  { color: #a6e3a1; } /* css value */
+  .jk  { color: #cba6f7; } /* js keyword */
+  .js  { color: #a6e3a1; } /* js string */
+  .jn  { color: #fab387; } /* js number */
+  .jf  { color: #89b4fa; } /* js function */
+  .jc  { color: #45475a; font-style: italic; } /* js comment */
+  .jm  { color: #89dceb; } /* js method */
+  .jp  { color: #f5c2e7; } /* js param */
+  .jd  { color: #f9e2af; } /* dom */
+
+  code { background: #1e293b; color: #93c5fd; padding: 2px 8px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+
+  /* ══ PREVIEW BOX ══ */
+  .preview {
+    border: 2px solid #e2e8f0; border-radius: 0 0 10px 10px;
+    margin-top: -16px; padding: 16px 20px; background: white;
+    font-size: 13.5px;
+  }
+  .preview-label { font-size: 11px; color: #94a3b8; letter-spacing: 2px; margin-bottom: 8px; }
+  body.dark-mode .preview { background: #1e293b; border-color: #334155; color: #e2e8f0; }
+
+  /* ══ BOXES ══ */
+  .box { padding: 16px 20px; border-radius: 10px; margin: 18px 0; border-left: 5px solid; }
+  .info    { background: #eff6ff; border-color: #3b82f6; color: #1e3a5f; }
+  .warn    { background: #fffbeb; border-color: #f59e0b; color: #78350f; }
+  .danger  { background: #fef2f2; border-color: #ef4444; color: #7f1d1d; }
+  .success { background: #f0fdf4; border-color: #22c55e; color: #14532d; }
+  .tip     { background: #f5f3ff; border-color: #a855f7; color: #3b0764; }
+  .box-t   { font-weight: 700; margin-bottom: 8px; font-size: 15px; }
+
+  /* ══ TABLES ══ */
+  table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 13.5px; }
+  thead tr { background: var(--primary); color: white; }
+  th { padding: 11px 14px; text-align: left; font-weight: 600; }
+  td { padding: 9px 14px; border-bottom: 1px solid #f1f5f9; }
+  tr:nth-child(even) { background: #f8fafc; }
+  tr:hover { background: #f0f9ff; }
+
+  /* ══ DIAGRAM ══ */
+  .diagram {
+    background: #0a0f1e; border: 1px solid #1e3a5f;
+    border-radius: 10px; padding: 20px 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; line-height: 1.9; margin: 18px 0; color: #cbd5e1; overflow-x: auto;
+  }
+  .dg { color: var(--green); }
+  .dy { color: var(--accent-js); }
+  .db { color: #60a5fa; }
+  .dr { color: #f87171; }
+  .dp { color: #c084fc; }
+  .do { color: var(--orange); }
+  .dt { color: var(--teal); }
+
+  /* ══ GRID ══ */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 18px 0; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin: 18px 0; }
+  .card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; }
+  .card h4 { color: var(--primary); margin-bottom: 9px; font-size: 14px; padding-bottom: 6px; }
+  .card.html-card { border-color: #fca5a5; background: #fff5f5; }
+  .card.html-card h4 { color: #b91c1c; border-bottom: 2px solid var(--accent-html); }
+  .card.css-card  { border-color: #93c5fd; background: #eff6ff; }
+  .card.css-card h4 { color: #1d4ed8; border-bottom: 2px solid var(--accent-css); }
+  .card.js-card   { border-color: #fde68a; background: #fffbeb; }
+  .card.js-card h4 { color: #92400e; border-bottom: 2px solid var(--accent-js-dark); }
+  .card.green-card { border-color: #86efac; background: #f0fdf4; }
+  .card.green-card h4 { color: #166534; border-bottom: 2px solid var(--green); }
+  .card.purple-card { border-color: #d8b4fe; background: #faf5ff; }
+  .card.purple-card h4 { color: #6b21a8; border-bottom: 2px solid var(--purple); }
+
+  /* ══ BADGE ══ */
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; margin: 2px; }
+  .badge-g { background: #dcfce7; color: #166534; }
+  .badge-b { background: #dbeafe; color: #1e40af; }
+  .badge-r { background: #fee2e2; color: #991b1b; }
+  .badge-y { background: #fef9c3; color: #713f12; }
+  .badge-p { background: #f3e8ff; color: #6b21a8; }
+  .badge-o { background: #ffedd5; color: #9a3412; }
+
+  /* ══ CSS PROPERTY DEMO ══ */
+  .prop-demo { display: flex; gap: 12px; align-items: flex-start; margin: 8px 0; }
+  .prop-name { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #2563eb; min-width: 180px; flex-shrink: 0; }
+  .prop-desc { font-size: 13.5px; }
+
+  /* ══ BOX MODEL VISUAL ══ */
+  .box-model { display: flex; flex-direction: column; align-items: center; margin: 18px 0; }
+
+  /* ══ STEP ══ */
+  .step { display: flex; gap: 14px; margin: 12px 0; align-items: flex-start; }
+  .step-num { min-width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px; flex-shrink: 0; }
+  .step-body { flex: 1; padding-top: 4px; }
+
+  /* ══ ROADMAP ══ */
+  .roadmap-phase { display: flex; gap: 18px; margin-bottom: 24px; align-items: flex-start; }
+  .phase-number { min-width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 800; color: white; flex-shrink: 0; }
+  .phase-content { flex: 1; }
+  .phase-title { font-size: 17px; font-weight: 700; margin-bottom: 5px; }
+  .phase-items { display: flex; flex-wrap: wrap; gap: 7px; }
+  .phase-item { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+
+  /* ══ PRINT ══ */
+  @media print {
+    .print-btn, .top-controls { display: none !important; }
+    body { background: white; }
+    .cover, .chapter-header, thead tr { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .code, .diagram { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  /* ══ DARK MODE ══ */
+  body.light-mode {
+    --bg: #f1f5f9; --text: #0f172a;
+    --code-bg: #0a0f1e; --code-border: #1e3a5f;
+  }
+  body.dark-mode {
+    --bg: #060a14; --text: #cbd5e1;
+    --code-bg: #030610; --code-border: #1e3a5f;
+  }
+  body { background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; }
+  body.dark-mode .toc, body.dark-mode .chapter, body.dark-mode .chapter-body { background: #0d1424; color: var(--text); }
+  body.dark-mode h2.sec { color: #93c5fd; }
+  body.dark-mode h3.sub { color: #7dd3fc; border-color: #1e3a5f; }
+  body.dark-mode p { color: var(--text); }
+  body.dark-mode .toc-main { color: #cbd5e1; border-color: #1e3a5f; }
+  body.dark-mode .toc-header, body.dark-mode .toc-section-label { color: #cbd5e1; }
+  body.dark-mode .toc-sub { color: #64748b; }
+  body.dark-mode table { color: var(--text); }
+  body.dark-mode td { border-color: #1e3a5f; }
+  body.dark-mode tr:nth-child(even) { background: #0f1a2e; }
+  body.dark-mode tr:hover { background: #132238; }
+  body.dark-mode .card { background: #0f1a2e; border-color: #1e3a5f; color: var(--text); }
+  body.dark-mode .card h4 { color: #93c5fd; }
+  body.dark-mode .info { background: #071828; color: #93c5fd; }
+  body.dark-mode .warn { background: #1a1200; color: #fbbf24; }
+  body.dark-mode .danger { background: #1a0505; color: #fca5a5; }
+  body.dark-mode .success { background: #041410; color: #86efac; }
+  body.dark-mode .tip { background: #0f0520; color: #d8b4fe; }
+  body.dark-mode code { background: #1e3a5f; color: #93c5fd; }
+
+  /* ══ BILINGUAL ══ */
+  .en-text { display: none; } .bn-text { display: inline; }
+  body.lang-en .bn-text { display: none; } body.lang-en .en-text { display: inline; }
+  .en-block { display: none; } .bn-block { display: block; }
+  body.lang-en .bn-block { display: none; } body.lang-en .en-block { display: block; }
+
+  /* ══ CONTROLS ══ */
+  .top-controls { position: fixed; top: 20px; right: 20px; display: flex; gap: 10px; z-index: 9999; }
+  .ctrl-btn { border: none; padding: 10px 18px; border-radius: 8px; font-size: 14px; font-family: inherit; cursor: pointer; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: all 0.3s; }
+  .lang-btn  { background: #3b82f6; color: white; }
+  .theme-btn { background: #f97316; color: white; }
+  .print-btn { background: var(--accent-html); color: white; border: none; padding: 10px 18px; border-radius: 8px; font-size: 14px; font-family: inherit; cursor: pointer; font-weight: 600; transition: all 0.3s; }
+  .ctrl-btn:hover, .print-btn:hover { transform: translateY(-2px); }
+
+  ul, ol { margin: 10px 0 10px 24px; line-height: 2.1; }
+  li { margin-bottom: 3px; }
+
+  .chapter-summary { background: linear-gradient(135deg, #0f172a, #1e293b); color: white; border-radius: 12px; padding: 24px 28px; margin-top: 38px; }
+  .chapter-summary h3 { margin-bottom: 14px; font-size: 17px; }
+  .chapter-summary li { color: rgba(255,255,255,0.85); margin-bottom: 5px; }
+  .page-footer { text-align:center; margin-top:48px; padding:28px; background: linear-gradient(135deg,#0f172a,#1e293b); border-radius:12px; color:rgba(255,255,255,0.75); }
+  .page-footer .quote { font-size: 17px; margin-bottom: 10px; }
+</style>
+</head>
+<body class="light-mode">
+
+<div class="top-controls">
+  <button class="ctrl-btn lang-btn" id="langBtn" onclick="toggleLang()">🇬🇧 English</button>
+  <button class="ctrl-btn theme-btn" id="themeBtn" onclick="toggleTheme()">🌙 Dark Mode</button>
+  <button class="print-btn" onclick="window.print()">🖨️ Print / PDF</button>
+</div>
+
+<!-- ══════ COVER ══════ -->
+<div class="cover">
+  <div class="cover-trio">
+    <span>🌐</span><span>🎨</span><span>⚡</span>
+  </div>
+  <h1><span class="html-c">HTML</span> + <span class="css-c">CSS</span> + <span class="js-c">JS</span></h1>
+  <h2><span class="bn-text">সম্পূর্ণ Web Development গাইড — Zero থেকে Advanced</span><span class="en-text">Complete Web Development Guide — Zero to Advanced</span></h2>
+  <div class="divider"></div>
+  <p class="desc">
+    <span class="bn-text">ওয়েবসাইট কখনো বানাওনি? কোনো সমস্যা নেই। এই গাইড তোমাকে HTML দিয়ে কাঠামো, CSS দিয়ে সাজানো এবং JavaScript দিয়ে প্রাণ দেওয়া — সবটা শেখাবে একদম শুরু থেকে।</span>
+    <span class="en-text">Never built a website? No problem. This guide teaches you structure with HTML, styling with CSS, and bringing it to life with JavaScript — all from scratch.</span>
+  </p>
+  <div class="badges">
+    <span class="badge-cv b-html">🌐 HTML — কাঠামো</span>
+    <span class="badge-cv b-css">🎨 CSS — ডিজাইন</span>
+    <span class="badge-cv b-js">⚡ JS — কার্যকারিতা</span>
+    <span class="badge-cv b-gen">📖 14 Chapters</span>
+    <span class="badge-cv b-gen">💡 100+ Examples</span>
+    <span class="badge-cv b-gen">🌙 Dark Mode</span>
+  </div>
+  <div class="browser-mock">
+    <div class="browser-bar">
+      <span class="dot" style="background:#ff5f57"></span>
+      <span class="dot" style="background:#febc2e"></span>
+      <span class="dot" style="background:#28c840"></span>
+      <span class="url">https://mywebsite.com</span>
+    </div>
+    <div class="browser-body">
+      <div style="color:#f87171; font-family:'JetBrains Mono',monospace; font-size:13px;">&lt;<span style="color:#f87171">h1</span>&gt;<span style="color:#e2e8f0">আমার প্রথম ওয়েবসাইট</span>&lt;/<span style="color:#f87171">h1</span>&gt;</div>
+      <div style="color:#60a5fa; font-family:'JetBrains Mono',monospace; font-size:13px; margin-top:4px;"><span style="color:#60a5fa">h1</span> { <span style="color:#c084fc">color</span>: <span style="color:#4ade80">coral</span>; }</div>
+      <div style="color:#fde68a; font-family:'JetBrains Mono',monospace; font-size:13px; margin-top:4px;"><span style="color:#c084fc">document</span>.<span style="color:#60a5fa">querySelector</span>(<span style="color:#4ade80">'h1'</span>).<span style="color:#60a5fa">addEventListener</span>(<span style="color:#4ade80">'click'</span>, () =&gt; <span style="color:#c084fc">alert</span>(<span style="color:#4ade80">'Hello!'</span>))</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ TOC ══════ -->
+<div class="toc">
+  <div class="toc-header" style="border-color: #e34c26;">📋 <span class="bn-text">সূচিপত্র</span><span class="en-text">Table of Contents</span></div>
+
+  <div class="toc-section-label" style="color: var(--accent-html);">🌐 PART 1 — HTML</div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span>01 &nbsp;<span class="bn-text">HTML পরিচিতি ও ওয়েবের কাঠামো</span><span class="en-text">HTML Intro & Web Structure</span></span><span>Ch. 1</span></div>
+    <div class="toc-sub"><span><span class="bn-text">HTML কী, Tag, Element, Attribute — ওয়েবের হাড়গোড়</span><span class="en-text">What is HTML, Tag, Element, Attribute — the skeleton of web</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span>02 &nbsp;<span class="bn-text">গুরুত্বপূর্ণ HTML Tags</span><span class="en-text">Essential HTML Tags</span></span><span>Ch. 2</span></div>
+    <div class="toc-sub"><span><span class="bn-text">Heading, Paragraph, Link, Image, List, Table, Form</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span>03 &nbsp;<span class="bn-text">Semantic HTML ও Forms</span><span class="en-text">Semantic HTML & Forms</span></span><span>Ch. 3</span></div>
+    <div class="toc-sub"><span><span class="bn-text">header, nav, main, section, footer, form input types</span></span></div>
+  </div>
+
+  <div class="toc-section-label" style="color: var(--accent-css);">🎨 PART 2 — CSS</div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span>04 &nbsp;<span class="bn-text">CSS পরিচিতি ও Selectors</span><span class="en-text">CSS Intro & Selectors</span></span><span>Ch. 4</span></div>
+    <div class="toc-sub"><span><span class="bn-text">CSS কী, Selectors, Properties, Box Model</span><span class="en-text">What is CSS, Selectors, Properties, Box Model</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span>05 &nbsp;<span class="bn-text">Typography, Colors ও Units</span><span class="en-text">Typography, Colors & Units</span></span><span>Ch. 5</span></div>
+    <div class="toc-sub"><span><span class="bn-text">Font, Color, px/em/rem/%, Gradient, CSS Variables</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span>06 &nbsp;<span class="bn-text">Flexbox — আধুনিক Layout</span><span class="en-text">Flexbox — Modern Layout</span></span><span>Ch. 6</span></div>
+    <div class="toc-sub"><span><span class="bn-text">flex-direction, justify-content, align-items, flex-wrap</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span>07 &nbsp;<span class="bn-text">CSS Grid ও Responsive Design</span><span class="en-text">CSS Grid & Responsive Design</span></span><span>Ch. 7</span></div>
+    <div class="toc-sub"><span><span class="bn-text">Grid template, Media Queries, Mobile-first design</span></span></div>
+  </div>
+
+  <div class="toc-section-label" style="color: var(--accent-js-dark);">⚡ PART 3 — JavaScript</div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span>08 &nbsp;<span class="bn-text">JavaScript পরিচিতি ও Basics</span><span class="en-text">JavaScript Intro & Basics</span></span><span>Ch. 8</span></div>
+    <div class="toc-sub"><span><span class="bn-text">Variables, Data Types, Operators, Conditions, Loops</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span>09 &nbsp;<span class="bn-text">Functions ও Arrays</span><span class="en-text">Functions & Arrays</span></span><span>Ch. 9</span></div>
+    <div class="toc-sub"><span><span class="bn-text">Function declaration, Arrow function, Array methods</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span>10 &nbsp;<span class="bn-text">DOM Manipulation</span><span class="en-text">DOM Manipulation</span></span><span>Ch. 10</span></div>
+    <div class="toc-sub"><span><span class="bn-text">querySelector, innerHTML, Events, classList — Page বদলানো</span><span class="en-text">querySelector, innerHTML, Events, classList — changing the page</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span>11 &nbsp;<span class="bn-text">Objects, JSON ও Fetch API</span><span class="en-text">Objects, JSON & Fetch API</span></span><span>Ch. 11</span></div>
+    <div class="toc-sub"><span><span class="bn-text">Objects, JSON, Async/Await, API থেকে data আনা</span><span class="en-text">Objects, JSON, Async/Await, fetching data from APIs</span></span></div>
+  </div>
+
+  <div class="toc-section-label" style="color: var(--purple);">🚀 PART 4 — Advanced & Projects</div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span>12 &nbsp;<span class="bn-text">CSS Animations ও Transitions</span><span class="en-text">CSS Animations & Transitions</span></span><span>Ch. 12</span></div>
+    <div class="toc-sub"><span><span class="bn-text">transition, animation, keyframes, transform</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span>13 &nbsp;<span class="bn-text">Advanced JS — ES6+ ও Modern Web</span><span class="en-text">Advanced JS — ES6+ & Modern Web</span></span><span>Ch. 13</span></div>
+    <div class="toc-sub"><span><span class="bn-text">Destructuring, Spread, Modules, LocalStorage, Error handling</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span>14 &nbsp;<span class="bn-text">Projects ও Next Steps</span><span class="en-text">Projects & Next Steps</span></span><span>Ch. 14</span></div>
+    <div class="toc-sub"><span><span class="bn-text">৫টি প্রজেক্ট আইডিয়া, Roadmap, কোথায় Deploy করবো</span><span class="en-text">5 project ideas, Roadmap, where to deploy</span></span></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 1: HTML Intro
+══════════════════════════════════ -->
+<div class="chapter ch1">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 01 — HTML</div>
+    <div class="chapter-tag tag-html">🌐 HTML</div>
+    <div class="chapter-title"><span class="bn-text">HTML পরিচিতি ও ওয়েবের কাঠামো</span><span class="en-text">HTML Introduction & Web Structure</span></div>
+    <div class="chapter-desc"><span class="bn-text">HTML কী, কিভাবে কাজ করে, প্রথম পেজ বানানো</span><span class="en-text">What is HTML, how it works, building your first page</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-html">🌐 <span class="bn-text">HTML কী?</span><span class="en-text">What is HTML?</span></h2>
+    <p><span class="bn-text">HTML (HyperText Markup Language) হলো ওয়েবপেজের <strong>কাঠামো</strong>। এটা কোনো programming language না — এটা একটা <strong>markup language</strong>। ঘরের ইটের দেওয়ালের মতো — যা CSS (রং-রূপ) এবং JavaScript (কার্যকারিতা) ধরে রাখে।</span><span class="en-text">HTML (HyperText Markup Language) is the <strong>structure</strong> of a webpage. It's not a programming language — it's a <strong>markup language</strong>. Like the brick walls of a house — holding up the CSS (looks) and JavaScript (functionality).</span></p>
+
+    <div class="grid3">
+      <div class="card html-card">
+        <h4>🌐 HTML</h4>
+        <p><span class="bn-text">কাঠামো — <em>কী আছে</em></span><span class="en-text">Structure — <em>what's there</em></span></p>
+        <p style="font-size:12px;"><span class="bn-text">Heading, Paragraph, Image, Button</span></p>
+      </div>
+      <div class="card css-card">
+        <h4>🎨 CSS</h4>
+        <p><span class="bn-text">ডিজাইন — <em>কেমন দেখায়</em></span><span class="en-text">Design — <em>how it looks</em></span></p>
+        <p style="font-size:12px;"><span class="bn-text">Color, Font, Layout, Animation</span></p>
+      </div>
+      <div class="card js-card">
+        <h4>⚡ JavaScript</h4>
+        <p><span class="bn-text">কার্যকারিতা — <em>কী করে</em></span><span class="en-text">Functionality — <em>what it does</em></span></p>
+        <p style="font-size:12px;"><span class="bn-text">Click, Form submit, Data fetch</span></p>
+      </div>
+    </div>
+
+    <h2 class="sec sec-html">📄 <span class="bn-text">HTML ফাইলের কাঠামো</span><span class="en-text">HTML File Structure</span></h2>
+    <div class="code html-code"><span class="hc">&lt;!-- প্রতিটা HTML ফাইলের এই কাঠামো লাগে --&gt;</span>
+<span class="ht">&lt;!DOCTYPE html&gt;</span>                  <span class="hc">&lt;!-- HTML5 ঘোষণা --&gt;</span>
+<span class="ht">&lt;html</span> <span class="ha">lang</span>=<span class="hv">"bn"</span><span class="ht">&gt;</span>                    <span class="hc">&lt;!-- root element --&gt;</span>
+
+  <span class="ht">&lt;head&gt;</span>                              <span class="hc">&lt;!-- Browser-এর জন্য তথ্য --&gt;</span>
+    <span class="ht">&lt;meta</span> <span class="ha">charset</span>=<span class="hv">"UTF-8"</span><span class="ht">&gt;</span>          <span class="hc">&lt;!-- বাংলা সাপোর্ট --&gt;</span>
+    <span class="ht">&lt;meta</span> <span class="ha">name</span>=<span class="hv">"viewport"</span> <span class="ha">content</span>=<span class="hv">"width=device-width, initial-scale=1.0"</span><span class="ht">&gt;</span>
+    <span class="ht">&lt;title&gt;</span>আমার প্রথম পেজ<span class="ht">&lt;/title&gt;</span>     <span class="hc">&lt;!-- Tab-এ নাম --&gt;</span>
+    <span class="ht">&lt;link</span> <span class="ha">rel</span>=<span class="hv">"stylesheet"</span> <span class="ha">href</span>=<span class="hv">"style.css"</span><span class="ht">&gt;</span>   <span class="hc">&lt;!-- CSS file --&gt;</span>
+  <span class="ht">&lt;/head&gt;</span>
+
+  <span class="ht">&lt;body&gt;</span>                              <span class="hc">&lt;!-- যা পেজে দেখা যাবে --&gt;</span>
+    <span class="ht">&lt;h1&gt;</span>হ্যালো দুনিয়া!<span class="ht">&lt;/h1&gt;</span>
+    <span class="ht">&lt;p&gt;</span>আমার প্রথম ওয়েবসাইট।<span class="ht">&lt;/p&gt;</span>
+    <span class="ht">&lt;script</span> <span class="ha">src</span>=<span class="hv">"script.js"</span><span class="ht">&gt;&lt;/script&gt;</span> <span class="hc">&lt;!-- JS file --&gt;</span>
+  <span class="ht">&lt;/body&gt;</span>
+
+<span class="ht">&lt;/html&gt;</span></div>
+
+    <h2 class="sec sec-html">🧱 <span class="bn-text">Tag, Element ও Attribute</span><span class="en-text">Tags, Elements & Attributes</span></h2>
+    <div class="diagram">
+<pre><span class="db">Opening Tag    Content       Closing Tag</span>
+     ↓             ↓               ↓
+<span class="dr">&lt;h1</span> <span class="dg">class</span>=<span class="dy">"title"</span><span class="dr">&gt;</span>    আমার ওয়েবসাইট    <span class="dr">&lt;/h1&gt;</span>
+      ↑       ↑
+ Attribute   Value
+
+<span class="dt">সব মিলিয়ে এটাই একটা Element</span></pre>
+    </div>
+
+    <div class="box info">
+      <div class="box-t">💡 <span class="bn-text">Self-closing Tags — closing tag লাগে না</span><span class="en-text">Self-closing Tags — no closing tag needed</span></div>
+      <div class="code html-code" style="margin:8px 0;">
+<span class="ht">&lt;img</span> <span class="ha">src</span>=<span class="hv">"photo.jpg"</span> <span class="ha">alt</span>=<span class="hv">"ছবি"</span><span class="ht">&gt;</span>       <span class="hc">&lt;!-- ছবি --&gt;</span>
+<span class="ht">&lt;br&gt;</span>                                     <span class="hc">&lt;!-- নতুন লাইন --&gt;</span>
+<span class="ht">&lt;hr&gt;</span>                                     <span class="hc">&lt;!-- আড়াআড়ি রেখা --&gt;</span>
+<span class="ht">&lt;input</span> <span class="ha">type</span>=<span class="hv">"text"</span><span class="ht">&gt;</span>                    <span class="hc">&lt;!-- Input box --&gt;</span>
+<span class="ht">&lt;meta</span> <span class="ha">charset</span>=<span class="hv">"UTF-8"</span><span class="ht">&gt;</span>               <span class="hc">&lt;!-- Metadata --&gt;</span></div>
+    </div>
+
+    <h2 class="sec sec-html">🚀 <span class="bn-text">প্রথম পেজ তৈরি করো</span><span class="en-text">Create Your First Page</span></h2>
+    <div class="step"><div class="step-num" style="background:var(--accent-html); color:white;">1</div><div class="step-body"><span class="bn-text">VS Code খুলো → নতুন ফাইল তৈরি করো → নাম দাও <code>index.html</code></span><span class="en-text">Open VS Code → Create new file → Name it <code>index.html</code></span></div></div>
+    <div class="step"><div class="step-num" style="background:var(--accent-html); color:white;">2</div><div class="step-body"><span class="bn-text">টাইপ করো <code>!</code> তারপর Tab চাপো → পুরো HTML skeleton তৈরি হয়ে যাবে!</span><span class="en-text">Type <code>!</code> then press Tab → complete HTML skeleton appears!</span></div></div>
+    <div class="step"><div class="step-num" style="background:var(--accent-html); color:white;">3</div><div class="step-body"><span class="bn-text">Live Server extension ইনস্টল করো → Go Live চাপো → Browser-এ real-time দেখবে</span><span class="en-text">Install Live Server extension → Click Go Live → See real-time in browser</span></div></div>
+
+    <div class="chapter-summary">
+      <h3 style="color: #fca5a5;">📌 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>🌐 HTML = <span class="bn-text">ওয়েবপেজের কাঠামো, programming language নয়</span><span class="en-text">structure of a webpage, not a programming language</span></li>
+        <li>📄 <span class="bn-text">সব HTML ফাইলে: DOCTYPE → html → head → body</span></li>
+        <li>🧱 <code>&lt;tag&gt;</code> content <code>&lt;/tag&gt;</code> = Element; <code>attribute="value"</code></li>
+        <li>⚡ <span class="bn-text">VS Code + Live Server = সেরা শুরু</span><span class="en-text">VS Code + Live Server = best start</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 2: Essential HTML Tags
+══════════════════════════════════ -->
+<div class="chapter ch2">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 02 — HTML</div>
+    <div class="chapter-tag tag-html">🌐 HTML</div>
+    <div class="chapter-title"><span class="bn-text">গুরুত্বপূর্ণ HTML Tags</span><span class="en-text">Essential HTML Tags</span></div>
+    <div class="chapter-desc"><span class="bn-text">Heading, Paragraph, Link, Image, List, Table — পেজ বানানোর সব উপকরণ</span><span class="en-text">Heading, Paragraph, Link, Image, List, Table — all ingredients for building a page</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-html">📰 <span class="bn-text">Text Tags</span><span class="en-text">Text Tags</span></h2>
+    <div class="code html-code"><span class="hc">&lt;!-- Headings — h1 সবচেয়ে বড়, h6 সবচেয়ে ছোট --&gt;</span>
+<span class="ht">&lt;h1&gt;</span>সবচেয়ে বড় শিরোনাম<span class="ht">&lt;/h1&gt;</span>
+<span class="ht">&lt;h2&gt;</span>দ্বিতীয় শিরোনাম<span class="ht">&lt;/h2&gt;</span>
+<span class="ht">&lt;h3&gt;</span>তৃতীয় শিরোনাম<span class="ht">&lt;/h3&gt;</span>
+
+<span class="hc">&lt;!-- Paragraph --&gt;</span>
+<span class="ht">&lt;p&gt;</span>এটা একটা অনুচ্ছেদ।<span class="ht">&lt;/p&gt;</span>
+
+<span class="hc">&lt;!-- Text formatting --&gt;</span>
+<span class="ht">&lt;strong&gt;</span>মোটা লেখা (Bold)<span class="ht">&lt;/strong&gt;</span>
+<span class="ht">&lt;em&gt;</span>বাঁকা লেখা (Italic)<span class="ht">&lt;/em&gt;</span>
+<span class="ht">&lt;u&gt;</span>আন্ডারলাইন<span class="ht">&lt;/u&gt;</span>
+<span class="ht">&lt;mark&gt;</span>হাইলাইট<span class="ht">&lt;/mark&gt;</span>
+<span class="ht">&lt;del&gt;</span>কাটা লেখা<span class="ht">&lt;/del&gt;</span>
+<span class="ht">&lt;br&gt;</span>                    <span class="hc">&lt;!-- নতুন লাইন --&gt;</span>
+<span class="ht">&lt;hr&gt;</span>                    <span class="hc">&lt;!-- আড়াআড়ি রেখা --&gt;</span></div>
+
+    <h2 class="sec sec-html">🔗 <span class="bn-text">Link ও Image</span><span class="en-text">Links & Images</span></h2>
+    <div class="code html-code"><span class="hc">&lt;!-- Link --&gt;</span>
+<span class="ht">&lt;a</span> <span class="ha">href</span>=<span class="hv">"https://google.com"</span><span class="ht">&gt;</span>Google-এ যাও<span class="ht">&lt;/a&gt;</span>
+<span class="ht">&lt;a</span> <span class="ha">href</span>=<span class="hv">"about.html"</span><span class="ht">&gt;</span>About পেজ<span class="ht">&lt;/a&gt;</span>          <span class="hc">&lt;!-- same site --&gt;</span>
+<span class="ht">&lt;a</span> <span class="ha">href</span>=<span class="hv">"#section1"</span><span class="ht">&gt;</span>নিচে যাও<span class="ht">&lt;/a&gt;</span>          <span class="hc">&lt;!-- same page --&gt;</span>
+<span class="ht">&lt;a</span> <span class="ha">href</span>=<span class="hv">"https://fb.com"</span> <span class="ha">target</span>=<span class="hv">"_blank"</span><span class="ht">&gt;</span>নতুন tab<span class="ht">&lt;/a&gt;</span>
+
+<span class="hc">&lt;!-- Image --&gt;</span>
+<span class="ht">&lt;img</span> <span class="ha">src</span>=<span class="hv">"photo.jpg"</span> <span class="ha">alt</span>=<span class="hv">"আমার ছবি"</span> <span class="ha">width</span>=<span class="hv">"300"</span><span class="ht">&gt;</span>
+<span class="ht">&lt;img</span> <span class="ha">src</span>=<span class="hv">"https://picsum.photos/400/300"</span> <span class="ha">alt</span>=<span class="hv">"Random photo"</span><span class="ht">&gt;</span>
+
+<span class="hc">&lt;!-- Clickable image --&gt;</span>
+<span class="ht">&lt;a</span> <span class="ha">href</span>=<span class="hv">"https://google.com"</span><span class="ht">&gt;</span>
+  <span class="ht">&lt;img</span> <span class="ha">src</span>=<span class="hv">"logo.png"</span> <span class="ha">alt</span>=<span class="hv">"Logo"</span><span class="ht">&gt;</span>
+<span class="ht">&lt;/a&gt;</span></div>
+
+    <h2 class="sec sec-html">📋 <span class="bn-text">List</span><span class="en-text">Lists</span></h2>
+    <div class="code html-code"><span class="hc">&lt;!-- Unordered List (bullet) --&gt;</span>
+<span class="ht">&lt;ul&gt;</span>
+  <span class="ht">&lt;li&gt;</span>আম<span class="ht">&lt;/li&gt;</span>
+  <span class="ht">&lt;li&gt;</span>কলা<span class="ht">&lt;/li&gt;</span>
+  <span class="ht">&lt;li&gt;</span>লিচু<span class="ht">&lt;/li&gt;</span>
+<span class="ht">&lt;/ul&gt;</span>
+
+<span class="hc">&lt;!-- Ordered List (number) --&gt;</span>
+<span class="ht">&lt;ol&gt;</span>
+  <span class="ht">&lt;li&gt;</span>প্রথম ধাপ<span class="ht">&lt;/li&gt;</span>
+  <span class="ht">&lt;li&gt;</span>দ্বিতীয় ধাপ<span class="ht">&lt;/li&gt;</span>
+<span class="ht">&lt;/ol&gt;</span></div>
+
+    <h2 class="sec sec-html">📊 <span class="bn-text">Table</span><span class="en-text">Tables</span></h2>
+    <div class="code html-code"><span class="ht">&lt;table&gt;</span>
+  <span class="ht">&lt;thead&gt;</span>                        <span class="hc">&lt;!-- Table Header --&gt;</span>
+    <span class="ht">&lt;tr&gt;</span>                          <span class="hc">&lt;!-- Table Row --&gt;</span>
+      <span class="ht">&lt;th&gt;</span>নাম<span class="ht">&lt;/th&gt;</span>               <span class="hc">&lt;!-- Header cell --&gt;</span>
+      <span class="ht">&lt;th&gt;</span>বয়স<span class="ht">&lt;/th&gt;</span>
+      <span class="ht">&lt;th&gt;</span>শহর<span class="ht">&lt;/th&gt;</span>
+    <span class="ht">&lt;/tr&gt;</span>
+  <span class="ht">&lt;/thead&gt;</span>
+  <span class="ht">&lt;tbody&gt;</span>
+    <span class="ht">&lt;tr&gt;</span>
+      <span class="ht">&lt;td&gt;</span>রহিম<span class="ht">&lt;/td&gt;</span>              <span class="hc">&lt;!-- Data cell --&gt;</span>
+      <span class="ht">&lt;td&gt;</span>২০<span class="ht">&lt;/td&gt;</span>
+      <span class="ht">&lt;td&gt;</span>ঢাকা<span class="ht">&lt;/td&gt;</span>
+    <span class="ht">&lt;/tr&gt;</span>
+    <span class="ht">&lt;tr&gt;</span>
+      <span class="ht">&lt;td&gt;</span>করিম<span class="ht">&lt;/td&gt;</span>
+      <span class="ht">&lt;td&gt;</span>২২<span class="ht">&lt;/td&gt;</span>
+      <span class="ht">&lt;td&gt;</span>চট্টগ্রাম<span class="ht">&lt;/td&gt;</span>
+    <span class="ht">&lt;/tr&gt;</span>
+  <span class="ht">&lt;/tbody&gt;</span>
+<span class="ht">&lt;/table&gt;</span></div>
+
+    <h2 class="sec sec-html">📦 div ও span — <span class="bn-text">Container Elements</span><span class="en-text">Container Elements</span></h2>
+    <div class="code html-code"><span class="hc">&lt;!-- div = block level container (নতুন লাইনে) --&gt;</span>
+<span class="ht">&lt;div</span> <span class="ha">class</span>=<span class="hv">"card"</span><span class="ht">&gt;</span>
+  <span class="ht">&lt;h2&gt;</span>Card Title<span class="ht">&lt;/h2&gt;</span>
+  <span class="ht">&lt;p&gt;</span>Card content<span class="ht">&lt;/p&gt;</span>
+<span class="ht">&lt;/div&gt;</span>
+
+<span class="hc">&lt;!-- span = inline container (একই লাইনে) --&gt;</span>
+<span class="ht">&lt;p&gt;</span>এটা <span class="ht">&lt;span</span> <span class="ha">style</span>=<span class="hv">"color:red"</span><span class="ht">&gt;</span>লাল<span class="ht">&lt;/span&gt;</span> রঙের শব্দ।<span class="ht">&lt;/p&gt;</span></div>
+
+    <div class="chapter-summary">
+      <h3 style="color: #fca5a5;">📌 <span class="bn-text">সারসংক্ষেপ</span><span class="en-text">Summary</span></h3>
+      <ul>
+        <li>📰 <code>h1-h6</code>, <code>p</code>, <code>strong</code>, <code>em</code> — <span class="bn-text">text formatting</span></li>
+        <li>🔗 <code>&lt;a href=""&gt;</code> — <span class="bn-text">link, </span><code>&lt;img src="" alt=""&gt;</code> — <span class="bn-text">image</span></li>
+        <li>📋 <code>ul/ol + li</code> — <span class="bn-text">list, </span><code>table + tr + td</code> — <span class="bn-text">table</span></li>
+        <li>📦 <code>div</code> — <span class="bn-text">block container, </span><code>span</code> — <span class="bn-text">inline container</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 3: Semantic HTML & Forms
+══════════════════════════════════ -->
+<div class="chapter ch3">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 03 — HTML</div>
+    <div class="chapter-tag tag-html">🌐 HTML</div>
+    <div class="chapter-title"><span class="bn-text">Semantic HTML ও Forms</span><span class="en-text">Semantic HTML & Forms</span></div>
+    <div class="chapter-desc"><span class="bn-text">অর্থপূর্ণ Tags ও ব্যবহারকারীর কাছ থেকে তথ্য নেওয়া</span><span class="en-text">Meaningful tags and collecting information from users</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-html">🏗️ Semantic HTML — <span class="bn-text">অর্থপূর্ণ কাঠামো</span><span class="en-text">Meaningful Structure</span></h2>
+    <p><span class="bn-text">Semantic tag ব্যবহার করলে browser, search engine এবং screen reader বুঝতে পারে কোন অংশের কী কাজ। শুধু <code>div</code> দিলে বোঝা যায় না।</span><span class="en-text">Using semantic tags helps browsers, search engines and screen readers understand what each part does. Using only <code>div</code> doesn't convey meaning.</span></p>
+
+    <div class="grid2">
+      <div class="card html-card">
+        <h4>❌ <span class="bn-text">Non-Semantic (এড়িয়ে চলো)</span><span class="en-text">Non-Semantic (avoid)</span></h4>
+        <div class="code html-code" style="margin:0; font-size:12px;">
+<span class="ht">&lt;div</span> <span class="ha">id</span>=<span class="hv">"header"</span><span class="ht">&gt;</span>...<span class="ht">&lt;/div&gt;</span>
+<span class="ht">&lt;div</span> <span class="ha">id</span>=<span class="hv">"nav"</span><span class="ht">&gt;</span>...<span class="ht">&lt;/div&gt;</span>
+<span class="ht">&lt;div</span> <span class="ha">id</span>=<span class="hv">"content"</span><span class="ht">&gt;</span>...<span class="ht">&lt;/div&gt;</span>
+<span class="ht">&lt;div</span> <span class="ha">id</span>=<span class="hv">"footer"</span><span class="ht">&gt;</span>...<span class="ht">&lt;/div&gt;</span></div>
+      </div>
+      <div class="card green-card">
+        <h4>✅ <span class="bn-text">Semantic (ব্যবহার করো)</span><span class="en-text">Semantic (use this)</span></h4>
+        <div class="code html-code" style="margin:0; font-size:12px;">
+<span class="ht">&lt;header&gt;</span>...<span class="ht">&lt;/header&gt;</span>
+<span class="ht">&lt;nav&gt;</span>...<span class="ht">&lt;/nav&gt;</span>
+<span class="ht">&lt;main&gt;</span>...<span class="ht">&lt;/main&gt;</span>
+<span class="ht">&lt;footer&gt;</span>...<span class="ht">&lt;/footer&gt;</span></div>
+      </div>
+    </div>
+
+    <div class="code html-code"><span class="hc">&lt;!-- সম্পূর্ণ Semantic কাঠামো --&gt;</span>
+<span class="ht">&lt;header&gt;</span>                         <span class="hc">&lt;!-- সাইটের উপরের অংশ --&gt;</span>
+  <span class="ht">&lt;nav&gt;</span>                           <span class="hc">&lt;!-- Navigation menu --&gt;</span>
+    <span class="ht">&lt;ul&gt;</span>
+      <span class="ht">&lt;li&gt;&lt;a</span> <span class="ha">href</span>=<span class="hv">"/"</span><span class="ht">&gt;</span>Home<span class="ht">&lt;/a&gt;&lt;/li&gt;</span>
+      <span class="ht">&lt;li&gt;&lt;a</span> <span class="ha">href</span>=<span class="hv">"/about"</span><span class="ht">&gt;</span>About<span class="ht">&lt;/a&gt;&lt;/li&gt;</span>
+    <span class="ht">&lt;/ul&gt;</span>
+  <span class="ht">&lt;/nav&gt;</span>
+<span class="ht">&lt;/header&gt;</span>
+
+<span class="ht">&lt;main&gt;</span>                            <span class="hc">&lt;!-- পেজের মূল বিষয়বস্তু --&gt;</span>
+  <span class="ht">&lt;article&gt;</span>                       <span class="hc">&lt;!-- স্বতন্ত্র article --&gt;</span>
+    <span class="ht">&lt;h1&gt;</span>আমার Blog Post<span class="ht">&lt;/h1&gt;</span>
+    <span class="ht">&lt;section&gt;</span>                     <span class="hc">&lt;!-- article-এর অংশ --&gt;</span>
+      <span class="ht">&lt;h2&gt;</span>ভূমিকা<span class="ht">&lt;/h2&gt;</span>
+      <span class="ht">&lt;p&gt;</span>এখানে লেখা...<span class="ht">&lt;/p&gt;</span>
+    <span class="ht">&lt;/section&gt;</span>
+  <span class="ht">&lt;/article&gt;</span>
+  <span class="ht">&lt;aside&gt;</span>                         <span class="hc">&lt;!-- পাশের তথ্য/sidebar --&gt;</span>
+    <span class="ht">&lt;p&gt;</span>Related links...<span class="ht">&lt;/p&gt;</span>
+  <span class="ht">&lt;/aside&gt;</span>
+<span class="ht">&lt;/main&gt;</span>
+
+<span class="ht">&lt;footer&gt;</span>                          <span class="hc">&lt;!-- সাইটের নিচের অংশ --&gt;</span>
+  <span class="ht">&lt;p&gt;</span>© 2025 আমার ওয়েবসাইট<span class="ht">&lt;/p&gt;</span>
+<span class="ht">&lt;/footer&gt;</span></div>
+
+    <h2 class="sec sec-html">📝 Forms — <span class="bn-text">ব্যবহারকারীর কাছ থেকে তথ্য নেওয়া</span><span class="en-text">Taking Input from Users</span></h2>
+    <div class="code html-code"><span class="ht">&lt;form</span> <span class="ha">action</span>=<span class="hv">"/submit"</span> <span class="ha">method</span>=<span class="hv">"POST"</span><span class="ht">&gt;</span>
+
+  <span class="hc">&lt;!-- Text input --&gt;</span>
+  <span class="ht">&lt;label</span> <span class="ha">for</span>=<span class="hv">"naam"</span><span class="ht">&gt;</span>নাম:<span class="ht">&lt;/label&gt;</span>
+  <span class="ht">&lt;input</span> <span class="ha">type</span>=<span class="hv">"text"</span> <span class="ha">id</span>=<span class="hv">"naam"</span> <span class="ha">name</span>=<span class="hv">"naam"</span> <span class="ha">placeholder</span>=<span class="hv">"তোমার নাম"</span> <span class="ha">required</span><span class="ht">&gt;</span>
+
+  <span class="hc">&lt;!-- Email --&gt;</span>
+  <span class="ht">&lt;label</span> <span class="ha">for</span>=<span class="hv">"email"</span><span class="ht">&gt;</span>Email:<span class="ht">&lt;/label&gt;</span>
+  <span class="ht">&lt;input</span> <span class="ha">type</span>=<span class="hv">"email"</span> <span class="ha">id</span>=<span class="hv">"email"</span> <span class="ha">name</span>=<span class="hv">"email"</span> <span class="ha">required</span><span class="ht">&gt;</span>
+
+  <span class="hc">&lt;!-- Password --&gt;</span>
+  <span class="ht">&lt;input</span> <span class="ha">type</span>=<span class="hv">"password"</span> <span class="ha">placeholder</span>=<span class="hv">"পাসওয়ার্ড"</span><span class="ht">&gt;</span>
+
+  <span class="hc">&lt;!-- Number --&gt;</span>
+  <span class="ht">&lt;input</span> <span class="ha">type</span>=<span class="hv">"number"</span> <span class="ha">min</span>=<span class="hv">"1"</span> <span class="ha">max</span>=<span class="hv">"100"</span><span class="ht">&gt;</span>
+
+  <span class="hc">&lt;!-- Date --&gt;</span>
+  <span class="ht">&lt;input</span> <span class="ha">type</span>=<span class="hv">"date"</span><span class="ht">&gt;</span>
+
+  <span class="hc">&lt;!-- Radio buttons --&gt;</span>
+  <span class="ht">&lt;input</span> <span class="ha">type</span>=<span class="hv">"radio"</span> <span class="ha">name</span>=<span class="hv">"gender"</span> <span class="ha">value</span>=<span class="hv">"male"</span><span class="ht">&gt;</span> পুরুষ
+  <span class="ht">&lt;input</span> <span class="ha">type</span>=<span class="hv">"radio"</span> <span class="ha">name</span>=<span class="hv">"gender"</span> <span class="ha">value</span>=<span class="hv">"female"</span><span class="ht">&gt;</span> মহিলা
+
+  <span class="hc">&lt;!-- Checkbox --&gt;</span>
+  <span class="ht">&lt;input</span> <span class="ha">type</span>=<span class="hv">"checkbox"</span> <span class="ha">name</span>=<span class="hv">"agree"</span><span class="ht">&gt;</span> শর্তে রাজি
+
+  <span class="hc">&lt;!-- Dropdown --&gt;</span>
+  <span class="ht">&lt;select</span> <span class="ha">name</span>=<span class="hv">"city"</span><span class="ht">&gt;</span>
+    <span class="ht">&lt;option</span> <span class="ha">value</span>=<span class="hv">"dhaka"</span><span class="ht">&gt;</span>ঢাকা<span class="ht">&lt;/option&gt;</span>
+    <span class="ht">&lt;option</span> <span class="ha">value</span>=<span class="hv">"ctg"</span><span class="ht">&gt;</span>চট্টগ্রাম<span class="ht">&lt;/option&gt;</span>
+  <span class="ht">&lt;/select&gt;</span>
+
+  <span class="hc">&lt;!-- Textarea --&gt;</span>
+  <span class="ht">&lt;textarea</span> <span class="ha">name</span>=<span class="hv">"message"</span> <span class="ha">rows</span>=<span class="hv">"5"</span> <span class="ha">placeholder</span>=<span class="hv">"তোমার বার্তা"</span><span class="ht">&gt;&lt;/textarea&gt;</span>
+
+  <span class="hc">&lt;!-- Submit button --&gt;</span>
+  <span class="ht">&lt;button</span> <span class="ha">type</span>=<span class="hv">"submit"</span><span class="ht">&gt;</span>Submit<span class="ht">&lt;/button&gt;</span>
+
+<span class="ht">&lt;/form&gt;</span></div>
+
+    <div class="chapter-summary">
+      <h3 style="color: #fca5a5;">📌 <span class="bn-text">সারসংক্ষেপ</span><span class="en-text">Summary</span></h3>
+      <ul>
+        <li>🏗️ <span class="bn-text">Semantic: header, nav, main, article, section, aside, footer</span></li>
+        <li>📝 <span class="bn-text">Form: action (কোথায় যাবে), method (GET/POST)</span></li>
+        <li>⌨️ <span class="bn-text">Input types: text, email, password, number, radio, checkbox, select</span></li>
+        <li>✅ <code>required</code> — <span class="bn-text">ফাঁকা রাখা যাবে না</span><span class="en-text">cannot be left empty</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 4: CSS Intro & Selectors
+══════════════════════════════════ -->
+<div class="chapter ch4">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 04 — CSS</div>
+    <div class="chapter-tag tag-css">🎨 CSS</div>
+    <div class="chapter-title"><span class="bn-text">CSS পরিচিতি, Selectors ও Box Model</span><span class="en-text">CSS Introduction, Selectors & Box Model</span></div>
+    <div class="chapter-desc"><span class="bn-text">HTML-কে সুন্দর করার জাদু — Selectors, Properties ও Box Model</span><span class="en-text">The magic of making HTML beautiful — Selectors, Properties & Box Model</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-css">🎨 CSS <span class="bn-text">কিভাবে লিখবো?</span><span class="en-text">How to Write CSS?</span></h2>
+    <div class="code css-code"><span class="hc">/* CSS-এর গঠন */</span>
+<span class="ct">selector</span> {
+  <span class="cp">property</span>: <span class="cv">value</span>;
+  <span class="cp">property</span>: <span class="cv">value</span>;
+}
+
+<span class="hc">/* উদাহরণ */</span>
+<span class="ct">h1</span> {
+  <span class="cp">color</span>: <span class="cv">red</span>;
+  <span class="cp">font-size</span>: <span class="cv">32px</span>;
+  <span class="cp">text-align</span>: <span class="cv">center</span>;
+}</div>
+
+    <h2 class="sec sec-css">🎯 CSS Selectors — <span class="bn-text">কাকে style দেবো</span><span class="en-text">Who Gets Styled</span></h2>
+    <div class="code css-code"><span class="hc">/* 1. Element selector — সব h1 */</span>
+<span class="ct">h1</span> { <span class="cp">color</span>: <span class="cv">blue</span>; }
+
+<span class="hc">/* 2. Class selector — .title class-এর সব element */</span>
+<span class="ct">.title</span> { <span class="cp">font-weight</span>: <span class="cv">bold</span>; }
+
+<span class="hc">/* 3. ID selector — #header id-এর element */</span>
+<span class="ct">#header</span> { <span class="cp">background</span>: <span class="cv">navy</span>; }
+
+<span class="hc">/* 4. Multiple selectors */</span>
+<span class="ct">h1, h2, h3</span> { <span class="cp">color</span>: <span class="cv">darkblue</span>; }
+
+<span class="hc">/* 5. Descendant selector — div-এর ভেতরের p */</span>
+<span class="ct">div p</span> { <span class="cp">margin</span>: <span class="cv">10px</span>; }
+
+<span class="hc">/* 6. Pseudo-class — hover করলে */</span>
+<span class="ct">button:hover</span> { <span class="cp">background</span>: <span class="cv">green</span>; }
+<span class="ct">a:visited</span>    { <span class="cp">color</span>: <span class="cv">purple</span>; }
+<span class="ct">input:focus</span>  { <span class="cp">border-color</span>: <span class="cv">blue</span>; }
+
+<span class="hc">/* 7. Pseudo-element */</span>
+<span class="ct">p::first-line</span>  { <span class="cp">font-weight</span>: <span class="cv">bold</span>; }
+<span class="ct">p::before</span>      { <span class="cp">content</span>: <span class="cv">"→ "</span>; }</div>
+
+    <h2 class="sec sec-css">📦 Box Model — <span class="bn-text">সবকিছুই একটা বাক্স</span><span class="en-text">Everything is a Box</span></h2>
+    <p><span class="bn-text">CSS-এ প্রতিটা element একটা বাক্সের মতো। এই বাক্সের চারটা অংশ আছে:</span><span class="en-text">In CSS, every element is like a box. This box has four parts:</span></p>
+
+    <div class="diagram">
+<pre>┌─────────────────────────────────────────┐
+│                 margin                  │  ← <span class="do">বাইরের ফাঁক</span>
+│  ┌───────────────────────────────────┐  │
+│  │             border                │  │  ← <span class="dr">বাক্সের সীমানা</span>
+│  │  ┌─────────────────────────────┐  │  │
+│  │  │           padding           │  │  │  ← <span class="dy">ভেতরের ফাঁক</span>
+│  │  │  ┌───────────────────────┐  │  │  │
+│  │  │  │       content         │  │  │  │  ← <span class="dg">আসল বিষয়বস্তু</span>
+│  │  │  │  (text, image, etc)   │  │  │  │
+│  │  │  └───────────────────────┘  │  │  │
+│  │  └─────────────────────────────┘  │  │
+│  └───────────────────────────────────┘  │
+└─────────────────────────────────────────┘</pre>
+    </div>
+
+    <div class="code css-code"><span class="ct">.card</span> {
+  <span class="hc">/* Content size */</span>
+  <span class="cp">width</span>: <span class="cv">300px</span>;
+  <span class="cp">height</span>: <span class="cv">200px</span>;
+
+  <span class="hc">/* Padding — ভেতরের ফাঁক */</span>
+  <span class="cp">padding</span>: <span class="cv">20px</span>;            <span class="hc">/* চারদিকে */</span>
+  <span class="cp">padding</span>: <span class="cv">10px 20px</span>;       <span class="hc">/* উপর-নিচ, বাম-ডান */</span>
+  <span class="cp">padding-top</span>: <span class="cv">15px</span>;        <span class="hc">/* শুধু উপরে */</span>
+
+  <span class="hc">/* Margin — বাইরের ফাঁক */</span>
+  <span class="cp">margin</span>: <span class="cv">20px</span>;             <span class="hc">/* চারদিকে */</span>
+  <span class="cp">margin</span>: <span class="cv">0 auto</span>;           <span class="hc">/* মাঝখানে রাখো */</span>
+
+  <span class="hc">/* Border — সীমানা */</span>
+  <span class="cp">border</span>: <span class="cv">2px solid #333</span>;
+  <span class="cp">border-radius</span>: <span class="cv">10px</span>;      <span class="hc">/* গোল কোণ */</span>
+
+  <span class="hc">/* box-sizing: border-box — padding/border size-এ যোগ হয় না */</span>
+  <span class="cp">box-sizing</span>: <span class="cv">border-box</span>;   <span class="hc">/* সবসময় এটা ব্যবহার করো! */</span>
+}</div>
+
+    <h2 class="sec sec-css">📍 Display ও Position</h2>
+    <div class="code css-code"><span class="hc">/* Display */</span>
+<span class="ct">.element</span> {
+  <span class="cp">display</span>: <span class="cv">block</span>;        <span class="hc">/* নতুন লাইনে, পুরো width */</span>
+  <span class="cp">display</span>: <span class="cv">inline</span>;       <span class="hc">/* একই লাইনে, content width */</span>
+  <span class="cp">display</span>: <span class="cv">inline-block</span>; <span class="hc">/* একই লাইনে কিন্তু size দেওয়া যায় */</span>
+  <span class="cp">display</span>: <span class="cv">none</span>;         <span class="hc">/* লুকিয়ে যায় */</span>
+  <span class="cp">display</span>: <span class="cv">flex</span>;         <span class="hc">/* Flexbox (পরের chapter!) */</span>
+  <span class="cp">display</span>: <span class="cv">grid</span>;         <span class="hc">/* Grid (পরের chapter!) */</span>
+}
+
+<span class="hc">/* Position */</span>
+<span class="ct">.box</span> {
+  <span class="cp">position</span>: <span class="cv">static</span>;      <span class="hc">/* default — flow-তে থাকে */</span>
+  <span class="cp">position</span>: <span class="cv">relative</span>;   <span class="hc">/* নিজের জায়গা থেকে সরে */</span>
+  <span class="cp">position</span>: <span class="cv">absolute</span>;   <span class="hc">/* parent-এর সাপেক্ষে */</span>
+  <span class="cp">position</span>: <span class="cv">fixed</span>;      <span class="hc">/* screen-এ আটকা (navbar!) */</span>
+  <span class="cp">position</span>: <span class="cv">sticky</span>;     <span class="hc">/* scroll করলে আটকে যায় */</span>
+  <span class="cp">top</span>: <span class="cv">20px</span>;
+  <span class="cp">left</span>: <span class="cv">30px</span>;
+}</div>
+
+    <div class="chapter-summary">
+      <h3 style="color: #93c5fd;">📌 <span class="bn-text">সারসংক্ষেপ</span><span class="en-text">Summary</span></h3>
+      <ul>
+        <li>🎯 <span class="bn-text">Selector: element, .class, #id, :hover, ::before</span></li>
+        <li>📦 <span class="bn-text">Box Model: content → padding → border → margin</span></li>
+        <li>✅ <code>box-sizing: border-box</code> — <span class="bn-text">সবসময় ব্যবহার করো</span><span class="en-text">always use this</span></li>
+        <li>📍 <span class="bn-text">Position: static, relative, absolute, fixed, sticky</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 5: Typography, Colors, Variables
+══════════════════════════════════ -->
+<div class="chapter ch5">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 05 — CSS</div>
+    <div class="chapter-tag tag-css">🎨 CSS</div>
+    <div class="chapter-title"><span class="bn-text">Typography, Colors ও CSS Variables</span><span class="en-text">Typography, Colors & CSS Variables</span></div>
+    <div class="chapter-desc"><span class="bn-text">Font, Color, Gradient ও CSS Custom Properties দিয়ে পেশাদার ডিজাইন</span><span class="en-text">Professional design with Font, Color, Gradient & CSS Custom Properties</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-css">✍️ Typography — <span class="bn-text">লেখার সৌন্দর্য</span><span class="en-text">Beautiful Text</span></h2>
+    <div class="code css-code"><span class="ct">body</span> {
+  <span class="hc">/* Google Fonts ব্যবহার */</span>
+  <span class="cp">font-family</span>: <span class="cv">'Hind Siliguri', sans-serif</span>;
+  <span class="cp">font-size</span>: <span class="cv">16px</span>;          <span class="hc">/* base size */</span>
+  <span class="cp">line-height</span>: <span class="cv">1.6</span>;         <span class="hc">/* লাইনের ফাঁক */</span>
+}
+
+<span class="ct">h1</span> {
+  <span class="cp">font-size</span>: <span class="cv">2.5rem</span>;        <span class="hc">/* base-এর 2.5 গুণ */</span>
+  <span class="cp">font-weight</span>: <span class="cv">700</span>;          <span class="hc">/* bold */</span>
+  <span class="cp">letter-spacing</span>: <span class="cv">-0.02em</span>;  <span class="hc">/* অক্ষরের ফাঁক */</span>
+  <span class="cp">text-transform</span>: <span class="cv">uppercase</span>;<span class="hc">/* বড় হাতে */</span>
+  <span class="cp">text-decoration</span>: <span class="cv">none</span>;    <span class="hc">/* underline সরাও */</span>
+  <span class="cp">text-align</span>: <span class="cv">center</span>;       <span class="hc">/* মাঝখানে */</span>
+  <span class="cp">text-shadow</span>: <span class="cv">2px 2px 4px rgba(0,0,0,0.3)</span>; <span class="hc">/* ছায়া */</span>
+}</div>
+
+    <h2 class="sec sec-css">🎨 Colors — <span class="bn-text">রঙের উপায়</span><span class="en-text">Ways to Use Color</span></h2>
+    <div class="code css-code"><span class="ct">.element</span> {
+  <span class="hc">/* Named colors */</span>
+  <span class="cp">color</span>: <span class="cv">red</span>;
+  <span class="cp">color</span>: <span class="cv">coral</span>;
+
+  <span class="hc">/* Hex (সবচেয়ে বেশি ব্যবহার) */</span>
+  <span class="cp">color</span>: <span class="cv">#e63946</span>;
+  <span class="cp">color</span>: <span class="cv">#fff</span>;               <span class="hc">/* shorthand */</span>
+
+  <span class="hc">/* RGB */</span>
+  <span class="cp">color</span>: <span class="cv">rgb(230, 57, 70)</span>;
+
+  <span class="hc">/* RGBA — a = transparency (0-1) */</span>
+  <span class="cp">color</span>: <span class="cv">rgba(230, 57, 70, 0.5)</span>;    <span class="hc">/* 50% স্বচ্ছ */</span>
+  <span class="cp">background</span>: <span class="cv">rgba(0, 0, 0, 0.8)</span>; <span class="hc">/* dark overlay */</span>
+
+  <span class="hc">/* HSL */</span>
+  <span class="cp">color</span>: <span class="cv">hsl(350, 78%, 56%)</span>;
+}
+
+<span class="hc">/* Gradient */</span>
+<span class="ct">.hero</span> {
+  <span class="cp">background</span>: <span class="cv">linear-gradient(135deg, #667eea, #764ba2)</span>;
+  <span class="cp">background</span>: <span class="cv">radial-gradient(circle, #667eea, #764ba2)</span>;
+}</div>
+
+    <h2 class="sec sec-css">🔧 CSS Variables — <span class="bn-text">পুনরায় ব্যবহারযোগ্য মান</span><span class="en-text">Reusable Values</span></h2>
+    <p><span class="bn-text">CSS Variables (Custom Properties) দিয়ে একটা জায়গায় রঙ বা মান সংরক্ষণ করো, সব জায়গায় ব্যবহার করো। পরে বদলাতে হলে একটা জায়গায় বদলালেই হয়।</span><span class="en-text">CSS Variables let you store colors or values in one place and use them everywhere. To change later, update just one place.</span></p>
+    <div class="code css-code"><span class="hc">/* :root-এ define করো — সব পেজে available */</span>
+<span class="ct">:root</span> {
+  <span class="cp">--primary-color</span>: <span class="cv">#2563eb</span>;
+  <span class="cp">--secondary-color</span>: <span class="cv">#7c3aed</span>;
+  <span class="cp">--text-color</span>: <span class="cv">#1e293b</span>;
+  <span class="cp">--bg-color</span>: <span class="cv">#f8fafc</span>;
+  <span class="cp">--font-size-base</span>: <span class="cv">16px</span>;
+  <span class="cp">--border-radius</span>: <span class="cv">8px</span>;
+  <span class="cp">--shadow</span>: <span class="cv">0 4px 6px rgba(0,0,0,0.1)</span>;
+}
+
+<span class="hc">/* var() দিয়ে ব্যবহার করো */</span>
+<span class="ct">.button</span> {
+  <span class="cp">background</span>: <span class="cv">var(--primary-color)</span>;
+  <span class="cp">color</span>: <span class="cv">white</span>;
+  <span class="cp">border-radius</span>: <span class="cv">var(--border-radius)</span>;
+  <span class="cp">box-shadow</span>: <span class="cv">var(--shadow)</span>;
+}
+
+<span class="ct">.card</span> {
+  <span class="cp">background</span>: <span class="cv">var(--bg-color)</span>;
+  <span class="cp">color</span>: <span class="cv">var(--text-color)</span>;
+  <span class="cp">border-radius</span>: <span class="cv">var(--border-radius)</span>;
+}</div>
+
+    <h2 class="sec sec-css">🌑 Dark Mode — <span class="bn-text">CSS Variables দিয়ে</span><span class="en-text">With CSS Variables</span></h2>
+    <div class="code css-code"><span class="ct">:root</span> { <span class="cp">--bg</span>: <span class="cv">#ffffff</span>; <span class="cp">--text</span>: <span class="cv">#000000</span>; }
+
+<span class="ct">[data-theme="dark"]</span> {
+  <span class="cp">--bg</span>: <span class="cv">#0f172a</span>;
+  <span class="cp">--text</span>: <span class="cv">#e2e8f0</span>;
+}
+
+<span class="ct">body</span> {
+  <span class="cp">background</span>: <span class="cv">var(--bg)</span>;
+  <span class="cp">color</span>: <span class="cv">var(--text)</span>;
+  <span class="cp">transition</span>: <span class="cv">background 0.3s, color 0.3s</span>;
+}</div>
+
+    <div class="chapter-summary">
+      <h3 style="color: #93c5fd;">📌 <span class="bn-text">সারসংক্ষেপ</span><span class="en-text">Summary</span></h3>
+      <ul>
+        <li>✍️ <span class="bn-text">Typography: font-family, font-size, line-height, font-weight</span></li>
+        <li>🎨 <span class="bn-text">Color: hex (#fff), rgba(0,0,0,0.5), hsl()</span></li>
+        <li>🌈 <span class="bn-text">Gradient: linear-gradient(), radial-gradient()</span></li>
+        <li>🔧 <code>--variable: value</code> <span class="bn-text">define, </span><code>var(--variable)</code> <span class="bn-text">ব্যবহার</span><span class="en-text">use</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 6: Flexbox
+══════════════════════════════════ -->
+<div class="chapter ch6">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 06 — CSS</div>
+    <div class="chapter-tag tag-css">🎨 CSS</div>
+    <div class="chapter-title">🧲 Flexbox — <span class="bn-text">আধুনিক Layout</span><span class="en-text">Modern Layout</span></div>
+    <div class="chapter-desc"><span class="bn-text">Elements সাজানোর সবচেয়ে সহজ এবং শক্তিশালী উপায়</span><span class="en-text">The easiest and most powerful way to arrange elements</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-css">🧲 Flexbox <span class="bn-text">কী?</span><span class="en-text">What is Flexbox?</span></h2>
+    <p><span class="bn-text">Flexbox একটা CSS Layout system। Parent-এ <code>display: flex</code> দিলে তার সব সরাসরি children flex items হয়ে যায় এবং সহজে সাজানো যায়।</span><span class="en-text">Flexbox is a CSS Layout system. Adding <code>display: flex</code> to a parent makes all its direct children flex items that are easy to arrange.</span></p>
+
+    <div class="code css-code"><span class="hc">/* Flex Container (Parent) */</span>
+<span class="ct">.container</span> {
+  <span class="cp">display</span>: <span class="cv">flex</span>;
+
+  <span class="hc">/* Direction — কোন দিকে সাজাবো */</span>
+  <span class="cp">flex-direction</span>: <span class="cv">row</span>;             <span class="hc">/* → বাম থেকে ডান (default) */</span>
+  <span class="cp">flex-direction</span>: <span class="cv">row-reverse</span>;    <span class="hc">/* ← ডান থেকে বাম */</span>
+  <span class="cp">flex-direction</span>: <span class="cv">column</span>;         <span class="hc">/* ↓ উপর থেকে নিচ */</span>
+  <span class="cp">flex-direction</span>: <span class="cv">column-reverse</span>; <span class="hc">/* ↑ নিচ থেকে উপর */</span>
+
+  <span class="hc">/* Main axis alignment (row হলে horizontal) */</span>
+  <span class="cp">justify-content</span>: <span class="cv">flex-start</span>;    <span class="hc">/* বাম থেকে */</span>
+  <span class="cp">justify-content</span>: <span class="cv">flex-end</span>;      <span class="hc">/* ডান থেকে */</span>
+  <span class="cp">justify-content</span>: <span class="cv">center</span>;        <span class="hc">/* মাঝখানে */</span>
+  <span class="cp">justify-content</span>: <span class="cv">space-between</span>; <span class="hc">/* দুপাশে আটকে, মাঝে ফাঁক */</span>
+  <span class="cp">justify-content</span>: <span class="cv">space-around</span>;  <span class="hc">/* সব দিকে সমান ফাঁক */</span>
+  <span class="cp">justify-content</span>: <span class="cv">space-evenly</span>;  <span class="hc">/* একেবারে সমান */</span>
+
+  <span class="hc">/* Cross axis alignment (row হলে vertical) */</span>
+  <span class="cp">align-items</span>: <span class="cv">stretch</span>;           <span class="hc">/* পূর্ণ height (default) */</span>
+  <span class="cp">align-items</span>: <span class="cv">flex-start</span>;        <span class="hc">/* উপরে */</span>
+  <span class="cp">align-items</span>: <span class="cv">flex-end</span>;          <span class="hc">/* নিচে */</span>
+  <span class="cp">align-items</span>: <span class="cv">center</span>;            <span class="hc">/* মাঝখানে ✨ */</span>
+
+  <span class="hc">/* Wrap — ছোট হলে পরের লাইনে যাবে */</span>
+  <span class="cp">flex-wrap</span>: <span class="cv">wrap</span>;
+  <span class="cp">gap</span>: <span class="cv">20px</span>;                       <span class="hc">/* items-এর মধ্যে ফাঁক */</span>
+}</div>
+
+    <h2 class="sec sec-css">⭐ <span class="bn-text">সবচেয়ে কাজের Flexbox trick</span><span class="en-text">Most Useful Flexbox Trick</span></h2>
+    <div class="code css-code"><span class="hc">/* Perfect center করা — horizontal ও vertical */</span>
+<span class="ct">.center-everything</span> {
+  <span class="cp">display</span>: <span class="cv">flex</span>;
+  <span class="cp">justify-content</span>: <span class="cv">center</span>;
+  <span class="cp">align-items</span>: <span class="cv">center</span>;
+  <span class="cp">min-height</span>: <span class="cv">100vh</span>;     <span class="hc">/* পুরো screen উচ্চতা */</span>
+}</div>
+
+    <div class="code css-code"><span class="hc">/* Navbar layout */</span>
+<span class="ct">.navbar</span> {
+  <span class="cp">display</span>: <span class="cv">flex</span>;
+  <span class="cp">justify-content</span>: <span class="cv">space-between</span>;
+  <span class="cp">align-items</span>: <span class="cv">center</span>;
+  <span class="cp">padding</span>: <span class="cv">16px 32px</span>;
+  <span class="cp">background</span>: <span class="cv">#0f172a</span>;
+}
+
+<span class="hc">/* Card grid layout */</span>
+<span class="ct">.card-grid</span> {
+  <span class="cp">display</span>: <span class="cv">flex</span>;
+  <span class="cp">flex-wrap</span>: <span class="cv">wrap</span>;
+  <span class="cp">gap</span>: <span class="cv">24px</span>;
+}
+<span class="ct">.card-grid .card</span> {
+  <span class="cp">flex</span>: <span class="cv">1 1 300px</span>;  <span class="hc">/* min 300px, বাকি space নাও */</span>
+}</div>
+
+    <h2 class="sec sec-css">🔢 Flex Item Properties</h2>
+    <div class="code css-code"><span class="hc">/* Flex Item (Children) */</span>
+<span class="ct">.item</span> {
+  <span class="cp">flex</span>: <span class="cv">1</span>;         <span class="hc">/* available space সমানভাবে নাও */</span>
+  <span class="cp">flex</span>: <span class="cv">2</span>;         <span class="hc">/* অন্যদের দ্বিগুণ space নাও */</span>
+  <span class="cp">flex-grow</span>: <span class="cv">1</span>;    <span class="hc">/* বাড়তে পারবে */</span>
+  <span class="cp">flex-shrink</span>: <span class="cv">0</span>;  <span class="hc">/* ছোট হবে না */</span>
+  <span class="cp">flex-basis</span>: <span class="cv">200px</span>;<span class="hc">/* base size */</span>
+  <span class="cp">order</span>: <span class="cv">-1</span>;       <span class="hc">/* HTML-এর আগে দেখাবে */</span>
+  <span class="cp">align-self</span>: <span class="cv">center</span>; <span class="hc">/* শুধু এই item আলাদাভাবে */</span>
+}</div>
+
+    <div class="chapter-summary">
+      <h3 style="color: #93c5fd;">📌 <span class="bn-text">সারসংক্ষেপ</span><span class="en-text">Summary</span></h3>
+      <ul>
+        <li>🧲 <code>display: flex</code> — <span class="bn-text">parent-এ দিলে flex শুরু</span><span class="en-text">add to parent to start flex</span></li>
+        <li>↔️ <code>justify-content</code> — <span class="bn-text">main axis-এ সাজানো</span><span class="en-text">arrange on main axis</span></li>
+        <li>↕️ <code>align-items</code> — <span class="bn-text">cross axis-এ সাজানো</span><span class="en-text">arrange on cross axis</span></li>
+        <li>⭐ <span class="bn-text">Perfect center: flex + justify-content:center + align-items:center</span></li>
+        <li>📐 <code>gap</code> — <span class="bn-text">items-এর মধ্যে ফাঁক</span><span class="en-text">gap between items</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 7: CSS Grid & Responsive
+══════════════════════════════════ -->
+<div class="chapter ch7">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 07 — CSS</div>
+    <div class="chapter-tag tag-css">🎨 CSS</div>
+    <div class="chapter-title">📐 CSS Grid <span class="bn-text">ও Responsive Design</span><span class="en-text">& Responsive Design</span></div>
+    <div class="chapter-desc"><span class="bn-text">Two-dimensional layout ও সব device-এ সুন্দর দেখানো</span><span class="en-text">Two-dimensional layout and looking good on all devices</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-css">📐 CSS Grid — <span class="bn-text">দুই দিকে Layout</span><span class="en-text">Layout in Two Directions</span></h2>
+    <p><span class="bn-text">Flexbox এক দিকে (row বা column) কাজ করে। Grid দুই দিকে (row এবং column) কাজ করে — magazine layout-এর জন্য পারফেক্ট।</span><span class="en-text">Flexbox works in one direction (row or column). Grid works in two directions (row AND column) — perfect for magazine-style layouts.</span></p>
+
+    <div class="code css-code"><span class="ct">.grid-container</span> {
+  <span class="cp">display</span>: <span class="cv">grid</span>;
+
+  <span class="hc">/* 3 column grid */</span>
+  <span class="cp">grid-template-columns</span>: <span class="cv">200px 200px 200px</span>;   <span class="hc">/* fixed */</span>
+  <span class="cp">grid-template-columns</span>: <span class="cv">1fr 1fr 1fr</span>;         <span class="hc">/* fraction */</span>
+  <span class="cp">grid-template-columns</span>: <span class="cv">repeat(3, 1fr)</span>;     <span class="hc">/* shorthand */</span>
+  <span class="cp">grid-template-columns</span>: <span class="cv">repeat(auto-fit, minmax(250px, 1fr))</span>; <span class="hc">/* responsive! */</span>
+
+  <span class="hc">/* Rows */</span>
+  <span class="cp">grid-template-rows</span>: <span class="cv">100px auto 60px</span>;
+
+  <span class="hc">/* Gap */</span>
+  <span class="cp">gap</span>: <span class="cv">24px</span>;
+  <span class="cp">row-gap</span>: <span class="cv">20px</span>;
+  <span class="cp">column-gap</span>: <span class="cv">16px</span>;
+}
+
+<span class="hc">/* Item placement */</span>
+<span class="ct">.header</span> { <span class="cp">grid-column</span>: <span class="cv">1 / -1</span>; }  <span class="hc">/* সব column জুড়ে */</span>
+<span class="ct">.sidebar</span> { <span class="cp">grid-row</span>: <span class="cv">2 / 4</span>; }     <span class="hc">/* 2 row জুড়ে */</span></div>
+
+    <div class="code css-code"><span class="hc">/* সবচেয়ে দরকারি: Responsive card grid */</span>
+<span class="ct">.card-grid</span> {
+  <span class="cp">display</span>: <span class="cv">grid</span>;
+  <span class="cp">grid-template-columns</span>: <span class="cv">repeat(auto-fit, minmax(280px, 1fr))</span>;
+  <span class="cp">gap</span>: <span class="cv">24px</span>;
+}
+<span class="hc">/* এটা automatically: mobile-এ 1 column, tablet-এ 2, desktop-এ 3+ দেখাবে! */</span></div>
+
+    <h2 class="sec sec-css">📱 Responsive Design — <span class="bn-text">সব device-এ সুন্দর</span><span class="en-text">Beautiful on All Devices</span></h2>
+    <p><span class="bn-text">Media Query ব্যবহার করে screen-এর size অনুযায়ী আলাদা CSS লেখা যায়।</span><span class="en-text">Media Queries let you write different CSS based on screen size.</span></p>
+    <div class="code css-code"><span class="hc">/* Mobile-first approach — ছোট থেকে বড় */</span>
+
+<span class="hc">/* Mobile (default — কোনো query নেই) */</span>
+<span class="ct">.container</span> { <span class="cp">padding</span>: <span class="cv">16px</span>; }
+<span class="ct">.nav-links</span> { <span class="cp">display</span>: <span class="cv">none</span>; }      <span class="hc">/* mobile-এ hidden */</span>
+
+<span class="hc">/* Tablet (768px+) */</span>
+<span class="ct">@media (min-width: 768px)</span> {
+  <span class="ct">.container</span> { <span class="cp">padding</span>: <span class="cv">24px</span>; }
+  <span class="ct">.nav-links</span>  { <span class="cp">display</span>: <span class="cv">flex</span>; }  <span class="hc">/* tablet-এ দেখায় */</span>
+  <span class="ct">.grid</span>       { <span class="cp">grid-template-columns</span>: <span class="cv">repeat(2, 1fr)</span>; }
+}
+
+<span class="hc">/* Desktop (1024px+) */</span>
+<span class="ct">@media (min-width: 1024px)</span> {
+  <span class="ct">.container</span> { <span class="cp">max-width</span>: <span class="cv">1200px</span>; <span class="cp">margin</span>: <span class="cv">0 auto</span>; }
+  <span class="ct">.grid</span>      { <span class="cp">grid-template-columns</span>: <span class="cv">repeat(3, 1fr)</span>; }
+}
+
+<span class="hc">/* Dark mode */</span>
+<span class="ct">@media (prefers-color-scheme: dark)</span> {
+  <span class="ct">body</span> { <span class="cp">background</span>: <span class="cv">#0f172a</span>; <span class="cp">color</span>: <span class="cv">#e2e8f0</span>; }
+}</div>
+
+    <div class="box tip">
+      <div class="box-t">💡 Viewport Units</div>
+      <div class="code css-code" style="margin:8px 0;">
+<span class="hc">/* vw = viewport width, vh = viewport height */</span>
+<span class="ct">.hero</span>     { <span class="cp">height</span>: <span class="cv">100vh</span>; }    <span class="hc">/* পুরো screen উচ্চতা */</span>
+<span class="ct">.title</span>    { <span class="cp">font-size</span>: <span class="cv">5vw</span>; }   <span class="hc">/* screen width-এর 5% */</span>
+<span class="ct">.sidebar</span>  { <span class="cp">width</span>: <span class="cv">30vw</span>; }      <span class="hc">/* screen width-এর 30% */</span></div>
+    </div>
+
+    <div class="chapter-summary">
+      <h3 style="color: #93c5fd;">📌 <span class="bn-text">সারসংক্ষেপ</span><span class="en-text">Summary</span></h3>
+      <ul>
+        <li>📐 <code>display: grid</code> + <code>grid-template-columns</code> — <span class="bn-text">2D layout</span></li>
+        <li>⭐ <code>repeat(auto-fit, minmax(280px, 1fr))</code> — <span class="bn-text">auto-responsive grid</span></li>
+        <li>📱 <code>@media (min-width: 768px)</code> — <span class="bn-text">responsive CSS</span></li>
+        <li>📐 <span class="bn-text">Mobile-first: ছোট screen-এর CSS আগে লেখো</span><span class="en-text">Mobile-first: write small screen CSS first</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 8: JavaScript Basics
+══════════════════════════════════ -->
+<div class="chapter ch8">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 08 — JAVASCRIPT</div>
+    <div class="chapter-tag tag-js">⚡ JavaScript</div>
+    <div class="chapter-title"><span class="bn-text">JavaScript পরিচিতি ও Basics</span><span class="en-text">JavaScript Introduction & Basics</span></div>
+    <div class="chapter-desc"><span class="bn-text">Variables, Data Types, Conditions, Loops — ওয়েবকে জীবন্ত করা</span><span class="en-text">Variables, Data Types, Conditions, Loops — bringing the web to life</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-js">⚡ JavaScript <span class="bn-text">কীভাবে যোগ করবো?</span><span class="en-text">How to Add JavaScript?</span></h2>
+    <div class="code js-code"><span class="hc">/* HTML-এ যোগ করার উপায় */</span>
+
+<span class="hc">&lt;!-- 1. External file (সবচেয়ে ভালো) --&gt;</span>
+<span class="ht">&lt;script</span> <span class="ha">src</span>=<span class="hv">"script.js"</span> <span class="ha">defer</span><span class="ht">&gt;&lt;/script&gt;</span>   <span class="hc">&lt;-- body-র শেষে</span>
+
+<span class="hc">&lt;!-- 2. Inline --&gt;</span>
+<span class="ht">&lt;script&gt;</span>
+  <span class="jk">console</span>.<span class="jm">log</span>(<span class="js">"Hello!"</span>);  <span class="jc">// browser console-এ দেখায়</span>
+<span class="ht">&lt;/script&gt;</span></div>
+
+    <h2 class="sec sec-js">📦 Variables — <span class="bn-text">ডেটা সংরক্ষণ</span><span class="en-text">Storing Data</span></h2>
+    <div class="code js-code"><span class="jc">// 3 ধরনের variable declaration</span>
+<span class="jk">let</span>   naam  = <span class="js">"Rahim"</span>;     <span class="jc">// পরিবর্তন করা যায় ✅</span>
+<span class="jk">const</span> PI    = <span class="jn">3.14</span>;        <span class="jc">// পরিবর্তন করা যায় না ❌</span>
+<span class="jk">var</span>   boyos = <span class="jn">20</span>;          <span class="jc">// পুরনো পদ্ধতি, এড়িয়ে চলো</span>
+
+<span class="jc">// Data Types</span>
+<span class="jk">let</span> text    = <span class="js">"Hello"</span>;          <span class="jc">// String</span>
+<span class="jk">let</span> number  = <span class="jn">42</span>;               <span class="jc">// Number</span>
+<span class="jk">let</span> decimal = <span class="jn">3.14</span>;             <span class="jc">// Number (float)</span>
+<span class="jk">let</span> isTrue  = <span class="jk">true</span>;             <span class="jc">// Boolean</span>
+<span class="jk">let</span> nothing = <span class="jk">null</span>;             <span class="jc">// Null</span>
+<span class="jk">let</span> undef;                       <span class="jc">// Undefined</span>
+<span class="jk">let</span> list    = [<span class="jn">1</span>, <span class="jn">2</span>, <span class="jn">3</span>];        <span class="jc">// Array</span>
+<span class="jk">let</span> person  = { naam: <span class="js">"Rahim"</span> }; <span class="jc">// Object</span></div>
+
+    <h2 class="sec sec-js">🔀 Conditions ও Loops</h2>
+    <div class="code js-code"><span class="jc">// if/else</span>
+<span class="jk">let</span> boyos = <span class="jn">20</span>;
+<span class="jk">if</span> (boyos >= <span class="jn">18</span>) {
+  <span class="jk">console</span>.<span class="jm">log</span>(<span class="js">"প্রাপ্তবয়স্ক"</span>);
+} <span class="jk">else if</span> (boyos >= <span class="jn">13</span>) {
+  <span class="jk">console</span>.<span class="jm">log</span>(<span class="js">"কিশোর"</span>);
+} <span class="jk">else</span> {
+  <span class="jk">console</span>.<span class="jm">log</span>(<span class="js">"শিশু"</span>);
+}
+
+<span class="jc">// Ternary operator — এক লাইনে if/else</span>
+<span class="jk">let</span> status = boyos >= <span class="jn">18</span> ? <span class="js">"Adult"</span> : <span class="js">"Minor"</span>;
+
+<span class="jc">// for loop</span>
+<span class="jk">for</span> (<span class="jk">let</span> i = <span class="jn">0</span>; i < <span class="jn">5</span>; i++) {
+  <span class="jk">console</span>.<span class="jm">log</span>(<span class="js">`সংখ্যা: <span class="jm">${i}</span>`</span>);    <span class="jc">// template literal</span>
+}
+
+<span class="jc">// Array-তে loop</span>
+<span class="jk">const</span> fruits = [<span class="js">"আম"</span>, <span class="js">"কলা"</span>, <span class="js">"লিচু"</span>];
+<span class="jk">for</span> (<span class="jk">const</span> fruit <span class="jk">of</span> fruits) {
+  <span class="jk">console</span>.<span class="jm">log</span>(fruit);
+}
+
+<span class="jc">// while loop</span>
+<span class="jk">let</span> count = <span class="jn">0</span>;
+<span class="jk">while</span> (count < <span class="jn">3</span>) {
+  <span class="jk">console</span>.<span class="jm">log</span>(count);
+  count++;
+}</div>
+
+    <h2 class="sec sec-js">🔧 Template Literals ও String</h2>
+    <div class="code js-code"><span class="jk">const</span> naam  = <span class="js">"Rahim"</span>;
+<span class="jk">const</span> boyos = <span class="jn">20</span>;
+
+<span class="jc">// পুরনো পদ্ধতি (এড়িয়ে চলো)</span>
+<span class="jk">console</span>.<span class="jm">log</span>(<span class="js">"নাম: "</span> + naam + <span class="js">", বয়স: "</span> + boyos);
+
+<span class="jc">// Template Literal (সবসময় এটা ব্যবহার করো!)</span>
+<span class="jk">console</span>.<span class="jm">log</span>(<span class="js">`নাম: <span class="jm">${naam}</span>, বয়স: <span class="jm">${boyos}</span>`</span>);
+<span class="jk">console</span>.<span class="jm">log</span>(<span class="js">`গণনা: <span class="jm">${boyos * 2}</span>`</span>);    <span class="jc">// expression-ও চলে</span>
+
+<span class="jc">// Multi-line string</span>
+<span class="jk">const</span> html = <span class="js">`
+  &lt;div class="card"&gt;
+    &lt;h2&gt;<span class="jm">${naam}</span>&lt;/h2&gt;
+    &lt;p&gt;বয়স: <span class="jm">${boyos}</span>&lt;/p&gt;
+  &lt;/div&gt;
+`</span>;</div>
+
+    <div class="chapter-summary">
+      <h3 style="color: #fde68a;">📌 <span class="bn-text">সারসংক্ষেপ</span><span class="en-text">Summary</span></h3>
+      <ul>
+        <li>📦 <code>let</code> — <span class="bn-text">পরিবর্তনযোগ্য, </span><code>const</code> — <span class="bn-text">স্থির</span><span class="en-text">fixed</span></li>
+        <li>🔀 <code>if/else if/else</code> — <span class="bn-text">শর্ত, Ternary: </span><code>? :</code></li>
+        <li>🔁 <code>for</code>, <code>for...of</code>, <code>while</code> — <span class="bn-text">loop</span></li>
+        <li>✨ <code>`Hello ${name}`</code> — <span class="bn-text">Template Literal, সবসময় এটা ব্যবহার করো</span><span class="en-text">always use this</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 9: Functions & Arrays
+══════════════════════════════════ -->
+<div class="chapter ch9">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 09 — JAVASCRIPT</div>
+    <div class="chapter-tag tag-js">⚡ JavaScript</div>
+    <div class="chapter-title"><span class="bn-text">Functions ও Arrays</span><span class="en-text">Functions & Arrays</span></div>
+    <div class="chapter-desc"><span class="bn-text">কোড পুনরায় ব্যবহার ও ডেটার তালিকা নিয়ে কাজ</span><span class="en-text">Reusing code and working with lists of data</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-js">⚙️ Functions</h2>
+    <div class="code js-code"><span class="jc">// 1. Function Declaration</span>
+<span class="jk">function</span> <span class="jf">greet</span>(<span class="jp">naam</span>) {
+  <span class="jk">return</span> <span class="js">`হ্যালো, <span class="jm">${naam}</span>!`</span>;
+}
+<span class="jk">console</span>.<span class="jm">log</span>(<span class="jf">greet</span>(<span class="js">"Rahim"</span>));
+
+<span class="jc">// 2. Arrow Function (modern) — ⬅ সবচেয়ে বেশি ব্যবহার করো</span>
+<span class="jk">const</span> <span class="jf">greet</span> = (<span class="jp">naam</span>) => <span class="js">`হ্যালো, <span class="jm">${naam}</span>!`</span>;
+
+<span class="jc">// Multiple parameters</span>
+<span class="jk">const</span> <span class="jf">add</span> = (<span class="jp">a</span>, <span class="jp">b</span>) => a + b;
+<span class="jk">console</span>.<span class="jm">log</span>(<span class="jf">add</span>(<span class="jn">10</span>, <span class="jn">20</span>));    <span class="jc">// 30</span>
+
+<span class="jc">// Default parameter</span>
+<span class="jk">const</span> <span class="jf">greetUser</span> = (<span class="jp">naam</span> = <span class="js">"বন্ধু"</span>) => <span class="js">`হ্যালো, <span class="jm">${naam}</span>!`</span>;
+<span class="jk">console</span>.<span class="jm">log</span>(<span class="jf">greetUser</span>());      <span class="jc">// হ্যালো, বন্ধু!</span>
+
+<span class="jc">// Higher-order function — function-কে parameter হিসেবে দেওয়া</span>
+<span class="jk">const</span> <span class="jf">doTwice</span> = (<span class="jp">fn</span>, <span class="jp">value</span>) => <span class="jf">fn</span>(<span class="jf">fn</span>(value));
+<span class="jk">console</span>.<span class="jm">log</span>(<span class="jf">doTwice</span>(x => x * <span class="jn">2</span>, <span class="jn">5</span>));  <span class="jc">// 20</span></div>
+
+    <h2 class="sec sec-js">📋 Arrays ও দরকারি Methods</h2>
+    <div class="code js-code"><span class="jk">const</span> fruits = [<span class="js">"আম"</span>, <span class="js">"কলা"</span>, <span class="js">"লিচু"</span>];
+
+<span class="jc">// Access</span>
+<span class="jk">console</span>.<span class="jm">log</span>(fruits[<span class="jn">0</span>]);          <span class="jc">// আম</span>
+<span class="jk">console</span>.<span class="jm">log</span>(fruits.<span class="jm">length</span>);      <span class="jc">// 3</span>
+
+<span class="jc">// Add/Remove</span>
+fruits.<span class="jm">push</span>(<span class="js">"আনারস"</span>);            <span class="jc">// শেষে যোগ</span>
+fruits.<span class="jm">unshift</span>(<span class="js">"জাম"</span>);           <span class="jc">// শুরুতে যোগ</span>
+fruits.<span class="jm">pop</span>();                     <span class="jc">// শেষেরটা বাদ</span>
+fruits.<span class="jm">splice</span>(<span class="jn">1</span>, <span class="jn">1</span>);             <span class="jc">// index 1 থেকে 1টা বাদ</span>
+
+<span class="jc">// Powerful Methods</span>
+<span class="jk">const</span> numbers = [<span class="jn">1</span>, <span class="jn">2</span>, <span class="jn">3</span>, <span class="jn">4</span>, <span class="jn">5</span>];
+
+<span class="jc">// map — প্রতিটা item transform করো</span>
+<span class="jk">const</span> doubled = numbers.<span class="jm">map</span>(n => n * <span class="jn">2</span>);
+<span class="jk">console</span>.<span class="jm">log</span>(doubled);    <span class="jc">// [2, 4, 6, 8, 10]</span>
+
+<span class="jc">// filter — শর্ত মেলে এমনগুলো রাখো</span>
+<span class="jk">const</span> evens = numbers.<span class="jm">filter</span>(n => n % <span class="jn">2</span> === <span class="jn">0</span>);
+<span class="jk">console</span>.<span class="jm">log</span>(evens);      <span class="jc">// [2, 4]</span>
+
+<span class="jc">// find — প্রথম match খোঁজো</span>
+<span class="jk">const</span> found = numbers.<span class="jm">find</span>(n => n > <span class="jn">3</span>);
+<span class="jk">console</span>.<span class="jm">log</span>(found);      <span class="jc">// 4</span>
+
+<span class="jc">// reduce — সব মিলিয়ে একটা ফলাফল</span>
+<span class="jk">const</span> sum = numbers.<span class="jm">reduce</span>((total, n) => total + n, <span class="jn">0</span>);
+<span class="jk">console</span>.<span class="jm">log</span>(sum);        <span class="jc">// 15</span>
+
+<span class="jc">// includes — আছে কিনা</span>
+<span class="jk">console</span>.<span class="jm">log</span>(numbers.<span class="jm">includes</span>(<span class="jn">3</span>));  <span class="jc">// true</span>
+
+<span class="jc">// forEach — প্রতিটায় কাজ করো (map-এর মতো, কিন্তু return নেই)</span>
+fruits.<span class="jm">forEach</span>(fruit => <span class="jk">console</span>.<span class="jm">log</span>(fruit));
+
+<span class="jc">// sort — সাজানো</span>
+<span class="jk">const</span> sorted = [<span class="jn">3</span>, <span class="jn">1</span>, <span class="jn">4</span>, <span class="jn">1</span>].<span class="jm">sort</span>((a, b) => a - b);
+<span class="jk">console</span>.<span class="jm">log</span>(sorted);    <span class="jc">// [1, 1, 3, 4]</span></div>
+
+    <div class="chapter-summary">
+      <h3 style="color: #fde68a;">📌 <span class="bn-text">সারসংক্ষেপ</span><span class="en-text">Summary</span></h3>
+      <ul>
+        <li>⚙️ <span class="bn-text">Arrow function: </span><code>const fn = (x) => x * 2</code></li>
+        <li>📋 <code>push/pop/splice</code> — <span class="bn-text">array modify করা</span><span class="en-text">modify array</span></li>
+        <li>🗺️ <code>map()</code> — <span class="bn-text">transform, </span><code>filter()</code> — <span class="bn-text">বাছাই, </span><code>reduce()</code> — <span class="bn-text">একটায় পরিণত</span></li>
+        <li>🔍 <code>find()</code> — <span class="bn-text">খোঁজা, </span><code>includes()</code> — <span class="bn-text">আছে কিনা</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 10: DOM Manipulation
+══════════════════════════════════ -->
+<div class="chapter ch10">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 10 — JAVASCRIPT</div>
+    <div class="chapter-tag tag-js">⚡ JavaScript</div>
+    <div class="chapter-title">🌳 DOM Manipulation</div>
+    <div class="chapter-desc"><span class="bn-text">JavaScript দিয়ে HTML page বদলানো — ওয়েবের সবচেয়ে শক্তিশালী দিক</span><span class="en-text">Changing the HTML page with JavaScript — the most powerful aspect of web</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-js">🌳 DOM <span class="bn-text">কী?</span><span class="en-text">What is the DOM?</span></h2>
+    <p><span class="bn-text">DOM (Document Object Model) হলো HTML document-এর JavaScript representation। JavaScript দিয়ে DOM-এর যেকোনো element খুঁজে পাওয়া, বদলানো, যোগ বা বাদ দেওয়া যায়।</span><span class="en-text">The DOM is JavaScript's representation of the HTML document. You can find, change, add or remove any element using JavaScript.</span></p>
+
+    <h2 class="sec sec-js">🔍 Elements খোঁজা</h2>
+    <div class="code js-code"><span class="jc">// querySelector — CSS selector দিয়ে প্রথমটা</span>
+<span class="jk">const</span> title  = <span class="jd">document</span>.<span class="jm">querySelector</span>(<span class="js">'h1'</span>);
+<span class="jk">const</span> btn    = <span class="jd">document</span>.<span class="jm">querySelector</span>(<span class="js">'.btn'</span>);
+<span class="jk">const</span> header = <span class="jd">document</span>.<span class="jm">querySelector</span>(<span class="js">'#header'</span>);
+
+<span class="jc">// querySelectorAll — সব মিলিয়ে NodeList</span>
+<span class="jk">const</span> allCards  = <span class="jd">document</span>.<span class="jm">querySelectorAll</span>(<span class="js">'.card'</span>);
+<span class="jk">const</span> allImages = <span class="jd">document</span>.<span class="jm">querySelectorAll</span>(<span class="js">'img'</span>);
+
+<span class="jc">// Loop করে সব নিয়ে কাজ করো</span>
+allCards.<span class="jm">forEach</span>(card => {
+  card.style.<span class="jm">border</span> = <span class="js">"2px solid blue"</span>;
+});</div>
+
+    <h2 class="sec sec-js">✏️ Content ও Style বদলানো</h2>
+    <div class="code js-code"><span class="jk">const</span> elem = <span class="jd">document</span>.<span class="jm">querySelector</span>(<span class="js">'#title'</span>);
+
+<span class="jc">// Text বদলানো</span>
+elem.<span class="jm">textContent</span> = <span class="js">"নতুন শিরোনাম"</span>;      <span class="jc">// plain text</span>
+elem.<span class="jm">innerHTML</span>    = <span class="js">"&lt;strong&gt;Bold&lt;/strong&gt;"</span>; <span class="jc">// HTML support</span>
+
+<span class="jc">// Style বদলানো</span>
+elem.style.<span class="jm">color</span>      = <span class="js">"red"</span>;
+elem.style.<span class="jm">fontSize</span>   = <span class="js">"24px"</span>;
+elem.style.<span class="jm">display</span>    = <span class="js">"none"</span>;     <span class="jc">// লুকিয়ে দাও</span>
+
+<span class="jc">// Attribute বদলানো</span>
+<span class="jk">const</span> img = <span class="jd">document</span>.<span class="jm">querySelector</span>(<span class="js">'img'</span>);
+img.<span class="jm">setAttribute</span>(<span class="js">'src'</span>, <span class="js">'new-photo.jpg'</span>);
+img.<span class="jm">setAttribute</span>(<span class="js">'alt'</span>, <span class="js">'নতুন ছবি'</span>);
+
+<span class="jc">// CSS class যোগ/বাদ/toggle</span>
+elem.classList.<span class="jm">add</span>(<span class="js">'active'</span>);       <span class="jc">// class যোগ</span>
+elem.classList.<span class="jm">remove</span>(<span class="js">'hidden'</span>);    <span class="jc">// class বাদ</span>
+elem.classList.<span class="jm">toggle</span>(<span class="js">'dark'</span>);      <span class="jc">// থাকলে বাদ, না থাকলে যোগ</span>
+elem.classList.<span class="jm">contains</span>(<span class="js">'active'</span>); <span class="jc">// আছে কিনা: true/false</span></div>
+
+    <h2 class="sec sec-js">🖱️ Events — <span class="bn-text">কিছু হলে কাজ করো</span><span class="en-text">Do Something When Something Happens</span></h2>
+    <div class="code js-code"><span class="jk">const</span> btn = <span class="jd">document</span>.<span class="jm">querySelector</span>(<span class="js">'#myBtn'</span>);
+
+<span class="jc">// Click event</span>
+btn.<span class="jm">addEventListener</span>(<span class="js">'click'</span>, () => {
+  <span class="jk">console</span>.<span class="jm">log</span>(<span class="js">"Button চাপা হয়েছে!"</span>);
+});
+
+<span class="jc">// Form submit</span>
+<span class="jk">const</span> form = <span class="jd">document</span>.<span class="jm">querySelector</span>(<span class="js">'form'</span>);
+form.<span class="jm">addEventListener</span>(<span class="js">'submit'</span>, (<span class="jp">event</span>) => {
+  event.<span class="jm">preventDefault</span>();    <span class="jc">// page reload বন্ধ</span>
+  <span class="jk">const</span> naam = <span class="jd">document</span>.<span class="jm">querySelector</span>(<span class="js">'#naam'</span>).value;
+  <span class="jk">console</span>.<span class="jm">log</span>(<span class="js">`নাম: <span class="jm">${naam}</span>`</span>);
+});
+
+<span class="jc">// Input change</span>
+<span class="jk">const</span> input = <span class="jd">document</span>.<span class="jm">querySelector</span>(<span class="js">'input'</span>);
+input.<span class="jm">addEventListener</span>(<span class="js">'input'</span>, (<span class="jp">e</span>) => {
+  <span class="jk">console</span>.<span class="jm">log</span>(<span class="js">`লিখছো: <span class="jm">${e.target.value}</span>`</span>);
+});
+
+<span class="jc">// Common events</span>
+<span class="jc">// click, dblclick, mouseover, mouseout</span>
+<span class="jc">// keydown, keyup, keypress</span>
+<span class="jc">// submit, input, change</span>
+<span class="jc">// load, resize, scroll</span></div>
+
+    <h2 class="sec sec-js">➕ <span class="bn-text">Element তৈরি ও যোগ করা</span><span class="en-text">Creating & Adding Elements</span></h2>
+    <div class="code js-code"><span class="jc">// নতুন element তৈরি করো</span>
+<span class="jk">const</span> newCard = <span class="jd">document</span>.<span class="jm">createElement</span>(<span class="js">'div'</span>);
+newCard.classList.<span class="jm">add</span>(<span class="js">'card'</span>);
+newCard.<span class="jm">innerHTML</span> = <span class="js">`
+  &lt;h3&gt;নতুন Card&lt;/h3&gt;
+  &lt;p&gt;এটা JavaScript দিয়ে তৈরি&lt;/p&gt;
+`</span>;
+
+<span class="jc">// Page-এ যোগ করো</span>
+<span class="jk">const</span> container = <span class="jd">document</span>.<span class="jm">querySelector</span>(<span class="js">'.container'</span>);
+container.<span class="jm">appendChild</span>(newCard);    <span class="jc">// শেষে যোগ</span>
+container.<span class="jm">prepend</span>(newCard);       <span class="jc">// শুরুতে যোগ</span>
+
+<span class="jc">// Remove করো</span>
+newCard.<span class="jm">remove</span>();</div>
+
+    <div class="chapter-summary">
+      <h3 style="color: #fde68a;">📌 <span class="bn-text">সারসংক্ষেপ</span><span class="en-text">Summary</span></h3>
+      <ul>
+        <li>🔍 <code>querySelector('.class')</code> — <span class="bn-text">element খোঁজো</span><span class="en-text">find element</span></li>
+        <li>✏️ <code>.textContent</code>, <code>.innerHTML</code>, <code>.style.color</code> — <span class="bn-text">বদলাও</span><span class="en-text">change</span></li>
+        <li>🎨 <code>.classList.add/remove/toggle</code> — <span class="bn-text">CSS class</span></li>
+        <li>🖱️ <code>addEventListener('click', fn)</code> — <span class="bn-text">event শোনো</span><span class="en-text">listen to events</span></li>
+        <li>➕ <code>createElement + appendChild</code> — <span class="bn-text">নতুন element তৈরি</span><span class="en-text">create new elements</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 11: Objects, JSON & Fetch
+══════════════════════════════════ -->
+<div class="chapter ch11">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 11 — JAVASCRIPT</div>
+    <div class="chapter-tag tag-js">⚡ JavaScript</div>
+    <div class="chapter-title">🌐 Objects, JSON <span class="bn-text">ও</span><span class="en-text">&</span> Fetch API</div>
+    <div class="chapter-desc"><span class="bn-text">Objects, JSON, Async/Await ও API থেকে real data আনা</span><span class="en-text">Objects, JSON, Async/Await and fetching real data from APIs</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-js">📦 Objects — <span class="bn-text">Key-Value জোড়া</span><span class="en-text">Key-Value Pairs</span></h2>
+    <div class="code js-code"><span class="jc">// Object তৈরি</span>
+<span class="jk">const</span> student = {
+  naam:    <span class="js">"Rahim"</span>,
+  boyos:   <span class="jn">20</span>,
+  shahor:  <span class="js">"Dhaka"</span>,
+  hobbies: [<span class="js">"coding"</span>, <span class="js">"reading"</span>],
+  address: {                        <span class="jc">// nested object</span>
+    road: <span class="js">"Mirpur 10"</span>,
+    city: <span class="js">"Dhaka"</span>
+  },
+  <span class="jf">greet</span>() {                         <span class="jc">// method</span>
+    <span class="jk">return</span> <span class="js">`হ্যালো, আমি <span class="jm">${<span class="jk">this</span>.naam}</span>`</span>;
+  }
+};
+
+<span class="jc">// Access</span>
+<span class="jk">console</span>.<span class="jm">log</span>(student.naam);            <span class="jc">// dot notation</span>
+<span class="jk">console</span>.<span class="jm">log</span>(student[<span class="js">'boyos'</span>]);       <span class="jc">// bracket notation</span>
+<span class="jk">console</span>.<span class="jm">log</span>(student.address.city);    <span class="jc">// nested</span>
+<span class="jk">console</span>.<span class="jm">log</span>(student.<span class="jm">greet</span>());         <span class="jc">// method call</span>
+
+<span class="jc">// Destructuring — সহজে বের করা</span>
+<span class="jk">const</span> { naam, boyos, shahor } = student;
+<span class="jk">console</span>.<span class="jm">log</span>(naam, boyos);              <span class="jc">// Rahim 20</span>
+
+<span class="jc">// Spread — copy করা</span>
+<span class="jk">const</span> updatedStudent = { ...student, boyos: <span class="jn">21</span> };</div>
+
+    <h2 class="sec sec-js">📄 JSON — <span class="bn-text">ডেটা আদান-প্রদানের ভাষা</span><span class="en-text">Language for Data Exchange</span></h2>
+    <div class="code js-code"><span class="jc">// JSON = JavaScript Object Notation</span>
+<span class="jc">// API থেকে এই format-এ ডেটা আসে</span>
+
+<span class="jk">const</span> jsonString = <span class="js">'{"naam": "Rahim", "boyos": 20}'</span>;
+
+<span class="jc">// JSON String → JavaScript Object</span>
+<span class="jk">const</span> obj = JSON.<span class="jm">parse</span>(jsonString);
+<span class="jk">console</span>.<span class="jm">log</span>(obj.naam);   <span class="jc">// Rahim</span>
+
+<span class="jc">// JavaScript Object → JSON String</span>
+<span class="jk">const</span> str = JSON.<span class="jm">stringify</span>(obj);
+<span class="jk">console</span>.<span class="jm">log</span>(str);         <span class="jc">// {"naam":"Rahim","boyos":20}</span>
+
+<span class="jc">// Pretty print</span>
+<span class="jk">console</span>.<span class="jm">log</span>(JSON.<span class="jm">stringify</span>(obj, <span class="jk">null</span>, <span class="jn">2</span>));</div>
+
+    <h2 class="sec sec-js">🌐 Fetch API — <span class="bn-text">ইন্টারনেট থেকে ডেটা আনা</span><span class="en-text">Fetching Data from the Internet</span></h2>
+    <div class="code js-code"><span class="jc">// Async/Await দিয়ে API call (সবচেয়ে আধুনিক পদ্ধতি)</span>
+<span class="jk">const</span> <span class="jf">getUsers</span> = <span class="jk">async</span> () => {
+  <span class="jk">try</span> {
+    <span class="jc">// API-তে request পাঠাও</span>
+    <span class="jk">const</span> response = <span class="jk">await</span> <span class="jm">fetch</span>(<span class="js">'https://jsonplaceholder.typicode.com/users'</span>);
+
+    <span class="jc">// JSON-এ convert করো</span>
+    <span class="jk">const</span> users = <span class="jk">await</span> response.<span class="jm">json</span>();
+
+    <span class="jc">// ব্যবহার করো</span>
+    users.<span class="jm">forEach</span>(user => {
+      <span class="jk">console</span>.<span class="jm">log</span>(<span class="js">`<span class="jm">${user.name}</span>: <span class="jm">${user.email}</span>`</span>);
+    });
+
+  } <span class="jk">catch</span> (error) {
+    <span class="jk">console</span>.<span class="jm">error</span>(<span class="js">'Error:'</span>, error);
+  }
+};
+<span class="jf">getUsers</span>();</div>
+
+    <div class="code js-code"><span class="jc">// Real-world example: Users দেখানো</span>
+<span class="jk">const</span> <span class="jf">showUsers</span> = <span class="jk">async</span> () => {
+  <span class="jk">const</span> container = <span class="jd">document</span>.<span class="jm">querySelector</span>(<span class="js">'#users'</span>);
+  container.<span class="jm">innerHTML</span> = <span class="js">'Loading...'</span>;
+
+  <span class="jk">const</span> res   = <span class="jk">await</span> <span class="jm">fetch</span>(<span class="js">'https://jsonplaceholder.typicode.com/users'</span>);
+  <span class="jk">const</span> users = <span class="jk">await</span> res.<span class="jm">json</span>();
+
+  container.<span class="jm">innerHTML</span> = users.<span class="jm">map</span>(user => <span class="js">`
+    &lt;div class="card"&gt;
+      &lt;h3&gt;<span class="jm">${user.name}</span>&lt;/h3&gt;
+      &lt;p&gt;📧 <span class="jm">${user.email}</span>&lt;/p&gt;
+      &lt;p&gt;🌐 <span class="jm">${user.website}</span>&lt;/p&gt;
+    &lt;/div&gt;
+  `</span>).<span class="jm">join</span>(<span class="js">''</span>);
+};
+<span class="jf">showUsers</span>();</div>
+
+    <div class="chapter-summary">
+      <h3 style="color: #fde68a;">📌 <span class="bn-text">সারসংক্ষেপ</span><span class="en-text">Summary</span></h3>
+      <ul>
+        <li>📦 <span class="bn-text">Object: key-value pair, nested object, method</span></li>
+        <li>✂️ <span class="bn-text">Destructuring: </span><code>const { naam, boyos } = student</code></li>
+        <li>📄 <code>JSON.parse()</code> → <span class="bn-text">Object, </span><code>JSON.stringify()</code> → <span class="bn-text">String</span></li>
+        <li>🌐 <code>async/await + fetch()</code> — <span class="bn-text">API থেকে ডেটা আনা</span><span class="en-text">fetch data from API</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 12: CSS Animations
+══════════════════════════════════ -->
+<div class="chapter ch12">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 12 — ADVANCED</div>
+    <div class="chapter-tag tag-adv">🚀 Advanced</div>
+    <div class="chapter-title">✨ CSS Animations <span class="bn-text">ও</span><span class="en-text">&</span> Transitions</div>
+    <div class="chapter-desc"><span class="bn-text">Motion দিয়ে ওয়েবসাইটকে প্রাণবন্ত করা</span><span class="en-text">Bringing the website to life with motion</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-adv">🔄 Transitions — <span class="bn-text">মসৃণ পরিবর্তন</span><span class="en-text">Smooth Changes</span></h2>
+    <div class="code adv-code"><span class="hc">/* transition: property duration timing-function delay */</span>
+<span class="ct">.button</span> {
+  <span class="cp">background</span>: <span class="cv">#2563eb</span>;
+  <span class="cp">color</span>: <span class="cv">white</span>;
+  <span class="cp">padding</span>: <span class="cv">12px 24px</span>;
+  <span class="cp">border-radius</span>: <span class="cv">8px</span>;
+  <span class="cp">transition</span>: <span class="cv">all 0.3s ease</span>;      <span class="hc">/* সব property, 0.3s, smooth */</span>
+}
+<span class="ct">.button:hover</span> {
+  <span class="cp">background</span>: <span class="cv">#1d4ed8</span>;
+  <span class="cp">transform</span>: <span class="cv">translateY(-2px)</span>;   <span class="hc">/* উপরে উঠে */</span>
+  <span class="cp">box-shadow</span>: <span class="cv">0 8px 24px rgba(37,99,235,0.4)</span>;
+}
+
+<span class="hc">/* Individual transitions */</span>
+<span class="ct">.card</span> {
+  <span class="cp">transition</span>:
+    <span class="cv">transform 0.3s ease,</span>
+    <span class="cv">box-shadow 0.3s ease,</span>
+    <span class="cv">opacity 0.2s linear</span>;
+}
+<span class="ct">.card:hover</span> {
+  <span class="cp">transform</span>: <span class="cv">scale(1.03)</span>;
+  <span class="cp">box-shadow</span>: <span class="cv">0 20px 40px rgba(0,0,0,0.15)</span>;
+}</div>
+
+    <h2 class="sec sec-adv">🎬 Transform — <span class="bn-text">Element-কে রূপান্তর</span><span class="en-text">Transforming Elements</span></h2>
+    <div class="code adv-code"><span class="ct">.element</span> {
+  <span class="cp">transform</span>: <span class="cv">translateX(50px)</span>;   <span class="hc">/* ডানে সরাও */</span>
+  <span class="cp">transform</span>: <span class="cv">translateY(-20px)</span>;  <span class="hc">/* উপরে সরাও */</span>
+  <span class="cp">transform</span>: <span class="cv">scale(1.5)</span>;         <span class="hc">/* দেড়গুণ বড় */</span>
+  <span class="cp">transform</span>: <span class="cv">rotate(45deg)</span>;      <span class="hc">/* ৪৫ ডিগ্রি ঘোরাও */</span>
+  <span class="cp">transform</span>: <span class="cv">skew(10deg)</span>;        <span class="hc">/* বাঁকাও */</span>
+
+  <span class="hc">/* একসাথে */</span>
+  <span class="cp">transform</span>: <span class="cv">translateY(-4px) scale(1.05)</span>;
+}</div>
+
+    <h2 class="sec sec-adv">🎞️ Keyframe Animations — <span class="bn-text">পূর্ণ Animation</span><span class="en-text">Full Animations</span></h2>
+    <div class="code adv-code"><span class="hc">/* @keyframes দিয়ে animation define করো */</span>
+<span class="ct">@keyframes fadeIn</span> {
+  <span class="ct">from</span> { <span class="cp">opacity</span>: <span class="cv">0</span>; <span class="cp">transform</span>: <span class="cv">translateY(20px)</span>; }
+  <span class="ct">to</span>   { <span class="cp">opacity</span>: <span class="cv">1</span>; <span class="cp">transform</span>: <span class="cv">translateY(0)</span>; }
+}
+
+<span class="ct">@keyframes spin</span> {
+  <span class="ct">from</span> { <span class="cp">transform</span>: <span class="cv">rotate(0deg)</span>; }
+  <span class="ct">to</span>   { <span class="cp">transform</span>: <span class="cv">rotate(360deg)</span>; }
+}
+
+<span class="ct">@keyframes pulse</span> {
+  <span class="ct">0%, 100%</span> { <span class="cp">transform</span>: <span class="cv">scale(1)</span>; }
+  <span class="ct">50%</span>      { <span class="cp">transform</span>: <span class="cv">scale(1.08)</span>; }
+}
+
+<span class="hc">/* animation: name duration timing-function delay iteration-count */</span>
+<span class="ct">.card</span>    { <span class="cp">animation</span>: <span class="cv">fadeIn 0.5s ease forwards</span>; }
+<span class="ct">.loader</span>  { <span class="cp">animation</span>: <span class="cv">spin 1s linear infinite</span>; }
+<span class="ct">.button</span>  { <span class="cp">animation</span>: <span class="cv">pulse 2s ease-in-out infinite</span>; }
+
+<span class="hc">/* Staggered animation — একটার পর একটা */</span>
+<span class="ct">.card:nth-child(1)</span> { <span class="cp">animation-delay</span>: <span class="cv">0s</span>; }
+<span class="ct">.card:nth-child(2)</span> { <span class="cp">animation-delay</span>: <span class="cv">0.1s</span>; }
+<span class="ct">.card:nth-child(3)</span> { <span class="cp">animation-delay</span>: <span class="cv">0.2s</span>; }</div>
+
+    <div class="chapter-summary">
+      <h3 style="color: #d8b4fe;">📌 <span class="bn-text">সারসংক্ষেপ</span><span class="en-text">Summary</span></h3>
+      <ul>
+        <li>🔄 <code>transition: all 0.3s ease</code> — <span class="bn-text">hover-এ মসৃণ পরিবর্তন</span><span class="en-text">smooth change on hover</span></li>
+        <li>🔧 <code>transform: scale/translate/rotate</code> — <span class="bn-text">রূপান্তর</span><span class="en-text">transform</span></li>
+        <li>🎞️ <code>@keyframes + animation</code> — <span class="bn-text">পূর্ণ animation</span><span class="en-text">full animation</span></li>
+        <li>⏱️ <code>animation-delay</code> — <span class="bn-text">staggered effect তৈরি</span><span class="en-text">create staggered effect</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 13: Advanced JS
+══════════════════════════════════ -->
+<div class="chapter ch13">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 13 — ADVANCED</div>
+    <div class="chapter-tag tag-adv">🚀 Advanced</div>
+    <div class="chapter-title">⚡ Advanced JavaScript — ES6+</div>
+    <div class="chapter-desc"><span class="bn-text">Destructuring, Spread, Modules, LocalStorage, Error handling</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-adv">✂️ Destructuring ও Spread</h2>
+    <div class="code adv-code"><span class="jc">// Array Destructuring</span>
+<span class="jk">const</span> [first, second, ...rest] = [<span class="jn">1</span>, <span class="jn">2</span>, <span class="jn">3</span>, <span class="jn">4</span>, <span class="jn">5</span>];
+<span class="jk">console</span>.<span class="jm">log</span>(first, second, rest);   <span class="jc">// 1, 2, [3,4,5]</span>
+
+<span class="jc">// Object Destructuring</span>
+<span class="jk">const</span> { naam, boyos, ...otherInfo } = student;
+
+<span class="jc">// Spread operator — ছড়িয়ে দাও</span>
+<span class="jk">const</span> arr1 = [<span class="jn">1</span>, <span class="jn">2</span>, <span class="jn">3</span>];
+<span class="jk">const</span> arr2 = [<span class="jn">4</span>, <span class="jn">5</span>, <span class="jn">6</span>];
+<span class="jk">const</span> combined = [...arr1, ...arr2];   <span class="jc">// [1,2,3,4,5,6]</span>
+
+<span class="jk">const</span> obj1 = { a: <span class="jn">1</span>, b: <span class="jn">2</span> };
+<span class="jk">const</span> obj2 = { c: <span class="jn">3</span> };
+<span class="jk">const</span> merged = { ...obj1, ...obj2 };   <span class="jc">// {a:1, b:2, c:3}</span>
+
+<span class="jc">// Optional chaining — safely nested property access</span>
+<span class="jk">const</span> city = user?.address?.city;      <span class="jc">// error ছাড়াই</span>
+
+<span class="jc">// Nullish coalescing — null/undefined হলে default দাও</span>
+<span class="jk">const</span> name = user.naam ?? <span class="js">"অপরিচিত"</span>;</div>
+
+    <h2 class="sec sec-adv">💾 LocalStorage — <span class="bn-text">Browser-এ ডেটা সংরক্ষণ</span><span class="en-text">Storing Data in Browser</span></h2>
+    <div class="code adv-code"><span class="jc">// LocalStorage — browser বন্ধ করলেও থাকে</span>
+
+<span class="jc">// সংরক্ষণ করো (শুধু string)</span>
+<span class="jd">localStorage</span>.<span class="jm">setItem</span>(<span class="js">'naam'</span>, <span class="js">'Rahim'</span>);
+
+<span class="jc">// Object সংরক্ষণ করতে JSON.stringify</span>
+<span class="jk">const</span> user = { naam: <span class="js">"Rahim"</span>, boyos: <span class="jn">20</span> };
+<span class="jd">localStorage</span>.<span class="jm">setItem</span>(<span class="js">'user'</span>, JSON.<span class="jm">stringify</span>(user));
+
+<span class="jc">// পড়ো</span>
+<span class="jk">const</span> savedName = <span class="jd">localStorage</span>.<span class="jm">getItem</span>(<span class="js">'naam'</span>);
+<span class="jk">const</span> savedUser = JSON.<span class="jm">parse</span>(<span class="jd">localStorage</span>.<span class="jm">getItem</span>(<span class="js">'user'</span>));
+
+<span class="jc">// বাদ দাও</span>
+<span class="jd">localStorage</span>.<span class="jm">removeItem</span>(<span class="js">'naam'</span>);
+<span class="jd">localStorage</span>.<span class="jm">clear</span>();
+
+<span class="jc">// Use case: Dark mode সংরক্ষণ</span>
+<span class="jk">const</span> <span class="jf">toggleDark</span> = () => {
+  <span class="jd">document</span>.body.classList.<span class="jm">toggle</span>(<span class="js">'dark'</span>);
+  <span class="jk">const</span> isDark = <span class="jd">document</span>.body.classList.<span class="jm">contains</span>(<span class="js">'dark'</span>);
+  <span class="jd">localStorage</span>.<span class="jm">setItem</span>(<span class="js">'darkMode'</span>, isDark);
+};</div>
+
+    <h2 class="sec sec-adv">🛡️ Error Handling ও Try/Catch</h2>
+    <div class="code adv-code"><span class="jc">// try/catch দিয়ে error সামলাও</span>
+<span class="jk">const</span> <span class="jf">fetchData</span> = <span class="jk">async</span> (<span class="jp">url</span>) => {
+  <span class="jk">try</span> {
+    <span class="jk">const</span> response = <span class="jk">await</span> <span class="jm">fetch</span>(url);
+
+    <span class="jk">if</span> (!response.ok) {
+      <span class="jk">throw new</span> Error(<span class="js">`HTTP Error: <span class="jm">${response.status}</span>`</span>);
+    }
+
+    <span class="jk">const</span> data = <span class="jk">await</span> response.<span class="jm">json</span>();
+    <span class="jk">return</span> data;
+
+  } <span class="jk">catch</span> (error) {
+    <span class="jk">console</span>.<span class="jm">error</span>(<span class="js">'Error:'</span>, error.message);
+    <span class="jc">// UI-তে error দেখাও</span>
+    <span class="jd">document</span>.<span class="jm">querySelector</span>(<span class="js">'#error'</span>).<span class="jm">textContent</span> = error.message;
+  } <span class="jk">finally</span> {
+    <span class="jc">// সবসময় চলে — loading hide করো</span>
+    <span class="jd">document</span>.<span class="jm">querySelector</span>(<span class="js">'.loader'</span>).style.<span class="jm">display</span> = <span class="js">'none'</span>;
+  }
+};</div>
+
+    <div class="chapter-summary">
+      <h3 style="color: #d8b4fe;">📌 <span class="bn-text">সারসংক্ষেপ</span><span class="en-text">Summary</span></h3>
+      <ul>
+        <li>✂️ <span class="bn-text">Destructuring: array ও object থেকে সহজে বের করা</span><span class="en-text">extract easily from arrays and objects</span></li>
+        <li>🔀 <span class="bn-text">Spread <code>...</code>: array/object copy ও merge</span></li>
+        <li>💾 <code>localStorage</code> — <span class="bn-text">browser-এ স্থায়ীভাবে সংরক্ষণ</span><span class="en-text">permanently store in browser</span></li>
+        <li>🛡️ <code>try/catch/finally</code> — <span class="bn-text">error সামলানো</span><span class="en-text">handling errors</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     CH 14: Projects & Roadmap
+══════════════════════════════════ -->
+<div class="chapter ch14">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 14 — PROJECTS</div>
+    <div class="chapter-tag tag-adv">🚀 Projects</div>
+    <div class="chapter-title">🏗️ <span class="bn-text">Projects ও Next Steps</span><span class="en-text">Projects & Next Steps</span></div>
+    <div class="chapter-desc"><span class="bn-text">৫টি প্রজেক্ট আইডিয়া, Roadmap এবং কোথায় Deploy করবো</span><span class="en-text">5 project ideas, Roadmap and where to deploy</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-adv">🏗️ <span class="bn-text">৫টি Project — শুরু থেকে Advanced</span><span class="en-text">5 Projects — Beginner to Advanced</span></h2>
+
+    <div class="grid2">
+      <div class="card html-card">
+        <h4>🟢 Project 1: Personal Portfolio</h4>
+        <p><span class="bn-text">নিজের পরিচয় সাইট। HTML + CSS শেখার পরেই বানাও।</span><span class="en-text">Your personal introduction site. Build right after learning HTML + CSS.</span></p>
+        <p><span class="badge badge-g">HTML</span> <span class="badge badge-b">CSS</span> <span class="badge badge-g">Flexbox</span></p>
+        <p style="font-size:13px;"><span class="bn-text">নাম, কাজ, ছবি, Contact form</span><span class="en-text">Name, work, photo, contact form</span></p>
+      </div>
+      <div class="card css-card">
+        <h4>🟡 Project 2: Todo App</h4>
+        <p><span class="bn-text">কাজের তালিকা। JS শেখার পরেই বানাও।</span><span class="en-text">Task list app. Build right after learning JS.</span></p>
+        <p><span class="badge badge-y">JS DOM</span> <span class="badge badge-y">localStorage</span> <span class="badge badge-g">Events</span></p>
+        <p style="font-size:13px;"><span class="bn-text">Add, delete, complete, save করা</span><span class="en-text">Add, delete, complete, save tasks</span></p>
+      </div>
+      <div class="card js-card">
+        <h4>🟠 Project 3: Weather App</h4>
+        <p><span class="bn-text">Real-time আবহাওয়া। Fetch API শেখার পরে।</span><span class="en-text">Real-time weather. After learning Fetch API.</span></p>
+        <p><span class="badge badge-o">Fetch API</span> <span class="badge badge-o">JSON</span> <span class="badge badge-b">OpenWeather API</span></p>
+        <p style="font-size:13px;"><span class="bn-text">শহরের নাম দাও, আবহাওয়া দেখাও</span><span class="en-text">Enter city name, show weather</span></p>
+      </div>
+      <div class="card purple-card">
+        <h4>🔵 Project 4: Quiz App</h4>
+        <p><span class="bn-text">MCQ Quiz। Arrays ও DOM-এর ভালো practice।</span><span class="en-text">MCQ Quiz. Great practice for Arrays & DOM.</span></p>
+        <p><span class="badge badge-p">Arrays</span> <span class="badge badge-p">DOM</span> <span class="badge badge-p">Timer</span></p>
+        <p style="font-size:13px;"><span class="bn-text">প্রশ্ন, option, score, timer</span><span class="en-text">Questions, options, score, timer</span></p>
+      </div>
+    </div>
+
+    <div class="card green-card" style="margin-top:16px;">
+      <h4>🔴 Project 5: E-commerce Product Page</h4>
+      <p><span class="bn-text">পণ্যের পেজ, cart, filter। সব কিছু একসাথে।</span><span class="en-text">Product page, cart, filter. Everything combined.</span></p>
+      <p><span class="badge badge-g">HTML</span> <span class="badge badge-b">CSS Grid</span> <span class="badge badge-y">JS</span> <span class="badge badge-g">Fetch API</span> <span class="badge badge-p">localStorage</span></p>
+    </div>
+
+    <h2 class="sec sec-adv">📅 <span class="bn-text">Roadmap — এরপর কোথায় যাবো?</span><span class="en-text">Roadmap — Where to Go Next?</span></h2>
+
+    <div class="roadmap-phase">
+      <div class="phase-number" style="background: var(--accent-html);">1</div>
+      <div class="phase-content">
+        <div class="phase-title">🌱 <span class="bn-text">এখন (এই গাইড শেষ)</span><span class="en-text">Now (after this guide)</span></div>
+        <div class="phase-items">
+          <span class="phase-item badge-r">HTML Semantic</span>
+          <span class="phase-item badge-b">CSS Flexbox</span>
+          <span class="phase-item badge-b">CSS Grid</span>
+          <span class="phase-item badge-y">JS DOM</span>
+          <span class="phase-item badge-y">Fetch API</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="roadmap-phase">
+      <div class="phase-number" style="background: var(--accent-css);">2</div>
+      <div class="phase-content">
+        <div class="phase-title">⚡ <span class="bn-text">পরবর্তী ধাপ</span><span class="en-text">Next Step</span></div>
+        <div class="phase-items">
+          <span class="phase-item badge-b">Git & GitHub</span>
+          <span class="phase-item badge-b">Tailwind CSS</span>
+          <span class="phase-item badge-y">React JS</span>
+          <span class="phase-item badge-g">Node.js Basics</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="roadmap-phase">
+      <div class="phase-number" style="background: var(--purple);">3</div>
+      <div class="phase-content">
+        <div class="phase-title">🚀 Advanced</div>
+        <div class="phase-items">
+          <span class="phase-item badge-p">Next.js</span>
+          <span class="phase-item badge-p">TypeScript</span>
+          <span class="phase-item badge-g">Node + Express</span>
+          <span class="phase-item badge-g">MongoDB / SQL</span>
+          <span class="phase-item badge-b">REST API বানানো</span>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec sec-adv">🚀 <span class="bn-text">Deploy — Live করো!</span><span class="en-text">Deploy — Go Live!</span></h2>
+    <table>
+      <thead><tr><th>Platform</th><th><span class="bn-text">কী সুবিধা</span><span class="en-text">Benefit</span></th><th><span class="bn-text">দাম</span><span class="en-text">Price</span></th></tr></thead>
+      <tbody>
+        <tr><td><strong>GitHub Pages</strong></td><td><span class="bn-text">Static site — সবচেয়ে সহজ</span><span class="en-text">Static site — easiest</span></td><td><span class="badge badge-g">Free</span></td></tr>
+        <tr><td><strong>Netlify</strong></td><td><span class="bn-text">Drag & drop deploy, custom domain</span></td><td><span class="badge badge-g">Free</span></td></tr>
+        <tr><td><strong>Vercel</strong></td><td><span class="bn-text">React/Next.js-এর জন্য সেরা</span><span class="en-text">Best for React/Next.js</span></td><td><span class="badge badge-g">Free</span></td></tr>
+        <tr><td><strong>Cloudflare Pages</strong></td><td><span class="bn-text">দ্রুত, unlimited bandwidth</span><span class="en-text">Fast, unlimited bandwidth</span></td><td><span class="badge badge-g">Free</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec sec-adv">📚 <span class="bn-text">দরকারি Resources</span><span class="en-text">Essential Resources</span></h2>
+    <div class="grid2">
+      <div class="card html-card">
+        <h4>📖 <span class="bn-text">শেখার সাইট</span><span class="en-text">Learning Sites</span></h4>
+        <ul>
+          <li><strong>MDN Web Docs</strong> — developer.mozilla.org</li>
+          <li><strong>W3Schools</strong> — w3schools.com</li>
+          <li><strong>CSS-Tricks</strong> — css-tricks.com</li>
+          <li><strong>JavaScript.info</strong> — javascript.info</li>
+          <li><strong>freeCodeCamp</strong> — freecodecamp.org</li>
+        </ul>
+      </div>
+      <div class="card css-card">
+        <h4>🛠️ <span class="bn-text">দরকারি Tools</span><span class="en-text">Useful Tools</span></h4>
+        <ul>
+          <li><strong>VS Code</strong> — সেরা editor</li>
+          <li><strong>Chrome DevTools</strong> — F12 চাপো</li>
+          <li><strong>Figma</strong> — design দেখো</li>
+          <li><strong>Coolors.co</strong> — color palette</li>
+          <li><strong>Google Fonts</strong> — fonts</li>
+          <li><strong>Canva</strong> — design resource</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <p class="quote" style="color: #f97316;">🌐 "Every website you've ever used was built by someone who once knew nothing about web development."</p>
+      <p style="margin-top:12px;"><span class="bn-text">প্রতিটা কোড নিজে লিখো, ভুল করো, Google করো, আবার চেষ্টা করো। এটাই শেখার একমাত্র উপায়।</span>
+         <span class="en-text">Write every code yourself, make mistakes, Google it, try again. That's the only way to learn.</span></p>
+      <p style="margin-top:12px; font-size:12px; color: #f97316;">Web Development Guide (HTML + CSS + JS) — v1.0 | 14 Chapters | Zero to Advanced</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const body = document.body;
+body.classList.add('light-mode');
+
+function toggleTheme() {
+  const btn = document.getElementById('themeBtn');
+  if (body.classList.contains('light-mode')) {
+    body.classList.replace('light-mode', 'dark-mode');
+    btn.textContent = '☀️ Light Mode';
+    localStorage.setItem('wdTheme', 'dark');
+  } else {
+    body.classList.replace('dark-mode', 'light-mode');
+    btn.textContent = '🌙 Dark Mode';
+    localStorage.setItem('wdTheme', 'light');
+  }
+}
+
+function toggleLang() {
+  const btn = document.getElementById('langBtn');
+  if (body.classList.contains('lang-en')) {
+    body.classList.remove('lang-en');
+    btn.textContent = '🇬🇧 English';
+    localStorage.setItem('wdLang', 'bn');
+  } else {
+    body.classList.add('lang-en');
+    btn.textContent = '🇧🇩 বাংলা';
+    localStorage.setItem('wdLang', 'en');
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  if (localStorage.getItem('wdTheme') === 'dark') {
+    body.classList.replace('light-mode', 'dark-mode');
+    document.getElementById('themeBtn').textContent = '☀️ Light Mode';
+  }
+  if (localStorage.getItem('wdLang') === 'en') {
+    body.classList.add('lang-en');
+    document.getElementById('langBtn').textContent = '🇧🇩 বাংলা';
+  }
+});
+</script>
+</body>
+</html>

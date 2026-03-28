@@ -1,0 +1,1974 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python প্রোগ্রামিং — সম্পূর্ণ গাইড (Zero to Advanced)</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #1a0533;
+    --secondary: #2d1b69;
+    --accent: #f7c948;
+    --blue: #4a9eff;
+    --green: #3dd68c;
+    --red: #ff6b6b;
+    --orange: #ff9f43;
+    --purple: #a855f7;
+    --pink: #ec4899;
+    --code-bg: #0f0a1a;
+    --code-border: #3d2b6b;
+    --text: #1e1340;
+    --bg: #f3f0fa;
+    --card: #ffffff;
+    --snake-yellow: #f7c948;
+    --snake-blue: #306998;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14.5px;
+    line-height: 1.9;
+  }
+
+  /* ═══ COVER PAGE ═══ */
+  .cover {
+    background: linear-gradient(135deg, #1a0533 0%, #2d1b69 40%, #0f0a1a 100%);
+    color: white; min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 60px 40px;
+    page-break-after: always; position: relative; overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      45deg, transparent, transparent 40px,
+      rgba(247,201,72,0.03) 40px, rgba(247,201,72,0.03) 41px
+    );
+  }
+  .cover::after {
+    content: '🐍';
+    position: absolute; font-size: 300px; opacity: 0.04;
+    bottom: -40px; right: -40px; line-height: 1;
+  }
+  .cover-snake { font-size: 100px; margin-bottom: 15px; position: relative; animation: float 3s ease-in-out infinite; }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+  .cover h1 { font-size: 48px; font-weight: 700; color: var(--snake-yellow); text-shadow: 0 0 40px rgba(247,201,72,0.5); position: relative; }
+  .cover h2 { font-size: 22px; font-weight: 400; opacity: 0.75; margin: 10px 0 20px; }
+  .cover .divider { width: 120px; height: 3px; background: linear-gradient(90deg, var(--snake-blue), var(--snake-yellow)); margin: 20px auto; border-radius: 2px; }
+  .cover .desc { font-size: 16px; opacity: 0.7; max-width: 650px; line-height: 2.1; position: relative; }
+  .cover .badges { margin-top: 28px; position: relative; }
+  .cover .badge {
+    display: inline-block; background: rgba(247,201,72,0.12);
+    border: 1px solid rgba(247,201,72,0.3); padding: 6px 18px;
+    border-radius: 20px; margin: 5px; font-size: 13px; color: #d4bbff;
+  }
+  .cover .terminal {
+    background: rgba(0,0,0,0.6); border: 1px solid rgba(247,201,72,0.3);
+    border-radius: 10px; padding: 20px 30px; margin-top: 30px;
+    font-family: 'JetBrains Mono', monospace; font-size: 14px;
+    color: var(--green); text-align: left; max-width: 460px; position: relative;
+  }
+  .cover .terminal .prompt { color: #89b4fa; }
+  .cover .terminal .out { color: var(--snake-yellow); }
+
+  /* ═══ TOC ═══ */
+  .toc { background: white; padding: 50px 60px; page-break-after: always; }
+  .toc-header { font-size: 30px; color: var(--primary); border-bottom: 4px solid var(--snake-yellow); padding-bottom: 15px; margin-bottom: 35px; }
+  .toc-chapter { margin-bottom: 4px; }
+  .toc-main { display: flex; justify-content: space-between; padding: 10px 0; font-weight: 700; font-size: 16px; color: var(--primary); border-bottom: 1px solid #eee; margin-top: 15px; }
+  .toc-main .num { color: var(--purple); margin-right: 10px; }
+  .toc-sub { display: flex; justify-content: space-between; padding: 5px 0 5px 30px; color: #666; font-size: 13.5px; border-bottom: 1px dotted #f0f0f0; }
+
+  /* ═══ CHAPTERS ═══ */
+  .chapter { background: white; margin: 0; page-break-before: always; }
+  .chapter-header { padding: 40px 55px; position: relative; overflow: hidden; }
+  .ch1  .chapter-header { background: linear-gradient(135deg, #1a0533, #2d1b69); }
+  .ch2  .chapter-header { background: linear-gradient(135deg, #0f2027, #203a43); }
+  .ch3  .chapter-header { background: linear-gradient(135deg, #1a1a0d, #3d3d00); }
+  .ch4  .chapter-header { background: linear-gradient(135deg, #0d1b2a, #1b3a4b); }
+  .ch5  .chapter-header { background: linear-gradient(135deg, #0d2818, #1a4731); }
+  .ch6  .chapter-header { background: linear-gradient(135deg, #1b0000, #4a0000); }
+  .ch7  .chapter-header { background: linear-gradient(135deg, #1a0533, #3d0f6b); }
+  .ch8  .chapter-header { background: linear-gradient(135deg, #001a33, #003366); }
+  .ch9  .chapter-header { background: linear-gradient(135deg, #1a1000, #4a2e00); }
+  .ch10 .chapter-header { background: linear-gradient(135deg, #0d1a0d, #1a4f1a); }
+  .ch11 .chapter-header { background: linear-gradient(135deg, #1a0020, #4a0060); }
+  .ch12 .chapter-header { background: linear-gradient(135deg, #001a1a, #003d3d); }
+  .ch13 .chapter-header { background: linear-gradient(135deg, #1a0a00, #4a2000); }
+  .ch14 .chapter-header { background: linear-gradient(135deg, #0a001a, #2d0060); }
+
+  .chapter-header::after {
+    content: ''; position: absolute; top: -40px; right: -40px;
+    width: 160px; height: 160px; border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .chapter-label { font-size: 11px; letter-spacing: 4px; color: var(--snake-yellow); text-transform: uppercase; margin-bottom: 10px; }
+  .chapter-title { font-size: 30px; color: white; font-weight: 700; }
+  .chapter-desc { font-size: 14px; color: rgba(255,255,255,0.6); margin-top: 8px; }
+  .chapter-body { padding: 40px 55px; }
+
+  /* ═══ HEADINGS ═══ */
+  h2.sec { font-size: 22px; color: var(--primary); margin: 35px 0 15px; padding-left: 18px; border-left: 5px solid var(--snake-yellow); }
+  h3.sub { font-size: 17px; color: #2d1b69; margin: 25px 0 12px; padding-bottom: 6px; border-bottom: 2px dashed #e0e0e0; }
+  h4.mini { font-size: 15px; color: #333; margin: 18px 0 8px; font-weight: 600; }
+  p { margin-bottom: 14px; text-align: justify; }
+
+  /* ═══ CODE ═══ */
+  .code {
+    background: var(--code-bg); color: #cdd6f4;
+    padding: 20px 25px; border-radius: 10px;
+    font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: 13px;
+    margin: 18px 0; line-height: 1.9; overflow-x: auto;
+    border: 1px solid var(--code-border);
+    border-left: 4px solid var(--snake-yellow);
+  }
+  .code .c { color: #6c7086; font-style: italic; } /* comment */
+  .code .k { color: #cba6f7; } /* keyword */
+  .code .s { color: #a6e3a1; } /* string */
+  .code .n { color: #f38ba8; } /* number */
+  .code .f { color: #89b4fa; } /* function */
+  .code .p { color: var(--snake-yellow); } /* prompt/output */
+  .code .g { color: var(--green); } /* green */
+  .code .b { color: #fab387; } /* builtin */
+  .code .m { color: #89dceb; } /* method */
+  code { background: #2d1b69; color: #cba6f7; padding: 2px 8px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+
+  /* ═══ OUTPUT BOX ═══ */
+  .output {
+    background: #0a0a1a; border: 1px solid #3d2b6b; border-left: 4px solid var(--green);
+    border-radius: 0 0 10px 10px; margin-top: -18px; padding: 14px 25px;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #a6e3a1; line-height: 1.8;
+  }
+  .output-label { font-size: 11px; color: #6c7086; letter-spacing: 2px; margin-bottom: 5px; }
+
+  /* ═══ BOXES ═══ */
+  .box { padding: 18px 22px; border-radius: 10px; margin: 20px 0; border-left: 5px solid; }
+  .info    { background: #e8f4fd; border-color: #4a9eff; color: #023e8a; }
+  .warn    { background: #fff8e6; border-color: var(--orange); color: #7b3f00; }
+  .danger  { background: #fde8ea; border-color: var(--red); color: #9b1d20; }
+  .success { background: #e8f8ed; border-color: var(--green); color: #1a4731; }
+  .purple-box { background: #f3e8ff; border-color: var(--purple); color: #4a0072; }
+  .yellow-box { background: #fffbeb; border-color: var(--snake-yellow); color: #6b4f00; }
+  .box-t { font-weight: 700; margin-bottom: 8px; font-size: 15px; }
+
+  /* ═══ TABLES ═══ */
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13.5px; }
+  thead tr { background: var(--primary); color: white; }
+  th { padding: 12px 15px; text-align: left; font-weight: 600; }
+  td { padding: 10px 15px; border-bottom: 1px solid #eee; }
+  tr:nth-child(even) { background: #f8f5ff; }
+  tr:hover { background: #ede9ff; }
+
+  /* ═══ DIAGRAM ═══ */
+  .diagram {
+    background: #0f0a1a; border: 1px solid #3d2b6b;
+    border-radius: 10px; padding: 22px; font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; line-height: 1.9; margin: 20px 0; color: #cdd6f4; overflow-x: auto;
+  }
+  .diagram .dg { color: var(--green); }
+  .diagram .dy { color: var(--snake-yellow); }
+  .diagram .db { color: #89b4fa; }
+  .diagram .dr { color: #f38ba8; }
+  .diagram .dp { color: #cba6f7; }
+
+  /* ═══ GRID ═══ */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 20px 0; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin: 20px 0; }
+  .card { background: #f8f5ff; border: 1px solid #e0d7ff; border-radius: 10px; padding: 18px; }
+  .card h4 { color: var(--primary); margin-bottom: 10px; font-size: 15px; border-bottom: 2px solid var(--snake-yellow); padding-bottom: 6px; }
+  .card.danger-card { border-color: var(--red); }
+  .card.danger-card h4 { color: var(--red); border-color: var(--red); }
+  .card.success-card { border-color: var(--green); }
+  .card.success-card h4 { color: #1a4731; border-color: var(--green); }
+  .card.purple-card { border-color: var(--purple); }
+  .card.purple-card h4 { color: var(--purple); border-color: var(--purple); }
+  .card.yellow-card { border-color: var(--snake-yellow); }
+  .card.yellow-card h4 { color: #6b4f00; border-color: var(--snake-yellow); }
+
+  /* ═══ BADGE ═══ */
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; margin: 2px; }
+  .badge-g { background: #d1e7dd; color: #0f5132; }
+  .badge-r { background: #fde8ea; color: #c1121f; }
+  .badge-y { background: #fff3cd; color: #856404; }
+  .badge-b { background: #cfe2ff; color: #084298; }
+  .badge-p { background: #f3e8ff; color: #4a0072; }
+
+  /* ═══ HIGHLIGHT ═══ */
+  .hl { background: linear-gradient(135deg, #fff9c4, #fef3e0); border: 1px solid var(--snake-yellow); padding: 15px 20px; border-radius: 8px; margin: 18px 0; }
+  .chapter-summary { background: linear-gradient(135deg, #1a0533, #2d1b69); color: white; border-radius: 12px; padding: 25px 30px; margin-top: 40px; }
+  .chapter-summary h3 { color: var(--snake-yellow); margin-bottom: 15px; font-size: 18px; }
+  .chapter-summary li { color: rgba(255,255,255,0.85); margin-bottom: 6px; }
+
+  ul, ol { margin: 12px 0 12px 25px; line-height: 2.1; }
+  li { margin-bottom: 4px; }
+
+  /* ═══ STEP BOX ═══ */
+  .step { display: flex; gap: 16px; margin: 15px 0; align-items: flex-start; }
+  .step-num { min-width: 38px; height: 38px; border-radius: 50%; background: var(--snake-yellow); color: #1a0533; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; flex-shrink: 0; }
+  .step-body { flex: 1; padding-top: 5px; }
+
+  /* ═══ CONCEPT CARD ═══ */
+  .concept { background: linear-gradient(135deg, #f8f5ff, #ede9ff); border: 2px solid #c4b5fd; border-radius: 12px; padding: 20px 24px; margin: 18px 0; }
+  .concept-title { font-size: 17px; font-weight: 700; color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+
+  /* ═══ PRINT ═══ */
+  @media print {
+    .print-btn, .top-controls { display: none !important; }
+    body { background: white; }
+    .chapter { margin: 0; }
+    .cover, .chapter-header, thead tr { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .code, .diagram, .output { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  /* ═══ DARK MODE ═══ */
+  body.light-mode {
+    --bg: #f3f0fa; --card: #ffffff; --text: #1e1340;
+    --code-bg: #0f0a1a; --code-border: #3d2b6b;
+    --toc-bg: #ffffff; --ch-body-bg: #ffffff;
+  }
+  body.dark-mode {
+    --bg: #080612; --card: #100d1f; --text: #e2e0f0;
+    --code-bg: #050310; --code-border: #2d1b69;
+    --toc-bg: #100d1f; --ch-body-bg: #100d1f;
+  }
+  body { background: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; }
+  body.dark-mode .toc { background: var(--toc-bg); color: var(--text); }
+  body.dark-mode .chapter { background: var(--ch-body-bg); }
+  body.dark-mode .chapter-body { background: var(--ch-body-bg); }
+  body.dark-mode h2.sec { color: #c4b5fd; }
+  body.dark-mode h3.sub { color: #a78bfa; border-color: #2d1b69; }
+  body.dark-mode p { color: var(--text); }
+  body.dark-mode .toc-main { color: #e2e0f0; border-color: #2d1b69; }
+  body.dark-mode .toc-header { color: #e2e0f0; }
+  body.dark-mode .toc-sub { color: #94a3b8; }
+  body.dark-mode table { color: var(--text); }
+  body.dark-mode td { border-color: #2d1b69; color: var(--text); }
+  body.dark-mode tr:nth-child(even) { background: #13102a; }
+  body.dark-mode tr:hover { background: #1a1440; }
+  body.dark-mode .card { background: #13102a; border-color: #2d1b69; color: var(--text); }
+  body.dark-mode .card h4 { color: #c4b5fd; }
+  body.dark-mode .info { background: #0c1c40; color: #90cdf4; }
+  body.dark-mode .warn { background: #2a1a00; color: #fbbf24; }
+  body.dark-mode .danger { background: #2a0a0a; color: #fc8181; }
+  body.dark-mode .success { background: #0a2a15; color: #6ee7b7; }
+  body.dark-mode .purple-box { background: #1a0a2a; color: #d8b4fe; }
+  body.dark-mode .yellow-box { background: #1a1500; color: #fcd34d; }
+  body.dark-mode .hl { background: #2a2000; border-color: #6b4f00; color: #fcd34d; }
+  body.dark-mode code { background: #2d1b69; color: #cba6f7; }
+  body.dark-mode .concept { background: linear-gradient(135deg, #13102a, #1a1440); border-color: #4c3d99; }
+  body.dark-mode .concept-title { color: #e2e0f0; }
+
+  /* ═══ BILINGUAL ═══ */
+  .en-text { display: none; }
+  .bn-text { display: inline; }
+  body.lang-en .bn-text { display: none; }
+  body.lang-en .en-text { display: inline; }
+  .en-block { display: none; }
+  .bn-block { display: block; }
+  body.lang-en .bn-block { display: none; }
+  body.lang-en .en-block { display: block; }
+
+  /* ═══ TOGGLE BUTTONS ═══ */
+  .top-controls {
+    position: fixed; top: 20px; right: 20px;
+    display: flex; gap: 10px; z-index: 9999; align-items: center;
+  }
+  .ctrl-btn {
+    border: none; padding: 10px 18px; border-radius: 8px;
+    font-size: 14px; font-family: inherit; cursor: pointer;
+    transition: all 0.3s; font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  .lang-btn { background: #4a9eff; color: white; }
+  .lang-btn:hover { background: #2d7dd2; transform: translateY(-2px); }
+  .theme-btn { background: var(--snake-yellow); color: #1a0533; }
+  .theme-btn:hover { background: #e6b800; transform: translateY(-2px); }
+  .print-btn { background: var(--purple); color: white; border: none; padding: 10px 18px; border-radius: 8px; font-size: 14px; font-family: inherit; cursor: pointer; transition: all 0.3s; font-weight: 600; box-shadow: 0 4px 15px rgba(168,85,247,0.4); }
+  .print-btn:hover { background: #9333ea; transform: translateY(-2px); }
+
+  /* ═══ ROADMAP ═══ */
+  .roadmap-phase { display: flex; gap: 20px; margin-bottom: 28px; align-items: flex-start; }
+  .phase-number { min-width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; color: white; flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+  .phase-content { flex: 1; }
+  .phase-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+  .phase-desc { font-size: 13.5px; color: #555; margin-bottom: 10px; }
+  body.dark-mode .phase-desc { color: #94a3b8; }
+  .phase-items { display: flex; flex-wrap: wrap; gap: 8px; }
+  .phase-item { padding: 5px 14px; border-radius: 20px; font-size: 12.5px; font-weight: 600; }
+
+  /* ═══ PROGRESS BAR ═══ */
+  .skill-row { display: flex; align-items: center; gap: 12px; margin: 8px 0; }
+  .skill-label { width: 140px; font-size: 13px; flex-shrink: 0; }
+  .skill-bar { flex: 1; height: 10px; background: #e0d7ff; border-radius: 5px; overflow: hidden; }
+  .skill-fill { height: 100%; border-radius: 5px; background: linear-gradient(90deg, var(--purple), var(--snake-yellow)); }
+  body.dark-mode .skill-bar { background: #2d1b69; }
+
+  /* footer */
+  .page-footer { text-align:center; margin-top:50px; padding:30px; background: linear-gradient(135deg,#1a0533,#2d1b69); border-radius:12px; color:rgba(255,255,255,0.75); }
+  .page-footer p.quote { font-size:17px; color:var(--snake-yellow); margin-bottom:10px; }
+</style>
+</head>
+<body class="light-mode">
+
+<!-- ═══ CONTROLS ═══ -->
+<div class="top-controls">
+  <button class="ctrl-btn lang-btn" id="langBtn" onclick="toggleLang()">🇬🇧 English</button>
+  <button class="ctrl-btn theme-btn" id="themeBtn" onclick="toggleTheme()">🌙 Dark Mode</button>
+  <button class="print-btn" onclick="window.print()">🖨️ Print / PDF</button>
+</div>
+
+<!-- ═══════════════════════════════════════
+     COVER
+════════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-snake">🐍</div>
+  <h1>Python প্রোগ্রামিং</h1>
+  <h2><span class="bn-text">সম্পূর্ণ গাইড — Zero থেকে Advanced</span><span class="en-text">Complete Guide — Zero to Advanced</span></h2>
+  <div class="divider"></div>
+  <p class="desc">
+    <span class="bn-text">Python একদম কখনো দেখোনি? কোনো সমস্যা নেই। এই গাইডটি তোমাকে একদম শুরু থেকে হাত ধরে নিয়ে যাবে — Variables থেকে শুরু করে Object Oriented Programming পর্যন্ত।</span>
+    <span class="en-text">Never seen Python before? No problem. This guide will take you from the very beginning — from Variables all the way to Object Oriented Programming.</span>
+  </p>
+  <div class="badges">
+    <span class="badge">🐣 Beginner Friendly</span>
+    <span class="badge">📖 14 Chapters</span>
+    <span class="badge">💻 100+ Code Examples</span>
+    <span class="badge">🌙 Dark Mode</span>
+    <span class="badge">🇧🇩 বাংলা / 🇬🇧 English</span>
+  </div>
+  <div class="terminal">
+    <div><span class="prompt">>>> </span><span class="k">print</span>(<span class="s">"হ্যালো, Python শিখছি!"</span>)</div>
+    <div class="out">হ্যালো, Python শিখছি!</div>
+    <div style="margin-top:8px;"><span class="prompt">>>> </span><span class="k">print</span>(<span class="s">"Hello, I'm learning Python!"</span>)</div>
+    <div class="out">Hello, I'm learning Python!</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     TABLE OF CONTENTS
+════════════════════════════════════════ -->
+<div class="toc">
+  <div class="toc-header">📋 <span class="bn-text">সূচিপত্র</span><span class="en-text">Table of Contents</span></div>
+
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">01</span><span class="bn-text">Python পরিচিতি ও Installation</span><span class="en-text">Python Introduction & Installation</span></span><span>Ch. 1</span></div>
+    <div class="toc-sub"><span><span class="bn-text">Python কী, কেন শিখবো, ইনস্টলেশন, প্রথম প্রোগ্রাম</span><span class="en-text">What is Python, why learn, installation, first program</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">02</span><span class="bn-text">print(), input() ও Comments</span><span class="en-text">print(), input() and Comments</span></span><span>Ch. 2</span></div>
+    <div class="toc-sub"><span><span class="bn-text">স্ক্রিনে লেখা, ব্যবহারকারীর কাছ থেকে ইনপুট নেওয়া</span><span class="en-text">Displaying output, taking user input</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">03</span><span class="bn-text">ভেরিয়েবল ও ডেটা টাইপ</span><span class="en-text">Variables & Data Types</span></span><span>Ch. 3</span></div>
+    <div class="toc-sub"><span><span class="bn-text">int, float, str, bool, type() — ডেটা সংরক্ষণ</span><span class="en-text">int, float, str, bool, type() — storing data</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">04</span><span class="bn-text">অপারেটর</span><span class="en-text">Operators</span></span><span>Ch. 4</span></div>
+    <div class="toc-sub"><span><span class="bn-text">গাণিতিক, তুলনা, লজিক্যাল অপারেটর</span><span class="en-text">Arithmetic, comparison, logical operators</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">05</span><span class="bn-text">শর্ত (if / elif / else)</span><span class="en-text">Conditions (if / elif / else)</span></span><span>Ch. 5</span></div>
+    <div class="toc-sub"><span><span class="bn-text">সিদ্ধান্ত নেওয়া — প্রোগ্রামকে চিন্তা করা শেখানো</span><span class="en-text">Decision making — teaching the program to think</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">06</span><span class="bn-text">লুপ (for / while)</span><span class="en-text">Loops (for / while)</span></span><span>Ch. 6</span></div>
+    <div class="toc-sub"><span><span class="bn-text">কাজ বারবার করানো — break, continue, range()</span><span class="en-text">Repeating tasks — break, continue, range()</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">07</span><span class="bn-text">ফাংশন</span><span class="en-text">Functions</span></span><span>Ch. 7</span></div>
+    <div class="toc-sub"><span><span class="bn-text">def, return, parameters, *args, **kwargs</span><span class="en-text">def, return, parameters, *args, **kwargs</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">08</span><span class="bn-text">লিস্ট, টাপল, সেট, ডিকশনারি</span><span class="en-text">List, Tuple, Set, Dictionary</span></span><span>Ch. 8</span></div>
+    <div class="toc-sub"><span><span class="bn-text">Python-এর ৪টি প্রধান ডেটা স্ট্রাকচার</span><span class="en-text">Python's 4 main data structures</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">09</span><span class="bn-text">স্ট্রিং (String)</span><span class="en-text">Strings</span></span><span>Ch. 9</span></div>
+    <div class="toc-sub"><span><span class="bn-text">টেক্সট নিয়ে কাজ, slicing, methods, f-string</span><span class="en-text">Working with text, slicing, methods, f-string</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">10</span><span class="bn-text">ফাইল হ্যান্ডলিং</span><span class="en-text">File Handling</span></span><span>Ch. 10</span></div>
+    <div class="toc-sub"><span><span class="bn-text">ফাইল পড়া, লেখা, মুছা — open(), with</span><span class="en-text">Reading, writing, deleting files — open(), with</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">11</span><span class="bn-text">এরর হ্যান্ডলিং</span><span class="en-text">Error Handling</span></span><span>Ch. 11</span></div>
+    <div class="toc-sub"><span><span class="bn-text">try, except, finally, raise — ভুল সামলানো</span><span class="en-text">try, except, finally, raise — handling mistakes</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">12</span><span class="bn-text">OOP — অবজেক্ট অরিয়েন্টেড প্রোগ্রামিং</span><span class="en-text">OOP — Object Oriented Programming</span></span><span>Ch. 12</span></div>
+    <div class="toc-sub"><span><span class="bn-text">class, object, __init__, inheritance, polymorphism</span><span class="en-text">class, object, __init__, inheritance, polymorphism</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">13</span><span class="bn-text">মডিউল ও লাইব্রেরি</span><span class="en-text">Modules & Libraries</span></span><span>Ch. 13</span></div>
+    <div class="toc-sub"><span><span class="bn-text">import, os, math, random, datetime — বাইরের কোড ব্যবহার</span><span class="en-text">import, os, math, random, datetime — using external code</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">14</span><span class="bn-text">Advanced Python</span><span class="en-text">Advanced Python</span></span><span>Ch. 14</span></div>
+    <div class="toc-sub"><span><span class="bn-text">List Comprehension, Lambda, Decorators, Generators</span><span class="en-text">List Comprehension, Lambda, Decorators, Generators</span></span></div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     CHAPTER 1: পরিচিতি ও Installation
+════════════════════════════════════════ -->
+<div class="chapter ch1">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 01</div>
+    <div class="chapter-title">🐍 <span class="bn-text">Python পরিচিতি ও Installation</span><span class="en-text">Python Introduction & Installation</span></div>
+    <div class="chapter-desc"><span class="bn-text">Python কী, কেন শিখবো, কিভাবে ইনস্টল করবো এবং প্রথম প্রোগ্রাম</span><span class="en-text">What is Python, why learn it, how to install and write your first program</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🤔 <span class="bn-text">Python কী?</span><span class="en-text">What is Python?</span></h2>
+    <p><span class="bn-text">Python একটি <strong>High-Level Programming Language</strong>। এটি তৈরি করেছেন <strong>Guido van Rossum</strong>, ১৯৯১ সালে। Python-এর সবচেয়ে বড় বৈশিষ্ট্য হলো এর কোড পড়তে অনেকটা ইংরেজির মতো — তাই beginner-দের জন্য এটি সবচেয়ে ভালো।</span><span class="en-text">Python is a <strong>High-Level Programming Language</strong> created by <strong>Guido van Rossum</strong> in 1991. Its biggest feature is that its code reads almost like English — making it the best choice for beginners.</span></p>
+
+    <div class="grid2">
+      <div class="card success-card">
+        <h4>✅ <span class="bn-text">Python কেন শিখবো?</span><span class="en-text">Why Learn Python?</span></h4>
+        <ul>
+          <li><span class="bn-text">শেখা সবচেয়ে সহজ</span><span class="en-text">Easiest to learn</span></li>
+          <li><span class="bn-text">Web Development (Django, Flask)</span><span class="en-text">Web Development (Django, Flask)</span></li>
+          <li><span class="bn-text">Data Science & AI/ML</span><span class="en-text">Data Science & AI/ML</span></li>
+          <li><span class="bn-text">Automation & Scripting</span><span class="en-text">Automation & Scripting</span></li>
+          <li><span class="bn-text">Cyber Security / Hacking</span><span class="en-text">Cyber Security / Hacking</span></li>
+          <li><span class="bn-text">বিশ্বের ১ নম্বর জনপ্রিয় ভাষা</span><span class="en-text">World's #1 popular language</span></li>
+          <li><span class="bn-text">চাকরির বাজারে সর্বোচ্চ চাহিদা</span><span class="en-text">Highest demand in job market</span></li>
+        </ul>
+      </div>
+      <div class="card purple-card">
+        <h4>🔥 <span class="bn-text">Python দিয়ে কী করা যায়?</span><span class="en-text">What Can You Build?</span></h4>
+        <ul>
+          <li>🌐 <span class="bn-text">ওয়েবসাইট ও API</span><span class="en-text">Websites & APIs</span></li>
+          <li>🤖 <span class="bn-text">AI / Chatbot</span><span class="en-text">AI / Chatbot</span></li>
+          <li>📊 <span class="bn-text">ডেটা বিশ্লেষণ</span><span class="en-text">Data analysis</span></li>
+          <li>🎮 <span class="bn-text">সহজ গেম</span><span class="en-text">Simple games</span></li>
+          <li>📱 <span class="bn-text">Desktop App</span><span class="en-text">Desktop Apps</span></li>
+          <li>🔐 <span class="bn-text">Hacking টুলস</span><span class="en-text">Hacking tools</span></li>
+          <li>⚙️ <span class="bn-text">অটোমেশন স্ক্রিপ্ট</span><span class="en-text">Automation scripts</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec">⚙️ <span class="bn-text">Python ইনস্টল করো</span><span class="en-text">Install Python</span></h2>
+
+    <div class="roadmap-phase">
+      <div class="phase-number" style="background:#306998;">1</div>
+      <div class="phase-content">
+        <div class="phase-title"><span class="bn-text">Python ডাউনলোড করো</span><span class="en-text">Download Python</span></div>
+        <p><span class="bn-text"><strong>python.org</strong> ওয়েবসাইটে যাও → Downloads → তোমার OS অনুযায়ী ডাউনলোড করো (Windows/Mac/Linux)</span><span class="en-text">Go to <strong>python.org</strong> → Downloads → Download for your OS (Windows/Mac/Linux)</span></p>
+        <div class="box warn"><span class="bn-text">⚠️ Windows-এ install করার সময় অবশ্যই <strong>"Add Python to PATH"</strong> বক্সে টিক দাও!</span><span class="en-text">⚠️ On Windows, make sure to check <strong>"Add Python to PATH"</strong> during installation!</span></div>
+      </div>
+    </div>
+
+    <div class="roadmap-phase">
+      <div class="phase-number" style="background:#f7c948; color:#1a0533;">2</div>
+      <div class="phase-content">
+        <div class="phase-title"><span class="bn-text">ইনস্টল হয়েছে কিনা চেক করো</span><span class="en-text">Verify Installation</span></div>
+        <p><span class="bn-text">Terminal/CMD খুলে টাইপ করো:</span><span class="en-text">Open Terminal/CMD and type:</span></p>
+        <div class="code"><span class="p">$</span> python --version
+<span class="g">Python 3.12.0</span>   <span class="c"># এরকম কিছু দেখাবে / should show something like this</span></div>
+      </div>
+    </div>
+
+    <div class="roadmap-phase">
+      <div class="phase-number" style="background:#3dd68c; color:#0a2a15;">3</div>
+      <div class="phase-content">
+        <div class="phase-title"><span class="bn-text">Code Editor — VS Code</span><span class="en-text">Code Editor — VS Code</span></div>
+        <p><span class="bn-text"><strong>VS Code</strong> ডাউনলোড করো (code.visualstudio.com) — এটাই সবচেয়ে ভালো editor। Python extension ইনস্টল করো।</span><span class="en-text">Download <strong>VS Code</strong> (code.visualstudio.com) — the best editor. Install the Python extension.</span></p>
+      </div>
+    </div>
+
+    <h2 class="sec">🎉 <span class="bn-text">প্রথম প্রোগ্রাম লেখো!</span><span class="en-text">Write Your First Program!</span></h2>
+    <p><span class="bn-text">VS Code খুলো। একটা নতুন ফাইল তৈরি করো নাম দাও <code>hello.py</code>। এবার নিচের কোডটা লেখো:</span><span class="en-text">Open VS Code. Create a new file named <code>hello.py</code>. Now type the code below:</span></p>
+
+    <div class="code"><span class="c"># আমার প্রথম Python প্রোগ্রাম / My first Python program</span>
+<span class="k">print</span>(<span class="s">"হ্যালো দুনিয়া!"</span>)
+<span class="k">print</span>(<span class="s">"Hello, World!"</span>)
+<span class="k">print</span>(<span class="s">"আমি Python শিখছি!"</span>)</div>
+    <div class="output"><div class="output-label">⬇ OUTPUT</div>হ্যালো দুনিয়া!
+Hello, World!
+আমি Python শিখছি!</div>
+
+    <p><span class="bn-text">Terminal-এ গিয়ে রান করো:</span><span class="en-text">Run it from the terminal:</span></p>
+    <div class="code"><span class="p">$</span> python hello.py</div>
+
+    <div class="box success">
+      <div class="box-t">🎊 <span class="bn-text">অভিনন্দন!</span><span class="en-text">Congratulations!</span></div>
+      <span class="bn-text">তুমি তোমার প্রথম Python প্রোগ্রাম লিখেছো এবং রান করেছো! এটাই শুরু।</span>
+      <span class="en-text">You've written and run your very first Python program! This is the beginning.</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>📌 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>🐍 <span class="bn-text">Python = সহজ, শক্তিশালী, জনপ্রিয় programming language</span><span class="en-text">Python = easy, powerful, popular programming language</span></li>
+        <li>⚙️ <span class="bn-text">python.org থেকে ইনস্টল করো, PATH যোগ করতে ভুলো না</span><span class="en-text">Install from python.org, don't forget to add PATH</span></li>
+        <li>✏️ <span class="bn-text">VS Code হলো সবচেয়ে ভালো editor</span><span class="en-text">VS Code is the best editor</span></li>
+        <li>▶️ <span class="bn-text"><code>python filename.py</code> দিয়ে প্রোগ্রাম রান করো</span><span class="en-text">Run programs with <code>python filename.py</code></span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     CHAPTER 2: print(), input(), Comments
+════════════════════════════════════════ -->
+<div class="chapter ch2">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 02</div>
+    <div class="chapter-title">🖨️ <span class="bn-text">print(), input() ও Comments</span><span class="en-text">print(), input() and Comments</span></div>
+    <div class="chapter-desc"><span class="bn-text">স্ক্রিনে দেখানো, ব্যবহারকারীর কাছ থেকে তথ্য নেওয়া এবং কোডে নোট লেখা</span><span class="en-text">Displaying on screen, taking user input, and writing notes in code</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🖨️ <span class="bn-text">print() — স্ক্রিনে দেখানো</span><span class="en-text">print() — Display on Screen</span></h2>
+    <p><span class="bn-text"><code>print()</code> হলো Python-এর সবচেয়ে বেশি ব্যবহৃত function। এটি যা দাও তাই স্ক্রিনে দেখায়।</span><span class="en-text"><code>print()</code> is Python's most used function. It displays whatever you give it on the screen.</span></p>
+
+    <div class="code"><span class="c"># সাধারণ print / Simple print</span>
+<span class="k">print</span>(<span class="s">"নমস্কার!"</span>)
+<span class="k">print</span>(<span class="n">100</span>)
+<span class="k">print</span>(<span class="n">3.14</span>)
+
+<span class="c"># একসাথে অনেক কিছু print করা / Printing multiple things</span>
+<span class="k">print</span>(<span class="s">"আমার বয়স:"</span>, <span class="n">20</span>)
+<span class="k">print</span>(<span class="s">"My name is"</span>, <span class="s">"Rahim"</span>, <span class="s">"and I am"</span>, <span class="n">20</span>)
+
+<span class="c"># sep দিয়ে separator বদলানো / Change separator with sep</span>
+<span class="k">print</span>(<span class="s">"Python"</span>, <span class="s">"Java"</span>, <span class="s">"C++"</span>, sep=<span class="s">" | "</span>)
+
+<span class="c"># end দিয়ে line ending বদলানো / Change line ending with end</span>
+<span class="k">print</span>(<span class="s">"Hello"</span>, end=<span class="s">" "</span>)
+<span class="k">print</span>(<span class="s">"World"</span>)</div>
+    <div class="output"><div class="output-label">⬇ OUTPUT</div>নমস্কার!
+100
+3.14
+আমার বয়স: 20
+My name is Rahim and I am 20
+Python | Java | C++
+Hello World</div>
+
+    <h2 class="sec">⌨️ <span class="bn-text">input() — ব্যবহারকারীর কাছ থেকে তথ্য নেওয়া</span><span class="en-text">input() — Take Input from User</span></h2>
+    <p><span class="bn-text"><code>input()</code> দিয়ে প্রোগ্রাম চলার সময় ব্যবহারকারীর কাছ থেকে তথ্য নেওয়া যায়। <strong>মনে রেখো: input() সব কিছু string হিসেবে নেয়।</strong></span><span class="en-text"><code>input()</code> lets you take information from the user while the program runs. <strong>Remember: input() takes everything as a string.</strong></span></p>
+
+    <div class="code"><span class="c"># ব্যবহারকারীর নাম নেওয়া / Taking user's name</span>
+naam = <span class="k">input</span>(<span class="s">"তোমার নাম কী? "</span>)
+<span class="k">print</span>(<span class="s">"হ্যালো,"</span>, naam)
+
+<span class="c"># সংখ্যা নেওয়া — int() দিয়ে convert করতে হবে!</span>
+<span class="c"># Taking number — must convert with int()!</span>
+boyos = <span class="k">int</span>(<span class="k">input</span>(<span class="s">"তোমার বয়স কত? "</span>))
+<span class="k">print</span>(<span class="s">"তুমি"</span>, boyos, <span class="s">"বছর বয়সী।"</span>)
+
+<span class="c"># দশমিক সংখ্যা নেওয়া / Taking decimal number</span>
+weight = <span class="k">float</span>(<span class="k">input</span>(<span class="s">"তোমার ওজন কত কেজি? "</span>))
+<span class="k">print</span>(<span class="s">"ওজন:"</span>, weight, <span class="s">"kg"</span>)</div>
+
+    <div class="box warn">
+      <div class="box-t">⚠️ <span class="bn-text">গুরুত্বপূর্ণ কথা!</span><span class="en-text">Important Note!</span></div>
+      <span class="bn-text"><code>input()</code> সবসময় <strong>string</strong> return করে। গণনার জন্য <code>int()</code> বা <code>float()</code> দিয়ে convert করতে হবে।</span>
+      <span class="en-text"><code>input()</code> always returns a <strong>string</strong>. For calculations you must convert with <code>int()</code> or <code>float()</code>.</span>
+    </div>
+
+    <h2 class="sec">💬 <span class="bn-text">Comments — কোডে নোট লেখা</span><span class="en-text">Comments — Notes in Code</span></h2>
+    <p><span class="bn-text">Comments হলো কোডের মধ্যে মানুষের পড়ার জন্য লেখা নোট। Python এগুলো execute করে না।</span><span class="en-text">Comments are notes written in code for humans to read. Python doesn't execute them.</span></p>
+
+    <div class="code"><span class="c"># এটা একটা single-line comment</span>
+<span class="c"># This is a single-line comment</span>
+
+<span class="k">print</span>(<span class="s">"Hello"</span>)  <span class="c"># এই লাইনের শেষে comment</span>
+
+<span class="c"># Multi-line comment এভাবে লেখো:</span>
+<span class="s">"""
+এটা একটা
+multi-line comment
+বা docstring
+"""</span>
+
+<span class="k">print</span>(<span class="s">"Comments Python execute করে না।"</span>)</div>
+
+    <div class="box info">
+      <div class="box-t">💡 <span class="bn-text">Comment কেন লিখবো?</span><span class="en-text">Why Write Comments?</span></div>
+      <span class="bn-text">ভবিষ্যতে তুমি নিজে বা অন্য কেউ কোড পড়লে যেন বুঝতে পারে। Professional programmer রা সবসময় comment লেখেন।</span>
+      <span class="en-text">So that you or someone else can understand the code in the future. Professional programmers always write comments.</span>
+    </div>
+
+    <h3 class="sub"><span class="bn-text">ছোট্ট প্রজেক্ট: নাম ও বয়স দিয়ে স্বাগতম বার্তা</span><span class="en-text">Mini Project: Welcome Message with Name & Age</span></h3>
+    <div class="code"><span class="c"># স্বাগতম প্রোগ্রাম / Welcome program</span>
+naam = <span class="k">input</span>(<span class="s">"তোমার নাম কী? "</span>)
+boyos = <span class="k">int</span>(<span class="k">input</span>(<span class="s">"তোমার বয়স কত? "</span>))
+shahor = <span class="k">input</span>(<span class="s">"তুমি কোথায় থাকো? "</span>)
+
+<span class="k">print</span>()  <span class="c"># ফাঁকা লাইন / blank line</span>
+<span class="k">print</span>(<span class="s">"━━━━━━━━━━━━━━━━━━━━━━━━━━"</span>)
+<span class="k">print</span>(<span class="s">"  স্বাগতম!"</span>)
+<span class="k">print</span>(<span class="s">"  নাম:"</span>, naam)
+<span class="k">print</span>(<span class="s">"  বয়স:"</span>, boyos, <span class="s">"বছর"</span>)
+<span class="k">print</span>(<span class="s">"  শহর:"</span>, shahor)
+<span class="k">print</span>(<span class="s">"━━━━━━━━━━━━━━━━━━━━━━━━━━"</span>)</div>
+    <div class="output"><div class="output-label">⬇ OUTPUT</div>━━━━━━━━━━━━━━━━━━━━━━━━━━
+  স্বাগতম!
+  নাম: Rahim
+  বয়স: 20 বছর
+  শহর: Dhaka
+━━━━━━━━━━━━━━━━━━━━━━━━━━</div>
+
+    <div class="chapter-summary">
+      <h3>📌 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>🖨️ <code>print()</code> — <span class="bn-text">স্ক্রিনে দেখায়, sep ও end দিয়ে customize করা যায়</span><span class="en-text">shows on screen, customizable with sep and end</span></li>
+        <li>⌨️ <code>input()</code> — <span class="bn-text">সবসময় string দেয়, সংখ্যার জন্য int()/float() লাগে</span><span class="en-text">always gives string, need int()/float() for numbers</span></li>
+        <li>💬 <code>#</code> — <span class="bn-text">single line comment, """ """ — multi-line</span><span class="en-text">single line comment, """ """ — multi-line</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     CHAPTER 3: Variable & Data Types
+════════════════════════════════════════ -->
+<div class="chapter ch3">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 03</div>
+    <div class="chapter-title">📦 <span class="bn-text">ভেরিয়েবল ও ডেটা টাইপ</span><span class="en-text">Variables & Data Types</span></div>
+    <div class="chapter-desc"><span class="bn-text">ডেটা সংরক্ষণ করার পাত্র এবং ডেটার ধরন</span><span class="en-text">Containers for storing data and types of data</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">📦 <span class="bn-text">Variable কী?</span><span class="en-text">What is a Variable?</span></h2>
+    <p><span class="bn-text">Variable হলো একটি <strong>নামযুক্ত বাক্স</strong> যেখানে তুমি ডেটা রাখো। যেমন একটা বাক্সে জিনিস রাখলে বাক্সের নাম ধরে সেটা খোঁজা যায়।</span><span class="en-text">A variable is a <strong>named box</strong> where you store data. Like putting things in a labeled box and finding them by name.</span></p>
+
+    <div class="concept">
+      <div class="concept-title">🧠 <span class="bn-text">ধারণাটা বোঝো</span><span class="en-text">Understand the Concept</span></div>
+      <div class="diagram">
+<pre><span class="dg">naam</span>  = <span class="dy">"Rahim"</span>    <span class="c">← "naam" নামের বাক্সে "Rahim" রাখলাম</span>
+<span class="dg">boyos</span> = <span class="db">20</span>         <span class="c">← "boyos" নামের বাক্সে 20 রাখলাম</span>
+<span class="dg">GPA</span>   = <span class="dp">4.75</span>       <span class="c">← "GPA" বাক্সে 4.75 রাখলাম</span></pre>
+      </div>
+    </div>
+
+    <div class="code"><span class="c"># Variable তৈরি করা / Creating variables</span>
+naam = <span class="s">"Rahim"</span>         <span class="c"># String (লেখা/text)</span>
+boyos = <span class="n">20</span>             <span class="c"># Integer (পূর্ণ সংখ্যা)</span>
+ojon = <span class="n">65.5</span>            <span class="c"># Float (দশমিক সংখ্যা)</span>
+student = <span class="k">True</span>         <span class="c"># Boolean (সত্য/মিথ্যা)</span>
+
+<span class="c"># Variable ব্যবহার করা / Using variables</span>
+<span class="k">print</span>(naam)
+<span class="k">print</span>(boyos)
+<span class="k">print</span>(ojon)
+<span class="k">print</span>(student)</div>
+    <div class="output"><div class="output-label">⬇ OUTPUT</div>Rahim
+20
+65.5
+True</div>
+
+    <h2 class="sec">🗂️ <span class="bn-text">Python-এর প্রধান ডেটা টাইপ</span><span class="en-text">Python's Main Data Types</span></h2>
+
+    <table>
+      <thead><tr><th>Data Type</th><th><span class="bn-text">বাংলায়</span><span class="en-text">Description</span></th><th><span class="bn-text">উদাহরণ</span><span class="en-text">Example</span></th><th><span class="bn-text">ব্যবহার</span><span class="en-text">Use</span></th></tr></thead>
+      <tbody>
+        <tr><td><code>int</code></td><td><span class="bn-text">পূর্ণ সংখ্যা</span><span class="en-text">Whole number</span></td><td><code>20, -5, 1000</code></td><td><span class="bn-text">বয়স, সংখ্যা গোনা</span><span class="en-text">Age, counting</span></td></tr>
+        <tr><td><code>float</code></td><td><span class="bn-text">দশমিক সংখ্যা</span><span class="en-text">Decimal number</span></td><td><code>3.14, -2.5</code></td><td><span class="bn-text">ওজন, তাপমাত্রা</span><span class="en-text">Weight, temperature</span></td></tr>
+        <tr><td><code>str</code></td><td><span class="bn-text">লেখা/পাঠ্য</span><span class="en-text">Text</span></td><td><code>"Rahim", 'Hello'</code></td><td><span class="bn-text">নাম, বার্তা</span><span class="en-text">Names, messages</span></td></tr>
+        <tr><td><code>bool</code></td><td><span class="bn-text">সত্য বা মিথ্যা</span><span class="en-text">True or False</span></td><td><code>True, False</code></td><td><span class="bn-text">শর্ত পরীক্ষা</span><span class="en-text">Condition checking</span></td></tr>
+        <tr><td><code>list</code></td><td><span class="bn-text">পরিবর্তনযোগ্য তালিকা</span><span class="en-text">Mutable list</span></td><td><code>[1, 2, 3]</code></td><td><span class="bn-text">একাধিক আইটেম</span><span class="en-text">Multiple items</span></td></tr>
+        <tr><td><code>dict</code></td><td><span class="bn-text">key-value জোড়া</span><span class="en-text">Key-value pairs</span></td><td><code>{"naam": "Rahim"}</code></td><td><span class="bn-text">ডেটা mapping</span><span class="en-text">Data mapping</span></td></tr>
+        <tr><td><code>NoneType</code></td><td><span class="bn-text">কিছু নেই / খালি</span><span class="en-text">Nothing / empty</span></td><td><code>None</code></td><td><span class="bn-text">শূন্য মান</span><span class="en-text">Null value</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🔍 type() — <span class="bn-text">ডেটা টাইপ জানো</span><span class="en-text">Know the Data Type</span></h2>
+    <div class="code"><span class="c"># type() দিয়ে ডেটা টাইপ চেক করো</span>
+<span class="k">print</span>(<span class="b">type</span>(<span class="n">20</span>))         <span class="c"># &lt;class 'int'&gt;</span>
+<span class="k">print</span>(<span class="b">type</span>(<span class="n">3.14</span>))       <span class="c"># &lt;class 'float'&gt;</span>
+<span class="k">print</span>(<span class="b">type</span>(<span class="s">"Hello"</span>))    <span class="c"># &lt;class 'str'&gt;</span>
+<span class="k">print</span>(<span class="b">type</span>(<span class="k">True</span>))       <span class="c"># &lt;class 'bool'&gt;</span>
+<span class="k">print</span>(<span class="b">type</span>(<span class="k">None</span>))       <span class="c"># &lt;class 'NoneType'&gt;</span></div>
+    <div class="output"><div class="output-label">⬇ OUTPUT</div>&lt;class 'int'&gt;
+&lt;class 'float'&gt;
+&lt;class 'str'&gt;
+&lt;class 'bool'&gt;
+&lt;class 'NoneType'&gt;</div>
+
+    <h2 class="sec">🔄 <span class="bn-text">Type Conversion — এক টাইপ থেকে অন্যটায়</span><span class="en-text">Type Conversion</span></h2>
+    <div class="code"><span class="c"># String থেকে Integer / String to Integer</span>
+katha = <span class="s">"50"</span>
+sankhya = <span class="k">int</span>(katha)    <span class="c"># "50" → 50</span>
+<span class="k">print</span>(sankhya + <span class="n">10</span>)     <span class="c"># 60</span>
+
+<span class="c"># Integer থেকে Float / Integer to Float</span>
+a = <span class="n">5</span>
+b = <span class="k">float</span>(a)             <span class="c"># 5 → 5.0</span>
+<span class="k">print</span>(b)
+
+<span class="c"># যেকোনো কিছু থেকে String / Any to String</span>
+boyos = <span class="n">20</span>
+text = <span class="k">str</span>(boyos)        <span class="c"># 20 → "20"</span>
+<span class="k">print</span>(<span class="s">"বয়স: "</span> + text)    <span class="c"># string জোড়া লাগানো</span></div>
+    <div class="output"><div class="output-label">⬇ OUTPUT</div>60
+5.0
+বয়স: 20</div>
+
+    <h2 class="sec">📏 <span class="bn-text">Variable-এর নামকরণের নিয়ম</span><span class="en-text">Variable Naming Rules</span></h2>
+    <div class="grid2">
+      <div class="card success-card">
+        <h4>✅ <span class="bn-text">সঠিক নাম</span><span class="en-text">Valid Names</span></h4>
+        <div class="code" style="margin:0; font-size:12px;">naam = <span class="s">"Rahim"</span>
+my_name = <span class="s">"Karim"</span>
+age2 = <span class="n">25</span>
+_private = <span class="n">100</span>
+myGPA = <span class="n">4.75</span></div>
+      </div>
+      <div class="card danger-card">
+        <h4>❌ <span class="bn-text">ভুল নাম</span><span class="en-text">Invalid Names</span></h4>
+        <div class="code" style="margin:0; font-size:12px;"><span class="r">2naam = "Rahim"</span>   <span class="c"># সংখ্যা দিয়ে শুরু না</span>
+<span class="r">my-name = "Karim"</span> <span class="c"># dash নেই</span>
+<span class="r">for = 10</span>          <span class="c"># keyword নয়</span>
+<span class="r">my name = 100</span>     <span class="c"># space নেই</span></div>
+      </div>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>📌 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>📦 <span class="bn-text">Variable = ডেটা রাখার নামযুক্ত বাক্স</span><span class="en-text">Variable = named box to store data</span></li>
+        <li>📊 <span class="bn-text">প্রধান টাইপ: int, float, str, bool, None</span><span class="en-text">Main types: int, float, str, bool, None</span></li>
+        <li>🔍 <code>type()</code> — <span class="bn-text">টাইপ জানতে</span><span class="en-text">to know the type</span></li>
+        <li>🔄 <code>int(), float(), str()</code> — <span class="bn-text">টাইপ বদলাতে</span><span class="en-text">to convert types</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     CHAPTER 4: Operators
+════════════════════════════════════════ -->
+<div class="chapter ch4">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 04</div>
+    <div class="chapter-title">🔢 <span class="bn-text">অপারেটর</span><span class="en-text">Operators</span></div>
+    <div class="chapter-desc"><span class="bn-text">গাণিতিক হিসাব, তুলনা এবং লজিক — Python কিভাবে চিন্তা করে</span><span class="en-text">Mathematical calculations, comparisons and logic — how Python thinks</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">➕ <span class="bn-text">গাণিতিক অপারেটর</span><span class="en-text">Arithmetic Operators</span></h2>
+    <table>
+      <thead><tr><th>Operator</th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th><th><span class="bn-text">উদাহরণ</span><span class="en-text">Example</span></th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td><code>+</code></td><td><span class="bn-text">যোগ</span><span class="en-text">Addition</span></td><td><code>10 + 3</code></td><td><code>13</code></td></tr>
+        <tr><td><code>-</code></td><td><span class="bn-text">বিয়োগ</span><span class="en-text">Subtraction</span></td><td><code>10 - 3</code></td><td><code>7</code></td></tr>
+        <tr><td><code>*</code></td><td><span class="bn-text">গুণ</span><span class="en-text">Multiplication</span></td><td><code>10 * 3</code></td><td><code>30</code></td></tr>
+        <tr><td><code>/</code></td><td><span class="bn-text">ভাগ (দশমিক)</span><span class="en-text">Division (decimal)</span></td><td><code>10 / 3</code></td><td><code>3.333...</code></td></tr>
+        <tr><td><code>//</code></td><td><span class="bn-text">পূর্ণ ভাগ</span><span class="en-text">Floor division</span></td><td><code>10 // 3</code></td><td><code>3</code></td></tr>
+        <tr><td><code>%</code></td><td><span class="bn-text">ভাগশেষ (modulo)</span><span class="en-text">Remainder (modulo)</span></td><td><code>10 % 3</code></td><td><code>1</code></td></tr>
+        <tr><td><code>**</code></td><td><span class="bn-text">পাওয়ার/ঘাত</span><span class="en-text">Power/exponent</span></td><td><code>2 ** 10</code></td><td><code>1024</code></td></tr>
+      </tbody>
+    </table>
+
+    <div class="code"><span class="c"># Calculator উদাহরণ / Calculator example</span>
+a = <span class="n">20</span>
+b = <span class="n">6</span>
+
+<span class="k">print</span>(<span class="s">"যোগ:"</span>, a + b)      <span class="c"># 26</span>
+<span class="k">print</span>(<span class="s">"বিয়োগ:"</span>, a - b)    <span class="c"># 14</span>
+<span class="k">print</span>(<span class="s">"গুণ:"</span>, a * b)      <span class="c"># 120</span>
+<span class="k">print</span>(<span class="s">"ভাগ:"</span>, a / b)      <span class="c"># 3.333...</span>
+<span class="k">print</span>(<span class="s">"পূর্ণ ভাগ:"</span>, a // b) <span class="c"># 3</span>
+<span class="k">print</span>(<span class="s">"ভাগশেষ:"</span>, a % b)  <span class="c"># 2</span>
+<span class="k">print</span>(<span class="s">"2 এর 10 ঘাত:"</span>, <span class="n">2</span> ** <span class="n">10</span>)  <span class="c"># 1024</span></div>
+
+    <h2 class="sec">🤔 <span class="bn-text">তুলনা অপারেটর (Comparison)</span><span class="en-text">Comparison Operators</span></h2>
+    <p><span class="bn-text">এগুলো দুটো মান তুলনা করে এবং <code>True</code> বা <code>False</code> দেয়।</span><span class="en-text">These compare two values and return <code>True</code> or <code>False</code>.</span></p>
+    <table>
+      <thead><tr><th>Operator</th><th><span class="bn-text">অর্থ</span><span class="en-text">Meaning</span></th><th><span class="bn-text">উদাহরণ</span><span class="en-text">Example</span></th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td><code>==</code></td><td><span class="bn-text">সমান কিনা</span><span class="en-text">Equal to</span></td><td><code>5 == 5</code></td><td><code>True</code></td></tr>
+        <tr><td><code>!=</code></td><td><span class="bn-text">সমান নয়</span><span class="en-text">Not equal</span></td><td><code>5 != 3</code></td><td><code>True</code></td></tr>
+        <tr><td><code>&gt;</code></td><td><span class="bn-text">বড়</span><span class="en-text">Greater than</span></td><td><code>10 &gt; 5</code></td><td><code>True</code></td></tr>
+        <tr><td><code>&lt;</code></td><td><span class="bn-text">ছোট</span><span class="en-text">Less than</span></td><td><code>3 &lt; 7</code></td><td><code>True</code></td></tr>
+        <tr><td><code>&gt;=</code></td><td><span class="bn-text">বড় বা সমান</span><span class="en-text">Greater or equal</span></td><td><code>5 &gt;= 5</code></td><td><code>True</code></td></tr>
+        <tr><td><code>&lt;=</code></td><td><span class="bn-text">ছোট বা সমান</span><span class="en-text">Less or equal</span></td><td><code>4 &lt;= 5</code></td><td><code>True</code></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🧠 <span class="bn-text">লজিক্যাল অপারেটর</span><span class="en-text">Logical Operators</span></h2>
+    <table>
+      <thead><tr><th>Operator</th><th><span class="bn-text">অর্থ</span><span class="en-text">Meaning</span></th><th><span class="bn-text">উদাহরণ</span><span class="en-text">Example</span></th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td><code>and</code></td><td><span class="bn-text">দুটোই সত্য হলে True</span><span class="en-text">True only if both are True</span></td><td><code>True and True</code></td><td><code>True</code></td></tr>
+        <tr><td><code>or</code></td><td><span class="bn-text">যেকোনো একটা সত্য হলে True</span><span class="en-text">True if at least one is True</span></td><td><code>True or False</code></td><td><code>True</code></td></tr>
+        <tr><td><code>not</code></td><td><span class="bn-text">উল্টো করে দেয়</span><span class="en-text">Reverses the value</span></td><td><code>not True</code></td><td><code>False</code></td></tr>
+      </tbody>
+    </table>
+
+    <div class="code"><span class="c"># Logical operators উদাহরণ</span>
+boyos = <span class="n">20</span>
+student = <span class="k">True</span>
+
+<span class="k">print</span>(boyos &gt;= <span class="n">18</span> <span class="k">and</span> student)  <span class="c"># True and True = True</span>
+<span class="k">print</span>(boyos &lt; <span class="n">18</span> <span class="k">or</span> student)    <span class="c"># False or True = True</span>
+<span class="k">print</span>(<span class="k">not</span> student)               <span class="c"># not True = False</span></div>
+    <div class="output"><div class="output-label">⬇ OUTPUT</div>True
+True
+False</div>
+
+    <h2 class="sec">🔧 <span class="bn-text">Assignment Operators (শর্টকাট)</span><span class="en-text">Assignment Operators (Shortcuts)</span></h2>
+    <div class="code">x = <span class="n">10</span>
+x += <span class="n">5</span>   <span class="c"># x = x + 5  → x = 15</span>
+x -= <span class="n">3</span>   <span class="c"># x = x - 3  → x = 12</span>
+x *= <span class="n">2</span>   <span class="c"># x = x * 2  → x = 24</span>
+x //= <span class="n">4</span>  <span class="c"># x = x // 4 → x = 6</span>
+x **= <span class="n">2</span>  <span class="c"># x = x ** 2 → x = 36</span>
+<span class="k">print</span>(x)  <span class="c"># 36</span></div>
+
+    <div class="chapter-summary">
+      <h3>📌 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>➕ <span class="bn-text">Arithmetic: +, -, *, /, //, %, ** — গাণিতিক কাজ</span><span class="en-text">Arithmetic: +, -, *, /, //, %, ** — math operations</span></li>
+        <li>🤔 <span class="bn-text">Comparison: ==, !=, &gt;, &lt;, &gt;=, &lt;= — True/False দেয়</span><span class="en-text">Comparison: ==, !=, &gt;, &lt;, &gt;=, &lt;= — returns True/False</span></li>
+        <li>🧠 <span class="bn-text">Logical: and, or, not — শর্ত মিলানো</span><span class="en-text">Logical: and, or, not — combining conditions</span></li>
+        <li>🔧 <span class="bn-text">Assignment: +=, -=, *= — শর্টকাট</span><span class="en-text">Assignment: +=, -=, *= — shortcuts</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     CHAPTER 5: Conditions
+════════════════════════════════════════ -->
+<div class="chapter ch5">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 05</div>
+    <div class="chapter-title">🚦 <span class="bn-text">শর্ত — if / elif / else</span><span class="en-text">Conditions — if / elif / else</span></div>
+    <div class="chapter-desc"><span class="bn-text">প্রোগ্রামকে সিদ্ধান্ত নেওয়া শেখানো — বিভিন্ন পরিস্থিতিতে বিভিন্ন কাজ</span><span class="en-text">Teaching the program to make decisions — different actions in different situations</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🚦 <span class="bn-text">if — শর্ত পরীক্ষা</span><span class="en-text">if — Condition Check</span></h2>
+    <p><span class="bn-text">বাস্তব জীবনে আমরা প্রতিনিয়ত সিদ্ধান্ত নিই — "যদি বৃষ্টি হয়, তাহলে ছাতা নেব।" Python-এও একই ভাবে কাজ করে।</span><span class="en-text">In real life we constantly make decisions — "If it rains, I'll take an umbrella." Python works the same way.</span></p>
+
+    <div class="concept">
+      <div class="concept-title">🧠 <span class="bn-text">গঠন / Structure</span><span class="en-text">Structure</span></div>
+      <div class="diagram">
+<pre><span class="k">if</span> <span class="dy">শর্ত</span>:
+    <span class="dg">কাজ (যদি শর্ত সত্য হয়)</span>
+<span class="k">elif</span> <span class="dy">অন্য শর্ত</span>:
+    <span class="db">কাজ (যদি দ্বিতীয় শর্ত সত্য)</span>
+<span class="k">else</span>:
+    <span class="dr">কাজ (যদি কোনো শর্ত না মেলে)</span></pre>
+      </div>
+    </div>
+
+    <div class="box warn">
+      <div class="box-t">⚠️ Indentation — <span class="bn-text">বাংলায় বলতে গেলে "ভেতর ঢোকানো"</span><span class="en-text">"pushing in"</span></div>
+      <span class="bn-text">Python-এ if-এর পরের কোড <strong>4টা space বা 1টা Tab</strong> দিয়ে ভেতরে লিখতে হয়। এটা না করলে error আসবে!</span>
+      <span class="en-text">In Python, code after if must be indented with <strong>4 spaces or 1 Tab</strong>. Without this you'll get an error!</span>
+    </div>
+
+    <div class="code"><span class="c"># সহজ if উদাহরণ / Simple if example</span>
+boyos = <span class="k">int</span>(<span class="k">input</span>(<span class="s">"তোমার বয়স কত? "</span>))
+
+<span class="k">if</span> boyos >= <span class="n">18</span>:
+    <span class="k">print</span>(<span class="s">"তুমি প্রাপ্তবয়স্ক! ভোট দিতে পারবে।"</span>)
+<span class="k">elif</span> boyos >= <span class="n">13</span>:
+    <span class="k">print</span>(<span class="s">"তুমি কিশোর। আর কিছুদিন অপেক্ষা করো।"</span>)
+<span class="k">else</span>:
+    <span class="k">print</span>(<span class="s">"তুমি শিশু। স্কুলে মনোযোগ দাও!"</span>)</div>
+
+    <h3 class="sub"><span class="bn-text">Grade Calculator উদাহরণ</span><span class="en-text">Grade Calculator Example</span></h3>
+    <div class="code">marks = <span class="k">int</span>(<span class="k">input</span>(<span class="s">"নম্বর দাও (0-100): "</span>))
+
+<span class="k">if</span> marks >= <span class="n">80</span>:
+    grade = <span class="s">"A+"</span>
+    comment = <span class="s">"অসাধারণ! 🎉"</span>
+<span class="k">elif</span> marks >= <span class="n">70</span>:
+    grade = <span class="s">"A"</span>
+    comment = <span class="s">"খুব ভালো! 👍"</span>
+<span class="k">elif</span> marks >= <span class="n">60</span>:
+    grade = <span class="s">"B"</span>
+    comment = <span class="s">"ভালো করেছো।"</span>
+<span class="k">elif</span> marks >= <span class="n">50</span>:
+    grade = <span class="s">"C"</span>
+    comment = <span class="s">"আরো চেষ্টা করো।"</span>
+<span class="k">elif</span> marks >= <span class="n">33</span>:
+    grade = <span class="s">"D"</span>
+    comment = <span class="s">"পাস হয়েছো।"</span>
+<span class="k">else</span>:
+    grade = <span class="s">"F"</span>
+    comment = <span class="s">"ফেল। আবার চেষ্টা করো! 💪"</span>
+
+<span class="k">print</span>(<span class="s">f"গ্রেড: {grade} — {comment}"</span>)</div>
+
+    <h3 class="sub"><span class="bn-text">Nested if — if-এর ভেতরে if</span><span class="en-text">Nested if — if inside if</span></h3>
+    <div class="code">boyos = <span class="n">20</span>
+citizen = <span class="k">True</span>
+
+<span class="k">if</span> boyos >= <span class="n">18</span>:
+    <span class="k">if</span> citizen:
+        <span class="k">print</span>(<span class="s">"ভোট দিতে পারবে ✅"</span>)
+    <span class="k">else</span>:
+        <span class="k">print</span>(<span class="s">"বয়স হয়েছে কিন্তু নাগরিক নও ❌"</span>)
+<span class="k">else</span>:
+    <span class="k">print</span>(<span class="s">"বয়স হয়নি ❌"</span>)</div>
+    <div class="output"><div class="output-label">⬇ OUTPUT</div>ভোট দিতে পারবে ✅</div>
+
+    <div class="chapter-summary">
+      <h3>📌 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>🚦 <code>if</code> — <span class="bn-text">একটি শর্ত পরীক্ষা</span><span class="en-text">check one condition</span></li>
+        <li>🔀 <code>elif</code> — <span class="bn-text">আরেকটি শর্ত (একাধিক হতে পারে)</span><span class="en-text">another condition (can have many)</span></li>
+        <li>🔚 <code>else</code> — <span class="bn-text">কোনো শর্ত না মিললে এটা চলে</span><span class="en-text">runs if no condition matches</span></li>
+        <li>📐 <span class="bn-text">Indentation — ৪ space বা Tab, এটা Python-এ বাধ্যতামূলক!</span><span class="en-text">Indentation — 4 spaces or Tab, mandatory in Python!</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     CHAPTER 6: Loops
+════════════════════════════════════════ -->
+<div class="chapter ch6">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 06</div>
+    <div class="chapter-title">🔄 <span class="bn-text">লুপ — for / while</span><span class="en-text">Loops — for / while</span></div>
+    <div class="chapter-desc"><span class="bn-text">কাজ বারবার করানো — Python-এর সবচেয়ে শক্তিশালী বৈশিষ্ট্যগুলোর একটি</span><span class="en-text">Repeating tasks — one of Python's most powerful features</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🔁 for loop — <span class="bn-text">নির্দিষ্ট সংখ্যকবার</span><span class="en-text">Fixed Number of Times</span></h2>
+    <p><span class="bn-text"><code>for</code> loop ব্যবহার করা হয় যখন জানি কতবার কাজ করতে হবে, অথবা একটি list/sequence-এর সব item-এর উপর কাজ করতে হবে।</span><span class="en-text">Use <code>for</code> loop when you know how many times to repeat, or to work on every item in a list/sequence.</span></p>
+
+    <div class="code"><span class="c"># 5 বার Hello প্রিন্ট করো / Print Hello 5 times</span>
+<span class="k">for</span> i <span class="k">in</span> <span class="b">range</span>(<span class="n">5</span>):
+    <span class="k">print</span>(<span class="s">"Hello!"</span>, i)
+
+<span class="k">print</span>(<span class="s">"--- range(1, 6) ---"</span>)
+<span class="c"># 1 থেকে 5 পর্যন্ত / 1 to 5</span>
+<span class="k">for</span> i <span class="k">in</span> <span class="b">range</span>(<span class="n">1</span>, <span class="n">6</span>):
+    <span class="k">print</span>(i, end=<span class="s">" "</span>)</div>
+    <div class="output"><div class="output-label">⬇ OUTPUT</div>Hello! 0
+Hello! 1
+Hello! 2
+Hello! 3
+Hello! 4
+--- range(1, 6) ---
+1 2 3 4 5 </div>
+
+    <div class="code"><span class="c"># List-এর উপর for loop / for loop over a list</span>
+fruits = [<span class="s">"আম"</span>, <span class="s">"কলা"</span>, <span class="s">"লিচু"</span>, <span class="s">"আনারস"</span>]
+
+<span class="k">for</span> fol <span class="k">in</span> fruits:
+    <span class="k">print</span>(<span class="s">"ফল:"</span>, fol)
+
+<span class="c"># String-এর উপর loop / loop over a string</span>
+<span class="k">for</span> akhor <span class="k">in</span> <span class="s">"Python"</span>:
+    <span class="k">print</span>(akhor, end=<span class="s">"-"</span>)</div>
+    <div class="output"><div class="output-label">⬇ OUTPUT</div>ফল: আম
+ফল: কলা
+ফল: লিচু
+ফল: আনারস
+P-y-t-h-o-n-</div>
+
+    <h2 class="sec">🔂 while loop — <span class="bn-text">শর্ত সত্য থাকলে চলবে</span><span class="en-text">Runs While Condition is True</span></h2>
+    <div class="code"><span class="c"># 1 থেকে শুরু করে 5 পর্যন্ত / Count from 1 to 5</span>
+sankhya = <span class="n">1</span>
+
+<span class="k">while</span> sankhya <= <span class="n">5</span>:
+    <span class="k">print</span>(sankhya)
+    sankhya += <span class="n">1</span>   <span class="c"># এটা না দিলে infinite loop হবে!</span>
+
+<span class="k">print</span>(<span class="s">"শেষ!"</span>)</div>
+    <div class="output"><div class="output-label">⬇ OUTPUT</div>1
+2
+3
+4
+5
+শেষ!</div>
+
+    <h2 class="sec">⛔ break ও 🔀 continue</h2>
+    <div class="code"><span class="c"># break — loop থামিয়ে দেয় / stops the loop</span>
+<span class="k">for</span> i <span class="k">in</span> <span class="b">range</span>(<span class="n">1</span>, <span class="n">11</span>):
+    <span class="k">if</span> i == <span class="n">5</span>:
+        <span class="k">break</span>     <span class="c"># 5 আসলে থামো</span>
+    <span class="k">print</span>(i, end=<span class="s">" "</span>)
+
+<span class="k">print</span>()
+
+<span class="c"># continue — এই iteration skip করো / skip this iteration</span>
+<span class="k">for</span> i <span class="k">in</span> <span class="b">range</span>(<span class="n">1</span>, <span class="n">11</span>):
+    <span class="k">if</span> i % <span class="n">2</span> == <span class="n">0</span>:
+        <span class="k">continue</span>  <span class="c"># জোড় সংখ্যা skip করো</span>
+    <span class="k">print</span>(i, end=<span class="s">" "</span>)</div>
+    <div class="output"><div class="output-label">⬇ OUTPUT</div>1 2 3 4 
+1 3 5 7 9 </div>
+
+    <h3 class="sub"><span class="bn-text">প্র্যাক্টিক্যাল উদাহরণ: গুণের নামতা</span><span class="en-text">Practical Example: Multiplication Table</span></h3>
+    <div class="code">sankhya = <span class="k">int</span>(<span class="k">input</span>(<span class="s">"কোন সংখ্যার নামতা দেখাবো? "</span>))
+
+<span class="k">print</span>(<span class="s">f"\n{sankhya}-এর নামতা:"</span>)
+<span class="k">print</span>(<span class="s">"━" * 20</span>)
+<span class="k">for</span> i <span class="k">in</span> <span class="b">range</span>(<span class="n">1</span>, <span class="n">11</span>):
+    <span class="k">print</span>(<span class="s">f"{sankhya} × {i:2d} = {sankhya * i}"</span>)</div>
+    <div class="output"><div class="output-label">⬇ OUTPUT (যদি 5 দাও)</div>5-এর নামতা:
+━━━━━━━━━━━━━━━━━━━━
+5 ×  1 = 5
+5 ×  2 = 10
+5 ×  3 = 15
+...
+5 × 10 = 50</div>
+
+    <div class="chapter-summary">
+      <h3>📌 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>🔁 <code>for</code> — <span class="bn-text">নির্দিষ্ট বার বা list-এর প্রতিটি item-এ কাজ</span><span class="en-text">fixed times or each item in a list</span></li>
+        <li>🔂 <code>while</code> — <span class="bn-text">শর্ত সত্য থাকলে চলে</span><span class="en-text">runs while condition is True</span></li>
+        <li>📊 <code>range(start, stop, step)</code> — <span class="bn-text">সংখ্যার ক্রম তৈরি</span><span class="en-text">creates number sequence</span></li>
+        <li>⛔ <code>break</code> — <span class="bn-text">loop থামায়, </span><span class="en-text">stops loop, </span><code>continue</code> — <span class="bn-text">এই iteration skip করে</span><span class="en-text">skips current iteration</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     CHAPTER 7: Functions
+════════════════════════════════════════ -->
+<div class="chapter ch7">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 07</div>
+    <div class="chapter-title">⚙️ <span class="bn-text">ফাংশন</span><span class="en-text">Functions</span></div>
+    <div class="chapter-desc"><span class="bn-text">কোড পুনরায় ব্যবহারযোগ্য টুকরোতে ভাগ করা — def, return, parameters</span><span class="en-text">Breaking code into reusable pieces — def, return, parameters</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">⚙️ <span class="bn-text">Function কী এবং কেন?</span><span class="en-text">What is a Function and Why?</span></h2>
+    <p><span class="bn-text">Function হলো কোডের একটা <strong>নামযুক্ত block</strong> যা একটি নির্দিষ্ট কাজ করে। একবার লিখলে বারবার ব্যবহার করা যায়। রান্নার recipe-র মতো — একবার লিখলে যখন খুশি ব্যবহার করো।</span><span class="en-text">A function is a <strong>named block</strong> of code that does a specific job. Write once, use many times — like a cooking recipe.</span></p>
+
+    <div class="code"><span class="c"># Function তৈরি করা / Creating a function</span>
+<span class="k">def</span> <span class="f">shobaike_salam</span>():
+    <span class="k">print</span>(<span class="s">"আস্সালামু আলাইকুম!"</span>)
+    <span class="k">print</span>(<span class="s">"সবাইকে স্বাগতম!"</span>)
+
+<span class="c"># Function call করা / Calling the function</span>
+<span class="f">shobaike_salam</span>()   <span class="c"># প্রথমবার</span>
+<span class="f">shobaike_salam</span>()   <span class="c"># দ্বিতীয়বার</span>
+<span class="f">shobaike_salam</span>()   <span class="c"># তৃতীয়বার</span></div>
+    <div class="output"><div class="output-label">⬇ OUTPUT</div>আস্সালামু আলাইকুম!
+সবাইকে স্বাগতম!
+আস্সালামু আলাইকুম!
+সবাইকে স্বাগতম!
+আস্সালামু আলাইকুম!
+সবাইকে স্বাগতম!</div>
+
+    <h2 class="sec">📥 Parameters — <span class="bn-text">তথ্য পাঠানো</span><span class="en-text">Sending Information</span></h2>
+    <div class="code"><span class="c"># Parameter সহ function / Function with parameters</span>
+<span class="k">def</span> <span class="f">salam_dao</span>(naam):
+    <span class="k">print</span>(<span class="s">f"হ্যালো, {naam}! কেমন আছো?"</span>)
+
+<span class="f">salam_dao</span>(<span class="s">"Rahim"</span>)
+<span class="f">salam_dao</span>(<span class="s">"Karim"</span>)
+
+<span class="c"># একাধিক parameter / Multiple parameters</span>
+<span class="k">def</span> <span class="f">yog_koro</span>(a, b):
+    fol = a + b
+    <span class="k">print</span>(<span class="s">f"{a} + {b} = {fol}"</span>)
+
+<span class="f">yog_koro</span>(<span class="n">10</span>, <span class="n">20</span>)
+<span class="f">yog_koro</span>(<span class="n">5</span>, <span class="n">8</span>)</div>
+    <div class="output"><div class="output-label">⬇ OUTPUT</div>হ্যালো, Rahim! কেমন আছো?
+হ্যালো, Karim! কেমন আছো?
+10 + 20 = 30
+5 + 8 = 13</div>
+
+    <h2 class="sec">📤 return — <span class="bn-text">ফলাফল ফেরত পাঠানো</span><span class="en-text">Returning Results</span></h2>
+    <div class="code"><span class="c"># return দিয়ে মান ফেরত দেওয়া</span>
+<span class="k">def</span> <span class="f">chorbritto</span>(bhumi, uchho):
+    <span class="k">return</span> (bhumi * uchho) / <span class="n">2</span>
+
+<span class="c"># return করা মান ব্যবহার করা</span>
+fol = <span class="f">chorbritto</span>(<span class="n">10</span>, <span class="n">6</span>)
+<span class="k">print</span>(<span class="s">f"ত্রিভুজের ক্ষেত্রফল: {fol}"</span>)
+
+<span class="c"># সরাসরিও ব্যবহার করা যায়</span>
+<span class="k">print</span>(<span class="s">f"ক্ষেত্রফল: {<span class="f">chorbritto</span>(<span class="n">8</span>, <span class="n">4</span>)}"</span>)</div>
+    <div class="output"><div class="output-label">⬇ OUTPUT</div>ত্রিভুজের ক্ষেত্রফল: 30.0
+ক্ষেত্রফল: 16.0</div>
+
+    <h2 class="sec">📌 <span class="bn-text">Default Parameter</span><span class="en-text">Default Parameter</span></h2>
+    <div class="code"><span class="c"># Default value দেওয়া / Setting default values</span>
+<span class="k">def</span> <span class="f">parichoy</span>(naam, bhoomi=<span class="s">"বাংলাদেশ"</span>):
+    <span class="k">print</span>(<span class="s">f"নাম: {naam}, দেশ: {bhoomi}"</span>)
+
+<span class="f">parichoy</span>(<span class="s">"Rahim"</span>)                   <span class="c"># default দেশ</span>
+<span class="f">parichoy</span>(<span class="s">"John"</span>, <span class="s">"USA"</span>)              <span class="c"># custom দেশ</span>
+<span class="f">parichoy</span>(<span class="s">"Priya"</span>, bhoomi=<span class="s">"India"</span>)   <span class="c"># keyword argument</span></div>
+    <div class="output"><div class="output-label">⬇ OUTPUT</div>নাম: Rahim, দেশ: বাংলাদেশ
+নাম: John, দেশ: USA
+নাম: Priya, দেশ: India</div>
+
+    <h2 class="sec">🎯 *args ও **kwargs — <span class="bn-text">যেকোনো সংখ্যক argument</span><span class="en-text">Any Number of Arguments</span></h2>
+    <div class="code"><span class="c"># *args — যেকোনো সংখ্যক positional argument</span>
+<span class="k">def</span> <span class="f">sob_jog_koro</span>(*sankhya):
+    total = <span class="b">sum</span>(sankhya)
+    <span class="k">return</span> total
+
+<span class="k">print</span>(<span class="f">sob_jog_koro</span>(<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>))        <span class="c"># 6</span>
+<span class="k">print</span>(<span class="f">sob_jog_koro</span>(<span class="n">10</span>, <span class="n">20</span>, <span class="n">30</span>, <span class="n">40</span>))  <span class="c"># 100</span>
+
+<span class="c"># **kwargs — যেকোনো keyword arguments</span>
+<span class="k">def</span> <span class="f">profile_dakaho</span>(**tothyo):
+    <span class="k">for</span> chabi, mon <span class="k">in</span> tothyo.<span class="m">items</span>():
+        <span class="k">print</span>(<span class="s">f"  {chabi}: {mon}"</span>)
+
+<span class="f">profile_dakaho</span>(naam=<span class="s">"Rahim"</span>, boyos=<span class="n">20</span>, shahor=<span class="s">"Dhaka"</span>)</div>
+    <div class="output"><div class="output-label">⬇ OUTPUT</div>6
+100
+  naam: Rahim
+  boyos: 20
+  shahor: Dhaka</div>
+
+    <div class="chapter-summary">
+      <h3>📌 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>⚙️ <code>def naam():</code> — <span class="bn-text">function তৈরি</span><span class="en-text">create a function</span></li>
+        <li>📥 <span class="bn-text">Parameters — function-এ তথ্য পাঠাও</span><span class="en-text">Parameters — send info to function</span></li>
+        <li>📤 <code>return</code> — <span class="bn-text">ফলাফল ফেরত দাও</span><span class="en-text">return a result</span></li>
+        <li>📌 <span class="bn-text">Default parameter — না দিলে এটা ব্যবহার হয়</span><span class="en-text">Default parameter — used when not provided</span></li>
+        <li>🎯 <code>*args, **kwargs</code> — <span class="bn-text">যতো খুশি argument</span><span class="en-text">as many arguments as you want</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     CHAPTER 8: Data Structures
+════════════════════════════════════════ -->
+<div class="chapter ch8">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 08</div>
+    <div class="chapter-title">📚 <span class="bn-text">List, Tuple, Set, Dictionary</span><span class="en-text">List, Tuple, Set, Dictionary</span></div>
+    <div class="chapter-desc"><span class="bn-text">Python-এর ৪টি প্রধান ডেটা স্ট্রাকচার — একসাথে অনেক ডেটা রাখো</span><span class="en-text">Python's 4 main data structures — store lots of data together</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">📋 List — <span class="bn-text">পরিবর্তনযোগ্য তালিকা</span><span class="en-text">Changeable List</span></h2>
+    <p><span class="bn-text">List হলো একটি ordered (ক্রমানুযায়ী) এবং changeable (পরিবর্তনযোগ্য) collection। Square brackets <code>[ ]</code> দিয়ে তৈরি হয়।</span><span class="en-text">A List is an ordered and changeable collection. Created with square brackets <code>[ ]</code>.</span></p>
+
+    <div class="code"><span class="c"># List তৈরি করা / Creating a list</span>
+fruits = [<span class="s">"আম"</span>, <span class="s">"কলা"</span>, <span class="s">"লিচু"</span>, <span class="s">"আনারস"</span>]
+sankhya = [<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>, <span class="n">4</span>, <span class="n">5</span>]
+mishrana = [<span class="n">1</span>, <span class="s">"Rahim"</span>, <span class="n">3.14</span>, <span class="k">True</span>]  <span class="c"># mixed types</span>
+
+<span class="c"># Index দিয়ে access / Access by index (0 থেকে শুরু!)</span>
+<span class="k">print</span>(fruits[<span class="n">0</span>])   <span class="c"># আম (প্রথম)</span>
+<span class="k">print</span>(fruits[<span class="n">2</span>])   <span class="c"># লিচু</span>
+<span class="k">print</span>(fruits[-<span class="n">1</span>])  <span class="c"># আনারস (শেষ)</span>
+
+<span class="c"># List পরিবর্তন / Modify list</span>
+fruits[<span class="n">1</span>] = <span class="s">"পেয়ারা"</span>
+<span class="k">print</span>(fruits)       <span class="c"># ['আম', 'পেয়ারা', 'লিচু', 'আনারস']</span>
+
+<span class="c"># নতুন item যোগ / Add items</span>
+fruits.<span class="m">append</span>(<span class="s">"কমলা"</span>)   <span class="c"># শেষে যোগ</span>
+fruits.<span class="m">insert</span>(<span class="n">1</span>, <span class="s">"জাম"</span>)  <span class="c"># index 1-এ যোগ</span>
+
+<span class="c"># item সরানো / Remove items</span>
+fruits.<span class="m">remove</span>(<span class="s">"লিচু"</span>)    <span class="c"># নির্দিষ্ট item</span>
+fruits.<span class="m">pop</span>()             <span class="c"># শেষেরটা সরাও</span>
+fruits.<span class="m">pop</span>(<span class="n">0</span>)           <span class="c"># index 0 সরাও</span>
+
+<span class="c"># দরকারি method / Useful methods</span>
+<span class="k">print</span>(<span class="b">len</span>(fruits))      <span class="c"># দৈর্ঘ্য</span>
+<span class="k">print</span>(<span class="b">sorted</span>(sankhya))  <span class="c"># সাজানো</span>
+<span class="k">print</span>(<span class="b">sum</span>(sankhya))     <span class="c"># যোগফল</span>
+<span class="k">print</span>(<span class="b">max</span>(sankhya))     <span class="c"># সর্বোচ্চ</span>
+<span class="k">print</span>(<span class="b">min</span>(sankhya))     <span class="c"># সর্বনিম্ন</span></div>
+
+    <h3 class="sub">Slicing — <span class="bn-text">List-এর অংশ বের করা</span><span class="en-text">Extracting Parts of a List</span></h3>
+    <div class="code">nums = [<span class="n">0</span>, <span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>, <span class="n">4</span>, <span class="n">5</span>, <span class="n">6</span>, <span class="n">7</span>, <span class="n">8</span>, <span class="n">9</span>]
+
+<span class="k">print</span>(nums[<span class="n">2</span>:<span class="n">5</span>])   <span class="c"># [2, 3, 4] — index 2 থেকে 4</span>
+<span class="k">print</span>(nums[:<span class="n">4</span>])    <span class="c"># [0, 1, 2, 3] — শুরু থেকে</span>
+<span class="k">print</span>(nums[<span class="n">6</span>:])    <span class="c"># [6, 7, 8, 9] — শেষ পর্যন্ত</span>
+<span class="k">print</span>(nums[::2])   <span class="c"># [0, 2, 4, 6, 8] — একটা করে skip</span>
+<span class="k">print</span>(nums[::-<span class="n">1</span>])  <span class="c"># [9, 8, 7, ...] — উল্টো</span></div>
+
+    <h2 class="sec">🔒 Tuple — <span class="bn-text">পরিবর্তন-অযোগ্য তালিকা</span><span class="en-text">Immutable List</span></h2>
+    <p><span class="bn-text">Tuple, List-এর মতোই কিন্তু এটা <strong>পরিবর্তন করা যায় না</strong>। Parentheses <code>( )</code> দিয়ে তৈরি।</span><span class="en-text">Tuple is like a List but <strong>cannot be changed</strong>. Created with parentheses <code>( )</code>.</span></p>
+    <div class="code">desh = (<span class="s">"Bangladesh"</span>, <span class="s">"India"</span>, <span class="s">"Pakistan"</span>)
+coordinates = (<span class="n">23.8103</span>, <span class="n">90.4125</span>)   <span class="c"># Dhaka-র lat, lon</span>
+
+<span class="k">print</span>(desh[<span class="n">0</span>])      <span class="c"># Bangladesh</span>
+<span class="k">print</span>(<span class="b">len</span>(desh))     <span class="c"># 3</span>
+
+<span class="c"># Tuple unpack করা / Unpacking</span>
+lat, lon = coordinates
+<span class="k">print</span>(<span class="s">f"Latitude: {lat}, Longitude: {lon}"</span>)</div>
+
+    <h2 class="sec">🎲 Set — <span class="bn-text">অনন্য মানের সংগ্রহ</span><span class="en-text">Collection of Unique Values</span></h2>
+    <p><span class="bn-text">Set-এ duplicate হয় না। Curly braces <code>{ }</code> দিয়ে তৈরি।</span><span class="en-text">Sets don't have duplicates. Created with curly braces <code>{ }</code>.</span></p>
+    <div class="code">fruits = {<span class="s">"আম"</span>, <span class="s">"কলা"</span>, <span class="s">"আম"</span>, <span class="s">"লিচু"</span>, <span class="s">"কলা"</span>}
+<span class="k">print</span>(fruits)   <span class="c"># {'আম', 'কলা', 'লিচু'} — duplicate নেই!</span>
+
+<span class="c"># Set operations</span>
+a = {<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>, <span class="n">4</span>}
+b = {<span class="n">3</span>, <span class="n">4</span>, <span class="n">5</span>, <span class="n">6</span>}
+<span class="k">print</span>(a | b)   <span class="c"># Union: {1,2,3,4,5,6}</span>
+<span class="k">print</span>(a & b)   <span class="c"># Intersection: {3,4}</span>
+<span class="k">print</span>(a - b)   <span class="c"># Difference: {1,2}</span></div>
+
+    <h2 class="sec">🗂️ Dictionary — <span class="bn-text">Key-Value জোড়া</span><span class="en-text">Key-Value Pairs</span></h2>
+    <p><span class="bn-text">Dictionary হলো key-value pair-এর সংগ্রহ। একটা আসল Dictionary-র মতো — word (key) দিয়ে অর্থ (value) খোঁজো।</span><span class="en-text">A Dictionary is a collection of key-value pairs — like a real dictionary where you find meaning (value) by word (key).</span></p>
+    <div class="code"><span class="c"># Dictionary তৈরি / Create</span>
+student = {
+    <span class="s">"naam"</span>: <span class="s">"Rahim"</span>,
+    <span class="s">"boyos"</span>: <span class="n">20</span>,
+    <span class="s">"GPA"</span>: <span class="n">4.75</span>,
+    <span class="s">"subject"</span>: [<span class="s">"Math"</span>, <span class="s">"Physics"</span>]
+}
+
+<span class="c"># Access / পড়া</span>
+<span class="k">print</span>(student[<span class="s">"naam"</span>])        <span class="c"># Rahim</span>
+<span class="k">print</span>(student.<span class="m">get</span>(<span class="s">"GPA"</span>))     <span class="c"># 4.75 (safer)</span>
+
+<span class="c"># Add / Update</span>
+student[<span class="s">"shahor"</span>] = <span class="s">"Dhaka"</span>    <span class="c"># নতুন key</span>
+student[<span class="s">"boyos"</span>] = <span class="n">21</span>          <span class="c"># update</span>
+
+<span class="c"># Loop দিয়ে সব দেখাও</span>
+<span class="k">for</span> chabi, mon <span class="k">in</span> student.<span class="m">items</span>():
+    <span class="k">print</span>(<span class="s">f"  {chabi}: {mon}"</span>)
+
+<span class="c"># Keys ও Values আলাদা</span>
+<span class="k">print</span>(student.<span class="m">keys</span>())
+<span class="k">print</span>(student.<span class="m">values</span>())</div>
+
+    <div class="box info">
+      <div class="box-t">🔑 <span class="bn-text">কোনটা কখন ব্যবহার করবো?</span><span class="en-text">Which One to Use When?</span></div>
+      <table style="margin:0;">
+        <thead><tr><th>Type</th><th><span class="bn-text">ব্যবহারের সময়</span><span class="en-text">When to Use</span></th></tr></thead>
+        <tbody>
+          <tr><td><code>list</code></td><td><span class="bn-text">ক্রমানুযায়ী, পরিবর্তনযোগ্য তালিকা</span><span class="en-text">Ordered, changeable collection</span></td></tr>
+          <tr><td><code>tuple</code></td><td><span class="bn-text">স্থির ডেটা (coordinates, settings)</span><span class="en-text">Fixed data (coordinates, settings)</span></td></tr>
+          <tr><td><code>set</code></td><td><span class="bn-text">unique মান, duplicate সরাতে</span><span class="en-text">Unique values, removing duplicates</span></td></tr>
+          <tr><td><code>dict</code></td><td><span class="bn-text">label দিয়ে ডেটা খোঁজা</span><span class="en-text">Finding data by label</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>📌 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>📋 <code>list [ ]</code> — <span class="bn-text">ordered, changeable — সবচেয়ে বেশি ব্যবহৃত</span><span class="en-text">ordered, changeable — most used</span></li>
+        <li>🔒 <code>tuple ( )</code> — <span class="bn-text">ordered, unchangeable</span><span class="en-text">ordered, unchangeable</span></li>
+        <li>🎲 <code>set { }</code> — <span class="bn-text">unordered, duplicate নেই</span><span class="en-text">unordered, no duplicates</span></li>
+        <li>🗂️ <code>dict { key: value }</code> — <span class="bn-text">key দিয়ে value খোঁজো</span><span class="en-text">find value by key</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     CHAPTER 9: Strings
+════════════════════════════════════════ -->
+<div class="chapter ch9">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 09</div>
+    <div class="chapter-title">📝 <span class="bn-text">স্ট্রিং (String)</span><span class="en-text">Strings</span></div>
+    <div class="chapter-desc"><span class="bn-text">টেক্সট নিয়ে কাজ — Python-এ সবচেয়ে বেশি ব্যবহৃত ডেটা টাইপ</span><span class="en-text">Working with text — the most used data type in Python</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">📝 <span class="bn-text">String তৈরি করার উপায়</span><span class="en-text">Ways to Create Strings</span></h2>
+    <div class="code">s1 = <span class="s">'Single quote'</span>
+s2 = <span class="s">"Double quote"</span>
+s3 = <span class="s">"""তিন
+লাইনের
+স্ট্রিং"""</span>
+
+<span class="c"># String কোড বা special character</span>
+s4 = <span class="s">"নতুন লাইন:\nএটা নতুন লাইনে"</span>
+s5 = <span class="s">"Tab:\tএটা tab পরে"</span>
+<span class="k">print</span>(s4)
+<span class="k">print</span>(s5)</div>
+
+    <h2 class="sec">✂️ String Slicing — <span class="bn-text">অংশ বের করা</span><span class="en-text">Extracting Parts</span></h2>
+    <div class="code">text = <span class="s">"Python Programming"</span>
+<span class="c">#       0123456789...</span>
+
+<span class="k">print</span>(text[<span class="n">0</span>])      <span class="c"># P</span>
+<span class="k">print</span>(text[-<span class="n">1</span>])     <span class="c"># g (শেষ অক্ষর)</span>
+<span class="k">print</span>(text[<span class="n">0</span>:<span class="n">6</span>])    <span class="c"># Python</span>
+<span class="k">print</span>(text[<span class="n">7</span>:])     <span class="c"># Programming</span>
+<span class="k">print</span>(text[::-<span class="n">1</span>])   <span class="c"># gnimmargorP nohtyP (উল্টো)</span></div>
+
+    <h2 class="sec">🔧 <span class="bn-text">দরকারি String Methods</span><span class="en-text">Useful String Methods</span></h2>
+    <div class="code">text = <span class="s">"  Hello, World!  "</span>
+
+<span class="k">print</span>(text.<span class="m">upper</span>())        <span class="c"># HELLO, WORLD!</span>
+<span class="k">print</span>(text.<span class="m">lower</span>())        <span class="c"># hello, world!</span>
+<span class="k">print</span>(text.<span class="m">strip</span>())        <span class="c"># "Hello, World!" (দুপাশের space সরায়)</span>
+<span class="k">print</span>(text.<span class="m">replace</span>(<span class="s">"World"</span>, <span class="s">"Python"</span>))  <span class="c"># Hello, Python!</span>
+<span class="k">print</span>(text.<span class="m">find</span>(<span class="s">"World"</span>))  <span class="c"># 8 (index)</span>
+<span class="k">print</span>(text.<span class="m">count</span>(<span class="s">"l"</span>))     <span class="c"># 3</span>
+<span class="k">print</span>(text.<span class="m">startswith</span>(<span class="s">"Hello"</span>))  <span class="c"># False (space আছে)</span>
+<span class="k">print</span>(text.<span class="m">strip</span>().<span class="m">startswith</span>(<span class="s">"Hello"</span>))  <span class="c"># True</span>
+
+<span class="c"># Split ও Join</span>
+words = <span class="s">"Python,Java,C++,JavaScript"</span>
+list_words = words.<span class="m">split</span>(<span class="s">","</span>)
+<span class="k">print</span>(list_words)   <span class="c"># ['Python', 'Java', 'C++', 'JavaScript']</span>
+
+joined = <span class="s">" | "</span>.<span class="m">join</span>(list_words)
+<span class="k">print</span>(joined)       <span class="c"># Python | Java | C++ | JavaScript</span></div>
+
+    <h2 class="sec">🎨 f-String — <span class="bn-text">সুন্দরভাবে ডেটা দেখানো</span><span class="en-text">Displaying Data Beautifully</span></h2>
+    <p><span class="bn-text">f-string হলো সবচেয়ে আধুনিক এবং সহজ উপায় string-এ variable ঢোকানোর।</span><span class="en-text">f-string is the most modern and easy way to insert variables into strings.</span></p>
+    <div class="code">naam = <span class="s">"Rahim"</span>
+boyos = <span class="n">20</span>
+GPA = <span class="n">4.75</span>
+
+<span class="c"># পুরনো পদ্ধতি (এড়িয়ে চলো) / Old way (avoid)</span>
+<span class="k">print</span>(<span class="s">"নাম: "</span> + naam + <span class="s">", বয়স: "</span> + <span class="b">str</span>(boyos))
+
+<span class="c"># আধুনিক f-string (সবসময় এটা ব্যবহার করো)</span>
+<span class="k">print</span>(<span class="s">f"নাম: {naam}, বয়স: {boyos}, GPA: {GPA}"</span>)
+
+<span class="c"># Expression ব্যবহার করা যায়</span>
+<span class="k">print</span>(<span class="s">f"10 বছর পর বয়স হবে: {boyos + 10}"</span>)
+
+<span class="c"># Formatting</span>
+dam = <span class="n">1234567.89</span>
+<span class="k">print</span>(<span class="s">f"দাম: {dam:,.2f} টাকা"</span>)  <span class="c"># 1,234,567.89</span>
+<span class="k">print</span>(<span class="s">f"GPA: {GPA:.1f}"</span>)        <span class="c"># 4.8</span></div>
+    <div class="output"><div class="output-label">⬇ OUTPUT</div>নাম: Rahim, বয়স: 20, GPA: 4.75
+10 বছর পর বয়স হবে: 30
+দাম: 1,234,567.89 টাকা
+GPA: 4.8</div>
+
+    <div class="chapter-summary">
+      <h3>📌 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>✂️ <span class="bn-text">Slicing: text[start:end:step]</span><span class="en-text">Slicing: text[start:end:step]</span></li>
+        <li>🔧 <span class="bn-text">Methods: upper(), lower(), strip(), replace(), split(), join()</span></li>
+        <li>🎨 <code>f"{variable}"</code> — <span class="bn-text">সবচেয়ে সহজ string formatting</span><span class="en-text">easiest string formatting</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     CHAPTER 10: File Handling
+════════════════════════════════════════ -->
+<div class="chapter ch10">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 10</div>
+    <div class="chapter-title">📁 <span class="bn-text">ফাইল হ্যান্ডলিং</span><span class="en-text">File Handling</span></div>
+    <div class="chapter-desc"><span class="bn-text">ফাইল পড়া, লেখা এবং সংরক্ষণ — ডেটা permanently রাখা</span><span class="en-text">Reading, writing and saving files — keeping data permanently</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">📂 open() — <span class="bn-text">ফাইল খোলা</span><span class="en-text">Opening a File</span></h2>
+    <table>
+      <thead><tr><th>Mode</th><th><span class="bn-text">কাজ</span><span class="en-text">Function</span></th><th><span class="bn-text">ব্যাখ্যা</span><span class="en-text">Explanation</span></th></tr></thead>
+      <tbody>
+        <tr><td><code>"r"</code></td><td><span class="bn-text">পড়া</span><span class="en-text">Read</span></td><td><span class="bn-text">শুধু পড়া যাবে, ফাইল থাকতে হবে</span><span class="en-text">Read only, file must exist</span></td></tr>
+        <tr><td><code>"w"</code></td><td><span class="bn-text">লেখা</span><span class="en-text">Write</span></td><td><span class="bn-text">নতুন লেখা, আগের সব মুছে যাবে</span><span class="en-text">Write new, erases existing content</span></td></tr>
+        <tr><td><code>"a"</code></td><td><span class="bn-text">যোগ করা</span><span class="en-text">Append</span></td><td><span class="bn-text">শেষে যোগ হবে, আগেরটা থাকবে</span><span class="en-text">Adds to end, keeps existing content</span></td></tr>
+        <tr><td><code>"r+"</code></td><td><span class="bn-text">পড়া ও লেখা</span><span class="en-text">Read & Write</span></td><td><span class="bn-text">দুটোই করা যাবে</span><span class="en-text">Both read and write</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">✍️ <span class="bn-text">ফাইলে লেখা</span><span class="en-text">Writing to a File</span></h2>
+    <div class="code"><span class="c"># with statement ব্যবহার করো — automatically close হয়</span>
+<span class="k">with</span> <span class="b">open</span>(<span class="s">"students.txt"</span>, <span class="s">"w"</span>, encoding=<span class="s">"utf-8"</span>) <span class="k">as</span> file:
+    file.<span class="m">write</span>(<span class="s">"Rahim\n"</span>)
+    file.<span class="m">write</span>(<span class="s">"Karim\n"</span>)
+    file.<span class="m">write</span>(<span class="s">"Salam\n"</span>)
+
+<span class="k">print</span>(<span class="s">"ফাইলে লেখা হয়েছে!"</span>)
+
+<span class="c"># List থেকে লেখা / Write from list</span>
+students = [<span class="s">"Rahim\n"</span>, <span class="s">"Karim\n"</span>, <span class="s">"Salam\n"</span>]
+<span class="k">with</span> <span class="b">open</span>(<span class="s">"students.txt"</span>, <span class="s">"w"</span>, encoding=<span class="s">"utf-8"</span>) <span class="k">as</span> file:
+    file.<span class="m">writelines</span>(students)</div>
+
+    <h2 class="sec">📖 <span class="bn-text">ফাইল পড়া</span><span class="en-text">Reading a File</span></h2>
+    <div class="code"><span class="c"># সব একসাথে পড়া / Read all at once</span>
+<span class="k">with</span> <span class="b">open</span>(<span class="s">"students.txt"</span>, <span class="s">"r"</span>, encoding=<span class="s">"utf-8"</span>) <span class="k">as</span> file:
+    content = file.<span class="m">read</span>()
+    <span class="k">print</span>(content)
+
+<span class="c"># লাইন বাই লাইন পড়া / Read line by line</span>
+<span class="k">with</span> <span class="b">open</span>(<span class="s">"students.txt"</span>, <span class="s">"r"</span>, encoding=<span class="s">"utf-8"</span>) <span class="k">as</span> file:
+    <span class="k">for</span> line <span class="k">in</span> file:
+        <span class="k">print</span>(line.<span class="m">strip</span>())  <span class="c"># strip() দিয়ে \n সরাও</span>
+
+<span class="c"># সব লাইন list-এ / All lines in a list</span>
+<span class="k">with</span> <span class="b">open</span>(<span class="s">"students.txt"</span>, <span class="s">"r"</span>, encoding=<span class="s">"utf-8"</span>) <span class="k">as</span> file:
+    lines = file.<span class="m">readlines</span>()
+    <span class="k">print</span>(lines)   <span class="c"># ['Rahim\n', 'Karim\n', 'Salam\n']</span></div>
+
+    <h2 class="sec">➕ <span class="bn-text">ফাইলে যোগ করা (Append)</span><span class="en-text">Appending to a File</span></h2>
+    <div class="code"><span class="c"># "a" mode — আগেরটা না মুছে যোগ করা</span>
+<span class="k">with</span> <span class="b">open</span>(<span class="s">"students.txt"</span>, <span class="s">"a"</span>, encoding=<span class="s">"utf-8"</span>) <span class="k">as</span> file:
+    file.<span class="m">write</span>(<span class="s">"নতুন ছাত্র\n"</span>)
+<span class="k">print</span>(<span class="s">"যোগ হয়েছে!"</span>)</div>
+
+    <div class="box info">
+      <div class="box-t">💡 <code>with</code> <span class="bn-text">কেন ব্যবহার করবো?</span><span class="en-text">Why use</span> <code>with</code>?</div>
+      <span class="bn-text"><code>with</code> ব্যবহার করলে কাজ শেষে ফাইল automatically বন্ধ হয়ে যায়। এটা সবসময় ব্যবহার করা উচিত।</span>
+      <span class="en-text">Using <code>with</code> automatically closes the file when done. Always use it.</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>📌 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>📂 <code>open(file, mode, encoding)</code> — <span class="bn-text">ফাইল খোলা</span><span class="en-text">open a file</span></li>
+        <li>✍️ <code>"w"</code> — <span class="bn-text">লেখা (মুছে), </span><span class="en-text">write (erases), </span><code>"a"</code> — <span class="bn-text">যোগ করা</span><span class="en-text">append</span></li>
+        <li>📖 <code>read(), readlines()</code> — <span class="bn-text">ফাইল পড়া</span><span class="en-text">reading file</span></li>
+        <li>🔑 <code>with open() as file:</code> — <span class="bn-text">সবসময় এভাবে খোলো</span><span class="en-text">always open this way</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     CHAPTER 11: Error Handling
+════════════════════════════════════════ -->
+<div class="chapter ch11">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 11</div>
+    <div class="chapter-title">🛡️ <span class="bn-text">এরর হ্যান্ডলিং</span><span class="en-text">Error Handling</span></div>
+    <div class="chapter-desc"><span class="bn-text">প্রোগ্রাম crash না করে ভুল সামলানো — try, except, finally</span><span class="en-text">Handling errors without crashing — try, except, finally</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">❌ <span class="bn-text">Error বা Exception কী?</span><span class="en-text">What is an Error or Exception?</span></h2>
+    <p><span class="bn-text">Python-এ কোনো ভুল হলে program crash করে। কিন্তু আমরা চাই program crash না করে error সামলাক। এর জন্য <code>try-except</code> ব্যবহার করি।</span><span class="en-text">When Python encounters a mistake, the program crashes. But we want the program to handle errors without crashing. For this we use <code>try-except</code>.</span></p>
+
+    <div class="code"><span class="c"># এরকম করলে crash হবে / This will crash</span>
+<span class="c"># x = int("abc")  ← ValueError!</span>
+<span class="c"># y = 10 / 0      ← ZeroDivisionError!</span>
+
+<span class="c"># try-except দিয়ে সামলাও / Handle with try-except</span>
+<span class="k">try</span>:
+    sankhya = <span class="k">int</span>(<span class="k">input</span>(<span class="s">"একটা সংখ্যা দাও: "</span>))
+    fol = <span class="n">100</span> / sankhya
+    <span class="k">print</span>(<span class="s">f"100 ÷ {sankhya} = {fol}"</span>)
+<span class="k">except</span> ValueError:
+    <span class="k">print</span>(<span class="s">"❌ সংখ্যা দাও, অক্ষর নয়!"</span>)
+<span class="k">except</span> ZeroDivisionError:
+    <span class="k">print</span>(<span class="s">"❌ শূন্য দিয়ে ভাগ দেওয়া যাবে না!"</span>)
+<span class="k">else</span>:
+    <span class="k">print</span>(<span class="s">"✅ সফলভাবে হিসাব হয়েছে!"</span>)
+<span class="k">finally</span>:
+    <span class="k">print</span>(<span class="s">"এটা সবসময় চলে!"</span>)</div>
+
+    <h2 class="sec">📋 <span class="bn-text">সাধারণ Exception-গুলো</span><span class="en-text">Common Exceptions</span></h2>
+    <table>
+      <thead><tr><th>Exception</th><th><span class="bn-text">কখন হয়</span><span class="en-text">When it occurs</span></th><th><span class="bn-text">উদাহরণ</span><span class="en-text">Example</span></th></tr></thead>
+      <tbody>
+        <tr><td><code>ValueError</code></td><td><span class="bn-text">ভুল মান</span><span class="en-text">Wrong value</span></td><td><code>int("abc")</code></td></tr>
+        <tr><td><code>ZeroDivisionError</code></td><td><span class="bn-text">শূন্য দিয়ে ভাগ</span><span class="en-text">Divide by zero</span></td><td><code>10/0</code></td></tr>
+        <tr><td><code>IndexError</code></td><td><span class="bn-text">List-এ নেই এমন index</span><span class="en-text">Index out of range</span></td><td><code>list[100]</code></td></tr>
+        <tr><td><code>KeyError</code></td><td><span class="bn-text">Dict-এ নেই এমন key</span><span class="en-text">Key not in dict</span></td><td><code>dict["x"]</code></td></tr>
+        <tr><td><code>TypeError</code></td><td><span class="bn-text">ভুল টাইপে অপারেশন</span><span class="en-text">Wrong type operation</span></td><td><code>"a" + 1</code></td></tr>
+        <tr><td><code>FileNotFoundError</code></td><td><span class="bn-text">ফাইল নেই</span><span class="en-text">File not found</span></td><td><code>open("x.txt")</code></td></tr>
+        <tr><td><code>NameError</code></td><td><span class="bn-text">Variable নেই</span><span class="en-text">Variable undefined</span></td><td><code>print(x)</code></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🚀 raise — <span class="bn-text">নিজেই Error তৈরি করা</span><span class="en-text">Creating Your Own Errors</span></h2>
+    <div class="code"><span class="k">def</span> <span class="f">boyos_check</span>(boyos):
+    <span class="k">if</span> boyos &lt; <span class="n">0</span>:
+        <span class="k">raise</span> ValueError(<span class="s">"বয়স নেগেটিভ হতে পারে না!"</span>)
+    <span class="k">if</span> boyos &gt; <span class="n">150</span>:
+        <span class="k">raise</span> ValueError(<span class="s">"বয়স ১৫০-এর বেশি হওয়া অসম্ভব!"</span>)
+    <span class="k">return</span> <span class="s">f"বয়স {boyos} বছর — বৈধ!"</span>
+
+<span class="k">try</span>:
+    <span class="k">print</span>(<span class="f">boyos_check</span>(<span class="n">-5</span>))
+<span class="k">except</span> ValueError <span class="k">as</span> e:
+    <span class="k">print</span>(<span class="s">f"Error: {e}"</span>)</div>
+    <div class="output"><div class="output-label">⬇ OUTPUT</div>Error: বয়স নেগেটিভ হতে পারে না!</div>
+
+    <div class="chapter-summary">
+      <h3>📌 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>🛡️ <code>try</code> — <span class="bn-text">ঝুঁকিপূর্ণ কোড এখানে</span><span class="en-text">risky code goes here</span></li>
+        <li>❌ <code>except</code> — <span class="bn-text">error হলে এটা চলে</span><span class="en-text">runs if error occurs</span></li>
+        <li>✅ <code>else</code> — <span class="bn-text">কোনো error না হলে</span><span class="en-text">if no error</span></li>
+        <li>🔚 <code>finally</code> — <span class="bn-text">সবসময় চলে (cleanup)</span><span class="en-text">always runs (cleanup)</span></li>
+        <li>🚀 <code>raise</code> — <span class="bn-text">নিজে error তৈরি করো</span><span class="en-text">create your own errors</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     CHAPTER 12: OOP
+════════════════════════════════════════ -->
+<div class="chapter ch12">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 12</div>
+    <div class="chapter-title">🏗️ <span class="bn-text">OOP — অবজেক্ট অরিয়েন্টেড প্রোগ্রামিং</span><span class="en-text">OOP — Object Oriented Programming</span></div>
+    <div class="chapter-desc"><span class="bn-text">বাস্তব জগতের মতো করে প্রোগ্রামিং — Class, Object, Inheritance</span><span class="en-text">Programming like the real world — Class, Object, Inheritance</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🤔 <span class="bn-text">OOP কেন দরকার?</span><span class="en-text">Why is OOP Needed?</span></h2>
+    <p><span class="bn-text">ধরো তুমি একটা School management system বানাচ্ছো। অনেক ছাত্র আছে, প্রত্যেকের নাম, বয়স, GPA আলাদা। OOP দিয়ে একটা "Student" নামের ছাঁচ (template) বানাও, তারপর সেখান থেকে যত খুশি ছাত্র তৈরি করো।</span><span class="en-text">Imagine building a school management system. Many students, each with their own name, age, GPA. With OOP, make a "Student" template and create as many students as you want from it.</span></p>
+
+    <div class="concept">
+      <div class="concept-title">🧠 <span class="bn-text">Class vs Object</span><span class="en-text">Class vs Object</span></div>
+      <div class="diagram">
+<pre><span class="dy">Class</span> = <span class="dg">ছাঁচ/Blueprint</span>  (যেমন: গাড়ির ডিজাইন)
+<span class="dp">Object</span> = <span class="db">আসল জিনিস</span>     (যেমন: সেই ডিজাইন থেকে বানানো গাড়ি)
+
+<span class="dy">Student</span> (Class)
+├── naam: str
+├── boyos: int
+├── GPA: float
+└── parichoy(): method
+
+<span class="dp">rahim</span> = Student(<span class="s">"Rahim"</span>, 20, 4.75)   <span class="c">← Object তৈরি</span>
+<span class="dp">karim</span> = Student(<span class="s">"Karim"</span>, 21, 3.90)   <span class="c">← আরেকটি Object</span></pre>
+      </div>
+    </div>
+
+    <h2 class="sec">🏗️ <span class="bn-text">Class তৈরি করা</span><span class="en-text">Creating a Class</span></h2>
+    <div class="code"><span class="c"># Class তৈরি / Create a class</span>
+<span class="k">class</span> <span class="f">Student</span>:
+    
+    <span class="c"># __init__ — Object তৈরির সময় চলে</span>
+    <span class="k">def</span> <span class="f">__init__</span>(<span class="k">self</span>, naam, boyos, GPA):
+        <span class="k">self</span>.naam = naam      <span class="c"># instance variable</span>
+        <span class="k">self</span>.boyos = boyos
+        <span class="k">self</span>.GPA = GPA
+    
+    <span class="c"># Method — object-এর কাজ</span>
+    <span class="k">def</span> <span class="f">parichoy</span>(<span class="k">self</span>):
+        <span class="k">print</span>(<span class="s">f"নাম: {self.naam}"</span>)
+        <span class="k">print</span>(<span class="s">f"বয়স: {self.boyos}"</span>)
+        <span class="k">print</span>(<span class="s">f"GPA: {self.GPA}"</span>)
+    
+    <span class="k">def</span> <span class="f">scholarship_eligible</span>(<span class="k">self</span>):
+        <span class="k">if</span> <span class="k">self</span>.GPA >= <span class="n">4.5</span>:
+            <span class="k">return</span> <span class="s">f"{self.naam} বৃত্তির যোগ্য! ✅"</span>
+        <span class="k">else</span>:
+            <span class="k">return</span> <span class="s">f"{self.naam} বৃত্তির যোগ্য নয়।"</span>
+
+
+<span class="c"># Object তৈরি / Create objects</span>
+rahim = <span class="f">Student</span>(<span class="s">"Rahim"</span>, <span class="n">20</span>, <span class="n">4.75</span>)
+karim = <span class="f">Student</span>(<span class="s">"Karim"</span>, <span class="n">21</span>, <span class="n">3.90</span>)
+
+<span class="c"># Method call করা / Calling methods</span>
+rahim.<span class="m">parichoy</span>()
+<span class="k">print</span>(<span class="f">rahim.scholarship_eligible</span>())
+<span class="k">print</span>(<span class="f">karim.scholarship_eligible</span>())</div>
+    <div class="output"><div class="output-label">⬇ OUTPUT</div>নাম: Rahim
+বয়স: 20
+GPA: 4.75
+Rahim বৃত্তির যোগ্য! ✅
+Karim বৃত্তির যোগ্য নয়।</div>
+
+    <h2 class="sec">🧬 Inheritance — <span class="bn-text">উত্তরাধিকার</span><span class="en-text">Inheritance</span></h2>
+    <p><span class="bn-text">একটা class-এর সব কিছু আরেকটা class-এ পাওয়া। বাবার বৈশিষ্ট্য ছেলের মধ্যে আসার মতো।</span><span class="en-text">Getting everything from one class into another. Like a child inheriting parent's traits.</span></p>
+    <div class="code"><span class="c"># Parent class</span>
+<span class="k">class</span> <span class="f">Manush</span>:
+    <span class="k">def</span> <span class="f">__init__</span>(<span class="k">self</span>, naam, boyos):
+        <span class="k">self</span>.naam = naam
+        <span class="k">self</span>.boyos = boyos
+    
+    <span class="k">def</span> <span class="f">kotha_bolo</span>(<span class="k">self</span>):
+        <span class="k">print</span>(<span class="s">f"{self.naam} কথা বলতে পারে।"</span>)
+
+<span class="c"># Child class — Manush থেকে inherit করে</span>
+<span class="k">class</span> <span class="f">Student</span>(Manush):
+    <span class="k">def</span> <span class="f">__init__</span>(<span class="k">self</span>, naam, boyos, GPA):
+        <span class="b">super</span>().__init__(naam, boyos)  <span class="c"># parent-এর init</span>
+        <span class="k">self</span>.GPA = GPA
+    
+    <span class="k">def</span> <span class="f">poro</span>(<span class="k">self</span>):
+        <span class="k">print</span>(<span class="s">f"{self.naam} পড়াশোনা করে।"</span>)
+
+<span class="c"># Teacher class</span>
+<span class="k">class</span> <span class="f">Teacher</span>(Manush):
+    <span class="k">def</span> <span class="f">porao</span>(<span class="k">self</span>):
+        <span class="k">print</span>(<span class="s">f"{self.naam} পড়ান।"</span>)
+
+s = <span class="f">Student</span>(<span class="s">"Rahim"</span>, <span class="n">20</span>, <span class="n">4.75</span>)
+s.<span class="m">kotha_bolo</span>()   <span class="c"># Parent-এর method</span>
+s.<span class="m">poro</span>()         <span class="c"># নিজের method</span></div>
+    <div class="output"><div class="output-label">⬇ OUTPUT</div>Rahim কথা বলতে পারে।
+Rahim পড়াশোনা করে।</div>
+
+    <div class="chapter-summary">
+      <h3>📌 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>🏗️ <code>class</code> — <span class="bn-text">Blueprint/Template তৈরি</span><span class="en-text">Create a blueprint/template</span></li>
+        <li>🔑 <code>__init__</code> — <span class="bn-text">Object তৈরির সময় চলে (constructor)</span><span class="en-text">Runs when object is created (constructor)</span></li>
+        <li>📌 <code>self</code> — <span class="bn-text">নিজের object-কে বোঝায়</span><span class="en-text">Refers to the current object</span></li>
+        <li>🧬 <code>class Child(Parent)</code> — <span class="bn-text">Inheritance</span><span class="en-text">Inheritance</span></li>
+        <li>🔁 <code>super()</code> — <span class="bn-text">Parent class-এর method ডাকে</span><span class="en-text">Calls parent class methods</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     CHAPTER 13: Modules & Libraries
+════════════════════════════════════════ -->
+<div class="chapter ch13">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 13</div>
+    <div class="chapter-title">📦 <span class="bn-text">মডিউল ও লাইব্রেরি</span><span class="en-text">Modules & Libraries</span></div>
+    <div class="chapter-desc"><span class="bn-text">অন্যদের লেখা কোড ব্যবহার করা — import, os, math, random, datetime</span><span class="en-text">Using code others wrote — import, os, math, random, datetime</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">📦 <span class="bn-text">Module কী?</span><span class="en-text">What is a Module?</span></h2>
+    <p><span class="bn-text">Module হলো Python কোডের একটি ফাইল যা অন্য প্রোগ্রামে <code>import</code> করে ব্যবহার করা যায়। Python-এ হাজার হাজার built-in এবং third-party module আছে।</span><span class="en-text">A module is a Python code file that you can <code>import</code> and use in other programs. Python has thousands of built-in and third-party modules.</span></p>
+
+    <div class="code"><span class="c"># import করার উপায় / Ways to import</span>
+<span class="k">import</span> math                      <span class="c"># পুরো module</span>
+<span class="k">import</span> random <span class="k">as</span> rnd             <span class="c"># alias দিয়ে</span>
+<span class="k">from</span> datetime <span class="k">import</span> datetime    <span class="c"># নির্দিষ্ট part</span>
+<span class="k">from</span> os <span class="k">import</span> *                 <span class="c"># সব (সাধারণত avoid করো)</span></div>
+
+    <h2 class="sec">🔢 math — <span class="bn-text">গণিতের module</span><span class="en-text">Math Module</span></h2>
+    <div class="code"><span class="k">import</span> math
+
+<span class="k">print</span>(math.<span class="m">sqrt</span>(<span class="n">16</span>))     <span class="c"># 4.0 — বর্গমূল</span>
+<span class="k">print</span>(math.<span class="m">pow</span>(<span class="n">2</span>, <span class="n">10</span>))  <span class="c"># 1024.0 — ঘাত</span>
+<span class="k">print</span>(math.<span class="m">pi</span>)           <span class="c"># 3.14159... — পাই</span>
+<span class="k">print</span>(math.<span class="m">ceil</span>(<span class="n">4.2</span>))   <span class="c"># 5 — উপরে গোলাকার</span>
+<span class="k">print</span>(math.<span class="m">floor</span>(<span class="n">4.9</span>)) <span class="c"># 4 — নিচে গোলাকার</span>
+<span class="k">print</span>(math.<span class="m">factorial</span>(<span class="n">5</span>)) <span class="c"># 120 — factorial</span>
+<span class="k">print</span>(math.<span class="m">log</span>(<span class="n">100</span>, <span class="n">10</span>)) <span class="c"># 2.0 — log base 10</span></div>
+
+    <h2 class="sec">🎲 random — <span class="bn-text">এলোমেলো সংখ্যা</span><span class="en-text">Random Numbers</span></h2>
+    <div class="code"><span class="k">import</span> random
+
+<span class="k">print</span>(random.<span class="m">randint</span>(<span class="n">1</span>, <span class="n">100</span>))  <span class="c"># 1-100 এর মধ্যে যেকোনো</span>
+<span class="k">print</span>(random.<span class="m">random</span>())         <span class="c"># 0.0 - 1.0</span>
+<span class="k">print</span>(random.<span class="m">choice</span>([<span class="s">"আম"</span>, <span class="s">"কলা"</span>, <span class="s">"লিচু"</span>]))  <span class="c"># list থেকে এলোমেলো</span>
+
+fruits = [<span class="s">"আম"</span>, <span class="s">"কলা"</span>, <span class="s">"লিচু"</span>, <span class="s">"আনারস"</span>]
+random.<span class="m">shuffle</span>(fruits)     <span class="c"># list shuffle করো</span>
+<span class="k">print</span>(fruits)</div>
+
+    <h2 class="sec">📅 datetime — <span class="bn-text">তারিখ ও সময়</span><span class="en-text">Date and Time</span></h2>
+    <div class="code"><span class="k">from</span> datetime <span class="k">import</span> datetime, date, timedelta
+
+<span class="c"># এখনকার সময় / Current time</span>
+ekhon = datetime.<span class="m">now</span>()
+<span class="k">print</span>(ekhon)                          <span class="c"># 2025-01-15 14:30:00</span>
+<span class="k">print</span>(ekhon.<span class="m">strftime</span>(<span class="s">"%d/%m/%Y"</span>))   <span class="c"># 15/01/2025</span>
+<span class="k">print</span>(ekhon.<span class="m">year</span>, ekhon.<span class="m">month</span>, ekhon.<span class="m">day</span>)
+
+<span class="c"># তারিখের হিসাব / Date calculation</span>
+janmo = date(<span class="n">2005</span>, <span class="n">6</span>, <span class="n">15</span>)
+aaj = date.<span class="m">today</span>()
+boyos = aaj.year - janmo.year
+<span class="k">print</span>(<span class="s">f"বর্তমান বয়স: {boyos} বছর"</span>)
+
+<span class="c"># ১০০ দিন পরের তারিখ</span>
+porerdin = aaj + timedelta(days=<span class="n">100</span>)
+<span class="k">print</span>(<span class="s">f"১০০ দিন পরে: {porerdin}"</span>)</div>
+
+    <h2 class="sec">🖥️ os — <span class="bn-text">অপারেটিং সিস্টেম</span><span class="en-text">Operating System</span></h2>
+    <div class="code"><span class="k">import</span> os
+
+<span class="k">print</span>(os.<span class="m">getcwd</span>())            <span class="c"># বর্তমান folder</span>
+<span class="k">print</span>(os.<span class="m">listdir</span>(<span class="s">"."</span>))       <span class="c"># folder-এর ফাইল</span>
+os.<span class="m">mkdir</span>(<span class="s">"new_folder"</span>)       <span class="c"># নতুন folder</span>
+<span class="k">print</span>(os.path.<span class="m">exists</span>(<span class="s">"file.txt"</span>))  <span class="c"># আছে কিনা</span>
+<span class="k">print</span>(os.path.<span class="m">join</span>(<span class="s">"folder"</span>, <span class="s">"file.txt"</span>))  <span class="c"># path join</span></div>
+
+    <h2 class="sec">📦 pip — <span class="bn-text">Third-Party Library ইনস্টল করা</span><span class="en-text">Installing Third-Party Libraries</span></h2>
+    <div class="code"><span class="c"># Terminal-এ চালাও / Run in terminal</span>
+<span class="p">$</span> pip install requests    <span class="c"># ওয়েব request</span>
+<span class="p">$</span> pip install numpy       <span class="c"># সংখ্যার হিসাব</span>
+<span class="p">$</span> pip install pandas      <span class="c"># ডেটা বিশ্লেষণ</span>
+<span class="p">$</span> pip install matplotlib  <span class="c"># graph/chart</span>
+<span class="p">$</span> pip install flask       <span class="c"># ওয়েব সার্ভার</span></div>
+
+    <div class="chapter-summary">
+      <h3>📌 <span class="bn-text">Chapter সারসংক্ষেপ</span><span class="en-text">Chapter Summary</span></h3>
+      <ul>
+        <li>📦 <code>import module</code> — <span class="bn-text">module ব্যবহার করো</span><span class="en-text">use a module</span></li>
+        <li>🔢 <code>math</code> — <span class="bn-text">গণিতের কাজ</span><span class="en-text">math operations</span></li>
+        <li>🎲 <code>random</code> — <span class="bn-text">এলোমেলো ডেটা</span><span class="en-text">random data</span></li>
+        <li>📅 <code>datetime</code> — <span class="bn-text">তারিখ ও সময়</span><span class="en-text">date and time</span></li>
+        <li>🖥️ <code>os</code> — <span class="bn-text">ফাইল সিস্টেম</span><span class="en-text">file system</span></li>
+        <li>📥 <code>pip install</code> — <span class="bn-text">বাইরের library ইনস্টল</span><span class="en-text">install external libraries</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════
+     CHAPTER 14: Advanced Python
+════════════════════════════════════════ -->
+<div class="chapter ch14">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 14</div>
+    <div class="chapter-title">🚀 Advanced Python</div>
+    <div class="chapter-desc"><span class="bn-text">List Comprehension, Lambda, Decorators, Generators — Pro-level Python</span><span class="en-text">List Comprehension, Lambda, Decorators, Generators — Pro-level Python</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">⚡ List Comprehension — <span class="bn-text">একলাইনে list তৈরি</span><span class="en-text">Create List in One Line</span></h2>
+    <p><span class="bn-text">সাধারণ loop-এর বদলে একটি compact way-তে list তৈরি করার পদ্ধতি।</span><span class="en-text">A compact way to create lists instead of regular loops.</span></p>
+    <div class="code"><span class="c"># সাধারণ পদ্ধতি / Regular way</span>
+squares = []
+<span class="k">for</span> i <span class="k">in</span> <span class="b">range</span>(<span class="n">1</span>, <span class="n">6</span>):
+    squares.<span class="m">append</span>(i ** <span class="n">2</span>)
+<span class="k">print</span>(squares)   <span class="c"># [1, 4, 9, 16, 25]</span>
+
+<span class="c"># List Comprehension — এক লাইনে!</span>
+squares = [i ** <span class="n">2</span> <span class="k">for</span> i <span class="k">in</span> <span class="b">range</span>(<span class="n">1</span>, <span class="n">6</span>)]
+<span class="k">print</span>(squares)   <span class="c"># [1, 4, 9, 16, 25]</span>
+
+<span class="c"># শর্ত সহ / With condition</span>
+jugolr = [i <span class="k">for</span> i <span class="k">in</span> <span class="b">range</span>(<span class="n">1</span>, <span class="n">21</span>) <span class="k">if</span> i % <span class="n">2</span> == <span class="n">0</span>]
+<span class="k">print</span>(jugolr)    <span class="c"># [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]</span>
+
+<span class="c"># String list থেকে / From string list</span>
+fruits = [<span class="s">"apple"</span>, <span class="s">"banana"</span>, <span class="s">"mango"</span>]
+upper_fruits = [f.<span class="m">upper</span>() <span class="k">for</span> f <span class="k">in</span> fruits]
+<span class="k">print</span>(upper_fruits)   <span class="c"># ['APPLE', 'BANANA', 'MANGO']</span></div>
+
+    <h2 class="sec">λ Lambda — <span class="bn-text">নামছাড়া ছোট Function</span><span class="en-text">Nameless Small Functions</span></h2>
+    <div class="code"><span class="c"># সাধারণ function / Regular function</span>
+<span class="k">def</span> <span class="f">dwigun</span>(x):
+    <span class="k">return</span> x * <span class="n">2</span>
+
+<span class="c"># Lambda দিয়ে / Using lambda</span>
+dwigun = <span class="k">lambda</span> x: x * <span class="n">2</span>
+<span class="k">print</span>(<span class="f">dwigun</span>(<span class="n">5</span>))   <span class="c"># 10</span>
+
+<span class="c"># একাধিক parameter / Multiple parameters</span>
+jog = <span class="k">lambda</span> a, b: a + b
+<span class="k">print</span>(<span class="f">jog</span>(<span class="n">10</span>, <span class="n">20</span>))  <span class="c"># 30</span>
+
+<span class="c"># sorted() এর সাথে / With sorted()</span>
+students = [(<span class="s">"Rahim"</span>, <span class="n">4.75</span>), (<span class="s">"Karim"</span>, <span class="n">3.90</span>), (<span class="s">"Salam"</span>, <span class="n">4.50</span>)]
+sorted_students = <span class="b">sorted</span>(students, key=<span class="k">lambda</span> x: x[<span class="n">1</span>], reverse=<span class="k">True</span>)
+<span class="k">print</span>(sorted_students)  <span class="c"># GPA অনুযায়ী সাজানো</span></div>
+
+    <h2 class="sec">🎁 Decorators — <span class="bn-text">Function-এ extra শক্তি যোগ</span><span class="en-text">Adding Extra Power to Functions</span></h2>
+    <div class="code"><span class="c"># Decorator তৈরি / Creating a decorator</span>
+<span class="k">def</span> <span class="f">uppercase_decorator</span>(func):
+    <span class="k">def</span> <span class="f">wrapper</span>(*args, **kwargs):
+        result = <span class="f">func</span>(*args, **kwargs)
+        <span class="k">return</span> result.<span class="m">upper</span>()
+    <span class="k">return</span> wrapper
+
+<span class="c"># @ দিয়ে apply করা / Applying with @</span>
+<span class="k">@uppercase_decorator</span>
+<span class="k">def</span> <span class="f">greet</span>(naam):
+    <span class="k">return</span> <span class="s">f"hello, {naam}!"</span>
+
+<span class="k">print</span>(<span class="f">greet</span>(<span class="s">"rahim"</span>))   <span class="c"># HELLO, RAHIM!</span>
+
+<span class="c"># Timing decorator — কতক্ষণ লাগলো</span>
+<span class="k">import</span> time
+
+<span class="k">def</span> <span class="f">timer</span>(func):
+    <span class="k">def</span> <span class="f">wrapper</span>(*args, **kwargs):
+        start = time.<span class="m">time</span>()
+        result = <span class="f">func</span>(*args, **kwargs)
+        end = time.<span class="m">time</span>()
+        <span class="k">print</span>(<span class="s">f"{func.__name__} সময় নিলো: {end-start:.4f}s"</span>)
+        <span class="k">return</span> result
+    <span class="k">return</span> wrapper
+
+<span class="k">@timer</span>
+<span class="k">def</span> <span class="f">gorono</span>():
+    total = <span class="b">sum</span>(<span class="b">range</span>(<span class="n">1000000</span>))
+    <span class="k">return</span> total
+
+<span class="f">gorono</span>()</div>
+
+    <h2 class="sec">⚡ Generators — <span class="bn-text">মেমরি-দক্ষ Iteration</span><span class="en-text">Memory-Efficient Iteration</span></h2>
+    <div class="code"><span class="c"># Generator function — yield ব্যবহার করে</span>
+<span class="k">def</span> <span class="f">count_up</span>(n):
+    i = <span class="n">1</span>
+    <span class="k">while</span> i <= n:
+        <span class="k">yield</span> i    <span class="c"># return-এর মতো, কিন্তু থামে না</span>
+        i += <span class="n">1</span>
+
+<span class="c"># ব্যবহার করা / Using it</span>
+<span class="k">for</span> num <span class="k">in</span> <span class="f">count_up</span>(<span class="n">5</span>):
+    <span class="k">print</span>(num, end=<span class="s">" "</span>)
+<span class="c"># 1 2 3 4 5</span>
+
+<span class="c"># Generator Expression (list comprehension-এর মতো)</span>
+gen = (i ** <span class="n">2</span> <span class="k">for</span> i <span class="k">in</span> <span class="b">range</span>(<span class="n">10</span>))
+<span class="k">print</span>(<span class="b">next</span>(gen))   <span class="c"># 0</span>
+<span class="k">print</span>(<span class="b">next</span>(gen))   <span class="c"># 1</span>
+<span class="k">print</span>(<b>next</b>(gen))   <span class="c"># 4</span></div>
+
+    <h2 class="sec">🗺️ map() ও filter()</h2>
+    <div class="code"><span class="c"># map() — প্রতিটি item-এ function apply করো</span>
+numbers = [<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>, <span class="n">4</span>, <span class="n">5</span>]
+
+doubled = <span class="b">list</span>(<span class="b">map</span>(<span class="k">lambda</span> x: x * <span class="n">2</span>, numbers))
+<span class="k">print</span>(doubled)    <span class="c"># [2, 4, 6, 8, 10]</span>
+
+<span class="c"># filter() — শর্ত মেলে এমনগুলো রাখো</span>
+jugol = <span class="b">list</span>(<span class="b">filter</span>(<span class="k">lambda</span> x: x % <span class="n">2</span> == <span class="n">0</span>, numbers))
+<span class="k">print</span>(jugol)      <span class="c"># [2, 4]</span>
+
+<span class="c"># reduce() — সব মিলিয়ে একটা ফলাফল</span>
+<span class="k">from</span> functools <span class="k">import</span> reduce
+jog = <span class="f">reduce</span>(<span class="k">lambda</span> a, b: a + b, numbers)
+<span class="k">print</span>(jog)        <span class="c"># 15</span></div>
+
+    <h2 class="sec">🗺️ <span class="bn-text">কোন পথে এগাবো — Roadmap</span><span class="en-text">Where to Go Next — Roadmap</span></h2>
+    <div class="roadmap-phase">
+      <div class="phase-number" style="background:#3dd68c; color:#0a2a15;">1</div>
+      <div class="phase-content">
+        <div class="phase-title">🐣 <span class="bn-text">Beginner (এই গাইড শেষ করলে)</span><span class="en-text">Beginner (after finishing this guide)</span></div>
+        <div class="phase-items">
+          <span class="phase-item badge-g">Variables</span>
+          <span class="phase-item badge-g">Loops</span>
+          <span class="phase-item badge-g">Functions</span>
+          <span class="phase-item badge-g">Lists/Dicts</span>
+          <span class="phase-item badge-g">File Handling</span>
+        </div>
+      </div>
+    </div>
+    <div class="roadmap-phase">
+      <div class="phase-number" style="background:#4a9eff;">2</div>
+      <div class="phase-content">
+        <div class="phase-title">🚀 <span class="bn-text">Intermediate</span><span class="en-text">Intermediate</span></div>
+        <div class="phase-items">
+          <span class="phase-item badge-b">OOP Deep</span>
+          <span class="phase-item badge-b">APIs (requests)</span>
+          <span class="phase-item badge-b">Database (SQLite)</span>
+          <span class="phase-item badge-b">Web Scraping</span>
+          <span class="phase-item badge-b">Testing</span>
+        </div>
+      </div>
+    </div>
+    <div class="roadmap-phase">
+      <div class="phase-number" style="background:#cba6f7; color:#1a0533;">3</div>
+      <div class="phase-content">
+        <div class="phase-title">🧠 <span class="bn-text">Advanced — যেকোনো পথ বেছে নাও</span><span class="en-text">Advanced — Choose Your Path</span></div>
+        <div class="grid3" style="margin-top:10px;">
+          <div class="card yellow-card">
+            <h4>🌐 Web Dev</h4>
+            <ul><li>Django</li><li>Flask</li><li>FastAPI</li></ul>
+          </div>
+          <div class="card purple-card">
+            <h4>🤖 AI/ML</h4>
+            <ul><li>NumPy</li><li>Pandas</li><li>TensorFlow</li></ul>
+          </div>
+          <div class="card danger-card">
+            <h4>🔐 Security</h4>
+            <ul><li>Scapy</li><li>Impacket</li><li>Paramiko</li></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🎓 <span class="bn-text">তুমি এখন জানো</span><span class="en-text">You Now Know</span></h3>
+      <ul>
+        <li>⚡ <span class="bn-text">List Comprehension — একলাইনে list</span><span class="en-text">List Comprehension — list in one line</span></li>
+        <li>λ <span class="bn-text">Lambda — নামছাড়া function</span><span class="en-text">Lambda — nameless function</span></li>
+        <li>🎁 <span class="bn-text">Decorators — function-এ extra শক্তি</span><span class="en-text">Decorators — extra power to functions</span></li>
+        <li>⚡ <span class="bn-text">Generators — মেমরি বাঁচিয়ে iteration</span><span class="en-text">Generators — memory-efficient iteration</span></li>
+        <li>🗺️ <code>map(), filter(), reduce()</code> — <span class="bn-text">functional programming</span><span class="en-text">functional programming</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════ FINAL ════ -->
+<div class="chapter" style="background: linear-gradient(135deg, #1a0533, #2d1b69);">
+  <div class="chapter-body" style="background: transparent;">
+    <div class="page-footer">
+      <p class="quote">🐍 "Code করো, ভুল করো, শেখো, আবার করো।"</p>
+      <p class="quote" style="font-size:14px; margin-top:5px;">"Code, make mistakes, learn, repeat."</p>
+      <p style="margin-top:15px;"><span class="bn-text">এই গাইড সম্পূর্ণ শিক্ষামূলক উদ্দেশ্যে। প্রতিটি কোড নিজে লিখে রান করো — শুধু পড়লে শেখা হয় না।</span>
+         <span class="en-text">This guide is entirely for educational purposes. Run every code yourself — just reading isn't enough.</span></p>
+      <p style="margin-top:12px; font-size:12px; color:var(--snake-yellow);">Python Zero to Advanced Guide — v1.0 | 14 Chapters | 100+ Examples</p>
+    </div>
+  </div>
+</div>
+
+
+<script>
+const body = document.body;
+body.classList.add('light-mode');
+
+function toggleTheme() {
+  const btn = document.getElementById('themeBtn');
+  if (body.classList.contains('light-mode')) {
+    body.classList.replace('light-mode', 'dark-mode');
+    btn.textContent = '☀️ Light Mode';
+    localStorage.setItem('theme', 'dark');
+  } else {
+    body.classList.replace('dark-mode', 'light-mode');
+    btn.textContent = '🌙 Dark Mode';
+    localStorage.setItem('theme', 'light');
+  }
+}
+
+function toggleLang() {
+  const btn = document.getElementById('langBtn');
+  if (body.classList.contains('lang-en')) {
+    body.classList.remove('lang-en');
+    btn.textContent = '🇬🇧 English';
+    localStorage.setItem('lang', 'bn');
+  } else {
+    body.classList.add('lang-en');
+    btn.textContent = '🇧🇩 বাংলা';
+    localStorage.setItem('lang', 'en');
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('theme');
+  const savedLang = localStorage.getItem('lang');
+  if (savedTheme === 'dark') {
+    body.classList.replace('light-mode', 'dark-mode');
+    const btn = document.getElementById('themeBtn');
+    if (btn) { btn.textContent = '☀️ Light Mode'; }
+  }
+  if (savedLang === 'en') {
+    body.classList.add('lang-en');
+    const btn = document.getElementById('langBtn');
+    if (btn) { btn.textContent = '🇧🇩 বাংলা'; }
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Engineering — সম্পূর্ণ Security গাইড</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--primary:#0d1b2a;--secondary:#1b2838;--accent:#e63946;--green:#2dc653;--yellow:#ffd60a;--blue:#0077b6;--purple:#7b2d8b;--orange:#f4831f;--code-bg:#0d1117;--code-border:#30363d;--text:#1a1a2e;--bg:#f0f2f5;--card:#ffffff;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Hind Siliguri','Noto Sans Bengali',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.9;}
+  .lang-en .bn-text{display:none;}.lang-en .en-text{display:inline;}.en-text{display:none;}.bn-text{display:inline;}
+  .controls{position:fixed;top:20px;right:20px;z-index:1000;display:flex;gap:8px;flex-direction:column;}
+  .ctrl-btn{padding:8px 16px;border-radius:20px;border:none;cursor:pointer;font-family:'Hind Siliguri',sans-serif;font-size:13px;font-weight:600;transition:all 0.3s;box-shadow:0 4px 15px rgba(0,0,0,0.3);}
+  #themeBtn{background:#2dc653;color:#0d1b2a;}#langBtn{background:#0077b6;color:white;}#pdfBtn{background:#e63946;color:white;}
+  .dark-mode{--bg:#0d1117;--text:#c9d1d9;--card:#161b22;}
+  .dark-mode .chapter,.dark-mode .toc{background:#161b22;color:#c9d1d9;}
+  .dark-mode h2.sec{color:#c9d1d9;}.dark-mode h3.sub{color:#8b949e;}.dark-mode p{color:#c9d1d9;}
+  .dark-mode table{color:#c9d1d9;}.dark-mode td,.dark-mode th{border-color:#30363d;}
+  .dark-mode thead tr{background:#21262d;}.dark-mode tr:nth-child(even){background:#1c2128;}
+  .dark-mode .info{background:#0c2233;color:#79c0ff;}.dark-mode .warn{background:#2d1b00;color:#e3b341;}
+  .dark-mode .danger{background:#2d0a0a;color:#ff7b72;}.dark-mode .success{background:#0d2818;color:#3fb950;}
+  .dark-mode .card{background:#21262d;border-color:#30363d;color:#c9d1d9;}
+  .dark-mode .chapter-summary{background:#21262d;border-color:#2dc653;color:#c9d1d9;}
+  .dark-mode .toc-main{color:#c9d1d9;border-color:#30363d;}.dark-mode .toc-sub{color:#8b949e;}
+  .dark-mode code{background:#21262d;}
+  @media print{.controls{display:none!important;}.chapter{page-break-before:always;}.cover{page-break-after:always;}.toc{page-break-after:always;}}
+  .cover{background:linear-gradient(135deg,#0d1b2a 0%,#1b2838 50%,#16213e 100%);color:white;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:60px 40px;position:relative;overflow:hidden;}
+  .cover::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 30px,rgba(45,198,83,0.03) 30px,rgba(45,198,83,0.03) 31px);}
+  .cover-icon{font-size:90px;margin-bottom:20px;position:relative;}
+  .cover h1{font-size:42px;font-weight:700;color:var(--green);text-shadow:0 0 30px rgba(45,198,83,0.5);}
+  .cover h2{font-size:24px;font-weight:400;opacity:0.8;margin:10px 0 25px;}
+  .cover .divider{width:120px;height:3px;background:var(--accent);margin:20px auto;border-radius:2px;}
+  .cover .desc{font-size:16px;opacity:0.7;max-width:650px;line-height:2;}
+  .cover .badge{display:inline-block;background:rgba(45,198,83,0.15);border:1px solid rgba(45,198,83,0.3);padding:6px 18px;border-radius:20px;margin:5px;font-size:13px;color:#a8dadc;}
+  .toc{background:white;padding:50px 60px;}
+  .toc-header{font-size:30px;color:var(--primary);border-bottom:4px solid var(--green);padding-bottom:15px;margin-bottom:35px;}
+  .toc-main{display:flex;justify-content:space-between;padding:10px 0;font-weight:700;font-size:16px;color:var(--primary);border-bottom:1px solid #eee;margin-top:15px;}
+  .toc-main .num{color:var(--green);margin-right:10px;}
+  .toc-sub{display:flex;justify-content:space-between;padding:5px 0 5px 30px;color:#666;font-size:13.5px;border-bottom:1px dotted #f0f0f0;}
+  .chapter{background:white;margin:0;page-break-before:always;}
+  .chapter-header{padding:40px 55px;position:relative;overflow:hidden;}
+  .ch1 .chapter-header{background:linear-gradient(135deg,#0d1b2a,#1b3a4b);}
+  .ch2 .chapter-header{background:linear-gradient(135deg,#1b0000,#4a0000);}
+  .ch3 .chapter-header{background:linear-gradient(135deg,#1b2838,#2d3561);}
+  .ch4 .chapter-header{background:linear-gradient(135deg,#0d1b2a,#1a3c34);}
+  .ch5 .chapter-header{background:linear-gradient(135deg,#16213e,#0f3460);}
+  .ch6 .chapter-header{background:linear-gradient(135deg,#2d1b69,#3d2b8e);}
+  .ch7 .chapter-header{background:linear-gradient(135deg,#1a1000,#3d2800);}
+  .ch8 .chapter-header{background:linear-gradient(135deg,#1a0d26,#3d1f5c);}
+  .ch9 .chapter-header{background:linear-gradient(135deg,#0d2818,#1a4731);}
+  .ch10 .chapter-header{background:linear-gradient(135deg,#0d1a0d,#1a3a1a);}
+  .chapter-header::after{content:'';position:absolute;top:-30px;right:-30px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,0.03);}
+  .chapter-label{font-size:11px;letter-spacing:4px;color:var(--green);text-transform:uppercase;margin-bottom:10px;}
+  .chapter-title{font-size:30px;color:white;font-weight:700;}
+  .chapter-desc{font-size:14px;color:rgba(255,255,255,0.6);margin-top:8px;}
+  .chapter-body{padding:40px 55px;}
+  h2.sec{font-size:22px;color:var(--primary);margin:35px 0 15px;padding-left:18px;border-left:5px solid var(--green);}
+  h3.sub{font-size:17px;color:#1b3a4b;margin:25px 0 12px;padding-bottom:6px;border-bottom:2px dashed #e0e0e0;}
+  p{margin-bottom:14px;text-align:justify;}
+  .code{background:var(--code-bg);color:#c9d1d9;padding:20px 25px;border-radius:10px;font-family:'Courier New',monospace;font-size:13px;margin:18px 0;line-height:1.8;overflow-x:auto;border:1px solid var(--code-border);border-left:4px solid var(--green);white-space:pre;}
+  .code .c{color:#6e7681;}.code .k{color:#ff7b72;}.code .s{color:#a5d6ff;}.code .p{color:#f0883e;}.code .g{color:var(--green);}.code .y{color:#e3b341;}.code .fn{color:#d2a8ff;}.code .num{color:#79c0ff;}
+  code{background:#1b2838;color:#79c0ff;padding:2px 8px;border-radius:4px;font-family:'Courier New',monospace;font-size:13px;}
+  .box{padding:18px 22px;border-radius:10px;margin:20px 0;border-left:5px solid;}
+  .info{background:#e8f4fd;border-color:#0077b6;color:#023e8a;}
+  .warn{background:#fff8e6;border-color:#f4831f;color:#7b3f00;}
+  .danger{background:#fde8ea;border-color:#e63946;color:#9b1d20;}
+  .success{background:#e8f8ed;border-color:#2dc653;color:#1a4731;}
+  table{width:100%;border-collapse:collapse;margin:20px 0;font-size:13.5px;}
+  th,td{padding:10px 15px;border:1px solid #dee2e6;text-align:left;}
+  thead tr{background:var(--primary);color:white;}
+  tr:nth-child(even){background:#f8f9fa;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0;}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:15px;margin:20px 0;}
+  .card{background:#f8f9fa;padding:20px;border-radius:10px;border:1px solid #e0e0e0;}
+  .badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:600;}
+  .badge-g{background:#e8f8ed;color:#1a4731;}.badge-r{background:#fde8ea;color:#9b1d20;}
+  .badge-b{background:#e8f4fd;color:#023e8a;}.badge-y{background:#fff8e6;color:#7b3f00;}
+  .chapter-summary{background:#f0fff4;border:2px solid var(--green);border-radius:12px;padding:25px 30px;margin:30px 0;}
+  .chapter-summary h3{color:#1a4731;margin-bottom:12px;}
+  .chapter-summary ul{list-style:none;}
+  .chapter-summary li{padding:4px 0;}
+  ul li,ol li{margin:6px 0;}
+  .attack-flow{background:linear-gradient(135deg,#0d1b2a,#1b2838);border-radius:12px;padding:25px;margin:20px 0;}
+  .flow-step{display:flex;align-items:center;gap:15px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.08);}
+  .flow-step:last-child{border-bottom:none;}
+  .flow-num{background:var(--green);color:#0d1b2a;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;}
+  .flow-name{color:#ffd60a;font-weight:700;min-width:160px;font-size:14px;}
+  .flow-desc{color:#a5d6ff;font-size:13px;}
+  .red-flag{background:#fde8ea;border-left:4px solid #e63946;padding:12px 18px;border-radius:8px;margin:8px 0;color:#9b1d20;font-size:13.5px;}
+  .defense-tip{background:#e8f8ed;border-left:4px solid #2dc653;padding:12px 18px;border-radius:8px;margin:8px 0;color:#1a4731;font-size:13.5px;}
+  @media(max-width:768px){.chapter-body{padding:25px 20px;}.grid2,.grid3{grid-template-columns:1fr;}.cover h1{font-size:28px;}.toc{padding:30px 20px;}}
+</style>
+</head>
+<body class="light-mode">
+
+<div class="controls">
+  <button class="ctrl-btn" id="themeBtn" onclick="toggleTheme()">🌙 Dark Mode</button>
+  <button class="ctrl-btn" id="langBtn" onclick="toggleLang()">🇬🇧 English</button>
+  <button class="ctrl-btn" id="pdfBtn" onclick="savePDF()">📄 Save PDF</button>
+</div>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-icon">🎭</div>
+  <h1>Social Engineering</h1>
+  <h2><span class="bn-text">মানুষকে হ্যাক করার সম্পূর্ণ গাইড — Attack ও Defense</span><span class="en-text">The Complete Guide to Hacking Humans — Attack & Defense</span></h2>
+  <div class="divider"></div>
+  <p class="desc">
+    <span class="bn-text">Technology নয়, মানুষের মনস্তত্ত্বই সবচেয়ে বড় vulnerability। Phishing থেকে Vishing, Pretexting থেকে Physical Intrusion — সব কিছু বুঝো এবং নিজেকে ও প্রতিষ্ঠানকে রক্ষা করো।</span>
+    <span class="en-text">The biggest vulnerability isn't technology — it's human psychology. Understand everything from Phishing to Vishing, Pretexting to Physical Intrusion, and defend yourself and your organization.</span>
+  </p>
+  <div style="margin-top:20px;">
+    <span class="badge">🎣 Phishing</span>
+    <span class="badge">📞 Vishing</span>
+    <span class="badge">📱 Smishing</span>
+    <span class="badge">🎭 Pretexting</span>
+    <span class="badge">🚪 Tailgating</span>
+    <span class="badge">💾 Baiting</span>
+    <span class="badge">🛡️ Awareness Training</span>
+    <span class="badge">🔧 SET Toolkit</span>
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <div class="toc-header">📋 <span class="bn-text">সূচিপত্র</span><span class="en-text">Table of Contents</span></div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">01.</span> <span class="bn-text">Social Engineering কী এবং কেন কাজ করে</span><span class="en-text">What is Social Engineering & Why It Works</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">মনস্তত্ত্ব, Influence Principles, Attack Lifecycle</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">02.</span> <span class="bn-text">Phishing — সবচেয়ে বেশি ব্যবহৃত Attack</span><span class="en-text">Phishing — Most Common Attack</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">Spear Phishing, Whaling, Clone Phishing, চেনার উপায়</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">03.</span> <span class="bn-text">Vishing ও Smishing</span><span class="en-text">Vishing & Smishing</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">Phone Scams, SMS Attacks, Caller ID Spoofing</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">04.</span> <span class="bn-text">Pretexting ও Impersonation</span><span class="en-text">Pretexting & Impersonation</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">Fake Identities, Authority Abuse, IT Support Scam</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">05.</span> <span class="bn-text">Physical Social Engineering</span><span class="en-text">Physical Social Engineering</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">Tailgating, Shoulder Surfing, Dumpster Diving, Baiting</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">06.</span> <span class="bn-text">OSINT — Target Research</span><span class="en-text">OSINT — Target Research</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">LinkedIn, Facebook, Google Dorking, theHarvester</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">07.</span> <span class="bn-text">SET Toolkit — Pentest Framework</span><span class="en-text">SET Toolkit — Pentest Framework</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">Credential Harvester, Phishing Simulation, Payload Delivery</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">08.</span> <span class="bn-text">Real-World Attack Cases</span><span class="en-text">Real-World Attack Cases</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">Bangladesh Bank Heist, Twitter Hack, COVID Scams</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">09.</span> <span class="bn-text">Defense ও Awareness Training</span><span class="en-text">Defense & Awareness Training</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">User Training, Policy, Technical Controls, Incident Response</span></span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">10.</span> <span class="bn-text">Phishing Simulation Program</span><span class="en-text">Phishing Simulation Program</span></span></div>
+    <div class="toc-sub"><span><span class="bn-text">GoPhish, Campaign Planning, Metrics, Reporting</span></span></div>
+  </div>
+</div>
+
+<!-- CH1: INTRO & PSYCHOLOGY -->
+<div class="chapter ch1">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 01</div>
+    <div class="chapter-title">🧠 <span class="bn-text">Social Engineering কী এবং কেন কাজ করে</span><span class="en-text">What is Social Engineering & Why It Works</span></div>
+    <div class="chapter-desc"><span class="bn-text">মানুষের মনস্তত্ত্বই সবচেয়ে বড় security vulnerability</span><span class="en-text">Human psychology is the biggest security vulnerability</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🎭 <span class="bn-text">Social Engineering সংজ্ঞা</span><span class="en-text">Definition of Social Engineering</span></h2>
+    <p><span class="bn-text">Social Engineering হলো মানুষকে মনস্তাত্ত্বিকভাবে manipulate করে তাদের কাছ থেকে গোপন তথ্য বা access পাওয়ার পদ্ধতি। Kevin Mitnick — বিশ্বের সবচেয়ে বিখ্যাত hacker — বলেছিলেন: "The human factor is truly security's weakest link." প্রযুক্তি যতই শক্তিশালী হোক, মানুষের ভুল করার প্রবণতা থাকবেই।</span><span class="en-text">Social Engineering is the practice of psychologically manipulating people to obtain confidential information or access. Kevin Mitnick — the world's most famous hacker — said: "The human factor is truly security's weakest link." No matter how strong the technology, humans will always be prone to making mistakes.</span></p>
+
+    <div class="info box">💡 <strong><span class="bn-text">মূল কথা:</span><span class="en-text">Key Point:</span></strong> <span class="bn-text">৯৫% সাইবার attack-এ human error কোনো না কোনোভাবে জড়িত। Firewall বা Antivirus কোনো software-ই এটা আটকাতে পারে না।</span><span class="en-text">Human error is involved in 95% of cyber attacks in some way. No firewall or antivirus software can stop this.</span></div>
+
+    <h2 class="sec">🧬 <span class="bn-text">কেন কাজ করে — ৬টি মনস্তাত্ত্বিক Principle</span><span class="en-text">Why It Works — 6 Psychological Principles</span></h2>
+    <p><span class="bn-text">Robert Cialdini-র "Influence" বই অনুযায়ী, মানুষ ৬টি মূল principle-এ সহজে প্রভাবিত হয়। Attacker-রা এগুলো exploit করে।</span><span class="en-text">According to Robert Cialdini's book "Influence," humans are easily influenced by 6 core principles. Attackers exploit these.</span></p>
+
+    <table>
+      <thead><tr><th>Principle</th><th><span class="bn-text">মানে</span></th><th><span class="bn-text">Attack Example</span></th><th><span class="bn-text">Defense</span></th></tr></thead>
+      <tbody>
+        <tr><td><strong>🏛️ Authority</strong></td><td><span class="bn-text">কর্তৃপক্ষকে মানি</span></td><td><span class="bn-text">"আমি CEO বলছি, এখনই পাঠাও"</span></td><td><span class="bn-text">Phone করে verify করো</span></td></tr>
+        <tr><td><strong>⏰ Urgency</strong></td><td><span class="bn-text">সময়ের চাপ</span></td><td><span class="bn-text">"আজকেই না করলে account বন্ধ"</span></td><td><span class="bn-text">থামো, ভাবো, verify করো</span></td></tr>
+        <tr><td><strong>😨 Fear</strong></td><td><span class="bn-text">ভয় দেখানো</span></td><td><span class="bn-text">"আপনার computer-এ virus!"</span></td><td><span class="bn-text">Cold call-এ কখনো action নাও না</span></td></tr>
+        <tr><td><strong>🤝 Reciprocity</strong></td><td><span class="bn-text">উপকার করলে ফেরত দেই</span></td><td><span class="bn-text">USB gift দিয়ে malware ছড়ানো</span></td><td><span class="bn-text">অপরিচিতের gift নাও না</span></td></tr>
+        <tr><td><strong>👥 Social Proof</strong></td><td><span class="bn-text">সবাই করছে তাই আমিও</span></td><td><span class="bn-text">"আপনার সব colleague-রা sign করেছে"</span></td><td><span class="bn-text">নিজে independently verify করো</span></td></tr>
+        <tr><td><strong>🤗 Liking</strong></td><td><span class="bn-text">পছন্দের মানুষকে বিশ্বাস করি</span></td><td><span class="bn-text">Rapport build করে info চাওয়া</span></td><td><span class="bn-text">পরিচিতি ≠ trustworthy</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">🔄 <span class="bn-text">Social Engineering Attack Lifecycle</span><span class="en-text">Social Engineering Attack Lifecycle</span></h2>
+    <div class="attack-flow">
+      <div class="flow-step"><span class="flow-num">1</span><span class="flow-name">🔍 Research</span><span class="flow-desc">Target সম্পর্কে তথ্য সংগ্রহ — LinkedIn, Facebook, company website, OSINT</span></div>
+      <div class="flow-step"><span class="flow-num">2</span><span class="flow-name">🎯 Target Selection</span><span class="flow-desc">কে সবচেয়ে সহজ শিকার? New employee, receptionist, IT helpdesk</span></div>
+      <div class="flow-step"><span class="flow-num">3</span><span class="flow-name">🎭 Pretext Building</span><span class="flow-desc">বিশ্বাসযোগ্য story তৈরি করো — "আমি IT dept থেকে"</span></div>
+      <div class="flow-step"><span class="flow-num">4</span><span class="flow-name">⚡ Attack Execution</span><span class="flow-desc">Phishing email / phone call / physical visit — action নাও</span></div>
+      <div class="flow-step"><span class="flow-num">5</span><span class="flow-name">📦 Exploitation</span><span class="flow-desc">পাওয়া credentials/access দিয়ে system এ ঢোকো</span></div>
+      <div class="flow-step"><span class="flow-num">6</span><span class="flow-name">🧹 Cover Tracks</span><span class="flow-desc">প্রমাণ মুছে ফেলো, victim জানতেই পারে না</span></div>
+    </div>
+
+    <h2 class="sec">📊 <span class="bn-text">Attack Statistics</span><span class="en-text">Attack Statistics</span></h2>
+    <div class="grid3">
+      <div class="card" style="text-align:center;">
+        <div style="font-size:36px;font-weight:700;color:var(--accent);">95%</div>
+        <p><span class="bn-text">সাইবার breach-এ human error জড়িত</span><span class="en-text">of breaches involve human error</span></p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:36px;font-weight:700;color:var(--orange);">3.4B</div>
+        <p><span class="bn-text">Phishing email প্রতিদিন পাঠানো হয়</span><span class="en-text">phishing emails sent daily</span></p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div style="font-size:36px;font-weight:700;color:var(--green);">$4.91M</div>
+        <p><span class="bn-text">Social engineering breach-এর গড় খরচ</span><span class="en-text">avg cost of a social eng. breach</span></p>
+      </div>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>✅ Chapter 1 Summary</h3>
+      <ul>
+        <li>✔ <span class="bn-text">Social Engineering = technology নয়, মানুষকে manipulate করা</span></li>
+        <li>✔ <span class="bn-text">Authority, Urgency, Fear — এই ৩টি সবচেয়ে বেশি ব্যবহৃত</span></li>
+        <li>✔ <span class="bn-text">Attack lifecycle জানলে defense করা সহজ হয়</span></li>
+        <li>✔ <span class="bn-text">৯৫% breach-এ মানুষের ভুলই দায়ী</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CH2: PHISHING -->
+<div class="chapter ch2">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 02</div>
+    <div class="chapter-title">🎣 <span class="bn-text">Phishing — সবচেয়ে বেশি ব্যবহৃত Attack</span><span class="en-text">Phishing — Most Common Attack</span></h>
+    <div class="chapter-desc"><span class="bn-text">Email-based deception — সব ধরন, চেনার উপায় ও defense</span><span class="en-text">Email-based deception — all types, recognition, and defense</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🎣 <span class="bn-text">Phishing-এর প্রকারভেদ</span><span class="en-text">Types of Phishing</span></h2>
+    <div class="grid2">
+      <div class="card">
+        <h4>🎣 Regular Phishing</h4>
+        <p><span class="bn-text">Mass email — লক্ষ লক্ষ মানুষকে একই email পাঠানো। "আপনার bank account বন্ধ হচ্ছে"</span><span class="en-text">Mass email — the same email sent to millions. "Your bank account is being closed."</span></p>
+        <span class="badge badge-y">Mass Target</span>
+      </div>
+      <div class="card">
+        <h4>🎯 Spear Phishing</h4>
+        <p><span class="bn-text">Specific ব্যক্তিকে target করে। তার নাম, position, colleague-র নাম ব্যবহার করে personalized email।</span><span class="en-text">Targets a specific person. Uses their name, position, colleague names in a personalized email.</span></p>
+        <span class="badge badge-r">High Success Rate</span>
+      </div>
+      <div class="card">
+        <h4>🐋 Whaling</h4>
+        <p><span class="bn-text">CEO, CFO, CISO — Senior executive-দের target করে। বড় financial বা data theft-এর জন্য।</span><span class="en-text">Targets senior executives — CEO, CFO, CISO. Used for large-scale financial or data theft.</span></p>
+        <span class="badge badge-r">High Value Target</span>
+      </div>
+      <div class="card">
+        <h4>📋 Clone Phishing</h4>
+        <p><span class="bn-text">Legitimate email-এর হুবহু copy তৈরি করে malicious link যোগ করা। "Resending your invoice"</span><span class="en-text">Creates an exact copy of a legitimate email with a malicious link. "Resending your invoice."</span></p>
+        <span class="badge badge-y">Hard to Detect</span>
+      </div>
+      <div class="card">
+        <h4>👔 BEC (Business Email Compromise)</h4>
+        <p><span class="bn-text">CEO বা trusted partner-এর email impersonate করে wire transfer বা data request।</span><span class="en-text">Impersonates a CEO or trusted partner to request wire transfers or data.</span></p>
+        <span class="badge badge-r">$26B+ Global Losses</span>
+      </div>
+      <div class="card">
+        <h4>⚕️ Pharming</h4>
+        <p><span class="bn-text">DNS poisoning দিয়ে legitimate website-এ গেলে fake site-এ redirect করা।</span><span class="en-text">Uses DNS poisoning to redirect legitimate website visitors to a fake site.</span></p>
+        <span class="badge badge-r">No Link to Click</span>
+      </div>
+    </div>
+
+    <h2 class="sec">🔍 <span class="bn-text">একটা Real Phishing Email বিশ্লেষণ</span><span class="en-text">Analyzing a Real Phishing Email</span></h2>
+    <div class="code"><span class="c">━━━ PHISHING EMAIL ANATOMY ━━━</span>
+
+From: security-alert@paypa1.com        ← <span class="y">⚠️ paypal নয়, paypa1 (l→1 swap)</span>
+To: victim@company.com
+Subject: 🚨 Urgent: Your Account Will Be Suspended!   ← <span class="y">⚠️ Urgency + Fear</span>
+Date: Mon, 15 Jan 2024 03:42:11 +0000  ← <span class="y">⚠️ রাত ৩টায় পাঠানো</span>
+
+Dear Valued Customer,                  ← <span class="y">⚠️ নাম নেই = mass phishing</span>
+
+We have detected SUSPICIOUS ACTIVITY on your PayPal account.
+Your account will be PERMANENTLY SUSPENDED within 24 hours
+unless you verify your information IMMEDIATELY.         ← <span class="y">⚠️ Urgency + Fear</span>
+
+Click here to verify: http://paypal-secure-verify.xyz/login  ← <span class="y">⚠️ Fake domain</span>
+
+Best regards,
+PayPal Security Team                   ← <span class="y">⚠️ Fake signature</span>
+
+━━━ RED FLAGS চেকলিস্ট ━━━
+❌ Sender domain: paypa1.com (typosquat)
+❌ Generic greeting ("Dear Customer")
+❌ Urgency language ("24 hours", "IMMEDIATELY")
+❌ Fear tactics ("PERMANENTLY SUSPENDED")
+❌ Suspicious link domain (.xyz)
+❌ রাত ৩টায় পাঠানো
+❌ Excessive capitalization</div>
+
+    <h2 class="sec">🔗 <span class="bn-text">Malicious URL চেনার উপায়</span><span class="en-text">How to Identify Malicious URLs</span></h2>
+    <div class="code"><span class="c">━━━ LEGITIMATE vs MALICIOUS URL ━━━</span>
+
+<span class="g">✅ Legitimate:</span>
+https://www.paypal.com/signin
+https://online.bankofamerica.com/login
+https://accounts.google.com/
+
+<span class="y">⚠️ Typosquatting (অক্ষর পরিবর্তন):</span>
+http://paypa1.com          ← l → 1
+http://paypai.com          ← l → i
+http://paypaI.com          ← l → I (capital)
+http://pay-pal.com         ← hyphen যোগ
+http://paypal.com.login.xyz ← subdomain trick
+
+<span class="y">⚠️ Subdomain Trick:</span>
+http://paypal.com.malicious.xyz/login
+   ↑ এটা paypal.com নয়! Domain = malicious.xyz
+
+<span class="y">⚠️ URL Shortener (real URL লুকানো):</span>
+http://bit.ly/3xY9kLm   ← কোথায় নিয়ে যাবে জানো না
+
+<span class="y">⚠️ HTTP (no S):</span>
+http://yourbank.com/login  ← SSL নেই = unsafe
+
+<span class="c">━━━ URL CHECK TOOLS ━━━</span>
+https://virustotal.com       ← URL scan করো
+https://urlscan.io           ← Detailed analysis
+https://phishtank.org        ← Known phishing DB
+https://safebrowsing.google.com/safebrowsing/report_phish/</div>
+
+    <h2 class="sec">📧 <span class="bn-text">Email Header Analysis</span><span class="en-text">Email Header Analysis</span></h2>
+    <div class="code"><span class="c"># Email header দেখো (Gmail: More → Show Original)</span>
+<span class="c"># আসল sender বের করো</span>
+
+<span class="c">━━━ IMPORTANT HEADER FIELDS ━━━</span>
+
+<span class="c">From: display name &lt;real@sender.com&gt;</span>
+  └─ Display name ≠ Real email address!
+  └─ "PayPal Support" &lt;hacker@evil.com&gt; — fake!
+
+<span class="c">Return-Path: bounced@different-domain.com</span>
+  └─ From ≠ Return-Path → suspicious!
+
+<span class="c">Received: from mail.sender.com (IP: 1.2.3.4)</span>
+  └─ আসল sending server
+
+<span class="c">SPF: FAIL / SOFTFAIL</span>
+  └─ Sender authorized নয় → phishing!
+
+<span class="c">DKIM: FAIL</span>
+  └─ Email tampered হয়েছে → phishing!
+
+<span class="c">DMARC: FAIL</span>
+  └─ Domain policy violation → phishing!
+
+<span class="c">━━━ Python দিয়ে header parse করো ━━━</span>
+<span class="k">import</span> email
+<span class="k">from</span> email <span class="k">import</span> policy
+
+<span class="k">with</span> <span class="fn">open</span>(<span class="s">"email.eml"</span>, <span class="s">"rb"</span>) <span class="k">as</span> f:
+    msg = email.message_from_binary_file(f, policy=policy.default)
+
+<span class="k">print</span>(<span class="s">f"From:        {msg['From']}"</span>)
+<span class="k">print</span>(<span class="s">f"Return-Path: {msg['Return-Path']}"</span>)
+<span class="k">print</span>(<span class="s">f"Reply-To:    {msg['Reply-To']}"</span>)
+<span class="k">print</span>(<span class="s">f"Subject:     {msg['Subject']}"</span>)
+<span class="k">print</span>(<span class="s">f"Date:        {msg['Date']}"</span>)
+
+<span class="c"># All Received headers (email path)</span>
+<span class="k">for</span> received <span class="k">in</span> msg.get_all(<span class="s">'Received'</span>, []):
+    <span class="k">print</span>(<span class="s">f"Received: {received[:100]}"</span>)</div>
+
+    <h2 class="sec">📊 <span class="bn-text">Email Authentication — SPF, DKIM, DMARC</span><span class="en-text">Email Authentication — SPF, DKIM, DMARC</span></h2>
+    <table>
+      <thead><tr><th>Protocol</th><th><span class="bn-text">কী করে</span></th><th><span class="bn-text">কীভাবে কাজ করে</span></th><th>DNS Record</th></tr></thead>
+      <tbody>
+        <tr><td><strong>SPF</strong></td><td><span class="bn-text">Authorized sender server চেক করে</span></td><td><span class="bn-text">DNS-এ কোন IP থেকে email আসতে পারে তা define করা</span></td><td>TXT v=spf1 ip4:...</td></tr>
+        <tr><td><strong>DKIM</strong></td><td><span class="bn-text">Email tamper হয়েছে কিনা চেক করে</span></td><td><span class="bn-text">Private key দিয়ে sign, public key দিয়ে verify</span></td><td>TXT selector._domainkey</td></tr>
+        <tr><td><strong>DMARC</strong></td><td><span class="bn-text">SPF/DKIM fail হলে কী করবে</span></td><td><span class="bn-text">Policy: none / quarantine / reject</span></td><td>TXT _dmarc.domain.com</td></tr>
+      </tbody>
+    </table>
+    <div class="code"><span class="c"># DNS-এ SPF record চেক করো</span>
+<span class="p">$</span> dig TXT domain.com | grep spf
+<span class="g">v=spf1 include:_spf.google.com ~all</span>
+
+<span class="c"># DMARC record চেক করো</span>
+<span class="p">$</span> dig TXT _dmarc.domain.com
+<span class="g">v=DMARC1; p=reject; rua=mailto:dmarc@domain.com</span>
+<span class="c"># p=none (just monitor), p=quarantine (spam), p=reject (block)</span>
+
+<span class="c"># DKIM check</span>
+<span class="p">$</span> dig TXT selector1._domainkey.domain.com</div>
+
+    <div class="chapter-summary">
+      <h3>✅ Chapter 2 Summary</h3>
+      <ul>
+        <li>✔ <span class="bn-text">Spear Phishing = personalized = সবচেয়ে বিপজ্জনক</span></li>
+        <li>✔ <span class="bn-text">URL-এ typosquat, subdomain trick, HTTP চেক করো</span></li>
+        <li>✔ <span class="bn-text">Email header-এ SPF/DKIM/DMARC FAIL মানে phishing সম্ভাবনা</span></li>
+        <li>✔ <span class="bn-text">Generic greeting + urgency + fear = phishing সংকেত</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CH3: VISHING & SMISHING -->
+<div class="chapter ch3">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 03</div>
+    <div class="chapter-title">📞 <span class="bn-text">Vishing ও Smishing</span><span class="en-text">Vishing & Smishing</span></div>
+    <div class="chapter-desc"><span class="bn-text">Phone ও SMS-based attacks — কীভাবে চিনবো ও রক্ষা পাবো</span><span class="en-text">Phone and SMS-based attacks — how to recognize and protect yourself</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">📞 <span class="bn-text">Vishing — Voice Phishing</span><span class="en-text">Vishing — Voice Phishing</span></h2>
+    <p><span class="bn-text">Vishing মানে phone call-এর মাধ্যমে প্রতারণা। Attacker নিজেকে bank, telecom, government বা IT support হিসেবে পরিচয় দেয়। Voice-এ বিশ্বাসযোগ্যতা তৈরি করা সহজ।</span><span class="en-text">Vishing means fraud via phone call. The attacker poses as a bank, telecom, government, or IT support. It's easier to build credibility with voice.</span></p>
+
+    <h3 class="sub"><span class="bn-text">সবচেয়ে সাধারণ Vishing Scenarios</span><span class="en-text">Most Common Vishing Scenarios</span></h3>
+    <div class="grid2">
+      <div class="card">
+        <h4>🏦 Bank Scam</h4>
+        <p><span class="bn-text">"আমি Dutch-Bangla Bank থেকে বলছি। আপনার account সন্দেহজনক transaction হচ্ছে। Verify করতে OTP বলুন।"</span></p>
+        <div class="red-flag">⛔ কোনো bank কখনো OTP চায় না</div>
+      </div>
+      <div class="card">
+        <h4>💻 IT Support Scam</h4>
+        <p><span class="bn-text">"আমি Microsoft থেকে বলছি। আপনার PC-তে virus আছে। TeamViewer install করুন।"</span></p>
+        <div class="red-flag">⛔ Microsoft কখনো unsolicited call করে না</div>
+      </div>
+      <div class="card">
+        <h4>🏛️ Government Scam</h4>
+        <p><span class="bn-text">"আমি NBR থেকে বলছি। আপনার tax pending আছে। এখনই payment না করলে arrest হবে।"</span></p>
+        <div class="red-flag">⛔ Government phone-এ payment নেয় না</div>
+      </div>
+      <div class="card">
+        <h4>🎁 Prize Scam</h4>
+        <p><span class="bn-text">"আপনি lottery জিতেছেন! পুরস্কার পেতে processing fee পাঠান।"</span></p>
+        <div class="red-flag">⛔ কেউ lottery জেতায় না</div>
+      </div>
+    </div>
+
+    <h2 class="sec">📲 <span class="bn-text">Caller ID Spoofing</span><span class="en-text">Caller ID Spoofing</span></h2>
+    <p><span class="bn-text">Caller ID Spoofing মানে fake phone number দেখানো। Attacker আপনার bank-এর নম্বর থেকে call করছে বলে মনে করিয়ে দিতে পারে — কিন্তু সেটা নকল।</span><span class="en-text">Caller ID spoofing means displaying a fake phone number. An attacker can make it appear as if your bank is calling — but it's fake.</span></p>
+    <div class="code"><span class="c">Caller ID Spoofing Tools (pentest/awareness):</span>
+<span class="c">- SpoofCard (commercial service)</span>
+<span class="c">- Twilio API (programmable voice)</span>
+<span class="c">- Asterisk VoIP PBX</span>
+
+<span class="c">Defense:</span>
+<span class="c">→ Caller ID দেখে বিশ্বাস করো না</span>
+<span class="c">→ Call শেষ করে নিজে official number-এ call করো</span>
+<span class="c">→ Truecaller ব্যবহার করো (spam detection)</span>
+<span class="c">→ Bank-এর official app-এ check করো</span></div>
+
+    <h2 class="sec">📱 <span class="bn-text">Smishing — SMS Phishing</span><span class="en-text">Smishing — SMS Phishing</span></h2>
+    <p><span class="bn-text">Smishing = SMS + Phishing। SMS-এ malicious link পাঠানো। মানুষ phone-এ URL ভালো দেখতে পায় না, তাই click করে ফেলে।</span><span class="en-text">Smishing = SMS + Phishing. Malicious links sent via SMS. People can't see URLs clearly on phones, so they click.</span></p>
+
+    <div class="code"><span class="c">━━━ REAL SMISHING EXAMPLES ━━━</span>
+
+<span class="y">Example 1: Delivery Scam</span>
+"[bKash]: আপনার delivery hold আছে।
+Confirm করুন: http://bkash-track.xyz/verify"
+→ bkash.com নয়! bkash-track.xyz = fake
+
+<span class="y">Example 2: Bank Alert</span>
+"DBBL: Suspicious login detected!
+Secure your account: http://bit.ly/3xkLm9p"
+→ URL shortener দিয়ে real URL লুকানো
+
+<span class="y">Example 3: Prize Notification</span>
+"Congratulations! You won BDT 50,000.
+Claim: http://grameenphone-prize.com"
+→ GP-র official domain এটা নয়
+
+<span class="c">━━━ SMISHING RED FLAGS ━━━</span>
+❌ Unexpected message from unknown number
+❌ URL shortener (bit.ly, tinyurl)
+❌ Urgency ("আজকেই claim করুন")
+❌ Personal information চাওয়া
+❌ Official domain নয় (typosquat)
+❌ অনুরোধ না করেও OTP আসা</div>
+
+    <h2 class="sec">🛡️ <span class="bn-text">Vishing/Smishing Defense</span><span class="en-text">Vishing/Smishing Defense</span></h2>
+    <div class="grid2">
+      <div class="card">
+        <h4>🛡️ <span class="bn-text">যা করবে</span><span class="en-text">Do This</span></h4>
+        <div class="defense-tip">✅ <span class="bn-text">Call শেষ করে official number-এ callback করো</span></div>
+        <div class="defense-tip">✅ <span class="bn-text">Bank-এর app থেকে নিজে চেক করো</span></div>
+        <div class="defense-tip">✅ <span class="bn-text">Truecaller/spam filter ব্যবহার করো</span></div>
+        <div class="defense-tip">✅ <span class="bn-text">SMS link কখনো directly click করো না</span></div>
+        <div class="defense-tip">✅ <span class="bn-text">Trusted person-এর সাথে confirm করো</span></div>
+      </div>
+      <div class="card">
+        <h4>⛔ <span class="bn-text">যা করবে না</span><span class="en-text">Never Do This</span></h4>
+        <div class="red-flag">❌ <span class="bn-text">Phone-এ OTP, PIN বা password বলবে না</span></div>
+        <div class="red-flag">❌ <span class="bn-text">Remote access software install করবে না</span></div>
+        <div class="red-flag">❌ <span class="bn-text">Urgent payment করবে না</span></div>
+        <div class="red-flag">❌ <span class="bn-text">Gift card দিয়ে payment করবে না</span></div>
+        <div class="red-flag">❌ <span class="bn-text">Personal info confirm করবে না</span></div>
+      </div>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>✅ Chapter 3 Summary</h3>
+      <ul>
+        <li>✔ <span class="bn-text">Vishing = phone call scam — bank/government/IT support impersonation</span></li>
+        <li>✔ <span class="bn-text">Caller ID সহজেই spoof করা যায় — দেখে বিশ্বাস করো না</span></li>
+        <li>✔ <span class="bn-text">Smishing = SMS-এ malicious link — phone-এ URL ভালো দেখা যায় না</span></li>
+        <li>✔ <span class="bn-text">OTP কখনো phone-এ বলো না — কোনো bank চায় না</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CH4: PRETEXTING -->
+<div class="chapter ch4">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 04</div>
+    <div class="chapter-title">🎭 <span class="bn-text">Pretexting ও Impersonation</span><span class="en-text">Pretexting & Impersonation</span></div>
+    <div class="chapter-desc"><span class="bn-text">Fake identity তৈরি করে target-কে বিশ্বাস করানো</span><span class="en-text">Creating fake identities to gain the target's trust</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🎭 <span class="bn-text">Pretexting কী?</span><span class="en-text">What is Pretexting?</span></h2>
+    <p><span class="bn-text">Pretexting মানে একটা বিশ্বাসযোগ্য scenario বা backstory তৈরি করা যাতে victim নিজেই তথ্য দিয়ে দেয়। এটা সব Social Engineering attack-এর core।</span><span class="en-text">Pretexting means creating a believable scenario or backstory so that the victim willingly gives up information. It's the core of all social engineering attacks.</span></p>
+
+    <h2 class="sec">👔 <span class="bn-text">Common Pretext Scenarios</span><span class="en-text">Common Pretext Scenarios</span></h2>
+    <table>
+      <thead><tr><th>Pretext</th><th><span class="bn-text">Scenario</span></th><th><span class="bn-text">কী চাওয়া হয়</span></th><th><span class="bn-text">Protection</span></th></tr></thead>
+      <tbody>
+        <tr><td>🖥️ IT Support</td><td><span class="bn-text">"আমি helpdesk থেকে, আপনার password reset করতে হবে"</span></td><td>Password, remote access</td><td><span class="bn-text">Ticket number চাও, callback verify</span></td></tr>
+        <tr><td>👤 New Employee</td><td><span class="bn-text">"আমি নতুন join করেছি, আমাকে কি access দেবেন?"</span></td><td>Badge, login, building access</td><td><span class="bn-text">HR-এর সাথে confirm করো</span></td></tr>
+        <tr><td>🔍 Auditor</td><td><span class="bn-text">"আমি external auditor, document দরকার"</span></td><td>Financial/sensitive data</td><td><span class="bn-text">Management-এর approval নাও</span></td></tr>
+        <tr><td>🏢 Vendor</td><td><span class="bn-text">"আমি software vendor, maintenance করতে এসেছি"</span></td><td>Physical/system access</td><td><span class="bn-text">Pre-scheduled না হলে deny</span></td></tr>
+        <tr><td>📰 Journalist</td><td><span class="bn-text">"আমি সাংবাদিক, company সম্পর্কে জানতে চাই"</span></td><td>Internal processes, staff info</td><td><span class="bn-text">PR/legal-এ refer করো</span></td></tr>
+        <tr><td>😰 Distressed Person</td><td><span class="bn-text">"আমার মেয়ে accident-এ, টাকা দরকার"</span></td><td>Money, personal info</td><td><span class="bn-text">Verify করো, তাড়াহুড়ো করো না</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">📞 <span class="bn-text">IT Support Impersonation — Case Study</span><span class="en-text">IT Support Impersonation — Case Study</span></h2>
+    <div class="code"><span class="c">━━━ ATTACK FLOW (Awareness শুধু) ━━━</span>
+
+<span class="c">Step 1: Research</span>
+  Attacker LinkedIn-এ দেখে:
+  - IT Manager: John Rahman
+  - Help Desk email: it-support@company.com
+  - Employee names, positions
+
+<span class="c">Step 2: Pretext Build</span>
+  Fake email: john.rahman.it@gmail.com
+  (নামটা real, domain fake)
+
+<span class="c">Step 3: Attack</span>
+  Email → "Hi, I'm John from IT.
+  We detected unusual login from your account.
+  Please confirm your password so we can investigate."
+
+<span class="c">Step 4: Why it works</span>
+  ✗ Real IT manager-এর নাম ব্যবহার
+  ✗ "Unusual login" = Fear trigger
+  ✗ Authoritative tone
+  ✗ Busy employee rushed reply
+
+<span class="c">Defense:</span>
+  ✅ IT support কখনো email-এ password চায় না
+  ✅ জানা নামও verify করো
+  ✅ Direct phone করে confirm করো
+  ✅ Ticket system ব্যবহার করো</div>
+
+    <h2 class="sec">🎯 <span class="bn-text">CEO Fraud / BEC</span><span class="en-text">CEO Fraud / Business Email Compromise</span></h2>
+    <p><span class="bn-text">BEC attack-এ attacker CEO বা CFO-র email impersonate করে Finance team-কে wire transfer করতে বলে। $26 billion-এর বেশি ক্ষতি হয়েছে বিশ্বে।</span><span class="en-text">In BEC attacks, the attacker impersonates a CEO or CFO to instruct the Finance team to make a wire transfer. Over $26 billion has been lost worldwide.</span></p>
+    <div class="code"><span class="c">━━━ BEC ATTACK EXAMPLE ━━━</span>
+
+From: ceo@company-corp.com    ← <span class="y">company-corp নয়, companycorp</span>
+To: finance@company.com
+Subject: Urgent Wire Transfer Required
+
+Hi Sarah,
+
+I'm in an important meeting and need you to process
+an urgent wire transfer of $85,000 to our new vendor.
+This is time-sensitive and confidential.
+
+Account: [Attacker's bank]
+Please process immediately and confirm.
+
+Regards,
+David Chen, CEO
+
+<span class="c">━━━ RED FLAGS ━━━</span>
+❌ Urgency + Confidentiality ("don't tell anyone")
+❌ Unusual domain (company-corp vs companycorp)
+❌ CEO directly contacting junior employee
+❌ Large amount
+❌ New/unknown vendor
+
+<span class="c">━━━ DEFENSE ━━━</span>
+✅ Wire transfer → always phone CEO directly
+✅ Dual approval process for large transfers
+✅ Out-of-band verification mandatory
+✅ DMARC implement করো</div>
+
+    <div class="chapter-summary">
+      <h3>✅ Chapter 4 Summary</h3>
+      <ul>
+        <li>✔ <span class="bn-text">Pretexting = believable backstory — attack-এর সবচেয়ে গুরুত্বপূর্ণ অংশ</span></li>
+        <li>✔ <span class="bn-text">IT Support, Auditor, Vendor — সবচেয়ে বেশি ব্যবহৃত pretext</span></li>
+        <li>✔ <span class="bn-text">BEC = CEO email spoof → finance team → wire transfer</span></li>
+        <li>✔ <span class="bn-text">Verify করো, তাড়াহুড়ো করো না, out-of-band confirm</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CH5: PHYSICAL SE -->
+<div class="chapter ch5">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 05</div>
+    <div class="chapter-title">🚪 <span class="bn-text">Physical Social Engineering</span><span class="en-text">Physical Social Engineering</span></div>
+    <div class="chapter-desc"><span class="bn-text">Tailgating, Baiting, Shoulder Surfing, Dumpster Diving — Physical world-এর attack</span><span class="en-text">Tailgating, Baiting, Shoulder Surfing, Dumpster Diving — real-world physical attacks</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🚶 <span class="bn-text">Tailgating / Piggybacking</span><span class="en-text">Tailgating / Piggybacking</span></h2>
+    <p><span class="bn-text">Tailgating মানে authorized ব্যক্তির পেছনে ঢুকে secured area-তে প্রবেশ করা। Attacker দরজা ধরে রাখার জন্য ভদ্রতাবশত কেউ না বললেই হলো।</span><span class="en-text">Tailgating means entering a secured area by following an authorized person through a door. The attacker relies on someone being too polite to say no.</span></p>
+    <div class="grid2">
+      <div class="card">
+        <h4>🎭 <span class="bn-text">Tailgating Techniques</span></h4>
+        <ul>
+          <li><span class="bn-text">হাতে ভারী জিনিস নিয়ে "দরজা ধরুন" বলা</span></li>
+          <li><span class="bn-text">Delivery person সেজে ঢোকা</span></li>
+          <li><span class="bn-text">Smoke break-এ বাইরে দাঁড়িয়ে ঢোকা</span></li>
+          <li><span class="bn-text">Visitor badge copy করা</span></li>
+          <li><span class="bn-text">Fake contractor uniform পরা</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>🛡️ Defense</h4>
+        <div class="defense-tip">✅ <span class="bn-text">প্রতিটি ব্যক্তি নিজের card swipe করবে</span></div>
+        <div class="defense-tip">✅ <span class="bn-text">Mantrap / airlock door ব্যবহার করো</span></div>
+        <div class="defense-tip">✅ <span class="bn-text">Security guard-কে report করো</span></div>
+        <div class="defense-tip">✅ <span class="bn-text">Visitor badge সহজেই ভুয়া করা যায় না এমন করো</span></div>
+      </div>
+    </div>
+
+    <h2 class="sec">💾 <span class="bn-text">Baiting</span><span class="en-text">Baiting</span></h2>
+    <p><span class="bn-text">Baiting-এ attacker কিছু লোভনীয় জিনিস রেখে যায়। সবচেয়ে বিখ্যাত পদ্ধতি হলো infected USB drive parking lot-এ ফেলে রাখা।</span><span class="en-text">In baiting, the attacker leaves something enticing behind. The most famous method is leaving an infected USB drive in a parking lot.</span></p>
+    <div class="code"><span class="c">━━━ USB Drop Attack ━━━</span>
+
+<span class="c">Real Study (University of Michigan):</span>
+  297টি USB drive ছেড়ে রাখা হলো campus-এ
+  Result: 48% USB plug করা হয়েছিল!
+  "Confidential", "Salary" label দেওয়া গুলো বেশি open হলো
+
+<span class="c">Attack Flow:</span>
+  1. USB-তে malware/autorun script রাখো
+  2. Interesting label: "Salary 2024", "Confidential"
+  3. Parking lot / lobby / toilet-এ ফেলে দাও
+  4. কেউ plug করলে → reverse shell / keylogger
+
+<span class="c">Defense:</span>
+  ✅ Unknown USB কখনো plug করো না
+  ✅ USB autorun disable করো (Windows)
+  ✅ Group Policy: USB storage block
+  ✅ Awareness training
+
+<span class="c">Windows — USB autorun disable:</span>
+  gpedit.msc → Computer Configuration
+  → Administrative Templates → System
+  → "Turn off Autoplay" = Enabled</div>
+
+    <h2 class="sec">👁️ <span class="bn-text">Shoulder Surfing ও Dumpster Diving</span><span class="en-text">Shoulder Surfing & Dumpster Diving</span></h2>
+    <div class="grid2">
+      <div class="card">
+        <h4>👁️ Shoulder Surfing</h4>
+        <p><span class="bn-text">কারো পেছনে দাঁড়িয়ে PIN, password বা sensitive info দেখা। ATM, cafe, public transport — সব জায়গায় হয়।</span></p>
+        <div class="defense-tip">✅ <span class="bn-text">Screen privacy filter ব্যবহার করো</span></div>
+        <div class="defense-tip">✅ <span class="bn-text">PIN টাইপ করার সময় হাত দিয়ে ঢাকো</span></div>
+        <div class="defense-tip">✅ <span class="bn-text">Public-এ sensitive কাজ এড়িয়ে চলো</span></div>
+      </div>
+      <div class="card">
+        <h4>🗑️ Dumpster Diving</h4>
+        <p><span class="bn-text">Trash থেকে sensitive documents বের করা — bank statement, employee list, network diagrams, old passwords।</span></p>
+        <div class="defense-tip">✅ <span class="bn-text">Document shredder (cross-cut) ব্যবহার করো</span></div>
+        <div class="defense-tip">✅ <span class="bn-text">Digital-first approach — কম print করো</span></div>
+        <div class="defense-tip">✅ <span class="bn-text">Secure bin/locked dumpster ব্যবহার করো</span></div>
+      </div>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>✅ Chapter 5 Summary</h3>
+      <ul>
+        <li>✔ <span class="bn-text">Tailgating = ভদ্রতাকে exploit — প্রত্যেকে নিজের badge swipe করবে</span></li>
+        <li>✔ <span class="bn-text">Unknown USB কখনো plug করো না — 48% মানুষ করে</span></li>
+        <li>✔ <span class="bn-text">Shoulder surfing — public-এ PIN ঢেকে দাও</span></li>
+        <li>✔ <span class="bn-text">Documents shred করো — trash থেকেও attack সম্ভব</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CH6: OSINT FOR SE -->
+<div class="chapter ch6">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 06</div>
+    <div class="chapter-title">🔍 <span class="bn-text">OSINT — Target Research</span><span class="en-text">OSINT — Target Research</span></div>
+    <div class="chapter-desc"><span class="bn-text">Public information দিয়ে targeted attack-এর জন্য profile তৈরি</span><span class="en-text">Building an attack profile using public information</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🌐 <span class="bn-text">OSINT কী এবং SE-তে কেন দরকার?</span><span class="en-text">What is OSINT & Why is it Needed in SE?</span></h2>
+    <p><span class="bn-text">OSINT (Open Source Intelligence) মানে publicly available তথ্য সংগ্রহ। Spear phishing attack শুরু করার আগে attacker target সম্পর্কে যত বেশি জানে, attack তত বেশি convincing হয়।</span><span class="en-text">OSINT means collecting publicly available information. The more an attacker knows about the target before launching a spear phishing attack, the more convincing the attack becomes.</span></p>
+
+    <h2 class="sec">👤 <span class="bn-text">LinkedIn — Professional OSINT</span><span class="en-text">LinkedIn — Professional OSINT</span></h2>
+    <div class="code"><span class="c">LinkedIn থেকে কী পাওয়া যায়:</span>
+→ নাম, Position, Department
+→ Company, Location
+→ Colleague-দের নাম ও position
+→ Previous employers
+→ Skills, certifications
+→ Recent posts (travel, projects)
+→ Email pattern (firstname.lastname@company.com)
+
+<span class="c">Google Dorking for LinkedIn:</span>
+site:linkedin.com "Company Name" "IT Manager"
+site:linkedin.com "Company Name" "Finance"
+
+<span class="c">এই তথ্য দিয়ে attacker করতে পারে:</span>
+→ "Hi John, আমি your colleague Sarah-র referred করেছেন..."
+→ IT team-এর structure জেনে impersonate করা
+→ Email format জেনে email guess করা</div>
+
+    <h2 class="sec">🔧 <span class="bn-text">OSINT Tools</span><span class="en-text">OSINT Tools</span></h2>
+    <div class="code"><span class="c"># theHarvester — email, domain, name harvest</span>
+<span class="p">$</span> theHarvester -d company.com -b all
+<span class="p">$</span> theHarvester -d company.com -b linkedin,google,bing
+<span class="c"># Output: emails, names, IPs, subdomains</span>
+
+<span class="c"># Maltego (GUI OSINT tool)</span>
+<span class="c"># Person → email → social accounts → phone → address</span>
+<span class="c"># Entity relationship mapping</span>
+
+<span class="c"># Recon-ng</span>
+<span class="p">$</span> recon-ng
+[recon-ng] > modules search companies
+[recon-ng] > marketplace install recon/companies-contacts/linkedin_auth
+[recon-ng] > use recon/companies-contacts/linkedin_auth
+[recon-ng] > set COMPANY "Target Company"
+[recon-ng] > run
+
+<span class="c"># Hunter.io — email finder</span>
+https://hunter.io/domain/company.com
+<span class="c"># Email pattern + verified emails</span>
+
+<span class="c"># Shodan — device OSINT</span>
+<span class="p">$</span> shodan search org:"Company Name"
+<span class="c"># Public-facing servers, cameras, printers</span>
+
+<span class="c"># WHOIS — domain ownership</span>
+<span class="p">$</span> whois company.com
+<span class="c"># Registrant name, email, phone (যদি GDPR mask না করা)</span>
+
+<span class="c"># Social Searcher</span>
+https://www.social-searcher.com/
+<span class="c"># Social media monitoring</span></div>
+
+    <h2 class="sec">🛡️ <span class="bn-text">নিজের Digital Footprint কমাও</span><span class="en-text">Reduce Your Digital Footprint</span></h2>
+    <div class="grid2">
+      <div class="card">
+        <h4>📱 <span class="bn-text">Social Media Privacy</span></h4>
+        <div class="defense-tip">✅ <span class="bn-text">LinkedIn-এ company ও position সীমিত রাখো</span></div>
+        <div class="defense-tip">✅ <span class="bn-text">Facebook-এ workplace ও phone hide করো</span></div>
+        <div class="defense-tip">✅ <span class="bn-text">Birthday, location public করো না</span></div>
+        <div class="defense-tip">✅ <span class="bn-text">কাজের sensitive info post করো না</span></div>
+      </div>
+      <div class="card">
+        <h4>🌐 <span class="bn-text">Online Hygiene</span></h4>
+        <div class="defense-tip">✅ <span class="bn-text">WHOIS privacy/proxy ব্যবহার করো</span></div>
+        <div class="defense-tip">✅ <span class="bn-text">Data broker opt-out request পাঠাও</span></div>
+        <div class="defense-tip">✅ <span class="bn-text">Separate email for different purposes</span></div>
+        <div class="defense-tip">✅ <span class="bn-text">Google আপনার সম্পর্কে কী জানে দেখো</span></div>
+      </div>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>✅ Chapter 6 Summary</h3>
+      <ul>
+        <li>✔ <span class="bn-text">LinkedIn = attacker-এর সবচেয়ে প্রিয় OSINT source</span></li>
+        <li>✔ <span class="bn-text">theHarvester, Recon-ng, Hunter.io — email ও staff info বের করে</span></li>
+        <li>✔ <span class="bn-text">নিজের digital footprint কমাও — public profile limit করো</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CH7: SET TOOLKIT -->
+<div class="chapter ch7">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 07</div>
+    <div class="chapter-title">🔧 <span class="bn-text">SET Toolkit — Pentest Framework</span><span class="en-text">SET Toolkit — Social Engineering Pentest Framework</span></div>
+    <div class="chapter-desc"><span class="bn-text">Authorized security testing-এর জন্য SET ব্যবহার — শুধুমাত্র lab/authorized environment</span><span class="en-text">Using SET for authorized security testing — lab/authorized environment only</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <div class="danger box">🚨 <strong><span class="bn-text">SET Toolkit শুধুমাত্র authorized penetration testing ও security awareness training-এর জন্য। নিজের organization বা explicit written permission ছাড়া ব্যবহার করা বেআইনি।</span><span class="en-text">SET Toolkit is only for authorized penetration testing and security awareness training. Using it without explicit written permission from your own organization is illegal.</span></strong></div>
+
+    <h2 class="sec">🛠️ <span class="bn-text">SET কী?</span><span class="en-text">What is SET?</span></h2>
+    <p><span class="bn-text">Social-Engineer Toolkit (SET) হলো TrustedSec-এর তৈরি open-source penetration testing framework। Security professionals এটা দিয়ে organization-এর employees-দের social engineering vulnerability test করে।</span><span class="en-text">The Social-Engineer Toolkit (SET) is an open-source penetration testing framework by TrustedSec. Security professionals use it to test an organization's employees for social engineering vulnerabilities.</span></p>
+
+    <div class="code"><span class="c"># Install (Kali Linux-এ pre-installed)</span>
+<span class="p">$</span> apt install set
+<span class="p">$</span> setoolkit
+
+<span class="c">━━━ SET Main Menu ━━━</span>
+1) Social-Engineering Attacks
+2) Penetration Testing (Fast-Track)
+3) Third Party Modules
+4) Update the Social-Engineer Toolkit
+5) Update SET configuration
+6) Help, Credits, and About
+
+<span class="c">→ 1 Select</span>
+
+<span class="c">━━━ Social Engineering Attacks ━━━</span>
+1) Spear-Phishing Attack Vectors
+2) Website Attack Vectors
+3) Infectious Media Generator
+4) Create a Payload and Listener
+5) Mass Mailer Attack
+6) Arduino-Based Attack Vector
+7) Wireless Access Point Attack Vector
+8) QRCode Generator Attack Vector
+9) Powershell Attack Vectors</div>
+
+    <h2 class="sec">🌐 <span class="bn-text">Credential Harvester — Awareness Demo</span><span class="en-text">Credential Harvester — Awareness Demo</span></h2>
+    <div class="code"><span class="c">━━━ Credential Harvester (Lab Demo Only) ━━━</span>
+
+setoolkit > 1 (Social-Engineering)
+         > 2 (Website Attack Vectors)
+         > 3 (Credential Harvester Attack Method)
+         > 2 (Site Cloner)
+
+Enter IP address for POST back: 192.168.1.100  <span class="c">← আমাদের IP</span>
+Enter URL to clone: https://example.com/login
+
+<span class="c"># SET এখন example.com-এর হুবহু copy তৈরি করবে</span>
+<span class="c"># Victim এই fake page-এ login করলে credentials আমাদের কাছে আসবে</span>
+
+<span class="c">Output (যখন কেউ submit করবে):</span>
+<span class="g">[*] WE GOT A HIT! Printing the output:</span>
+<span class="g">POSSIBLE USERNAME FIELD FOUND: username=john.doe</span>
+<span class="g">POSSIBLE PASSWORD FIELD FOUND: password=*****</span>
+
+<span class="c">━━━ এই demo দিয়ে কর্মীদের দেখাও ━━━</span>
+<span class="c">→ "দেখুন, আপনার credentials কত সহজে চুরি হতে পারে"</span>
+<span class="c">→ এই awareness training phishing click rate 70% কমায়</span></div>
+
+    <h2 class="sec">📧 <span class="bn-text">Phishing Email Simulation — SET</span><span class="en-text">Phishing Email Simulation — SET</span></h2>
+    <div class="code"><span class="c">━━━ Spear Phishing Simulation (Authorized Only) ━━━</span>
+
+setoolkit > 1 (Social-Engineering)
+         > 1 (Spear-Phishing Attack Vectors)
+         > 1 (Perform a Mass Email Attack)
+
+<span class="c"># Email template select</span>
+<span class="c"># Target email enter</span>
+<span class="c"># Payload attach (for testing: harmless tracking pixel)</span>
+
+<span class="c">Tracking করা হয়:</span>
+→ Email কে open করেছে
+→ কে link click করেছে
+→ কে credentials submit করেছে
+→ কে report করেছে
+
+<span class="c">Report দিয়ে management-কে দেখাও:</span>
+→ "30% employee phishing click করেছে"
+→ "5% credentials দিয়েছে"
+→ "এই team-এর training দরকার"</div>
+
+    <div class="chapter-summary">
+      <h3>✅ Chapter 7 Summary</h3>
+      <ul>
+        <li>✔ <span class="bn-text">SET = authorized pentest tool — permission ছাড়া ব্যবহার নিষিদ্ধ</span></li>
+        <li>✔ <span class="bn-text">Credential Harvester দিয়ে real attack কীভাবে হয় দেখাও</span></li>
+        <li>✔ <span class="bn-text">Phishing simulation → awareness training-এর সেরা উপায়</span></li>
+        <li>✔ <span class="bn-text">Result দিয়ে কোন team-এর training দরকার বুঝো</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CH8: REAL CASES -->
+<div class="chapter ch8">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 08</div>
+    <div class="chapter-title">📰 <span class="bn-text">Real-World Attack Cases</span><span class="en-text">Real-World Attack Cases</span></div>
+    <div class="chapter-desc"><span class="bn-text">বিখ্যাত social engineering attack থেকে শিক্ষা নাও</span><span class="en-text">Learn from famous social engineering attacks</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🏦 <span class="bn-text">Bangladesh Bank Heist (2016) — $81 Million</span><span class="en-text">Bangladesh Bank Heist (2016) — $81 Million</span></h2>
+    <p><span class="bn-text">এটা ইতিহাসের সবচেয়ে বড় cyber bank robbery। North Korean hackers Bangladesh Bank থেকে $81 million চুরি করে। Social engineering এই attack-এর শুরু।</span><span class="en-text">This is the biggest cyber bank robbery in history. North Korean hackers stole $81 million from Bangladesh Bank. Social engineering was the starting point of this attack.</span></p>
+    <div class="code"><span class="c">━━━ Attack Timeline ━━━</span>
+
+<span class="c">2015:</span>
+  └─ Fake job application email পাঠানো হলো Bangladesh Bank-এ
+  └─ Resume-তে malware ছিল
+  └─ Bank employee open করলো → initial foothold
+
+<span class="c">2015-2016:</span>
+  └─ SWIFT network-এ access পাওয়া গেলো
+  └─ SWIFT messaging system-এর credentials চুরি
+  └─ Months ধরে network monitor করা হলো
+
+<span class="c">February 4-5, 2016 (Weekend):</span>
+  └─ $951 million transfer request পাঠানো হলো Federal Reserve-এ
+  └─ Weekend-এ কেউ check করবে না — timing intentional
+  └─ $81 million Philippines-এ গেলো (casino-তে laundered)
+  └─ $870 million block হলো typo-র কারণে!
+     ("fandation" লেখার ভুল = suspicious)
+
+<span class="c">━━━ Social Engineering Elements ━━━</span>
+→ Phishing email (initial vector)
+→ Trusted channel (SWIFT) abuse
+→ Timing attack (weekend)
+→ Insider knowledge (bank processes)
+
+<span class="c">━━━ Lessons ━━━</span>
+→ Email attachment → sandbox analysis mandatory
+→ Large transfers → multiple human approval
+→ Weekend → automated alerts
+→ SWIFT → anomaly detection</div>
+
+    <h2 class="sec">🐦 <span class="bn-text">Twitter Hack (2020) — Obama, Biden, Musk</span><span class="en-text">Twitter Hack (2020) — Obama, Biden, Musk</span></h2>
+    <div class="code"><span class="c">━━━ Attack Overview ━━━</span>
+
+<span class="c">Target: Twitter employee credentials</span>
+<span class="c">Method: Vishing (phone-based social engineering)</span>
+
+<span class="c">Attack Flow:</span>
+  1. Attacker Twitter employees-দের phone করলো
+  2. "আমি Twitter IT team থেকে"
+  3. Internal VPN credential reset করতে সাহায্য চাইলো
+  4. Employee দিয়ে দিলো → admin panel access
+
+<span class="c">Result:</span>
+  → 130+ high-profile accounts hijacked
+  → Obama, Biden, Musk, Apple, Uber, Gates
+  → Bitcoin scam tweet করা হলো
+  → $120,000+ Bitcoin collected
+
+<span class="c">Attacker: 17 বছরের teenager!</span>
+
+<span class="c">━━━ Lessons ━━━</span>
+→ Employee phone verification mandatory
+→ Admin panel → hardware MFA (SMS MFA যথেষ্ট নয়)
+→ Privileged access → strict access control
+→ Social engineering awareness training</div>
+
+    <h2 class="sec">🦠 <span class="bn-text">COVID-19 Themed Attacks (2020-2021)</span><span class="en-text">COVID-19 Themed Attacks (2020-2021)</span></h2>
+    <div class="code"><span class="c">━━━ COVID Phishing Campaigns ━━━</span>
+
+<span class="c">WHO Impersonation:</span>
+  "আপনার এলাকায় COVID outbreak। Attachment-এ health form।"
+  → Attachment = malware
+
+<span class="c">Government Relief Scam:</span>
+  "বাংলাদেশ সরকার COVID relief দিচ্ছে।
+  BDT 5,000 পেতে NID ও bKash number দিন।"
+  → Identity theft
+
+<span class="c">Vaccine Registration:</span>
+  "Vaccine priority registration করুন।
+  Link: http://bd-vaccine-register.xyz"
+  → Credential phishing
+
+<span class="c">Remote Work Scam:</span>
+  "Zoom update করুন" / "VPN install করুন"
+  → Actually malware
+
+<span class="c">━━━ Why it worked ━━━</span>
+→ Fear (সবাই scared ছিল)
+→ Authority (WHO, Government impersonation)
+→ Urgency (Limited time, priority registration)
+→ Information hunger (নতুন কিছু জানার আগ্রহ)</div>
+
+    <div class="chapter-summary">
+      <h3>✅ Chapter 8 Summary</h3>
+      <ul>
+        <li>✔ <span class="bn-text">Bangladesh Bank — simple phishing email → $81M theft</span></li>
+        <li>✔ <span class="bn-text">Twitter hack — phone call → admin access → 17-year-old hacker!</span></li>
+        <li>✔ <span class="bn-text">Crisis সময়ে (COVID) fear + urgency = সবচেয়ে বেশি attack</span></li>
+        <li>✔ <span class="bn-text">প্রতিটা case-এ human error ছিল — training দিলে আটকানো যেত</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CH9: DEFENSE -->
+<div class="chapter ch9">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 09</div>
+    <div class="chapter-title">🛡️ <span class="bn-text">Defense ও Awareness Training</span><span class="en-text">Defense & Awareness Training</span></div>
+    <div class="chapter-desc"><span class="bn-text">Organization ও ব্যক্তিকে রক্ষা করার সম্পূর্ণ framework</span><span class="en-text">Complete framework for protecting organizations and individuals</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🏛️ <span class="bn-text">Defense-in-Depth Framework</span><span class="en-text">Defense-in-Depth Framework</span></h2>
+    <div class="attack-flow">
+      <div class="flow-step"><span class="flow-num">1</span><span class="flow-name">👥 Human Layer</span><span class="flow-desc">Security awareness training, phishing simulation, clear reporting procedure</span></div>
+      <div class="flow-step"><span class="flow-num">2</span><span class="flow-name">📋 Policy Layer</span><span class="flow-desc">Data classification, clean desk policy, visitor policy, wire transfer approval process</span></div>
+      <div class="flow-step"><span class="flow-num">3</span><span class="flow-name">🔧 Technical Layer</span><span class="flow-desc">Email filtering, MFA, SPF/DKIM/DMARC, URL filtering, endpoint protection</span></div>
+      <div class="flow-step"><span class="flow-num">4</span><span class="flow-name">🏢 Physical Layer</span><span class="flow-desc">Access control, CCTV, visitor management, clean desk enforcement</span></div>
+      <div class="flow-step"><span class="flow-num">5</span><span class="flow-name">🚨 Incident Response</span><span class="flow-desc">Reporting procedure, investigation process, post-incident training</span></div>
+    </div>
+
+    <h2 class="sec">📚 <span class="bn-text">Security Awareness Training Program</span><span class="en-text">Security Awareness Training Program</span></h2>
+    <div class="code"><span class="c">━━━ Effective Training Program ━━━</span>
+
+<span class="c">1. Baseline Assessment (মাস 1)</span>
+   → Simulated phishing campaign চালাও
+   → কতজন click করে? Baseline establish করো
+   → Example: 35% click rate
+
+<span class="c">2. Initial Training (মাস 1-2)</span>
+   → 30-min interactive module
+   → Topics: Phishing, Vishing, Password, Physical SE
+   → Quiz with minimum passing score (80%)
+   → Real examples (Bangladesh specific)
+
+<span class="c">3. Ongoing Simulations (মাসিক)</span>
+   → Monthly phishing test (different scenarios)
+   → Immediately redirect those who click → micro-training
+   → Track improvement over time
+
+<span class="c">4. Reinforcement (quarterly)</span>
+   → New threat briefings
+   → Real incident case studies
+   → Department-specific training
+
+<span class="c">5. Metrics (6 months later)</span>
+   → Goal: click rate &lt; 5%
+   → Track report rate (should go up)
+   → Track repeat offenders
+
+<span class="c">━━━ Key Training Points ━━━</span>
+→ STOP - THINK - ACT (urgent request আসলে pause করো)
+→ Verify করো — call করো, ticket খোলো
+→ Report করো — শাস্তি নয়, culture তৈরি
+→ "When in doubt, don't click"</div>
+
+    <h2 class="sec">🔧 <span class="bn-text">Technical Controls</span><span class="en-text">Technical Controls</span></h2>
+    <div class="grid2">
+      <div class="card">
+        <h4>📧 Email Security</h4>
+        <div class="defense-tip">✅ SPF, DKIM, DMARC implement করো (p=reject)</div>
+        <div class="defense-tip">✅ Email gateway filtering (Proofpoint, Mimecast)</div>
+        <div class="defense-tip">✅ Sandbox (attachments automatically analyze)</div>
+        <div class="defense-tip">✅ External email banner যোগ করো</div>
+        <div class="defense-tip">✅ Link rewriting (click করলে scan হবে)</div>
+      </div>
+      <div class="card">
+        <h4>🔐 Access Control</h4>
+        <div class="defense-tip">✅ MFA everywhere (SMS নয়, Authenticator app)</div>
+        <div class="defense-tip">✅ Privileged access management (PAM)</div>
+        <div class="defense-tip">✅ Zero trust architecture</div>
+        <div class="defense-tip">✅ Least privilege principle</div>
+        <div class="defense-tip">✅ Password manager mandate</div>
+      </div>
+      <div class="card">
+        <h4>🖥️ Endpoint</h4>
+        <div class="defense-tip">✅ EDR solution (CrowdStrike, Sentinel One)</div>
+        <div class="defense-tip">✅ USB disable via Group Policy</div>
+        <div class="defense-tip">✅ Web filtering (malicious site block)</div>
+        <div class="defense-tip">✅ Screen lock (auto after 5 min)</div>
+      </div>
+      <div class="card">
+        <h4>🏢 Physical</h4>
+        <div class="defense-tip">✅ Badge access (not shared)</div>
+        <div class="defense-tip">✅ Visitor sign-in + escort</div>
+        <div class="defense-tip">✅ Clean desk policy enforce</div>
+        <div class="defense-tip">✅ Shredder সব desk-এ</div>
+      </div>
+    </div>
+
+    <h2 class="sec">🚨 <span class="bn-text">Reporting ও Incident Response</span><span class="en-text">Reporting & Incident Response</span></h2>
+    <div class="code"><span class="c">━━━ Phishing Report করার Process ━━━</span>
+
+<span class="c">Employee perspective:</span>
+  1. Suspicious email পেলে → Don't click
+  2. Report button click করো (Outlook: "Report Phishing")
+  3. অথবা IT security-কে forward করো
+  4. Delete করো
+
+<span class="c">Security team perspective:</span>
+  1. Report receive করো
+  2. Email header analyze করো
+  3. URLs VirusTotal-এ scan করো
+  4. Indicators of Compromise (IOC) বের করো
+  5. Organization-wide block করো
+  6. অন্য কেউ click করেছে কিনা check করো
+  7. Incident report তৈরি করো
+
+<span class="c">Culture তৈরি করো:</span>
+→ Report করলে → ধন্যবাদ দাও, পুরস্কার দাও
+→ Click করলে → blame না করে training দাও
+→ Goal: সবাই reporter হবে
+
+<span class="c">Blameless culture = more reports = better security</span></div>
+
+    <div class="chapter-summary">
+      <h3>✅ Chapter 9 Summary</h3>
+      <ul>
+        <li>✔ <span class="bn-text">Defense-in-Depth = Human + Policy + Technical + Physical + IR</span></li>
+        <li>✔ <span class="bn-text">Phishing simulation → training → re-simulate → track improvement</span></li>
+        <li>✔ <span class="bn-text">MFA, SPF/DKIM/DMARC, email sandbox = core technical controls</span></li>
+        <li>✔ <span class="bn-text">Blameless reporting culture = সবচেয়ে গুরুত্বপূর্ণ</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CH10: GOPHISH -->
+<div class="chapter ch10">
+  <div class="chapter-header">
+    <div class="chapter-label">Chapter 10</div>
+    <div class="chapter-title">🎣 <span class="bn-text">Phishing Simulation — GoPhish</span><span class="en-text">Phishing Simulation — GoPhish</span></div>
+    <div class="chapter-desc"><span class="bn-text">Organization-এ phishing simulation program চালানোর সম্পূর্ণ গাইড</span><span class="en-text">Complete guide to running a phishing simulation program in an organization</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <div class="warn box">⚠️ <strong><span class="bn-text">GoPhish শুধুমাত্র নিজের organization-এ authorized security testing-এর জন্য। Management ও Legal-এর written approval নাও।</span><span class="en-text">GoPhish is only for authorized security testing within your own organization. Get written approval from management and legal.</span></strong></div>
+
+    <h2 class="sec">⚙️ <span class="bn-text">GoPhish Setup</span><span class="en-text">GoPhish Setup</span></h2>
+    <div class="code"><span class="c"># Download GoPhish</span>
+<span class="p">$</span> wget https://github.com/gophish/gophish/releases/download/v0.12.1/gophish-v0.12.1-linux-64bit.zip
+<span class="p">$</span> unzip gophish-v0.12.1-linux-64bit.zip
+<span class="p">$</span> cd gophish
+<span class="p">$</span> chmod +x gophish
+<span class="p">$</span> ./gophish
+
+<span class="c"># Default credentials:</span>
+<span class="c"># URL: https://localhost:3333</span>
+<span class="c"># User: admin</span>
+<span class="c"># Pass: gophish (first login-এ change করো)</span>
+
+<span class="c">━━━ Configuration ━━━</span>
+<span class="c"># config.json</span>
+{
+  "admin_server": {
+    "listen_url": "0.0.0.0:3333",
+    "use_tls": true
+  },
+  "phish_server": {
+    "listen_url": "0.0.0.0:80",
+    "use_tls": false
+  }
+}</div>
+
+    <h2 class="sec">🎯 <span class="bn-text">Campaign Setup</span><span class="en-text">Campaign Setup</span></h2>
+    <div class="code"><span class="c">━━━ GoPhish Campaign Steps ━━━</span>
+
+<span class="c">Step 1: Sending Profile তৈরি করো</span>
+  Name: "Internal IT Team"
+  Interface Type: SMTP
+  SMTP Host: your-smtp-server:587
+  Username/Password: SMTP credentials
+  → Send Test Email করে verify করো
+
+<span class="c">Step 2: Landing Page তৈরি করো</span>
+  Name: "IT Portal Login"
+  Import Site: https://your-company-portal.com
+  → Credentials capture checkbox
+  → Redirect URL (after submit): https://awareness.company.com
+
+<span class="c">Step 3: Email Template তৈরি করো</span>
+  Name: "IT Security Alert"
+  Envelope Sender: it-security@company.com
+  Subject: "Action Required: Account Security Update"
+  Body:
+  "Hi {{.FirstName}},
+   We detected unusual login. Please verify:
+   {{.URL}}
+   IT Security Team"
+
+  → {{.FirstName}} = personalization
+  → {{.URL}} = tracking URL
+
+<span class="c">Step 4: Users & Groups</span>
+  CSV import:
+  First Name, Last Name, Email, Position
+  John, Doe, john.doe@company.com, Manager
+
+<span class="c">Step 5: Campaign Launch</span>
+  Name: "Q1 2024 Phishing Simulation"
+  Email Template: IT Security Alert
+  Landing Page: IT Portal Login
+  Launch Date: Monday 9:00 AM
+  Sending Profile: Internal IT Team
+  Groups: All Employees</div>
+
+    <h2 class="sec">📊 <span class="bn-text">Metrics ও Reporting</span><span class="en-text">Metrics & Reporting</span></h2>
+    <div class="code"><span class="c">━━━ GoPhish Dashboard Metrics ━━━</span>
+
+Emails Sent:     500   (100%)
+Emails Opened:   285   (57%)   ← open rate
+Links Clicked:   145   (29%)   ← click rate  ← Key metric
+Credentials:      42   (8.4%)  ← submit rate ← Critical
+Reported:         23   (4.6%)  ← report rate ← Want this HIGH
+
+<span class="c">━━━ Industry Benchmarks ━━━</span>
+Initial click rate: 25-35% (no training)
+After 1 year:       5-10%  (with training)
+Goal:               &lt; 5%
+
+<span class="c">━━━ Analysis করো ━━━</span>
+→ কোন department বেশি click করেছে?
+→ কোন email template বেশি effective?
+→ কোন সময়ে বেশি open হয়েছে?
+→ কারা repeatedly click করছে?
+
+<span class="c">━━━ Report Structure ━━━</span>
+Executive Summary:
+  - Overall click rate: 29% (Industry avg: 30%)
+  - Credentials submitted: 42 users (critical)
+  - Best performing dept: IT (5%)
+  - Worst performing dept: Finance (45%)
+
+Recommendations:
+  1. Finance team-এর immediate training
+  2. BEC-specific training (wire transfer policy)
+  3. Monthly simulation continue
+  4. MFA enforce করো</div>
+
+    <div class="chapter-summary">
+      <h3>🎯 <span class="bn-text">তুমি এখন কী কী পারো</span><span class="en-text">What You Can Now Do</span></h3>
+      <ul>
+        <li>🧠 <span class="bn-text">Social Engineering-এর মনস্তাত্ত্বিক principles বুঝতে পারো</span></li>
+        <li>🎣 <span class="bn-text">Phishing email-এর সব red flag চিনতে পারো</span></li>
+        <li>📞 <span class="bn-text">Vishing ও Smishing attack চিনতে ও রক্ষা পেতে পারো</span></li>
+        <li>🎭 <span class="bn-text">Pretexting ও impersonation কীভাবে কাজ করে জানো</span></li>
+        <li>🚪 <span class="bn-text">Physical SE attacks (tailgating, baiting) বুঝতে পারো</span></li>
+        <li>🔍 <span class="bn-text">OSINT দিয়ে digital footprint বিশ্লেষণ করতে পারো</span></li>
+        <li>🔧 <span class="bn-text">SET ও GoPhish দিয়ে authorized simulation চালাতে পারো</span></li>
+        <li>🛡️ <span class="bn-text">Organization-এর জন্য complete defense framework implement করতে পারো</span></li>
+      </ul>
+    </div>
+
+    <div style="text-align:center;margin-top:50px;padding:30px;background:#0d1b2a;border-radius:12px;">
+      <p style="font-size:20px;color:#2dc653;margin-bottom:10px;">🎭 "The weakest link in security is always the human."</p>
+      <p style="color:rgba(255,255,255,0.7)">
+        <span class="bn-text">এই গাইডের সব কিছু শুধুমাত্র শিক্ষামূলক ও defense উদ্দেশ্যে। Social engineering attack করা আইনত দণ্ডনীয়। নিজেকে ও প্রতিষ্ঠানকে রক্ষা করতে এই জ্ঞান ব্যবহার করো।</span>
+        <span class="en-text">Everything in this guide is for educational and defense purposes only. Conducting social engineering attacks is punishable by law. Use this knowledge to protect yourself and your organization.</span>
+      </p>
+      <p style="margin-top:12px;font-size:13px;color:#2dc653;">Social Engineering v1.0 — 10 Chapters | Attack & Defense | সম্পূর্ণ বাংলা গাইড</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const body = document.body;
+body.classList.add('light-mode');
+function toggleTheme(){
+  const btn=document.getElementById('themeBtn');
+  if(body.classList.contains('light-mode')){
+    body.classList.replace('light-mode','dark-mode');
+    btn.textContent='☀️ Light Mode';btn.style.background='#ffd60a';btn.style.color='#0d1b2a';
+    localStorage.setItem('theme','dark');
+  }else{
+    body.classList.replace('dark-mode','light-mode');
+    btn.textContent='🌙 Dark Mode';btn.style.background='#2dc653';btn.style.color='#0d1b2a';
+    localStorage.setItem('theme','light');
+  }
+}
+function toggleLang(){
+  const btn=document.getElementById('langBtn');
+  if(body.classList.contains('lang-en')){
+    body.classList.remove('lang-en');
+    btn.textContent='🇬🇧 English';btn.style.background='#0077b6';
+    localStorage.setItem('lang','bn');
+  }else{
+    body.classList.add('lang-en');
+    btn.textContent='🇧🇩 বাংলা';btn.style.background='#e63946';
+    localStorage.setItem('lang','en');
+  }
+}
+function savePDF(){
+  const c=document.querySelector('.controls');
+  c.style.display='none';window.print();
+  setTimeout(()=>{c.style.display='flex';},500);
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  const t=localStorage.getItem('theme'),l=localStorage.getItem('lang');
+  if(t==='dark'){
+    body.classList.replace('light-mode','dark-mode');
+    const b=document.getElementById('themeBtn');
+    if(b){b.textContent='☀️ Light Mode';b.style.background='#ffd60a';b.style.color='#0d1b2a';}
+  }
+  if(l==='en'){
+    body.classList.add('lang-en');
+    const b=document.getElementById('langBtn');
+    if(b){b.textContent='🇧🇩 বাংলা';b.style.background='#e63946';}
+  }
+});
+</script>
+</body>
+</html>
