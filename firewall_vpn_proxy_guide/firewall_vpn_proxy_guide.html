@@ -1,0 +1,1781 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Firewall, VPN & Proxy — সম্পূর্ণ গাইড (Zero to Advanced)</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --fire:    #e85d04;
+  --fire2:   #f48c06;
+  --vpn:     #1971c2;
+  --vpn2:    #1c7ed6;
+  --proxy:   #2f9e44;
+  --proxy2:  #37b24d;
+  --ink:     #0c1220;
+  --ink2:    #152035;
+  --ink3:    #1e2d45;
+  --paper:   #f0f4f8;
+  --paper2:  #e8edf3;
+  --red:     #c92a2a;
+  --green:   #2f9e44;
+  --yellow:  #e67700;
+  --purple:  #7048e8;
+  --teal:    #0c8599;
+  --text:    #0c1220;
+  --muted:   #4a5568;
+  --border:  #cbd5e0;
+  --mono:    'JetBrains Mono', monospace;
+  --body:    'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body {
+  font-family: var(--body);
+  background: var(--paper);
+  color: var(--text);
+  font-size: 14.5px;
+  line-height: 1.95;
+}
+
+/* ══ CONTROLS ══ */
+.top-controls {
+  position: fixed; top: 0; left: 0; right: 0;
+  background: var(--ink); padding: 10px 28px;
+  display: flex; align-items: center; gap: 10px;
+  z-index: 9999; box-shadow: 0 2px 20px rgba(0,0,0,0.5);
+}
+.ctrl-logo { font-size: 14px; font-weight: 700; color: white; margin-right: auto; letter-spacing: 1px; }
+.ctrl-logo .f { color: var(--fire2); }
+.ctrl-logo .v { color: var(--vpn2); }
+.ctrl-logo .p { color: var(--proxy2); }
+.ctrl-btn {
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.07); color: #ccc;
+  padding: 6px 16px; border-radius: 5px; font-size: 13px;
+  font-family: var(--body); cursor: pointer; font-weight: 600; transition: all 0.2s;
+}
+.ctrl-btn:hover { background: rgba(255,255,255,0.15); color: white; }
+
+/* ══ PAGE ══ */
+.page { max-width: 920px; margin: 60px auto 40px; padding: 0 20px; }
+
+/* ══ COVER ══ */
+.cover {
+  background: var(--ink);
+  color: white; margin-bottom: 10px;
+  position: relative; overflow: hidden;
+  page-break-after: always;
+}
+.cover-stripe {
+  height: 6px;
+  background: linear-gradient(90deg, var(--fire) 0%, var(--fire2) 33%, var(--vpn) 33%, var(--vpn2) 66%, var(--proxy) 66%, var(--proxy2) 100%);
+}
+.cover-inner { padding: 52px 56px; position: relative; }
+.cover-inner::after {
+  content: '🛡️';
+  position: absolute; font-size: 220px; opacity: 0.04;
+  bottom: -20px; right: 20px; line-height: 1;
+}
+.cover h1 { font-size: 46px; font-weight: 700; line-height: 1.15; margin-bottom: 10px; }
+.cover h1 .f { color: var(--fire2); }
+.cover h1 .v { color: #74c0fc; }
+.cover h1 .p { color: #69db7c; }
+.cover-sub { font-size: 18px; color: rgba(255,255,255,0.5); margin-bottom: 32px; }
+.cover-divider { width: 60px; height: 3px; background: linear-gradient(90deg,var(--fire2),var(--vpn2),var(--proxy2)); margin-bottom: 32px; border-radius: 2px; }
+.cover-trio {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 36px;
+}
+.cover-card {
+  border-radius: 8px; padding: 18px 20px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.cover-card.fc { background: rgba(232,93,4,0.12); border-color: rgba(232,93,4,0.3); }
+.cover-card.vc { background: rgba(25,113,194,0.12); border-color: rgba(25,113,194,0.3); }
+.cover-card.pc { background: rgba(47,158,68,0.12); border-color: rgba(47,158,68,0.3); }
+.cover-card .icon { font-size: 32px; margin-bottom: 8px; }
+.cover-card .name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.cover-card .desc { font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.6; }
+.cover-badges { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+.cover-badge {
+  display: inline-block; padding: 5px 14px; border-radius: 20px;
+  font-size: 12px; font-weight: 600;
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); color: #c0c8d8;
+}
+.cover-note { font-size: 12px; color: rgba(255,255,255,0.2); border-top: 1px solid rgba(255,255,255,0.06); padding-top: 18px; line-height: 1.7; }
+
+/* ══ TOC ══ */
+.toc { background: white; padding: 44px 52px; margin-bottom: 10px; }
+.toc-head { font-size: 22px; font-weight: 700; color: var(--ink); padding-bottom: 14px; margin-bottom: 24px; border-bottom: 3px solid var(--fire); }
+.toc-section { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; font-weight: 700; margin: 20px 0 8px; padding: 4px 12px; border-radius: 4px; display: inline-block; }
+.toc-s-fire   { background: #fff3e6; color: var(--fire); }
+.toc-s-vpn    { background: #e7f3ff; color: var(--vpn); }
+.toc-s-proxy  { background: #ebfaee; color: var(--proxy); }
+.toc-s-adv    { background: #f3eeff; color: var(--purple); }
+.toc-item { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px dotted #eee; font-size: 14px; }
+.toc-item .num { font-family: var(--mono); font-size: 11px; color: var(--muted); min-width: 36px; }
+.toc-item .title { flex: 1; color: var(--ink); font-weight: 500; }
+.toc-item .pg { font-size: 12px; color: var(--muted); }
+
+/* ══ CHAPTER ══ */
+.chapter { background: white; margin-bottom: 10px; overflow: hidden; }
+.chapter-header { padding: 36px 52px; position: relative; overflow: hidden; }
+.chapter-header::after {
+  content: ''; position: absolute; top: -40px; right: -40px;
+  width: 160px; height: 160px; border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+}
+/* Fire chapters */
+.ch-fire1 .chapter-header { background: linear-gradient(135deg,#3d1500,#6b2800); }
+.ch-fire2 .chapter-header { background: linear-gradient(135deg,#4a1a00,#7a3000); }
+.ch-fire3 .chapter-header { background: linear-gradient(135deg,#3a1200,#622000); }
+/* VPN chapters */
+.ch-vpn1 .chapter-header  { background: linear-gradient(135deg,#071a3a,#0e2d6b); }
+.ch-vpn2 .chapter-header  { background: linear-gradient(135deg,#062040,#0f3570); }
+.ch-vpn3 .chapter-header  { background: linear-gradient(135deg,#081e38,#102a60); }
+/* Proxy chapters */
+.ch-prx1 .chapter-header  { background: linear-gradient(135deg,#0a2a12,#154a20); }
+.ch-prx2 .chapter-header  { background: linear-gradient(135deg,#082214,#133d1e); }
+/* Advanced */
+.ch-adv1 .chapter-header  { background: linear-gradient(135deg,#1a0a3d,#2d1470); }
+.ch-adv2 .chapter-header  { background: linear-gradient(135deg,#0a1a2a,#1a3050); }
+
+.ch-label { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 6px; opacity: 0.6; color: white; }
+.ch-tag { display: inline-block; padding: 3px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-bottom: 10px; letter-spacing: 1px; }
+.tag-fire  { background: var(--fire); color: white; }
+.tag-vpn   { background: var(--vpn); color: white; }
+.tag-proxy { background: var(--proxy); color: white; }
+.tag-adv   { background: var(--purple); color: white; }
+.ch-title { font-size: 28px; font-weight: 700; color: white; line-height: 1.2; }
+.ch-desc  { font-size: 13.5px; color: rgba(255,255,255,0.55); margin-top: 8px; }
+.chapter-body { padding: 32px 52px; }
+
+/* ══ HEADINGS ══ */
+h2.sec { font-size: 20px; font-weight: 700; margin: 30px 0 13px; padding-left: 16px; border-left: 5px solid; color: var(--ink2); }
+.sec-fire  { border-color: var(--fire); }
+.sec-vpn   { border-color: var(--vpn); }
+.sec-proxy { border-color: var(--proxy); }
+.sec-adv   { border-color: var(--purple); }
+.sec-gen   { border-color: var(--teal); }
+h3.sub { font-size: 16px; font-weight: 700; color: var(--ink3); margin: 22px 0 10px; padding-bottom: 5px; border-bottom: 2px dashed var(--border); }
+p { margin-bottom: 13px; color: #2a3350; }
+p:last-child { margin-bottom: 0; }
+
+/* ══ CODE ══ */
+.code {
+  background: #0c1220; color: #c9d8e8;
+  padding: 18px 22px; border-radius: 8px;
+  font-family: var(--mono); font-size: 12.5px;
+  margin: 15px 0; line-height: 1.85; overflow-x: auto;
+  border: 1px solid #1e2d45;
+}
+.code.fire-code  { border-left: 4px solid var(--fire); }
+.code.vpn-code   { border-left: 4px solid var(--vpn); }
+.code.proxy-code { border-left: 4px solid var(--proxy); }
+.code.adv-code   { border-left: 4px solid var(--purple); }
+.ck { color: #cba6f7; }  /* keyword */
+.cs { color: #a6e3a1; }  /* string */
+.cn { color: #fab387; }  /* number */
+.cc { color: #45475a; font-style:italic; }  /* comment */
+.cp { color: var(--fire2); }  /* prompt */
+.cg { color: #89dceb; }  /* green/teal */
+.cb { color: #74c0fc; }  /* blue */
+.cr { color: #f38ba8; }  /* red/error */
+.cy { color: #fde68a; }  /* yellow */
+code { background: #1e2d45; color: #74c0fc; padding: 2px 7px; border-radius: 3px; font-family: var(--mono); font-size: 12.5px; }
+
+/* ══ OUTPUT ══ */
+.output {
+  background: #080f1a; border: 1px solid #1e2d45; border-left: 4px solid var(--proxy);
+  border-radius: 0 0 8px 8px; margin-top: -15px; padding: 12px 22px;
+  font-family: var(--mono); font-size: 12px; color: #a6e3a1; line-height: 1.8;
+}
+.output-label { font-size: 10px; color: #3a4a5a; letter-spacing: 2px; margin-bottom: 6px; text-transform: uppercase; }
+
+/* ══ ANALOGY BOX ══ */
+.analogy {
+  background: linear-gradient(135deg, #f8f4ff, #f0ecff);
+  border: 1px solid #c4b5fd; border-radius: 8px;
+  padding: 18px 22px; margin: 16px 0;
+}
+.analogy-title { font-size: 13px; font-weight: 700; color: var(--purple); margin-bottom: 8px; letter-spacing: 0.5px; }
+.analogy p { color: #3b1d8a; }
+
+/* ══ BOXES ══ */
+.box { padding: 14px 18px; border-radius: 6px; margin: 14px 0; border-left: 4px solid; font-size: 13.5px; }
+.box-fire   { background: #fff4ec; border-color: var(--fire); color: #6b2200; }
+.box-vpn    { background: #e7f3ff; border-color: var(--vpn); color: #0a2a5c; }
+.box-proxy  { background: #ebfaee; border-color: var(--proxy); color: #0a3018; }
+.box-warn   { background: #fff8e6; border-color: var(--yellow); color: #5c3a00; }
+.box-danger { background: #fff0f0; border-color: var(--red); color: #5c0a0a; }
+.box-tip    { background: #f3eeff; border-color: var(--purple); color: #2a1060; }
+.box-teal   { background: #e6f9fc; border-color: var(--teal); color: #063a42; }
+.box-t { font-weight: 700; margin-bottom: 6px; font-size: 13px; }
+
+/* ══ DIAGRAM ══ */
+.diagram {
+  background: #080f1a; border: 1px solid #1e2d45;
+  border-radius: 8px; padding: 20px 24px;
+  font-family: var(--mono); font-size: 12.5px; line-height: 1.95;
+  margin: 16px 0; color: #c9d8e8; overflow-x: auto;
+}
+.df { color: var(--fire2); }
+.dv { color: #74c0fc; }
+.dp { color: #69db7c; }
+.dg { color: #a6e3a1; }
+.dy { color: #fde68a; }
+.dr { color: #f38ba8; }
+.dm { color: #cba6f7; }
+.dc { color: #45475a; font-style: italic; }
+
+/* ══ TABLES ══ */
+table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
+thead tr { background: var(--ink2); color: white; }
+th { padding: 11px 14px; text-align: left; font-weight: 600; font-size: 12px; letter-spacing: 0.5px; }
+td { padding: 9px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:nth-child(even) td { background: #f8fafc; }
+tr:hover td { background: #f0f4ff; }
+
+/* ══ GRID ══ */
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin: 16px 0; }
+.card { background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+.card h4 { font-size: 14px; font-weight: 700; margin-bottom: 9px; padding-bottom: 6px; color: var(--ink2); }
+.card.fire-card { border-color: #fcc59f; background: #fff6f0; }
+.card.fire-card h4 { color: var(--fire); border-bottom: 2px solid var(--fire); }
+.card.vpn-card  { border-color: #97c4f8; background: #f0f7ff; }
+.card.vpn-card h4  { color: var(--vpn); border-bottom: 2px solid var(--vpn); }
+.card.proxy-card{ border-color: #8fdb9e; background: #f0faf2; }
+.card.proxy-card h4{ color: var(--proxy); border-bottom: 2px solid var(--proxy); }
+.card.adv-card  { border-color: #c4b5fd; background: #f5f0ff; }
+.card.adv-card h4  { color: var(--purple); border-bottom: 2px solid var(--purple); }
+.card.danger-card { border-color: #fca5a5; background: #fff5f5; }
+.card.danger-card h4 { color: var(--red); border-bottom: 2px solid var(--red); }
+
+/* ══ BADGE ══ */
+.badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; margin: 2px; }
+.badge-g { background: #dcfce7; color: #166534; }
+.badge-r { background: #fee2e2; color: #991b1b; }
+.badge-b { background: #dbeafe; color: #1e40af; }
+.badge-y { background: #fef9c3; color: #713f12; }
+.badge-p { background: #f3e8ff; color: #6b21a8; }
+.badge-o { background: #ffedd5; color: #9a3412; }
+
+/* ══ STEP ══ */
+.step { display: flex; gap: 14px; margin: 12px 0; align-items: flex-start; }
+.step-num { min-width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px; flex-shrink: 0; color: white; }
+.step-body { flex: 1; padding-top: 5px; }
+
+/* ══ COMPARISON ══ */
+.vs-table th:nth-child(2) { background: #3d1a00 !important; }
+.vs-table th:nth-child(3) { background: #071a3a !important; }
+.vs-table th:nth-child(4) { background: #0a2a12 !important; }
+
+/* ══ SUMMARY ══ */
+.summary { background: var(--ink2); color: white; border-radius: 10px; padding: 22px 26px; margin-top: 28px; }
+.summary h3 { margin-bottom: 12px; font-size: 15px; }
+.summary li { color: rgba(255,255,255,0.82); margin-bottom: 5px; font-size: 13.5px; }
+ul, ol { margin: 10px 0 10px 22px; line-height: 2.1; }
+li { margin-bottom: 3px; }
+
+/* ══ PRINT ══ */
+@media print {
+  .top-controls { display: none !important; }
+  .page { margin-top: 0; }
+  body { background: white; }
+  .cover-stripe, .chapter-header, .diagram, .code, .output, .summary, thead tr {
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+}
+
+/* ══ DARK MODE ══ */
+body.dark-mode { background: #050a12; color: #c9d8e8; }
+body.dark-mode .toc, body.dark-mode .chapter { background: #0c1220; }
+body.dark-mode .toc-head { color: #c9d8e8; }
+body.dark-mode .toc-item .title { color: #c9d8e8; }
+body.dark-mode h2.sec { color: #90c4e8; }
+body.dark-mode h3.sub { color: #74c0fc; border-color: #1e2d45; }
+body.dark-mode p { color: #a8b8c8; }
+body.dark-mode td { border-color: #1e2d45; color: #c9d8e8; }
+body.dark-mode tr:nth-child(even) td { background: #0f1c2e; }
+body.dark-mode tr:hover td { background: #101e30; }
+body.dark-mode .card { background: #0f1c2e; border-color: #1e2d45; color: #c9d8e8; }
+body.dark-mode .card h4 { color: #90c4e8; }
+body.dark-mode .box-fire   { background: #1a0800; color: #fcc59f; }
+body.dark-mode .box-vpn    { background: #040e24; color: #74c0fc; }
+body.dark-mode .box-proxy  { background: #041408; color: #69db7c; }
+body.dark-mode .box-warn   { background: #1a1000; color: #fde68a; }
+body.dark-mode .box-danger { background: #140505; color: #fca5a5; }
+body.dark-mode .box-tip    { background: #100520; color: #d8b4fe; }
+body.dark-mode .analogy { background: linear-gradient(135deg,#0f0520,#180a38); border-color: #4c3d8e; }
+body.dark-mode .analogy p { color: #c4b5fd; }
+body.dark-mode code { background: #1e2d45; color: #74c0fc; }
+
+/* ══ BILINGUAL ══ */
+.en-text { display: none; } .bn-text { display: inline; }
+body.lang-en .bn-text { display: none; } body.lang-en .en-text { display: inline; }
+.en-block { display: none; } .bn-block { display: block; }
+body.lang-en .bn-block { display: none; } body.lang-en .en-block { display: block; }
+
+.page-footer {
+  background: var(--ink); color: rgba(255,255,255,0.35);
+  padding: 18px 36px; display: flex; justify-content: space-between;
+  align-items: center; font-size: 12px; margin-top: 10px; border-radius: 4px;
+}
+</style>
+</head>
+<body>
+
+<!-- CONTROLS -->
+<div class="top-controls">
+  <div class="ctrl-logo">🛡️ <span class="f">Firewall</span> · <span class="v">VPN</span> · <span class="p">Proxy</span></div>
+  <button class="ctrl-btn" id="langBtn" onclick="toggleLang()">🇬🇧 English</button>
+  <button class="ctrl-btn" id="themeBtn" onclick="toggleTheme()">🌙 Dark Mode</button>
+  <button class="ctrl-btn" onclick="window.print()">🖨️ Print / PDF</button>
+</div>
+
+<div class="page">
+
+<!-- ══════ COVER ══════ -->
+<div class="cover">
+  <div class="cover-stripe"></div>
+  <div class="cover-inner">
+    <h1><span class="f">Firewall</span> · <span class="v">VPN</span> · <span class="p">Proxy</span></h1>
+    <div class="cover-sub">
+      <span class="bn-text">সম্পূর্ণ গাইড — একদম শুরু থেকে Advanced পর্যন্ত</span>
+      <span class="en-text">Complete Guide — From Absolute Zero to Advanced</span>
+    </div>
+    <div class="cover-divider"></div>
+    <div class="cover-trio">
+      <div class="cover-card fc">
+        <div class="icon">🔥</div>
+        <div class="name">Firewall</div>
+        <div class="desc">
+          <span class="bn-text">নেটওয়ার্কের প্রহরী — কে ঢুকবে কে বের হবে নিয়ন্ত্রণ করে</span>
+          <span class="en-text">The network guardian — controls who enters and exits</span>
+        </div>
+      </div>
+      <div class="cover-card vc">
+        <div class="icon">🔒</div>
+        <div class="name">VPN</div>
+        <div class="desc">
+          <span class="bn-text">এনক্রিপ্টেড টানেল — নিরাপদে ও গোপনে ইন্টারনেট ব্যবহার</span>
+          <span class="en-text">Encrypted tunnel — safe and private internet access</span>
+        </div>
+      </div>
+      <div class="cover-card pc">
+        <div class="icon">🌐</div>
+        <div class="name">Proxy</div>
+        <div class="desc">
+          <span class="bn-text">মধ্যস্থতাকারী — তোমার হয়ে যোগাযোগ করে</span>
+          <span class="en-text">Intermediary — communicates on your behalf</span>
+        </div>
+      </div>
+    </div>
+    <div class="cover-badges">
+      <span class="cover-badge">📖 <span class="bn-text">১৪টি Chapter</span><span class="en-text">14 Chapters</span></span>
+      <span class="cover-badge">💻 <span class="bn-text">১০০+ উদাহরণ</span><span class="en-text">100+ Examples</span></span>
+      <span class="cover-badge">⚙️ iptables · WireGuard · Squid</span>
+      <span class="cover-badge">🌙 Dark Mode</span>
+      <span class="cover-badge">🇧🇩 বাংলা / 🇬🇧 English</span>
+    </div>
+    <div class="cover-note">
+      <span class="bn-text">⚠️ এই গাইড সম্পূর্ণ শিক্ষামূলক। সব কিছু authorized নেটওয়ার্কে প্র্যাকটিস করো।</span>
+      <span class="en-text">⚠️ This guide is entirely educational. Practice everything on authorized networks only.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ TOC ══════ -->
+<div class="toc">
+  <div class="toc-head">📋 <span class="bn-text">সূচিপত্র</span><span class="en-text">Table of Contents</span></div>
+
+  <div class="toc-section toc-s-fire">🔥 PART 1 — FIREWALL</div>
+  <div class="toc-item"><span class="num">01</span><span class="title"><span class="bn-text">Firewall কী ও কেন দরকার</span><span class="en-text">What is a Firewall & Why You Need It</span></span><span class="pg">Ch. 1</span></div>
+  <div class="toc-item"><span class="num">02</span><span class="title"><span class="bn-text">Firewall-এর প্রকারভেদ</span><span class="en-text">Types of Firewalls</span></span><span class="pg">Ch. 2</span></div>
+  <div class="toc-item"><span class="num">03</span><span class="title"><span class="bn-text">iptables — Linux Firewall হাতে-কলমে</span><span class="en-text">iptables — Linux Firewall Hands-on</span></span><span class="pg">Ch. 3</span></div>
+  <div class="toc-item"><span class="num">04</span><span class="title"><span class="bn-text">Windows Firewall ও UFW</span><span class="en-text">Windows Firewall & UFW</span></span><span class="pg">Ch. 4</span></div>
+
+  <div class="toc-section toc-s-vpn">🔒 PART 2 — VPN</div>
+  <div class="toc-item"><span class="num">05</span><span class="title"><span class="bn-text">VPN কী, কিভাবে কাজ করে</span><span class="en-text">What is VPN & How It Works</span></span><span class="pg">Ch. 5</span></div>
+  <div class="toc-item"><span class="num">06</span><span class="title"><span class="bn-text">VPN Protocol — OpenVPN, WireGuard, IPSec</span><span class="en-text">VPN Protocols — OpenVPN, WireGuard, IPSec</span></span><span class="pg">Ch. 6</span></div>
+  <div class="toc-item"><span class="num">07</span><span class="title"><span class="bn-text">WireGuard VPN — নিজেই সেটআপ করো</span><span class="en-text">WireGuard VPN — Set It Up Yourself</span></span><span class="pg">Ch. 7</span></div>
+
+  <div class="toc-section toc-s-proxy">🌐 PART 3 — PROXY</div>
+  <div class="toc-item"><span class="num">08</span><span class="title"><span class="bn-text">Proxy কী, কিভাবে কাজ করে</span><span class="en-text">What is a Proxy & How It Works</span></span><span class="pg">Ch. 8</span></div>
+  <div class="toc-item"><span class="num">09</span><span class="title"><span class="bn-text">Proxy-র প্রকারভেদ — Forward, Reverse, SOCKS5</span><span class="en-text">Types of Proxy — Forward, Reverse, SOCKS5</span></span><span class="pg">Ch. 9</span></div>
+  <div class="toc-item"><span class="num">10</span><span class="title"><span class="bn-text">Squid Proxy ও Burp Suite Proxy</span><span class="en-text">Squid Proxy & Burp Suite Proxy</span></span><span class="pg">Ch. 10</span></div>
+
+  <div class="toc-section toc-s-adv">🚀 PART 4 — ADVANCED</div>
+  <div class="toc-item"><span class="num">11</span><span class="title"><span class="bn-text">Firewall Bypass কৌশল</span><span class="en-text">Firewall Bypass Techniques</span></span><span class="pg">Ch. 11</span></div>
+  <div class="toc-item"><span class="num">12</span><span class="title"><span class="bn-text">VPN vs Proxy vs Tor — কোনটা কখন?</span><span class="en-text">VPN vs Proxy vs Tor — When to Use What?</span></span><span class="pg">Ch. 12</span></div>
+  <div class="toc-item"><span class="num">13</span><span class="title"><span class="bn-text">Real-World Scenarios ও Use Cases</span><span class="en-text">Real-World Scenarios & Use Cases</span></span><span class="pg">Ch. 13</span></div>
+  <div class="toc-item"><span class="num">14</span><span class="title"><span class="bn-text">Cheat Sheet ও Roadmap</span><span class="en-text">Cheat Sheet & Roadmap</span></span><span class="pg">Ch. 14</span></div>
+</div>
+
+
+<!-- ══════════════════════════════
+     CH 1: What is Firewall
+══════════════════════════════ -->
+<div class="chapter ch-fire1">
+  <div class="chapter-header">
+    <div class="ch-label">CHAPTER 01 — FIREWALL</div>
+    <div class="ch-tag tag-fire">🔥 Firewall</div>
+    <div class="ch-title"><span class="bn-text">Firewall কী ও কেন দরকার</span><span class="en-text">What is a Firewall & Why You Need It</span></div>
+    <div class="ch-desc"><span class="bn-text">নেটওয়ার্কের পাহারাদার — একদম শুরু থেকে বোঝো</span><span class="en-text">The network guardian — understanding from absolute scratch</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-fire">🤔 <span class="bn-text">Firewall কী?</span><span class="en-text">What is a Firewall?</span></h2>
+    <p><span class="bn-text">Firewall হলো একটি নিরাপত্তা ব্যবস্থা যা তোমার কম্পিউটার বা নেটওয়ার্ক এবং বাইরের পৃথিবীর মধ্যে একটি <strong>ফিল্টার</strong> হিসেবে কাজ করে। এটি নির্ধারণ করে কোন traffic ঢুকতে পারবে এবং কোনটা পারবে না।</span><span class="en-text">A Firewall is a security system that acts as a <strong>filter</strong> between your computer or network and the outside world. It determines which traffic can enter and which cannot.</span></p>
+
+    <div class="analogy">
+      <div class="analogy-title">🏠 <span class="bn-text">সহজ উপমা</span><span class="en-text">Simple Analogy</span></div>
+      <p><span class="bn-text">ভাবো তোমার বাড়ির সামনে একজন নিরাপত্তারক্ষী আছে। সে প্রতিটা মানুষকে দেখে — পরিচিত হলে ঢুকতে দেয়, অপরিচিত বা সন্দেহজনক হলে আটকায়। Firewall ঠিক এভাবেই কাজ করে — শুধু মানুষের বদলে নেটওয়ার্ক traffic পরীক্ষা করে।</span><span class="en-text">Imagine a security guard at your front door. They check every person — letting in familiar faces and blocking strangers or suspicious people. A Firewall works exactly the same way — just checking network traffic instead of people.</span></p>
+    </div>
+
+    <h2 class="sec sec-fire">🔄 <span class="bn-text">Firewall কিভাবে কাজ করে?</span><span class="en-text">How Does a Firewall Work?</span></h2>
+
+    <div class="diagram">
+<pre>
+<span class="dc">     ইন্টারনেট থেকে আসা traffic</span>
+              ↓
+   ┌──────────────────────────┐
+   │      🔥 FIREWALL          │
+   │                          │
+   │  ✅ Port 80 (HTTP)  → ALLOW  │
+   │  ✅ Port 443 (HTTPS) → ALLOW │
+   │  ✅ Port 22 (SSH)  → ALLOW  │  <span class="dc">← নির্দিষ্ট IP থেকে</span>
+   │  ❌ Port 3306 (MySQL) → BLOCK│
+   │  ❌ Port 23 (Telnet) → BLOCK │
+   │  ❌ Unknown IP     → BLOCK  │
+   └──────────────────────────┘
+              ↓
+   <span class="dg">তোমার নেটওয়ার্ক / Computer</span>
+</pre>
+    </div>
+
+    <h2 class="sec sec-fire">📋 <span class="bn-text">Firewall Rules — নিয়মের ভিত্তি</span><span class="en-text">Firewall Rules — The Basis of Rules</span></h2>
+    <p><span class="bn-text">Firewall নির্দিষ্ট <strong>Rules</strong> বা <strong>Policy</strong> অনুযায়ী traffic বিশ্লেষণ করে। প্রতিটি packet-এর জন্য:</span><span class="en-text">A Firewall analyzes traffic according to specific <strong>Rules</strong> or <strong>Policies</strong>. For each packet:</span></p>
+    <table>
+      <thead><tr><th><span class="bn-text">Rule চেক করে</span><span class="en-text">Rule Checks</span></th><th><span class="bn-text">উদাহরণ</span><span class="en-text">Example</span></th><th><span class="bn-text">সিদ্ধান্ত</span><span class="en-text">Decision</span></th></tr></thead>
+      <tbody>
+        <tr><td>Source IP</td><td>192.168.1.100 থেকে আসছে</td><td>ALLOW / BLOCK</td></tr>
+        <tr><td>Destination IP</td><td>8.8.8.8-এ যাচ্ছে</td><td>ALLOW / BLOCK</td></tr>
+        <tr><td>Port Number</td><td>Port 80 (HTTP)</td><td>ALLOW / BLOCK</td></tr>
+        <tr><td>Protocol</td><td>TCP / UDP / ICMP</td><td>ALLOW / BLOCK</td></tr>
+        <tr><td>Direction</td><td>Inbound / Outbound</td><td>ALLOW / BLOCK</td></tr>
+        <tr><td>State</td><td>New / Established / Related</td><td>ALLOW / BLOCK</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec sec-fire">❓ <span class="bn-text">Firewall কেন দরকার?</span><span class="en-text">Why Do You Need a Firewall?</span></h2>
+    <div class="grid2">
+      <div class="card fire-card">
+        <h4>🛡️ <span class="bn-text">Firewall থাকলে</span><span class="en-text">With Firewall</span></h4>
+        <ul>
+          <li><span class="bn-text">Unauthorized access ব্লক হয়</span><span class="en-text">Unauthorized access blocked</span></li>
+          <li><span class="bn-text">Port scan থেকে সুরক্ষা</span><span class="en-text">Protection from port scan</span></li>
+          <li><span class="bn-text">Malware-এর outbound connection ব্লক</span><span class="en-text">Malware outbound blocked</span></li>
+          <li><span class="bn-text">DDoS attack কমানো যায়</span><span class="en-text">DDoS attacks reduced</span></li>
+          <li><span class="bn-text">নেটওয়ার্ক ট্র্যাফিক monitor করা যায়</span><span class="en-text">Network traffic monitored</span></li>
+        </ul>
+      </div>
+      <div class="card danger-card">
+        <h4>💀 <span class="bn-text">Firewall না থাকলে</span><span class="en-text">Without Firewall</span></h4>
+        <ul>
+          <li><span class="bn-text">যেকেউ open port-এ ঢুকতে পারবে</span><span class="en-text">Anyone can access open ports</span></li>
+          <li><span class="bn-text">Exploit scanner সহজে কাজ করবে</span><span class="en-text">Exploit scanners work easily</span></li>
+          <li><span class="bn-text">Data চুরি সহজ হবে</span><span class="en-text">Data theft becomes easy</span></li>
+          <li><span class="bn-text">Botnet-এ যুক্ত হওয়ার ঝুঁকি</span><span class="en-text">Risk of joining a botnet</span></li>
+          <li><span class="bn-text">Server সরাসরি exposed থাকবে</span><span class="en-text">Server directly exposed</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="summary">
+      <h3 style="color:#fcc59f;">📌 <span class="bn-text">সারসংক্ষেপ</span><span class="en-text">Summary</span></h3>
+      <ul>
+        <li>🔥 <span class="bn-text">Firewall = নেটওয়ার্কের Security Guard</span><span class="en-text">Firewall = Network Security Guard</span></li>
+        <li>📋 <span class="bn-text">Rules অনুযায়ী traffic ALLOW বা BLOCK করে</span><span class="en-text">Allows or blocks traffic based on rules</span></li>
+        <li>🔍 <span class="bn-text">IP, Port, Protocol, Direction চেক করে</span><span class="en-text">Checks IP, Port, Protocol, Direction</span></li>
+        <li>🛡️ <span class="bn-text">যেকোনো সার্ভার বা নেটওয়ার্কে Firewall অপরিহার্য</span><span class="en-text">Firewall is essential for any server or network</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════
+     CH 2: Types of Firewall
+══════════════════════════════ -->
+<div class="chapter ch-fire2">
+  <div class="chapter-header">
+    <div class="ch-label">CHAPTER 02 — FIREWALL</div>
+    <div class="ch-tag tag-fire">🔥 Firewall</div>
+    <div class="ch-title"><span class="bn-text">Firewall-এর প্রকারভেদ</span><span class="en-text">Types of Firewalls</span></div>
+    <div class="ch-desc"><span class="bn-text">Packet Filter থেকে Next-Gen Firewall পর্যন্ত</span><span class="en-text">From Packet Filter to Next-Gen Firewall</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-fire">📦 1. Packet Filtering Firewall</h2>
+    <p><span class="bn-text">সবচেয়ে পুরনো এবং সহজ Firewall। প্রতিটি packet-এর header (IP, Port, Protocol) দেখে সিদ্ধান্ত নেয়। Packet-এর ভেতরের content দেখে না।</span><span class="en-text">The oldest and simplest firewall. Makes decisions by looking at each packet's header (IP, Port, Protocol). Does not inspect the packet's content.</span></p>
+    <div class="diagram">
+<pre><span class="dy">Packet আসলো:</span>
+Source IP: 192.168.1.5 | Dest Port: <span class="dg">80</span> | Protocol: TCP
+                              ↓
+<span class="dg">Rule: Port 80 ALLOW → ✅ Pass</span>
+
+Source IP: 192.168.1.5 | Dest Port: <span class="dr">3306</span> | Protocol: TCP
+                              ↓
+<span class="dr">Rule: Port 3306 BLOCK → ❌ Drop</span></pre>
+    </div>
+    <div class="box box-warn"><div class="box-t">⚠️ <span class="bn-text">সীমাবদ্ধতা</span><span class="en-text">Limitation</span></div><span class="bn-text">State track করে না — Connection state বোঝে না। তাই Spoofed packet ধরতে পারে না।</span><span class="en-text">Doesn't track state — can't understand connection state. Can't detect spoofed packets.</span></div>
+
+    <h2 class="sec sec-fire">🔗 2. Stateful Inspection Firewall</h2>
+    <p><span class="bn-text">আধুনিক এবং বেশি intelligent। শুধু packet header নয়, connection-এর <strong>state</strong>ও track করে। যেমন — একটা connection প্রতিষ্ঠা হয়েছে কিনা, packet কি সেই connection-এর অংশ।</span><span class="en-text">More modern and intelligent. Tracks not just packet headers but also connection <strong>state</strong>. For example — whether a connection is established, whether a packet is part of that connection.</span></p>
+    <div class="diagram">
+<pre><span class="dg">State Table (Connection Tracking):</span>
+┌──────────────────┬────────────┬──────────┬───────────┐
+│   Source IP:Port │  Dest IP:Port │ Protocol │   State   │
+├──────────────────┼────────────┼──────────┼───────────┤
+│ 192.168.1.5:49120│ 8.8.8.8:80 │   TCP    │<span class="dg"> ESTABLISHED</span>│
+│ 192.168.1.6:51200│ 1.1.1.1:443│   TCP    │<span class="dy"> SYN_SENT   </span>│
+│ Unknown:4444     │ 192.168.1.5│   TCP    │<span class="dr"> BLOCKED    </span>│
+└──────────────────┴────────────┴──────────┴───────────┘</pre>
+    </div>
+
+    <h2 class="sec sec-fire">🔍 3. Application Layer Firewall (Proxy Firewall)</h2>
+    <p><span class="bn-text">OSI Model-এর Layer 7 (Application Layer) পর্যন্ত inspect করে। HTTP request-এর ভেতরে কী আছে সেটাও দেখতে পারে। SQL Injection, XSS এগুলো detect করতে পারে।</span><span class="en-text">Inspects up to OSI Model Layer 7 (Application Layer). Can see what's inside HTTP requests. Can detect SQL Injection, XSS and similar attacks.</span></p>
+
+    <h2 class="sec sec-fire">🚀 4. Next-Generation Firewall (NGFW)</h2>
+    <p><span class="bn-text">সবচেয়ে আধুনিক Firewall। এতে আছে:</span><span class="en-text">The most modern firewall. It includes:</span></p>
+    <div class="grid2">
+      <div class="card fire-card">
+        <h4>✨ NGFW Features</h4>
+        <ul>
+          <li>Deep Packet Inspection (DPI)</li>
+          <li>Intrusion Detection (IDS/IPS)</li>
+          <li>Application Awareness</li>
+          <li>User Identity Tracking</li>
+          <li>SSL/TLS Inspection</li>
+          <li>Threat Intelligence</li>
+          <li>Sandboxing</li>
+        </ul>
+      </div>
+      <div class="card fire-card">
+        <h4>🏢 <span class="bn-text">জনপ্রিয় NGFW</span><span class="en-text">Popular NGFWs</span></h4>
+        <ul>
+          <li>Palo Alto Networks</li>
+          <li>Cisco Firepower</li>
+          <li>Fortinet FortiGate</li>
+          <li>Check Point</li>
+          <li>pfSense (Free)</li>
+          <li>OPNsense (Free)</li>
+          <li>Sophos XG</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec sec-fire">📊 <span class="bn-text">প্রকারভেদ তুলনা</span><span class="en-text">Types Comparison</span></h2>
+    <table>
+      <thead><tr><th>Type</th><th><span class="bn-text">কাজ</span><span class="en-text">What it does</span></th><th>OSI Layer</th><th><span class="bn-text">Speed</span></th><th><span class="bn-text">Security</span></th></tr></thead>
+      <tbody>
+        <tr><td>Packet Filter</td><td><span class="bn-text">Header দেখে</span><span class="en-text">Checks headers</span></td><td>Layer 3-4</td><td><span class="badge badge-g">দ্রুত</span></td><td><span class="badge badge-r">কম</span></td></tr>
+        <tr><td>Stateful</td><td><span class="bn-text">State track করে</span><span class="en-text">Tracks state</span></td><td>Layer 3-4</td><td><span class="badge badge-b">মাঝারি</span></td><td><span class="badge badge-b">মাঝারি</span></td></tr>
+        <tr><td>Application</td><td><span class="bn-text">Content দেখে</span><span class="en-text">Checks content</span></td><td>Layer 7</td><td><span class="badge badge-y">ধীর</span></td><td><span class="badge badge-g">বেশি</span></td></tr>
+        <tr><td>NGFW</td><td><span class="bn-text">সব + AI</span><span class="en-text">All + AI</span></td><td>All</td><td><span class="badge badge-y">ধীর</span></td><td><span class="badge badge-g">সর্বোচ্চ</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="summary">
+      <h3 style="color:#fcc59f;">📌 <span class="bn-text">সারসংক্ষেপ</span><span class="en-text">Summary</span></h3>
+      <ul>
+        <li>📦 <span class="bn-text">Packet Filter → সহজ, দ্রুত, কম নিরাপদ</span><span class="en-text">Packet Filter → simple, fast, less secure</span></li>
+        <li>🔗 <span class="bn-text">Stateful → Connection track করে, বেশি intelligent</span><span class="en-text">Stateful → tracks connections, more intelligent</span></li>
+        <li>🔍 <span class="bn-text">Application → Content দেখে, Layer 7 পর্যন্ত</span><span class="en-text">Application → inspects content, up to Layer 7</span></li>
+        <li>🚀 <span class="bn-text">NGFW → সবচেয়ে আধুনিক, enterprise-level</span><span class="en-text">NGFW → most modern, enterprise-level</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════
+     CH 3: iptables
+══════════════════════════════ -->
+<div class="chapter ch-fire3">
+  <div class="chapter-header">
+    <div class="ch-label">CHAPTER 03 — FIREWALL</div>
+    <div class="ch-tag tag-fire">🔥 Firewall</div>
+    <div class="ch-title">iptables — <span class="bn-text">Linux Firewall হাতে-কলমে</span><span class="en-text">Linux Firewall Hands-on</span></div>
+    <div class="ch-desc"><span class="bn-text">Linux-এর শক্তিশালী Firewall tool — command দিয়ে rules লেখা</span><span class="en-text">Linux's powerful firewall tool — writing rules with commands</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-fire">🏗️ iptables <span class="bn-text">কাঠামো</span><span class="en-text">Structure</span></h2>
+    <p><span class="bn-text">iptables তিনটি প্রধান <strong>Table</strong> এবং প্রতিটি Table-এ কয়েকটি <strong>Chain</strong> নিয়ে গঠিত।</span><span class="en-text">iptables consists of three main <strong>Tables</strong> and several <strong>Chains</strong> in each table.</span></p>
+    <div class="diagram">
+<pre><span class="df">Tables ও Chains:</span>
+
+<span class="dy">filter</span> (default — traffic allow/block)
+  ├── <span class="dg">INPUT</span>    → <span class="dc">তোমার সিস্টেমে আসা traffic</span>
+  ├── <span class="dg">OUTPUT</span>   → <span class="dc">তোমার সিস্টেম থেকে যাওয়া traffic</span>
+  └── <span class="dg">FORWARD</span>  → <span class="dc">তোমার সিস্টেম দিয়ে forward হওয়া traffic</span>
+
+<span class="dy">nat</span> (Network Address Translation)
+  ├── <span class="dv">PREROUTING</span>   → <span class="dc">আসার আগে modify</span>
+  ├── <span class="dv">POSTROUTING</span>  → <span class="dc">যাওয়ার আগে modify</span>
+  └── <span class="dv">OUTPUT</span>       → <span class="dc">local-generated packet</span>
+
+<span class="dy">mangle</span> (packet modification)
+  └── <span class="dm">specialized packet alteration</span></pre>
+    </div>
+
+    <h2 class="sec sec-fire">⚡ <span class="bn-text">মূল Commands</span><span class="en-text">Core Commands</span></h2>
+    <div class="code fire-code"><span class="cc"># বর্তমান rules দেখো</span>
+<span class="cp">$</span> iptables -L -n -v
+<span class="cp">$</span> iptables -L -n -v --line-numbers  <span class="cc"># line number সহ</span>
+
+<span class="cc"># সব rules মুছে দাও (flush)</span>
+<span class="cp">$</span> iptables -F
+
+<span class="cc"># নির্দিষ্ট chain-এর rules দেখো</span>
+<span class="cp">$</span> iptables -L INPUT -n -v
+<span class="cp">$</span> iptables -L OUTPUT -n -v</div>
+
+    <h2 class="sec sec-fire">📝 <span class="bn-text">Rules লেখার নিয়ম</span><span class="en-text">Writing Rules</span></h2>
+    <div class="code fire-code"><span class="cc"># Syntax:</span>
+<span class="cb">iptables</span> -[A/I/D] [CHAIN] [matches] -j [TARGET]
+
+<span class="cc"># -A = Append (শেষে যোগ করো)</span>
+<span class="cc"># -I = Insert (শুরুতে যোগ করো)</span>
+<span class="cc"># -D = Delete (মুছে দাও)</span>
+<span class="cc"># -j TARGET = ACCEPT / DROP / REJECT / LOG</span>
+
+<span class="cc"># ══ ALLOW Rules ══</span>
+<span class="cc"># SSH (port 22) allow করো</span>
+<span class="cp">$</span> iptables -A INPUT -p tcp --dport <span class="cn">22</span> -j ACCEPT
+
+<span class="cc"># HTTP (80) ও HTTPS (443) allow করো</span>
+<span class="cp">$</span> iptables -A INPUT -p tcp --dport <span class="cn">80</span> -j ACCEPT
+<span class="cp">$</span> iptables -A INPUT -p tcp --dport <span class="cn">443</span> -j ACCEPT
+
+<span class="cc"># নির্দিষ্ট IP থেকে allow করো</span>
+<span class="cp">$</span> iptables -A INPUT -s <span class="cs">192.168.1.100</span> -j ACCEPT
+
+<span class="cc"># নির্দিষ্ট IP থেকে SSH allow</span>
+<span class="cp">$</span> iptables -A INPUT -s <span class="cs">192.168.1.100</span> -p tcp --dport <span class="cn">22</span> -j ACCEPT
+
+<span class="cc"># ══ BLOCK Rules ══</span>
+<span class="cc"># নির্দিষ্ট IP ব্লক করো</span>
+<span class="cp">$</span> iptables -A INPUT -s <span class="cr">10.0.0.50</span> -j DROP
+
+<span class="cc"># Port 3306 (MySQL) বাইরে থেকে ব্লক করো</span>
+<span class="cp">$</span> iptables -A INPUT -p tcp --dport <span class="cn">3306</span> -j DROP
+
+<span class="cc"># একটা subnet ব্লক করো</span>
+<span class="cp">$</span> iptables -A INPUT -s <span class="cr">192.168.2.0/24</span> -j DROP
+
+<span class="cc"># Ping (ICMP) ব্লক করো</span>
+<span class="cp">$</span> iptables -A INPUT -p icmp -j DROP</div>
+
+    <h2 class="sec sec-fire">🏠 <span class="bn-text">Stateful Firewall — Established Connection</span><span class="en-text">Stateful Firewall — Established Connection</span></h2>
+    <div class="code fire-code"><span class="cc"># Loopback interface allow (নিজের সাথে যোগাযোগ)</span>
+<span class="cp">$</span> iptables -A INPUT -i lo -j ACCEPT
+
+<span class="cc"># Established & Related connections allow (আগে থেকে চলা connection)</span>
+<span class="cp">$</span> iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+<span class="cc"># Default policy: সব DROP</span>
+<span class="cp">$</span> iptables -P INPUT DROP
+<span class="cp">$</span> iptables -P FORWARD DROP
+<span class="cp">$</span> iptables -P OUTPUT ACCEPT</div>
+
+    <h2 class="sec sec-fire">🛡️ <span class="bn-text">Basic Server Firewall — সম্পূর্ণ উদাহরণ</span><span class="en-text">Basic Server Firewall — Complete Example</span></h2>
+    <div class="code fire-code"><span class="cc">#!/bin/bash</span>
+<span class="cc"># basic_firewall.sh — একটা web server-এর জন্য</span>
+
+<span class="cc"># সব পুরনো rules মুছো</span>
+iptables -F
+iptables -X
+
+<span class="cc"># Default policy</span>
+iptables -P INPUT DROP
+iptables -P FORWARD DROP
+iptables -P OUTPUT ACCEPT
+
+<span class="cc"># Loopback allow</span>
+iptables -A INPUT -i lo -j ACCEPT
+
+<span class="cc"># Established connections allow</span>
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+<span class="cc"># SSH — শুধু নির্দিষ্ট IP থেকে</span>
+iptables -A INPUT -s <span class="cs">203.0.113.50</span> -p tcp --dport <span class="cn">22</span> -j ACCEPT
+
+<span class="cc"># Web traffic</span>
+iptables -A INPUT -p tcp --dport <span class="cn">80</span> -j ACCEPT
+iptables -A INPUT -p tcp --dport <span class="cn">443</span> -j ACCEPT
+
+<span class="cc"># ICMP (ping) — limited</span>
+iptables -A INPUT -p icmp --icmp-type echo-request -m limit \
+  --limit <span class="cn">1</span>/s --limit-burst <span class="cn">5</span> -j ACCEPT
+
+<span class="cc"># SYN Flood protection</span>
+iptables -A INPUT -p tcp --syn -m limit \
+  --limit <span class="cn">25</span>/s --limit-burst <span class="cn">50</span> -j ACCEPT
+
+<span class="cc"># Port scan detection</span>
+iptables -A INPUT -p tcp --tcp-flags ALL NONE -j DROP
+iptables -A INPUT -p tcp --tcp-flags ALL ALL -j DROP
+
+echo <span class="cs">"Firewall rules applied!"</span></div>
+
+    <h2 class="sec sec-fire">💾 <span class="bn-text">Rules সংরক্ষণ</span><span class="en-text">Saving Rules</span></h2>
+    <div class="code fire-code"><span class="cc"># Ubuntu/Debian</span>
+<span class="cp">$</span> iptables-save > /etc/iptables/rules.v4
+<span class="cp">$</span> apt install iptables-persistent
+
+<span class="cc"># CentOS/RHEL</span>
+<span class="cp">$</span> service iptables save
+<span class="cp">$</span> systemctl enable iptables
+
+<span class="cc"># Rules restore করো</span>
+<span class="cp">$</span> iptables-restore < /etc/iptables/rules.v4</div>
+
+    <div class="summary">
+      <h3 style="color:#fcc59f;">📌 <span class="bn-text">সারসংক্ষেপ</span><span class="en-text">Summary</span></h3>
+      <ul>
+        <li>🏗️ <span class="bn-text">iptables = Table → Chain → Rule</span></li>
+        <li>📝 <span class="bn-text">-A ACCEPT, -A DROP — append rule</span></li>
+        <li>🔗 <span class="bn-text">ESTABLISHED,RELATED — stateful tracking</span></li>
+        <li>⚡ <span class="bn-text">Default DROP policy = সবচেয়ে নিরাপদ</span><span class="en-text">Default DROP policy = most secure</span></li>
+        <li>💾 <span class="bn-text">iptables-save দিয়ে rules সংরক্ষণ করো</span><span class="en-text">Save rules with iptables-save</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════
+     CH 4: Windows Firewall & UFW
+══════════════════════════════ -->
+<div class="chapter ch-fire1">
+  <div class="chapter-header">
+    <div class="ch-label">CHAPTER 04 — FIREWALL</div>
+    <div class="ch-tag tag-fire">🔥 Firewall</div>
+    <div class="ch-title">Windows Firewall <span class="bn-text">ও</span><span class="en-text">&</span> UFW</div>
+    <div class="ch-desc"><span class="bn-text">Windows ও Ubuntu-র সহজ Firewall ব্যবস্থাপনা</span><span class="en-text">Simple firewall management for Windows & Ubuntu</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-fire">🪟 UFW — <span class="bn-text">Ubuntu-র সহজ Firewall</span><span class="en-text">Ubuntu's Easy Firewall</span></h2>
+    <p><span class="bn-text">UFW (Uncomplicated Firewall) হলো iptables-এর উপরে একটা simple wrapper। iptables-এর জটিল syntax-এর বদলে সহজ command দিয়ে কাজ করা যায়।</span><span class="en-text">UFW (Uncomplicated Firewall) is a simple wrapper around iptables. Instead of iptables' complex syntax, you work with simple commands.</span></p>
+
+    <div class="code fire-code"><span class="cc"># UFW install ও enable</span>
+<span class="cp">$</span> sudo apt install ufw
+<span class="cp">$</span> sudo ufw enable
+<span class="cp">$</span> sudo ufw status verbose
+
+<span class="cc"># Default policy</span>
+<span class="cp">$</span> sudo ufw default deny incoming   <span class="cc"># বাইরে থেকে সব block</span>
+<span class="cp">$</span> sudo ufw default allow outgoing  <span class="cc"># বাইরে যাওয়া allow</span>
+
+<span class="cc"># Service allow করো</span>
+<span class="cp">$</span> sudo ufw allow ssh               <span class="cc"># SSH (22)</span>
+<span class="cp">$</span> sudo ufw allow http              <span class="cc"># HTTP (80)</span>
+<span class="cp">$</span> sudo ufw allow https             <span class="cc"># HTTPS (443)</span>
+<span class="cp">$</span> sudo ufw allow <span class="cn">8080</span>/tcp          <span class="cc"># Custom port</span>
+
+<span class="cc"># নির্দিষ্ট IP allow করো</span>
+<span class="cp">$</span> sudo ufw allow from <span class="cs">192.168.1.100</span>
+<span class="cp">$</span> sudo ufw allow from <span class="cs">192.168.1.0/24</span> to any port <span class="cn">22</span>
+
+<span class="cc"># Port block করো</span>
+<span class="cp">$</span> sudo ufw deny <span class="cn">3306</span>              <span class="cc"># MySQL block</span>
+<span class="cp">$</span> sudo ufw deny from <span class="cr">10.0.0.50</span>   <span class="cc"># নির্দিষ্ট IP block</span>
+
+<span class="cc"># Rules দেখো ও মুছো</span>
+<span class="cp">$</span> sudo ufw status numbered         <span class="cc"># number সহ</span>
+<span class="cp">$</span> sudo ufw delete <span class="cn">3</span>               <span class="cc"># rule #3 মুছো</span>
+<span class="cp">$</span> sudo ufw reset                   <span class="cc"># সব reset</span></div>
+
+    <h2 class="sec sec-fire">🪟 Windows Defender Firewall</h2>
+    <div class="code fire-code"><span class="cc"># PowerShell দিয়ে Windows Firewall</span>
+
+<span class="cc"># Firewall status দেখো</span>
+<span class="cb">Get-NetFirewallProfile</span>
+
+<span class="cc"># Firewall enable/disable</span>
+<span class="cb">Set-NetFirewallProfile</span> -Profile Domain,Public,Private -Enabled True
+
+<span class="cc"># নতুন rule যোগ করো</span>
+<span class="cb">New-NetFirewallRule</span> -DisplayName <span class="cs">"Block Telnet"</span> `
+  -Direction Inbound -Protocol TCP `
+  -LocalPort <span class="cn">23</span> -Action Block
+
+<span class="cc"># HTTP allow করো</span>
+<span class="cb">New-NetFirewallRule</span> -DisplayName <span class="cs">"Allow HTTP"</span> `
+  -Direction Inbound -Protocol TCP `
+  -LocalPort <span class="cn">80</span> -Action Allow
+
+<span class="cc"># Rules দেখো</span>
+<span class="cb">Get-NetFirewallRule</span> | Where-Object { <span class="cs">$_.Enabled</span> -eq <span class="ck">True</span> }
+
+<span class="cc"># নির্দিষ্ট rule মুছো</span>
+<span class="cb">Remove-NetFirewallRule</span> -DisplayName <span class="cs">"Block Telnet"</span></div>
+
+    <div class="summary">
+      <h3 style="color:#fcc59f;">📌 <span class="bn-text">সারসংক্ষেপ</span><span class="en-text">Summary</span></h3>
+      <ul>
+        <li>🪟 <span class="bn-text">UFW = iptables-এর সহজ version — Ubuntu-র জন্য আদর্শ</span><span class="en-text">UFW = easy version of iptables — ideal for Ubuntu</span></li>
+        <li>⚡ <code>ufw allow/deny [port]</code> — <span class="bn-text">সহজ rule যোগ করো</span></li>
+        <li>🪟 <span class="bn-text">Windows-এ PowerShell বা GUI দিয়ে Firewall manage করো</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════
+     CH 5: What is VPN
+══════════════════════════════ -->
+<div class="chapter ch-vpn1">
+  <div class="chapter-header">
+    <div class="ch-label">CHAPTER 05 — VPN</div>
+    <div class="ch-tag tag-vpn">🔒 VPN</div>
+    <div class="ch-title"><span class="bn-text">VPN কী ও কিভাবে কাজ করে</span><span class="en-text">What is VPN & How It Works</span></div>
+    <div class="ch-desc"><span class="bn-text">Encrypted Tunnel দিয়ে নিরাপদ ও গোপন যোগাযোগ</span><span class="en-text">Safe and private communication through an Encrypted Tunnel</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-vpn">🤔 <span class="bn-text">VPN কী?</span><span class="en-text">What is VPN?</span></h2>
+    <p><span class="bn-text">VPN (Virtual Private Network) হলো একটি প্রযুক্তি যা তোমার ইন্টারনেট সংযোগকে <strong>এনক্রিপ্টেড টানেল</strong>-এর মাধ্যমে পাঠায়। এতে তোমার ISP, সরকার বা হ্যাকার তোমার traffic দেখতে পায় না এবং তোমার আসল IP address লুকিয়ে থাকে।</span><span class="en-text">VPN (Virtual Private Network) is a technology that routes your internet connection through an <strong>encrypted tunnel</strong>. This means your ISP, government or hackers can't see your traffic, and your real IP address stays hidden.</span></p>
+
+    <div class="analogy">
+      <div class="analogy-title">🚇 <span class="bn-text">সহজ উপমা</span><span class="en-text">Simple Analogy</span></div>
+      <p><span class="bn-text">ভাবো তুমি একটা স্বচ্ছ কাচের রাস্তায় হাঁটছো — সবাই দেখতে পাচ্ছে। VPN হলো সেই রাস্তার নিচে একটা আন্ডারগ্রাউন্ড টানেল তৈরি করা — বাইরে থেকে কেউ দেখতে পাবে না তুমি কোথায় যাচ্ছো এবং কার সাথে কথা বলছো।</span><span class="en-text">Imagine walking on a transparent glass road — everyone can see you. VPN is like building an underground tunnel beneath that road — nobody outside can see where you're going or who you're communicating with.</span></p>
+    </div>
+
+    <h2 class="sec sec-vpn">🔄 <span class="bn-text">VPN কিভাবে কাজ করে?</span><span class="en-text">How Does VPN Work?</span></h2>
+    <div class="diagram">
+<pre><span class="dc">VPN ছাড়া (Without VPN):</span>
+<span class="dy">তোমার PC</span> → <span class="dc">[Plain Text Traffic]</span> → <span class="dr">ISP দেখতে পায়</span> → Internet → <span class="dv">Website</span>
+                                        ↑
+                              <span class="dr">সরকার, হ্যাকার, ISP সব দেখতে পায়</span>
+
+<span class="dc">VPN সহ (With VPN):</span>
+<span class="dg">তোমার PC</span> → <span class="dg">[🔒 Encrypted Tunnel]</span> → <span class="dv">VPN Server</span> → Internet → <span class="dv">Website</span>
+                    ↑                        ↑
+          <span class="dg">ISP শুধু VPN Server    VPN Server তোমার হয়ে</span>
+          <span class="dg">দেখতে পায়            request করে</span>
+
+<span class="dc">Website যা দেখে:</span>
+  Real IP: <span class="dr">X.X.X.X (তোমার)</span>  →  VPN IP: <span class="dg">Y.Y.Y.Y (VPN Server)</span></pre>
+    </div>
+
+    <h2 class="sec sec-vpn">🎯 <span class="bn-text">VPN কেন ব্যবহার করবো?</span><span class="en-text">Why Use a VPN?</span></h2>
+    <div class="grid2">
+      <div class="card vpn-card">
+        <h4>✅ <span class="bn-text">ব্যক্তিগত ব্যবহার</span><span class="en-text">Personal Use</span></h4>
+        <ul>
+          <li><span class="bn-text">Public WiFi-এ নিরাপদ থাকা</span><span class="en-text">Stay safe on public WiFi</span></li>
+          <li><span class="bn-text">ISP থেকে privacy রক্ষা</span><span class="en-text">Privacy from ISP</span></li>
+          <li><span class="bn-text">Geo-restricted content দেখা</span><span class="en-text">Access geo-restricted content</span></li>
+          <li><span class="bn-text">Censored site access</span></li>
+          <li><span class="bn-text">Tracking থেকে সুরক্ষা</span><span class="en-text">Protection from tracking</span></li>
+        </ul>
+      </div>
+      <div class="card vpn-card">
+        <h4>🏢 <span class="bn-text">Business ব্যবহার</span><span class="en-text">Business Use</span></h4>
+        <ul>
+          <li><span class="bn-text">Remote workers-দের office network access</span></li>
+          <li><span class="bn-text">Branch office গুলো connect করা</span><span class="en-text">Connecting branch offices</span></li>
+          <li><span class="bn-text">Sensitive data transfer</span></li>
+          <li><span class="bn-text">Cloud server-এ secure access</span></li>
+          <li><span class="bn-text">Compliance requirements পূরণ</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec sec-vpn">🔐 <span class="bn-text">VPN Encryption কিভাবে কাজ করে?</span><span class="en-text">How VPN Encryption Works?</span></h2>
+    <div class="diagram">
+<pre><span class="dc">Step 1:</span> তোমার PC ও VPN Server-এর মধ্যে <span class="dg">Keys exchange</span> হয়
+         (TLS Handshake / Key Agreement)
+
+<span class="dc">Step 2:</span> তোমার data <span class="dv">Encrypt</span> হয়:
+         <span class="dy">"GET / HTTP/1.1"</span>
+              ↓ AES-256 Encryption
+         <span class="dr">"Xk#9@mP$2nQ!vR5..."</span> ← কেউ পড়তে পারবে না
+
+<span class="dc">Step 3:</span> VPN Server <span class="dv">Decrypt</span> করে website-এ পাঠায়
+
+<span class="dc">Step 4:</span> Response আবার <span class="dg">Encrypt</span> হয়ে তোমার কাছে আসে</pre>
+    </div>
+
+    <div class="summary">
+      <h3 style="color:#74c0fc;">📌 <span class="bn-text">সারসংক্ষেপ</span><span class="en-text">Summary</span></h3>
+      <ul>
+        <li>🔒 <span class="bn-text">VPN = Encrypted Tunnel + IP Masking</span></li>
+        <li>🛡️ <span class="bn-text">ISP, সরকার, হ্যাকার — কেউ দেখতে পায় না</span><span class="en-text">ISP, government, hackers — none can see</span></li>
+        <li>🌐 <span class="bn-text">Geo-blocked content, privacy, remote work</span></li>
+        <li>🔐 <span class="bn-text">AES-256 encryption — সামরিক মানের সুরক্ষা</span><span class="en-text">AES-256 encryption — military-grade protection</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════
+     CH 6: VPN Protocols
+══════════════════════════════ -->
+<div class="chapter ch-vpn2">
+  <div class="chapter-header">
+    <div class="ch-label">CHAPTER 06 — VPN</div>
+    <div class="ch-tag tag-vpn">🔒 VPN</div>
+    <div class="ch-title"><span class="bn-text">VPN Protocols</span><span class="en-text">VPN Protocols</span></div>
+    <div class="ch-desc">OpenVPN · WireGuard · IPSec · L2TP · PPTP</div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-vpn">🔌 <span class="bn-text">VPN Protocol কী?</span><span class="en-text">What is a VPN Protocol?</span></h2>
+    <p><span class="bn-text">VPN Protocol হলো VPN connection তৈরি ও data encrypt করার পদ্ধতি। বিভিন্ন protocol-এর speed, security ও compatibility আলাদা।</span><span class="en-text">A VPN Protocol is the method used to create a VPN connection and encrypt data. Different protocols vary in speed, security and compatibility.</span></p>
+
+    <h2 class="sec sec-vpn">⚡ WireGuard — <span class="bn-text">সবচেয়ে আধুনিক</span><span class="en-text">Most Modern</span></h2>
+    <div class="grid2">
+      <div class="card vpn-card">
+        <h4>✅ <span class="bn-text">সুবিধা</span><span class="en-text">Advantages</span></h4>
+        <ul>
+          <li><span class="bn-text">সবচেয়ে দ্রুত protocol</span><span class="en-text">Fastest protocol</span></li>
+          <li><span class="bn-text">মাত্র ~4000 লাইন কোড — audit সহজ</span></li>
+          <li><span class="bn-text">Modern cryptography (ChaCha20, Curve25519)</span></li>
+          <li><span class="bn-text">Battery সাশ্রয়ী (mobile-এ ভালো)</span></li>
+          <li><span class="bn-text">Setup সহজ</span><span class="en-text">Easy setup</span></li>
+        </ul>
+      </div>
+      <div class="card danger-card">
+        <h4>⚠️ <span class="bn-text">সীমাবদ্ধতা</span><span class="en-text">Limitations</span></h4>
+        <ul>
+          <li>UDP only (TCP fallback নেই)</li>
+          <li><span class="bn-text">By default static IP logging</span></li>
+          <li><span class="bn-text">কিছু restrictive network-এ block হতে পারে</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec sec-vpn">🔓 OpenVPN — <span class="bn-text">সবচেয়ে বিশ্বস্ত</span><span class="en-text">Most Trusted</span></h2>
+    <div class="grid2">
+      <div class="card vpn-card">
+        <h4>✅ <span class="bn-text">সুবিধা</span><span class="en-text">Advantages</span></h4>
+        <ul>
+          <li><span class="bn-text">Open source ও widely audited</span></li>
+          <li>TCP ও UDP উভয় support</li>
+          <li><span class="bn-text">Port 443 দিয়ে চলে (firewall bypass)</span></li>
+          <li><span class="bn-text">Highly configurable</span></li>
+          <li><span class="bn-text">সর্বোচ্চ নিরাপত্তা</span><span class="en-text">Highest security</span></li>
+        </ul>
+      </div>
+      <div class="card danger-card">
+        <h4>⚠️ <span class="bn-text">সীমাবদ্ধতা</span><span class="en-text">Limitations</span></h4>
+        <ul>
+          <li><span class="bn-text">WireGuard-এর চেয়ে ধীর</span><span class="en-text">Slower than WireGuard</span></li>
+          <li><span class="bn-text">Setup জটিল</span><span class="en-text">Complex setup</span></li>
+          <li>~100K লাইন কোড</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec sec-vpn">📊 <span class="bn-text">Protocol তুলনা</span><span class="en-text">Protocol Comparison</span></h2>
+    <table>
+      <thead><tr><th>Protocol</th><th>Speed</th><th>Security</th><th>Port</th><th><span class="bn-text">ব্যবহার</span><span class="en-text">Use For</span></th></tr></thead>
+      <tbody>
+        <tr><td><strong>WireGuard</strong></td><td><span class="badge badge-g">⚡ দ্রুততম</span></td><td><span class="badge badge-g">✅ উচ্চ</span></td><td>UDP 51820</td><td><span class="bn-text">Personal, Mobile</span></td></tr>
+        <tr><td><strong>OpenVPN</strong></td><td><span class="badge badge-b">মাঝারি</span></td><td><span class="badge badge-g">✅ সর্বোচ্চ</span></td><td>443/1194</td><td><span class="bn-text">Business, Security</span></td></tr>
+        <tr><td><strong>IKEv2/IPSec</strong></td><td><span class="badge badge-g">দ্রুত</span></td><td><span class="badge badge-g">✅ উচ্চ</span></td><td>UDP 500</td><td>Mobile, Enterprise</td></tr>
+        <tr><td><strong>L2TP/IPSec</strong></td><td><span class="badge badge-y">মাঝারি</span></td><td><span class="badge badge-b">ঠিক আছে</span></td><td>UDP 1701</td><td>Legacy systems</td></tr>
+        <tr><td><strong>PPTP</strong></td><td><span class="badge badge-g">দ্রুত</span></td><td><span class="badge badge-r">❌ দুর্বল</span></td><td>TCP 1723</td><td><span class="bn-text">ব্যবহার করো না</span><span class="en-text">Avoid</span></td></tr>
+        <tr><td><strong>SSTP</strong></td><td><span class="badge badge-b">মাঝারি</span></td><td><span class="badge badge-g">✅ ভালো</span></td><td>TCP 443</td><td>Windows only</td></tr>
+      </tbody>
+    </table>
+
+    <div class="box box-vpn">
+      <div class="box-t">💡 <span class="bn-text">কোনটা ব্যবহার করবো?</span><span class="en-text">Which One to Use?</span></div>
+      <ul>
+        <li><span class="bn-text">ব্যক্তিগত ব্যবহার → <strong>WireGuard</strong></span><span class="en-text">Personal use → <strong>WireGuard</strong></span></li>
+        <li><span class="bn-text">Business/Security-critical → <strong>OpenVPN</strong></span></li>
+        <li><span class="bn-text">Mobile device → <strong>IKEv2 বা WireGuard</strong></span><span class="en-text">Mobile device → <strong>IKEv2 or WireGuard</strong></span></li>
+        <li><span class="bn-text">PPTP — কখনো ব্যবহার করো না, এটা broken!</span><span class="en-text">PPTP — Never use this, it's broken!</span></li>
+      </ul>
+    </div>
+
+    <div class="summary">
+      <h3 style="color:#74c0fc;">📌 <span class="bn-text">সারসংক্ষেপ</span><span class="en-text">Summary</span></h3>
+      <ul>
+        <li>⚡ <span class="bn-text">WireGuard = দ্রুততম, সবচেয়ে আধুনিক</span><span class="en-text">WireGuard = fastest, most modern</span></li>
+        <li>🔓 <span class="bn-text">OpenVPN = সবচেয়ে বিশ্বস্ত, battle-tested</span><span class="en-text">OpenVPN = most trusted, battle-tested</span></li>
+        <li>❌ <span class="bn-text">PPTP = ভাঙা প্রযুক্তি — ব্যবহার করো না</span><span class="en-text">PPTP = broken technology — avoid</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════
+     CH 7: WireGuard Setup
+══════════════════════════════ -->
+<div class="chapter ch-vpn3">
+  <div class="chapter-header">
+    <div class="ch-label">CHAPTER 07 — VPN</div>
+    <div class="ch-tag tag-vpn">🔒 VPN</div>
+    <div class="ch-title"><span class="bn-text">WireGuard VPN — নিজেই সেটআপ করো</span><span class="en-text">WireGuard VPN — Set It Up Yourself</span></div>
+    <div class="ch-desc"><span class="bn-text">একটি VPS-এ নিজের VPN Server তৈরি করা</span><span class="en-text">Creating your own VPN Server on a VPS</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-vpn">🖥️ <span class="bn-text">Server Setup (Ubuntu 22.04)</span><span class="en-text">Server Setup (Ubuntu 22.04)</span></h2>
+    <div class="code vpn-code"><span class="cc"># WireGuard install করো</span>
+<span class="cp">$</span> sudo apt update
+<span class="cp">$</span> sudo apt install wireguard -y
+
+<span class="cc"># Key pair তৈরি করো</span>
+<span class="cp">$</span> wg genkey | tee /etc/wireguard/server_private.key | \
+    wg pubkey > /etc/wireguard/server_public.key
+
+<span class="cc"># Keys দেখো</span>
+<span class="cp">$</span> cat /etc/wireguard/server_private.key
+<span class="cp">$</span> cat /etc/wireguard/server_public.key
+
+<span class="cc"># IP forwarding enable করো</span>
+<span class="cp">$</span> echo <span class="cs">"net.ipv4.ip_forward=1"</span> >> /etc/sysctl.conf
+<span class="cp">$</span> sysctl -p</div>
+
+    <div class="code vpn-code"><span class="cc"># /etc/wireguard/wg0.conf — Server Configuration</span>
+
+[Interface]
+Address = <span class="cg">10.0.0.1/24</span>           <span class="cc"># Server-এর VPN IP</span>
+ListenPort = <span class="cn">51820</span>               <span class="cc"># WireGuard port</span>
+PrivateKey = <span class="cy">SERVER_PRIVATE_KEY</span>   <span class="cc"># server private key</span>
+
+<span class="cc"># NAT rules — internet routing</span>
+PostUp = iptables -A FORWARD -i wg0 -j ACCEPT; \
+         iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; \
+           iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
+
+<span class="cc"># Client 1 (Peer)</span>
+[Peer]
+PublicKey = <span class="cy">CLIENT1_PUBLIC_KEY</span>    <span class="cc"># client-এর public key</span>
+AllowedIPs = <span class="cg">10.0.0.2/32</span>         <span class="cc"># client-এর VPN IP</span></div>
+
+    <div class="code vpn-code"><span class="cc"># WireGuard start করো</span>
+<span class="cp">$</span> sudo systemctl enable wg-quick@wg0
+<span class="cp">$</span> sudo systemctl start wg-quick@wg0
+<span class="cp">$</span> sudo wg show                      <span class="cc"># status দেখো</span>
+
+<span class="cc"># Firewall — UDP 51820 allow করো</span>
+<span class="cp">$</span> sudo ufw allow <span class="cn">51820</span>/udp</div>
+
+    <h2 class="sec sec-vpn">💻 <span class="bn-text">Client Setup</span><span class="en-text">Client Setup</span></h2>
+    <div class="code vpn-code"><span class="cc"># Client-এও WireGuard install করো</span>
+<span class="cp">$</span> sudo apt install wireguard -y  <span class="cc"># Linux</span>
+<span class="cc"># Windows/Mac/Android/iOS — WireGuard app ডাউনলোড করো</span>
+
+<span class="cc"># Client key pair তৈরি করো</span>
+<span class="cp">$</span> wg genkey | tee client_private.key | wg pubkey > client_public.key</div>
+
+    <div class="code vpn-code"><span class="cc"># client.conf — Client Configuration</span>
+
+[Interface]
+Address = <span class="cg">10.0.0.2/24</span>            <span class="cc"># Client-এর VPN IP</span>
+PrivateKey = <span class="cy">CLIENT_PRIVATE_KEY</span>   <span class="cc"># client private key</span>
+DNS = <span class="cn">1.1.1.1</span>                     <span class="cc"># DNS server</span>
+
+[Peer]
+PublicKey = <span class="cy">SERVER_PUBLIC_KEY</span>     <span class="cc"># server-এর public key</span>
+Endpoint = <span class="cg">YOUR_SERVER_IP:51820</span>  <span class="cc"># server IP ও port</span>
+AllowedIPs = <span class="cg">0.0.0.0/0</span>           <span class="cc"># সব traffic VPN দিয়ে</span>
+PersistentKeepalive = <span class="cn">25</span></div>
+
+    <div class="code vpn-code"><span class="cc"># Connection করো</span>
+<span class="cp">$</span> sudo wg-quick up ./client.conf   <span class="cc"># connect</span>
+<span class="cp">$</span> sudo wg-quick down ./client.conf <span class="cc"># disconnect</span>
+
+<span class="cc"># IP যাচাই করো</span>
+<span class="cp">$</span> curl ifconfig.me                 <span class="cc"># তোমার public IP দেখাবে</span>
+<span class="cc"># এখন server-এর IP দেখানো উচিত</span></div>
+
+    <div class="box box-vpn">
+      <div class="box-t">💡 <span class="bn-text">সহজ বিকল্প</span><span class="en-text">Easy Alternative</span></div>
+      <span class="bn-text">নিজে setup না করতে চাইলে <strong>wg-easy</strong> বা <strong>PiVPN</strong> script ব্যবহার করো — এক command-এ পুরো WireGuard setup হয়ে যায়।</span>
+      <span class="en-text">If you don't want to set it up manually, use <strong>wg-easy</strong> or <strong>PiVPN</strong> scripts — complete WireGuard setup with one command.</span>
+    </div>
+
+    <div class="summary">
+      <h3 style="color:#74c0fc;">📌 <span class="bn-text">সারসংক্ষেপ</span><span class="en-text">Summary</span></h3>
+      <ul>
+        <li>🔑 <span class="bn-text">Key pair তৈরি → wg.conf লেখো → systemctl start</span></li>
+        <li>🖥️ <span class="bn-text">Server: Private key, Client: Public key exchange করো</span></li>
+        <li>🌐 <span class="bn-text">AllowedIPs = 0.0.0.0/0 → সব traffic VPN দিয়ে</span></li>
+        <li>💡 <span class="bn-text">wg-easy / PiVPN = সহজ automated setup</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════
+     CH 8: What is Proxy
+══════════════════════════════ -->
+<div class="chapter ch-prx1">
+  <div class="chapter-header">
+    <div class="ch-label">CHAPTER 08 — PROXY</div>
+    <div class="ch-tag tag-proxy">🌐 Proxy</div>
+    <div class="ch-title"><span class="bn-text">Proxy কী ও কিভাবে কাজ করে</span><span class="en-text">What is a Proxy & How It Works</span></div>
+    <div class="ch-desc"><span class="bn-text">মধ্যস্থতাকারী সার্ভার — তোমার হয়ে কাজ করে</span><span class="en-text">The intermediary server — acts on your behalf</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-proxy">🤔 <span class="bn-text">Proxy কী?</span><span class="en-text">What is a Proxy?</span></h2>
+    <p><span class="bn-text">Proxy Server হলো একটি মধ্যস্থতাকারী সার্ভার যা তোমার এবং ইন্টারনেটের মধ্যে বসে। তুমি সরাসরি website-এ যাওয়ার বদলে proxy-তে যাও, proxy তোমার হয়ে website-এ যায় এবং response এনে তোমাকে দেয়।</span><span class="en-text">A Proxy Server is an intermediary server that sits between you and the internet. Instead of going directly to a website, you go to the proxy, and the proxy visits the website on your behalf and returns the response to you.</span></p>
+
+    <div class="analogy">
+      <div class="analogy-title">🛒 <span class="bn-text">সহজ উপমা</span><span class="en-text">Simple Analogy</span></div>
+      <p><span class="bn-text">ভাবো তুমি একটা দোকানে যেতে চাও কিন্তু তোমার পরিচয় লুকাতে চাও। তাই তুমি একজন দূত পাঠালে — দূত দোকানে গিয়ে জিনিস কিনে তোমার কাছে নিয়ে আসে। দোকান দূতকে চেনে, তোমাকে নয়। Proxy ঠিক এভাবে কাজ করে।</span><span class="en-text">Imagine you want to visit a shop but want to hide your identity. So you send a messenger — the messenger goes to the shop, buys things and brings them to you. The shop knows the messenger, not you. A Proxy works exactly this way.</span></p>
+    </div>
+
+    <h2 class="sec sec-proxy">🔄 <span class="bn-text">কিভাবে কাজ করে?</span><span class="en-text">How It Works</span></h2>
+    <div class="diagram">
+<pre><span class="dc">Proxy ছাড়া:</span>
+<span class="dg">তোমার PC</span> ──────────────────────────→ <span class="dv">Website</span>
+     <span class="dr">IP: 203.0.113.5 দেখায়</span>
+
+<span class="dc">Proxy সহ:</span>
+<span class="dg">তোমার PC</span> ──→ <span class="dp">Proxy Server</span> ──────────→ <span class="dv">Website</span>
+              <span class="dy">IP: 198.51.100.7</span>
+         <span class="dc">(Website Proxy IP দেখে, তোমার IP নয়)</span>
+
+<span class="dv">Website</span> ──→ <span class="dp">Proxy</span> ──→ <span class="dg">তোমার PC</span>
+        <span class="dc">Response ফেরত আসে</span></pre>
+    </div>
+
+    <h2 class="sec sec-proxy">⚖️ VPN vs Proxy — <span class="bn-text">মূল পার্থক্য</span><span class="en-text">Key Differences</span></h2>
+    <table>
+      <thead><tr><th><span class="bn-text">বিষয়</span><span class="en-text">Feature</span></th><th>VPN</th><th>Proxy</th></tr></thead>
+      <tbody>
+        <tr><td>Encryption</td><td><span class="badge badge-g">✅ সম্পূর্ণ</span></td><td><span class="badge badge-r">❌ সাধারণত নেই</span></td></tr>
+        <tr><td>IP Masking</td><td><span class="badge badge-g">✅ হ্যাঁ</span></td><td><span class="badge badge-g">✅ হ্যাঁ</span></td></tr>
+        <tr><td>Speed</td><td><span class="badge badge-y">ধীর (overhead)</span></td><td><span class="badge badge-g">দ্রুত</span></td></tr>
+        <tr><td><span class="bn-text">সব traffic</span><span class="en-text">All traffic</span></td><td><span class="badge badge-g">✅ System-wide</span></td><td><span class="badge badge-r">❌ শুধু configured app</span></td></tr>
+        <tr><td>Setup</td><td><span class="badge badge-y">জটিল</span></td><td><span class="badge badge-g">সহজ</span></td></tr>
+        <tr><td>Cost</td><td><span class="badge badge-y">সাধারণত paid</span></td><td><span class="badge badge-g">অনেক free</span></td></tr>
+        <tr><td>Security</td><td><span class="badge badge-g">উচ্চ</span></td><td><span class="badge badge-y">মাঝারি</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="summary">
+      <h3 style="color:#69db7c;">📌 <span class="bn-text">সারসংক্ষেপ</span><span class="en-text">Summary</span></h3>
+      <ul>
+        <li>🌐 <span class="bn-text">Proxy = মধ্যস্থতাকারী — তোমার হয়ে request করে</span><span class="en-text">Proxy = intermediary — makes requests on your behalf</span></li>
+        <li>🔒 <span class="bn-text">VPN = Encryption + IP masking — বেশি secure</span></li>
+        <li>⚡ <span class="bn-text">Proxy = দ্রুত, কিন্তু encryption নেই</span><span class="en-text">Proxy = fast, but no encryption</span></li>
+        <li>🎯 <span class="bn-text">Proxy শুধু configured app-এ কাজ করে</span><span class="en-text">Proxy only works for configured apps</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════
+     CH 9: Types of Proxy
+══════════════════════════════ -->
+<div class="chapter ch-prx2">
+  <div class="chapter-header">
+    <div class="ch-label">CHAPTER 09 — PROXY</div>
+    <div class="ch-tag tag-proxy">🌐 Proxy</div>
+    <div class="ch-title"><span class="bn-text">Proxy-র প্রকারভেদ</span><span class="en-text">Types of Proxy</span></div>
+    <div class="ch-desc">Forward · Reverse · Transparent · SOCKS5 · HTTP Proxy</div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-proxy">➡️ 1. Forward Proxy</h2>
+    <p><span class="bn-text">সবচেয়ে সাধারণ proxy। Client-এর হয়ে internet-এ যায়। Client-এর IP লুকায়।</span><span class="en-text">The most common proxy. Goes to the internet on behalf of the client. Hides the client's IP.</span></p>
+    <div class="diagram">
+<pre><span class="dg">Client</span> → <span class="dp">Forward Proxy</span> → <span class="dv">Internet</span>
+<span class="dc">ব্যবহার: Corporate filtering, anonymity, geo-bypass</span></pre>
+    </div>
+
+    <h2 class="sec sec-proxy">⬅️ 2. Reverse Proxy</h2>
+    <p><span class="bn-text">Client-এর জন্য নয়, <strong>Server-এর সামনে</strong> থাকে। ইন্টারনেট থেকে আসা request receive করে এবং পেছনের server-এ পাঠায়। Server-এর IP লুকায়।</span><span class="en-text">Not for the client, it sits <strong>in front of the server</strong>. Receives requests from the internet and forwards them to backend servers. Hides the server's IP.</span></p>
+    <div class="diagram">
+<pre><span class="dv">Internet</span> → <span class="dp">Reverse Proxy</span> → <span class="dg">Backend Server(s)</span>
+<span class="dc">ব্যবহার: Load balancing, DDoS protection, SSL termination, caching</span>
+<span class="dc">উদাহরণ: Nginx, Apache, Cloudflare, HAProxy</span></pre>
+    </div>
+
+    <div class="code proxy-code"><span class="cc"># Nginx Reverse Proxy উদাহরণ</span>
+server {
+    listen <span class="cn">80</span>;
+    server_name <span class="cs">example.com</span>;
+
+    location / {
+        proxy_pass <span class="cs">http://127.0.0.1:3000</span>;  <span class="cc"># backend</span>
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}</div>
+
+    <h2 class="sec sec-proxy">👻 3. Transparent Proxy</h2>
+    <p><span class="bn-text">ব্যবহারকারী জানেই না যে proxy ব্যবহার হচ্ছে। ISP এবং corporate network-এ ব্যাপকভাবে ব্যবহার হয় traffic filter করতে এবং cache করতে।</span><span class="en-text">The user doesn't even know a proxy is being used. Widely used by ISPs and corporate networks to filter traffic and for caching.</span></p>
+
+    <h2 class="sec sec-proxy">🧦 4. SOCKS5 Proxy</h2>
+    <p><span class="bn-text">SOCKS5 হলো সবচেয়ে flexible proxy protocol। HTTP-র বাইরেও TCP/UDP যেকোনো traffic handle করতে পারে। Authentication support আছে।</span><span class="en-text">SOCKS5 is the most flexible proxy protocol. Can handle any TCP/UDP traffic beyond just HTTP. Supports authentication.</span></p>
+
+    <div class="code proxy-code"><span class="cc"># SSH দিয়ে SOCKS5 Proxy তৈরি করো</span>
+<span class="cp">$</span> ssh -D <span class="cn">1080</span> -f -C -q -N user@remote_server
+<span class="cc">#        ↑    ↑  ↑  ↑  ↑</span>
+<span class="cc">#   Port  Background  Quiet No-command</span>
+
+<span class="cc"># Browser-এ SOCKS5 proxy: 127.0.0.1:1080</span>
+
+<span class="cc"># curl দিয়ে SOCKS5 ব্যবহার করো</span>
+<span class="cp">$</span> curl --socks5 <span class="cs">127.0.0.1:1080</span> <span class="cs">https://ifconfig.me</span>
+
+<span class="cc"># wget দিয়ে</span>
+<span class="cp">$</span> wget -e <span class="cs">"https_proxy=socks5://127.0.0.1:1080"</span> <span class="cs">https://example.com</span>
+
+<span class="cc"># nmap দিয়ে SOCKS proxy (proxychains)</span>
+<span class="cp">$</span> proxychains nmap -sT target.com</div>
+
+    <h2 class="sec sec-proxy">🔗 ProxyChains — <span class="bn-text">Multiple Proxy Chain করা</span><span class="en-text">Chaining Multiple Proxies</span></h2>
+    <div class="code proxy-code"><span class="cc"># ProxyChains install করো</span>
+<span class="cp">$</span> sudo apt install proxychains4
+
+<span class="cc"># /etc/proxychains4.conf সম্পাদনা করো</span>
+<span class="cc"># শেষে proxy list যোগ করো:</span>
+
+socks5  <span class="cn">127.0.0.1</span> <span class="cn">1080</span>      <span class="cc"># SSH SOCKS5</span>
+http    <span class="cn">proxy1.com</span> <span class="cn">3128</span>    <span class="cc"># HTTP proxy</span>
+
+<span class="cc"># যেকোনো command-এর আগে proxychains দাও</span>
+<span class="cp">$</span> proxychains curl ifconfig.me
+<span class="cp">$</span> proxychains firefox
+<span class="cp">$</span> proxychains nmap -sT 192.168.1.1</div>
+
+    <div class="summary">
+      <h3 style="color:#69db7c;">📌 <span class="bn-text">সারসংক্ষেপ</span><span class="en-text">Summary</span></h3>
+      <ul>
+        <li>➡️ <span class="bn-text">Forward = Client-এর IP লুকায়</span><span class="en-text">Forward = hides client IP</span></li>
+        <li>⬅️ <span class="bn-text">Reverse = Server-এর IP লুকায়, load balancing</span><span class="en-text">Reverse = hides server IP, load balancing</span></li>
+        <li>🧦 <span class="bn-text">SOCKS5 = সবচেয়ে flexible, TCP/UDP সব কাজ করে</span><span class="en-text">SOCKS5 = most flexible, works with all TCP/UDP</span></li>
+        <li>🔗 <span class="bn-text">ProxyChains = একাধিক proxy chain করে anonymity বাড়ায়</span><span class="en-text">ProxyChains = chain multiple proxies for more anonymity</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════
+     CH 10: Squid & Burp Proxy
+══════════════════════════════ -->
+<div class="chapter ch-prx1">
+  <div class="chapter-header">
+    <div class="ch-label">CHAPTER 10 — PROXY</div>
+    <div class="ch-tag tag-proxy">🌐 Proxy</div>
+    <div class="ch-title">Squid Proxy <span class="bn-text">ও</span><span class="en-text">&</span> Burp Suite Proxy</div>
+    <div class="ch-desc"><span class="bn-text">Caching Proxy সার্ভার ও Web Hacking Proxy</span><span class="en-text">Caching Proxy Server & Web Hacking Proxy</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-proxy">🦑 Squid Proxy Server</h2>
+    <p><span class="bn-text">Squid হলো সবচেয়ে জনপ্রিয় open-source Forward Proxy। এটি caching, content filtering এবং access control-এর জন্য ব্যাপকভাবে ব্যবহৃত হয়।</span><span class="en-text">Squid is the most popular open-source Forward Proxy. It's widely used for caching, content filtering and access control.</span></p>
+
+    <div class="code proxy-code"><span class="cc"># Squid install করো</span>
+<span class="cp">$</span> sudo apt install squid -y
+
+<span class="cc"># Config ফাইল: /etc/squid/squid.conf</span>
+
+<span class="cc"># ══ Basic Configuration ══</span>
+<span class="cc"># Port সেট করো</span>
+http_port <span class="cn">3128</span>
+
+<span class="cc"># নেটওয়ার্ক access দাও</span>
+acl localnet src <span class="cg">192.168.1.0/24</span>
+http_access allow localnet
+http_access deny all
+
+<span class="cc"># নির্দিষ্ট site block করো</span>
+acl blocked_sites dstdomain <span class="cr">"/etc/squid/blocked.txt"</span>
+http_access deny blocked_sites
+
+<span class="cc"># blocked.txt-এ site list:</span>
+<span class="cc"># .facebook.com</span>
+<span class="cc"># .youtube.com</span>
+<span class="cc"># .tiktok.com</span>
+
+<span class="cc"># Squid restart করো</span>
+<span class="cp">$</span> sudo systemctl restart squid
+<span class="cp">$</span> sudo systemctl status squid</div>
+
+    <h2 class="sec sec-proxy">🦆 Burp Suite Proxy — <span class="bn-text">Web Hacking-এর অস্ত্র</span><span class="en-text">Web Hacking's Weapon</span></h2>
+    <p><span class="bn-text">Burp Suite Proxy হলো একটি intercepting proxy যা Browser এবং Server-এর মধ্যে বসে HTTP/HTTPS traffic দেখে ও modify করে। Web security testing-এর জন্য অপরিহার্য।</span><span class="en-text">Burp Suite Proxy is an intercepting proxy that sits between the browser and server to view and modify HTTP/HTTPS traffic. Essential for web security testing.</span></p>
+
+    <div class="diagram">
+<pre><span class="dg">Browser</span> ←→ <span class="dp">Burp Proxy (127.0.0.1:8080)</span> ←→ <span class="dv">Web Server</span>
+              ↑
+     <span class="dy">তুমি এখানে traffic দেখো ও বদলাও</span></pre>
+    </div>
+
+    <div class="code proxy-code"><span class="cc"># Burp Suite Proxy Setup</span>
+<span class="cc"># 1. Burp Suite চালু করো</span>
+<span class="cc"># 2. Proxy → Options → 127.0.0.1:8080</span>
+<span class="cc"># 3. Browser-এ FoxyProxy install করো</span>
+<span class="cc"># 4. http://burpsuite → CA Certificate download করো</span>
+<span class="cc"># 5. Browser-এ certificate install করো</span>
+
+<span class="cc"># Intercept ON করো → Proxy → Intercept → ON</span>
+
+<span class="cc"># curl দিয়ে Burp Proxy ব্যবহার করো</span>
+<span class="cp">$</span> curl --proxy <span class="cs">http://127.0.0.1:8080</span> <span class="cs">https://target.com</span> -k
+
+<span class="cc"># Python দিয়ে</span>
+import requests
+proxies = {<span class="cs">'http'</span>: <span class="cs">'http://127.0.0.1:8080'</span>, 
+           <span class="cs">'https'</span>: <span class="cs">'http://127.0.0.1:8080'</span>}
+response = requests.get(<span class="cs">'https://target.com'</span>, proxies=proxies, verify=<span class="ck">False</span>)</div>
+
+    <div class="summary">
+      <h3 style="color:#69db7c;">📌 <span class="bn-text">সারসংক্ষেপ</span><span class="en-text">Summary</span></h3>
+      <ul>
+        <li>🦑 <span class="bn-text">Squid = Caching + Content Filtering proxy</span></li>
+        <li>🚫 <span class="bn-text">Squid দিয়ে website block করা সহজ</span><span class="en-text">Easy to block websites with Squid</span></li>
+        <li>🦆 <span class="bn-text">Burp Proxy = HTTP traffic intercept ও modify করার tool</span></li>
+        <li>🔒 <span class="bn-text">Burp = Web security testing-এর অপরিহার্য tool</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════
+     CH 11: Firewall Bypass
+══════════════════════════════ -->
+<div class="chapter ch-adv1">
+  <div class="chapter-header">
+    <div class="ch-label">CHAPTER 11 — ADVANCED</div>
+    <div class="ch-tag tag-adv">🚀 Advanced</div>
+    <div class="ch-title"><span class="bn-text">Firewall Bypass কৌশল</span><span class="en-text">Firewall Bypass Techniques</span></div>
+    <div class="ch-desc"><span class="bn-text">Attacker কিভাবে Firewall ফাঁকি দেয় ও Defender কিভাবে ঠেকায়</span><span class="en-text">How attackers bypass firewalls & how defenders prevent it</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <div class="box box-warn"><div class="box-t">⚠️</div><span class="bn-text">এই chapter সম্পূর্ণ শিক্ষামূলক। Defender হিসেবে threats জানা জরুরি। Authorized system ছাড়া ব্যবহার আইনত অপরাধ।</span><span class="en-text">This chapter is entirely educational. As a defender it's important to know threats. Use without authorization is illegal.</span></div>
+
+    <h2 class="sec sec-adv">🔍 1. Port Scanning ও Firewall Detection</h2>
+    <div class="code adv-code"><span class="cc"># Nmap দিয়ে firewall detect করা</span>
+<span class="cp">$</span> nmap -sA target.com    <span class="cc"># ACK scan — firewall আছে কিনা</span>
+<span class="cp">$</span> nmap -sF target.com    <span class="cc"># FIN scan</span>
+<span class="cp">$</span> nmap -sX target.com    <span class="cc"># Xmas scan</span>
+
+<span class="cc"># Fragmented packet — deep inspection ফাঁকি দেওয়া</span>
+<span class="cp">$</span> nmap -f target.com     <span class="cc"># 8-byte fragments</span>
+<span class="cp">$</span> nmap -f -f target.com  <span class="cc"># 16-byte fragments</span>
+
+<span class="cc"># Decoy scan — IP লুকানো</span>
+<span class="cp">$</span> nmap -D RND:<span class="cn">10</span> target.com  <span class="cc"># 10টি random decoy</span></div>
+
+    <h2 class="sec sec-adv">🚇 2. Tunneling — Firewall-এর ভেতর দিয়ে</h2>
+    <div class="code adv-code"><span class="cc"># DNS Tunneling — DNS packet-এ data লুকানো</span>
+<span class="cc"># iodine tool ব্যবহার করে</span>
+<span class="cp">$</span> iodine -f -P password dns.example.com  <span class="cc"># client</span>
+
+<span class="cc"># HTTP Tunneling — HTTP-র ভেতরে অন্য protocol</span>
+<span class="cc"># ICMP Tunneling — ping packet-এ data</span>
+<span class="cp">$</span> ptunnel-ng   <span class="cc"># ICMP tunnel</span>
+
+<span class="cc"># SSH Tunneling — সবচেয়ে সাধারণ</span>
+<span class="cp">$</span> ssh -L <span class="cn">8080</span>:blocked-site.com:<span class="cn">80</span> user@allowed-server.com
+<span class="cc"># Local port 8080 → blocked-site.com:80 দিয়ে SSH</span></div>
+
+    <h2 class="sec sec-adv">🔧 3. Port Knocking</h2>
+    <p><span class="bn-text">Port Knocking হলো একটি নিরাপত্তা কৌশল যেখানে নির্দিষ্ট port-গুলোতে নির্দিষ্ট ক্রমে "knock" করলে তবেই firewall port খোলে।</span><span class="en-text">Port Knocking is a security technique where ports only open after "knocking" on specific ports in a specific sequence.</span></p>
+    <div class="code adv-code"><span class="cc"># /etc/knockd.conf উদাহরণ</span>
+[openSSH]
+  sequence    = <span class="cn">7000,8000,9000</span>   <span class="cc"># এই ক্রমে knock করো</span>
+  seq_timeout = <span class="cn">15</span>
+  command     = /sbin/iptables -A INPUT -s %IP% -p tcp --dport <span class="cn">22</span> -j ACCEPT
+  tcpflags    = syn
+
+[closeSSH]
+  sequence    = <span class="cn">9000,8000,7000</span>
+  command     = /sbin/iptables -D INPUT -s %IP% -p tcp --dport <span class="cn">22</span> -j ACCEPT
+
+<span class="cc"># Client থেকে knock করো</span>
+<span class="cp">$</span> knock server_ip <span class="cn">7000</span> <span class="cn">8000</span> <span class="cn">9000</span>   <span class="cc"># open</span>
+<span class="cp">$</span> ssh user@server_ip                <span class="cc"># এখন SSH হবে</span>
+<span class="cp">$</span> knock server_ip <span class="cn">9000</span> <span class="cn">8000</span> <span class="cn">7000</span>   <span class="cc"># close</span></div>
+
+    <div class="summary">
+      <h3 style="color:#d8b4fe;">📌 <span class="bn-text">সারসংক্ষেপ</span><span class="en-text">Summary</span></h3>
+      <ul>
+        <li>🔍 <span class="bn-text">ACK/FIN scan দিয়ে firewall detect করা যায়</span><span class="en-text">ACK/FIN scan can detect firewalls</span></li>
+        <li>🚇 <span class="bn-text">DNS/ICMP/SSH tunneling দিয়ে bypass সম্ভব</span><span class="en-text">DNS/ICMP/SSH tunneling can bypass firewalls</span></li>
+        <li>🔧 <span class="bn-text">Port Knocking = secret sequence দিয়ে port খোলা</span><span class="en-text">Port Knocking = opening ports with secret sequence</span></li>
+        <li>🛡️ <span class="bn-text">Defense: Deep Packet Inspection, Anomaly Detection</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════
+     CH 12: VPN vs Proxy vs Tor
+══════════════════════════════ -->
+<div class="chapter ch-adv2">
+  <div class="chapter-header">
+    <div class="ch-label">CHAPTER 12 — ADVANCED</div>
+    <div class="ch-tag tag-adv">🚀 Advanced</div>
+    <div class="ch-title">VPN vs Proxy vs Tor — <span class="bn-text">কোনটা কখন?</span><span class="en-text">When to Use What?</span></div>
+    <div class="ch-desc"><span class="bn-text">তিনটি প্রযুক্তির বিস্তারিত তুলনা</span><span class="en-text">Detailed comparison of three technologies</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-gen">🧅 Tor — <span class="bn-text">Onion Routing</span><span class="en-text">Onion Routing</span></h2>
+    <p><span class="bn-text">Tor (The Onion Router) হলো একটি anonymity network যেখানে traffic একাধিক server (node) এর মধ্য দিয়ে যায়, প্রতিটিতে একটি layer of encryption যোগ হয়। পেঁয়াজের মতো layer-by-layer।</span><span class="en-text">Tor (The Onion Router) is an anonymity network where traffic passes through multiple servers (nodes), with a layer of encryption added at each. Layer by layer like an onion.</span></p>
+    <div class="diagram">
+<pre><span class="dg">তোমার PC</span> → <span class="dm">[Entry Node]</span> → <span class="dv">[Middle Node]</span> → <span class="dy">[Exit Node]</span> → <span class="dv">Website</span>
+              <span class="dc">শুধু তোমার IP     শুধু Entry IP    শুধু Middle IP</span>
+              <span class="dc">জানে                জানে              জানে</span>
+
+<span class="dc">কোনো single node সম্পূর্ণ path জানে না</span></pre>
+    </div>
+
+    <h2 class="sec sec-gen">📊 <span class="bn-text">তুলনামূলক চার্ট</span><span class="en-text">Comparison Chart</span></h2>
+    <table class="vs-table">
+      <thead>
+        <tr>
+          <th><span class="bn-text">বিষয়</span><span class="en-text">Feature</span></th>
+          <th>VPN</th>
+          <th>Proxy</th>
+          <th>Tor</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Encryption</td><td><span class="badge badge-g">✅ Strong</span></td><td><span class="badge badge-r">❌ Usually None</span></td><td><span class="badge badge-g">✅ Multi-layer</span></td></tr>
+        <tr><td>IP Masking</td><td><span class="badge badge-g">✅ হ্যাঁ</span></td><td><span class="badge badge-g">✅ হ্যাঁ</span></td><td><span class="badge badge-g">✅ উচ্চতর</span></td></tr>
+        <tr><td>Speed</td><td><span class="badge badge-b">মাঝারি</span></td><td><span class="badge badge-g">দ্রুত</span></td><td><span class="badge badge-r">অনেক ধীর</span></td></tr>
+        <tr><td>Anonymity</td><td><span class="badge badge-b">ভালো</span></td><td><span class="badge badge-y">কম</span></td><td><span class="badge badge-g">সর্বোচ্চ</span></td></tr>
+        <tr><td>Cost</td><td><span class="badge badge-y">Paid সাধারণত</span></td><td><span class="badge badge-g">Free অনেক</span></td><td><span class="badge badge-g">Free</span></td></tr>
+        <tr><td>Trust</td><td><span class="badge badge-y">VPN Provider</span></td><td><span class="badge badge-r">Proxy Provider</span></td><td><span class="badge badge-g">Distributed</span></td></tr>
+        <tr><td>Use Case</td><td><span class="bn-text">Privacy, Streaming</span></td><td><span class="bn-text">Bypassing, Caching</span></td><td><span class="bn-text">Max Anonymity</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec sec-gen">🎯 <span class="bn-text">কোনটা কখন ব্যবহার করবো?</span><span class="en-text">When to Use What?</span></h2>
+    <div class="grid3">
+      <div class="card vpn-card">
+        <h4>🔒 VPN ব্যবহার করো যখন:</h4>
+        <ul style="font-size:13px;">
+          <li>Public WiFi-এ নিরাপত্তা</li>
+          <li>Streaming (Netflix, etc.)</li>
+          <li>Remote work</li>
+          <li>General privacy</li>
+          <li>Speed দরকার</li>
+        </ul>
+      </div>
+      <div class="card proxy-card">
+        <h4>🌐 Proxy ব্যবহার করো যখন:</h4>
+        <ul style="font-size:13px;">
+          <li>Web scraping</li>
+          <li>Geo-bypass (specific site)</li>
+          <li>Content filtering</li>
+          <li>Load balancing (Reverse)</li>
+          <li>Caching দরকার</li>
+        </ul>
+      </div>
+      <div class="card adv-card">
+        <h4>🧅 Tor ব্যবহার করো যখন:</h4>
+        <ul style="font-size:13px;">
+          <li>সর্বোচ্চ anonymity</li>
+          <li>Journalism/Whistleblowing</li>
+          <li>Government surveillance</li>
+          <li>Dark web access</li>
+          <li>Speed সমস্যা নয়</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="box box-tip">
+      <div class="box-t">🔐 <span class="bn-text">VPN + Tor = সর্বোচ্চ সুরক্ষা</span><span class="en-text">VPN + Tor = Maximum Protection</span></div>
+      <span class="bn-text">VPN চালু থাকা অবস্থায় Tor ব্যবহার করলে (<strong>Tor over VPN</strong>) ISP দেখতে পায় না তুমি Tor ব্যবহার করছো এবং Exit Node তোমার VPN IP দেখে, আসল IP নয়।</span>
+      <span class="en-text">Using Tor while VPN is active (<strong>Tor over VPN</strong>) means your ISP can't see you're using Tor, and the Exit Node sees your VPN IP, not your real IP.</span>
+    </div>
+
+    <div class="summary">
+      <h3 style="color:#d8b4fe;">📌 <span class="bn-text">সারসংক্ষেপ</span><span class="en-text">Summary</span></h3>
+      <ul>
+        <li>🔒 <span class="bn-text">VPN = ভালো balance — speed + privacy</span></li>
+        <li>🌐 <span class="bn-text">Proxy = দ্রুত কিন্তু কম নিরাপদ</span><span class="en-text">Proxy = fast but less secure</span></li>
+        <li>🧅 <span class="bn-text">Tor = সর্বোচ্চ anonymity কিন্তু ধীর</span><span class="en-text">Tor = maximum anonymity but slow</span></li>
+        <li>🔐 <span class="bn-text">Tor over VPN = সর্বোচ্চ সুরক্ষা</span><span class="en-text">Tor over VPN = maximum protection</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════
+     CH 13: Real-World Scenarios
+══════════════════════════════ -->
+<div class="chapter ch-adv1">
+  <div class="chapter-header">
+    <div class="ch-label">CHAPTER 13 — ADVANCED</div>
+    <div class="ch-tag tag-adv">🚀 Advanced</div>
+    <div class="ch-title"><span class="bn-text">Real-World Scenarios</span><span class="en-text">Real-World Scenarios</span></div>
+    <div class="ch-desc"><span class="bn-text">বাস্তব জীবনের সমস্যা ও সমাধান</span><span class="en-text">Real-life problems and solutions</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-adv">🏢 Scenario 1: <span class="bn-text">Corporate Network Setup</span></h2>
+    <div class="diagram">
+<pre><span class="dc">একটা company-র নেটওয়ার্ক কাঠামো:</span>
+
+Internet ←→ <span class="df">Router</span> ←→ <span class="df">Firewall (NGFW)</span>
+                              ↓
+                    ┌─────────┴─────────┐
+                    ↓                   ↓
+            <span class="dg">DMZ Zone</span>          <span class="dv">Internal LAN</span>
+           <span class="dg">Web Server</span>         <span class="dv">Workstations</span>
+           <span class="dg">Mail Server</span>        <span class="dv">File Server</span>
+                              <span class="dv">Database Server</span>
+
+<span class="dp">VPN Server</span> ←→ Firewall
+  ↑
+<span class="dg">Remote Workers</span> (WireGuard/OpenVPN)</pre>
+    </div>
+
+    <h2 class="sec sec-adv">🏠 Scenario 2: <span class="bn-text">Home Network Security</span></h2>
+    <div class="code adv-code"><span class="cc"># Home router-এ UFW setup (Raspberry Pi / Ubuntu Server)</span>
+
+<span class="cc"># ১. Default deny</span>
+<span class="cp">$</span> sudo ufw default deny incoming
+<span class="cp">$</span> sudo ufw default allow outgoing
+
+<span class="cc"># ২. Router/SSH access শুধু local network থেকে</span>
+<span class="cp">$</span> sudo ufw allow from <span class="cg">192.168.1.0/24</span> to any port <span class="cn">22</span>
+
+<span class="cc"># ৩. Pi-hole (DNS sinkhole) allow করো</span>
+<span class="cp">$</span> sudo ufw allow <span class="cn">53</span>/tcp
+<span class="cp">$</span> sudo ufw allow <span class="cn">53</span>/udp
+
+<span class="cc"># ৪. WireGuard VPN</span>
+<span class="cp">$</span> sudo ufw allow <span class="cn">51820</span>/udp
+
+<span class="cc"># ৫. Enable করো</span>
+<span class="cp">$</span> sudo ufw enable</div>
+
+    <h2 class="sec sec-adv">☁️ Scenario 3: <span class="bn-text">Cloud Server (VPS) Hardening</span></h2>
+    <div class="code adv-code"><span class="cc"># একটা production VPS-এর security setup</span>
+
+<span class="cc"># ১. SSH port বদলাও (22 থেকে custom port)</span>
+<span class="cc"># /etc/ssh/sshd_config:</span>
+Port <span class="cn">2222</span>
+PermitRootLogin no
+PasswordAuthentication no
+
+<span class="cc"># ২. UFW rules</span>
+<span class="cp">$</span> sudo ufw allow <span class="cn">2222</span>/tcp   <span class="cc"># SSH custom port</span>
+<span class="cp">$</span> sudo ufw allow <span class="cn">80</span>/tcp     <span class="cc"># HTTP</span>
+<span class="cp">$</span> sudo ufw allow <span class="cn">443</span>/tcp    <span class="cc"># HTTPS</span>
+<span class="cp">$</span> sudo ufw default deny incoming
+<span class="cp">$</span> sudo ufw enable
+
+<span class="cc"># ৩. Fail2ban install করো (brute force protection)</span>
+<span class="cp">$</span> sudo apt install fail2ban
+<span class="cc"># /etc/fail2ban/jail.conf:</span>
+[sshd]
+enabled = <span class="ck">true</span>
+port = <span class="cn">2222</span>
+maxretry = <span class="cn">3</span>
+bantime = <span class="cn">3600</span>  <span class="cc"># ১ ঘন্টা ban</span>
+
+<span class="cc"># ৪. WireGuard VPN-এর মাধ্যমে access</span>
+<span class="cc"># Public internet-এ শুধু VPN port expose করো</span>
+<span class="cp">$</span> sudo ufw allow <span class="cn">51820</span>/udp</div>
+
+    <div class="summary">
+      <h3 style="color:#d8b4fe;">📌 <span class="bn-text">সারসংক্ষেপ</span><span class="en-text">Summary</span></h3>
+      <ul>
+        <li>🏢 <span class="bn-text">Corporate: NGFW + DMZ + VPN = standard setup</span></li>
+        <li>🏠 <span class="bn-text">Home: UFW + Pi-hole + WireGuard = solid defense</span></li>
+        <li>☁️ <span class="bn-text">VPS: Custom SSH port + UFW + Fail2ban = hardened server</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════
+     CH 14: Cheat Sheet & Roadmap
+══════════════════════════════ -->
+<div class="chapter ch-adv2">
+  <div class="chapter-header">
+    <div class="ch-label">CHAPTER 14 — CHEAT SHEET</div>
+    <div class="ch-tag tag-adv">🚀 Reference</div>
+    <div class="ch-title"><span class="bn-text">Cheat Sheet ও Roadmap</span><span class="en-text">Cheat Sheet & Roadmap</span></div>
+    <div class="ch-desc"><span class="bn-text">সব গুরুত্বপূর্ণ command এক জায়গায়</span><span class="en-text">All important commands in one place</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec sec-fire">🔥 Firewall Quick Reference</h2>
+    <div class="code fire-code"><span class="cc">## iptables Cheat Sheet ##</span>
+
+<span class="cc"># দেখা</span>
+iptables -L -n -v --line-numbers
+iptables -L INPUT -n
+
+<span class="cc"># Allow</span>
+iptables -A INPUT -p tcp --dport <span class="cn">22</span> -j ACCEPT
+iptables -A INPUT -s <span class="cg">192.168.1.0/24</span> -j ACCEPT
+iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+<span class="cc"># Block</span>
+iptables -A INPUT -s <span class="cr">10.0.0.1</span> -j DROP
+iptables -A INPUT -p tcp --dport <span class="cn">23</span> -j DROP
+
+<span class="cc"># Delete</span>
+iptables -D INPUT <span class="cn">3</span>            <span class="cc"># line 3 মুছো</span>
+iptables -F                    <span class="cc"># সব flush</span>
+
+<span class="cc"># Default Policy</span>
+iptables -P INPUT DROP
+iptables -P OUTPUT ACCEPT
+
+<span class="cc"># Save/Restore</span>
+iptables-save > /etc/iptables/rules.v4
+iptables-restore < /etc/iptables/rules.v4</div>
+
+    <div class="code fire-code"><span class="cc">## UFW Cheat Sheet ##</span>
+
+ufw enable / disable / reset / status verbose
+ufw default deny incoming
+ufw allow ssh / http / https
+ufw allow <span class="cn">8080</span>/tcp
+ufw deny <span class="cn">3306</span>
+ufw allow from <span class="cg">192.168.1.0/24</span> to any port <span class="cn">22</span>
+ufw delete <span class="cn">3</span>
+ufw status numbered</div>
+
+    <h2 class="sec sec-vpn">🔒 VPN Quick Reference</h2>
+    <div class="code vpn-code"><span class="cc">## WireGuard Cheat Sheet ##</span>
+
+<span class="cc"># Keys</span>
+wg genkey | tee private.key | wg pubkey > public.key
+
+<span class="cc"># Interface</span>
+wg-quick up wg0         <span class="cc"># start</span>
+wg-quick down wg0       <span class="cc"># stop</span>
+wg show                 <span class="cc"># status</span>
+
+<span class="cc"># Systemd</span>
+systemctl enable wg-quick@wg0
+systemctl start wg-quick@wg0
+systemctl status wg-quick@wg0
+
+<span class="cc"># Test</span>
+curl ifconfig.me        <span class="cc"># IP check</span></div>
+
+    <h2 class="sec sec-proxy">🌐 Proxy Quick Reference</h2>
+    <div class="code proxy-code"><span class="cc">## Proxy Cheat Sheet ##</span>
+
+<span class="cc"># SSH SOCKS5 Proxy</span>
+ssh -D <span class="cn">1080</span> -fCqN user@server
+
+<span class="cc"># curl দিয়ে proxy ব্যবহার</span>
+curl --proxy http://<span class="cg">proxy:port</span> url
+curl --socks5 <span class="cg">127.0.0.1:1080</span> url
+
+<span class="cc"># wget দিয়ে</span>
+export http_proxy=http://<span class="cg">proxy:port</span>
+export https_proxy=http://<span class="cg">proxy:port</span>
+
+<span class="cc"># ProxyChains</span>
+proxychains curl ifconfig.me
+proxychains nmap -sT target
+
+<span class="cc"># Python requests</span>
+proxies = {<span class="cs">'http'</span>: <span class="cs">'http://127.0.0.1:8080'</span>}
+requests.get(url, proxies=proxies)</div>
+
+    <h2 class="sec sec-gen">🗺️ <span class="bn-text">Learning Roadmap</span><span class="en-text">Learning Roadmap</span></h2>
+    <table>
+      <thead><tr><th><span class="bn-text">ধাপ</span><span class="en-text">Step</span></th><th><span class="bn-text">বিষয়</span><span class="en-text">Topic</span></th><th>Tools</th><th><span class="bn-text">সময়</span><span class="en-text">Time</span></th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-g">১</span></td><td><span class="bn-text">Networking Basics (OSI, TCP/IP, Ports)</span></td><td>Wireshark</td><td>১ সপ্তাহ</td></tr>
+        <tr><td><span class="badge badge-g">২</span></td><td>UFW দিয়ে Basic Firewall</td><td>UFW, Ubuntu VM</td><td>৩ দিন</td></tr>
+        <tr><td><span class="badge badge-b">৩</span></td><td>iptables গভীরভাবে</td><td>iptables, Linux</td><td>১ সপ্তাহ</td></tr>
+        <tr><td><span class="badge badge-b">৪</span></td><td>WireGuard VPN Setup</td><td>WireGuard, VPS</td><td>১ সপ্তাহ</td></tr>
+        <tr><td><span class="badge badge-y">৫</span></td><td>Proxy Types ও ProxyChains</td><td>Squid, ProxyChains</td><td>৫ দিন</td></tr>
+        <tr><td><span class="badge badge-y">৬</span></td><td>Burp Suite Proxy</td><td>Burp Suite</td><td>১ সপ্তাহ</td></tr>
+        <tr><td><span class="badge badge-p">৭</span></td><td>NGFW ও Enterprise Solutions</td><td>pfSense, OPNsense</td><td>২ সপ্তাহ</td></tr>
+        <tr><td><span class="badge badge-p">৮</span></td><td>OpenVPN Server Setup</td><td>OpenVPN, Easy-RSA</td><td>১ সপ্তাহ</td></tr>
+      </tbody>
+    </table>
+
+    <div class="box box-tip">
+      <div class="box-t">💡 <span class="bn-text">Practice Environment</span></div>
+      <ul>
+        <li><strong>VirtualBox / VMware</strong> — <span class="bn-text">নিজের lab তৈরি করো</span><span class="en-text">Create your own lab</span></li>
+        <li><strong>TryHackMe</strong> — Networking, Firewall rooms</li>
+        <li><strong>Oracle Cloud Free Tier</strong> — <span class="bn-text">Free VPS পাও WireGuard-এর জন্য</span><span class="en-text">Get free VPS for WireGuard</span></li>
+        <li><strong>pfSense</strong> — <span class="bn-text">VM-এ ইনস্টল করে NGFW শেখো</span><span class="en-text">Install in VM to learn NGFW</span></li>
+      </ul>
+    </div>
+
+    <div style="text-align:center; margin-top:40px; padding:28px; background: var(--ink); border-radius:10px; color:rgba(255,255,255,0.7);">
+      <p style="font-size:18px; margin-bottom:10px;">
+        <span style="color:var(--fire2);">🔥</span>
+        <span style="color:#74c0fc;"> "Security is not a product, it's a process." </span>
+        <span style="color:var(--proxy2);">🌐</span>
+      </p>
+      <p><span class="bn-text">প্রতিটি command নিজে চালাও — শুধু পড়লে শেখা হয় না।</span><span class="en-text">Run every command yourself — just reading isn't enough.</span></p>
+      <p style="margin-top:10px; font-size:12px; color:rgba(255,255,255,0.3);">Firewall · VPN · Proxy Guide — v1.0 | 14 Chapters | Zero to Advanced</p>
+    </div>
+
+  </div>
+</div>
+
+<div class="page-footer">
+  <div><span class="bn-text">⚠️ শিক্ষামূলক গাইড — সব কিছু authorized নেটওয়ার্কে প্র্যাকটিস করো</span><span class="en-text">⚠️ Educational guide — practice everything on authorized networks</span></div>
+  <div style="color: var(--fire2); font-weight:600;">Firewall · VPN · Proxy — v1.0</div>
+</div>
+
+</div><!-- /page -->
+
+<script>
+function toggleTheme() {
+  const btn = document.getElementById('themeBtn');
+  document.body.classList.toggle('dark-mode');
+  btn.textContent = document.body.classList.contains('dark-mode') ? '☀️ Light Mode' : '🌙 Dark Mode';
+  localStorage.setItem('fvpTheme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+}
+function toggleLang() {
+  const btn = document.getElementById('langBtn');
+  document.body.classList.toggle('lang-en');
+  btn.textContent = document.body.classList.contains('lang-en') ? '🇧🇩 বাংলা' : '🇬🇧 English';
+  localStorage.setItem('fvpLang', document.body.classList.contains('lang-en') ? 'en' : 'bn');
+}
+window.addEventListener('DOMContentLoaded', () => {
+  if (localStorage.getItem('fvpTheme') === 'dark') {
+    document.body.classList.add('dark-mode');
+    document.getElementById('themeBtn').textContent = '☀️ Light Mode';
+  }
+  if (localStorage.getItem('fvpLang') === 'en') {
+    document.body.classList.add('lang-en');
+    document.getElementById('langBtn').textContent = '🇧🇩 বাংলা';
+  }
+});
+</script>
+</body>
+</html>

