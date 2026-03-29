@@ -61,6 +61,7 @@
 > **Prerequisites:** Networking Fundamentals, Kali Part 1-3, Python basics
 
 - [Webdev Guide](https://saimum10.github.io/Learn-security/webdev_guide/webdev_guide.html) — HTML, CSS, JS basics needed to understand web vulnerabilities
+- [Web Security](https://saimum10.github.io/Learn-security/web_security_guide/web_security_guide.html) - From Basic web security
 - [Web Hacking Bangla](https://saimum10.github.io/Learn-security/web_hacking_bangla/web_hacking_bangla.html) — HTTP, cookies, sessions and common attack surfaces
 - [Web Hacking Owasp Bangla](https://saimum10.github.io/Learn-security/web_hacking_owasp_bangla/web_hacking_owasp_bangla.html) — OWASP Top 10: SQLi, XSS, IDOR, CSRF, SSRF with practical examples
 - [Web Pentest Bangla](https://saimum10.github.io/Learn-security/web_pentest_bangla/web_pentest_bangla.html) — Full web penetration testing methodology, recon to report
@@ -75,6 +76,7 @@
 
 - [Network Scanning Wifi Security](https://saimum10.github.io/Learn-security/network_scanning_wifi_security/network_scanning_wifi_security.html) — Nmap, ARP scan, WEP/WPA attacks
 - [Network Hacking Bangla](https://saimum10.github.io/Learn-security/network_hacking_bangla/network_hacking_bangla.html) — MitM attacks, sniffing, spoofing, pivoting
+- [FIREWALL,VPN,PROXY](https://saimum10.github.io/Learn-security/firewall_vpn_proxy_guide/firewall_vpn_proxy_guide.html)-- vpn , firewall, proxy..
 
 ---
 
@@ -126,6 +128,10 @@
 
 - [Pentest Checklist App](https://saimum10.github.io/Learn-security/pentest_checklist_app/pentest_checklist_app.html) — Interactive checklist to ensure you never miss a step during a real engagement
 
+---
+
+## Git & Github
+- [Github Security](https://saimum10.github.io/Learn-security/git_github_security_bangla/git_github_security_bangla.html)
 ---
 
 <div align="center">
