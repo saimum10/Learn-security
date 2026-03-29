@@ -130,8 +130,10 @@
 
 <div align="center">
 
-**Made with ❤️ by Saimum — For the Bangla Cybersecurity Community**
+**Made with ❤️ by Saimum — For learning cyber security in bangla**
 
 *Learn ethically. Hack responsibly.*
+
+*Stay ethical. Stay safe*
 
 </div>
