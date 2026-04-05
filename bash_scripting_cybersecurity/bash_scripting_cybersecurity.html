@@ -1,0 +1,1697 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bash Scripting for Cyber Security — সম্পূর্ণ গাইড</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&family=Lexend:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f7f0;
+  --surface: #ffffff;
+  --surface2: #eaede3;
+  --border: #d0d8c4;
+  --accent: #4a7c3f;
+  --accent2: #2e6b8a;
+  --accent3: #b33000;
+  --accent4: #8a6e00;
+  --accent5: #6b3a8a;
+  --text: #1c2218;
+  --text-dim: #5a6b50;
+  --text-bright: #0e1408;
+  --code-bg: #1a1e14;
+  --code-text: #d8e0c8;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Hind Siliguri', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.9;
+}
+
+/* ══ BILINGUAL ══ */
+.en-text { display:none; }
+.bn-text { display:inline; }
+body.lang-en .bn-text { display:none; }
+body.lang-en .en-text { display:inline; }
+.en-block { display:none; }
+.bn-block { display:block; }
+body.lang-en .bn-block { display:none; }
+body.lang-en .en-block { display:block; }
+
+/* ══ DARK MODE ══ */
+body.dark-mode {
+  --bg: #0c0f09;
+  --surface: #141810;
+  --surface2: #1c2218;
+  --border: #2a3424;
+  --text: #c8d4b8;
+  --text-dim: #6a7a5a;
+  --text-bright: #e0ecd0;
+  --code-bg: #080a06;
+  --accent: #6aaa5e;
+  --accent2: #4a9ab8;
+  --accent3: #e04a10;
+  --accent4: #c8a000;
+  --accent5: #9a5ab8;
+}
+body.dark-mode .card { background: var(--surface2); }
+body.dark-mode tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+
+/* ══ TOP CONTROLS ══ */
+.top-controls { position:fixed; top:16px; right:16px; display:flex; gap:8px; z-index:9999; }
+.ctrl-btn {
+  padding:8px 16px; border-radius:5px; font-size:12px;
+  font-family:'Lexend',sans-serif; cursor:pointer; font-weight:700;
+  transition:all 0.2s; border:1.5px solid; background:var(--surface); color:var(--text);
+}
+.print-btn { border-color:var(--accent3); color:var(--accent3); }
+.print-btn:hover { background:var(--accent3); color:#fff; }
+.theme-btn { border-color:var(--accent4); color:var(--accent4); }
+.theme-btn:hover { background:var(--accent4); color:#fff; }
+.lang-btn  { border-color:var(--accent2); color:var(--accent2); }
+.lang-btn:hover { background:var(--accent2); color:#fff; }
+
+/* ══ COVER ══ */
+.cover {
+  min-height:100vh;
+  background: linear-gradient(155deg, #0a120a 0%, #0e1a08 40%, #141e10 70%, #080e06 100%);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:80px 40px; page-break-after:always; position:relative; overflow:hidden;
+}
+.cover-lines {
+  position:absolute; inset:0; opacity:0.05;
+  background: repeating-linear-gradient(0deg, transparent, transparent 38px, rgba(74,124,63,1) 38px, rgba(74,124,63,1) 39px);
+}
+.cover-glow { position:absolute; width:500px; height:500px; border-radius:50%; top:50%; left:50%; transform:translate(-50%,-50%); background:radial-gradient(circle, rgba(74,124,63,0.1) 0%, transparent 70%); }
+.cover-icon { font-size:72px; margin-bottom:16px; position:relative; filter:drop-shadow(0 0 25px rgba(106,170,94,0.5)); }
+.cover-eyebrow {
+  font-family:'Fira Code',monospace; font-size:11px; letter-spacing:4px;
+  color:rgba(106,170,94,0.7); text-transform:uppercase; margin-bottom:20px;
+  border:1px solid rgba(106,170,94,0.2); padding:5px 18px; border-radius:3px; position:relative;
+}
+.cover h1 { font-family:'Lexend',sans-serif; font-size:50px; font-weight:800; color:#e0ecd0; line-height:1.05; position:relative; letter-spacing:-1px; margin-bottom:6px; }
+.cover h1 span { color:#6aaa5e; }
+.cover h2 { font-size:20px; font-weight:400; color:rgba(160,190,140,0.45); margin-bottom:28px; position:relative; }
+.cover-bar { width:50px; height:3px; background:var(--accent); margin:0 auto 28px; border-radius:2px; position:relative; }
+.cover-desc { font-size:14.5px; color:rgba(150,185,130,0.55); max-width:620px; line-height:2.1; margin-bottom:34px; position:relative; }
+.cover-term {
+  background:rgba(0,0,0,0.55); border:1px solid rgba(74,124,63,0.25);
+  border-top:3px solid var(--accent); border-radius:6px; padding:18px 26px;
+  font-family:'Fira Code',monospace; font-size:12px; text-align:left;
+  max-width:500px; width:100%; margin-bottom:28px; position:relative;
+}
+.t-bar { display:flex; gap:7px; margin-bottom:12px; }
+.dot { width:10px; height:10px; border-radius:50%; }
+.dot-r{background:#ff5f56;} .dot-y{background:#ffbd2e;} .dot-g{background:#27c93f;}
+.tp { color:#6aaa5e; } .tc { color:#4a9ab8; } .to { color:rgba(180,210,160,0.7); font-size:11.5px; }
+.cover-pills { display:flex; flex-wrap:wrap; gap:7px; justify-content:center; position:relative; }
+.cpill { font-family:'Fira Code',monospace; font-size:11px; padding:4px 12px; border-radius:3px; border:1px solid; }
+.cp-g { color:#6aaa5e; border-color:rgba(106,170,94,0.3); background:rgba(106,170,94,0.07); }
+.cp-b { color:#4a9ab8; border-color:rgba(74,154,184,0.3); background:rgba(74,154,184,0.07); }
+.cp-r { color:#e04a10; border-color:rgba(224,74,16,0.3); background:rgba(224,74,16,0.07); }
+.cp-y { color:#c8a000; border-color:rgba(200,160,0,0.3); background:rgba(200,160,0,0.07); }
+.cp-p { color:#9a5ab8; border-color:rgba(154,90,184,0.3); background:rgba(154,90,184,0.07); }
+
+/* ══ TOC ══ */
+.toc { background:var(--surface); padding:55px 65px; page-break-after:always; border-top:4px solid var(--accent); }
+.toc-h { font-family:'Lexend',sans-serif; font-size:26px; font-weight:800; color:var(--accent); margin-bottom:5px; }
+.toc-sh { font-family:'Fira Code',monospace; font-size:10px; color:var(--text-dim); letter-spacing:3px; text-transform:uppercase; margin-bottom:32px; }
+.toc-row { display:flex; align-items:flex-start; gap:14px; padding:11px 0; border-bottom:1px solid var(--border); transition:padding-left 0.2s; }
+.toc-row:hover { padding-left:6px; }
+.toc-n { font-family:'Fira Code',monospace; font-size:11px; color:var(--accent); min-width:28px; padding-top:2px; }
+.toc-info { flex:1; }
+.toc-name { font-family:'Lexend',sans-serif; font-size:15px; font-weight:700; color:var(--text-bright); }
+.toc-sub { font-size:12px; color:var(--text-dim); margin-top:2px; }
+.toc-tag { font-family:'Fira Code',monospace; font-size:10px; padding:2px 8px; border-radius:3px; white-space:nowrap; align-self:center; border:1px solid; }
+
+/* ══ CHAPTERS ══ */
+.chapter { background:var(--surface); page-break-before:always; }
+.chapter-header { padding:45px 60px; position:relative; overflow:hidden; }
+.ch1  .chapter-header { background:linear-gradient(135deg,#080e06,#0e1a0a); border-top:4px solid #6aaa5e; }
+.ch2  .chapter-header { background:linear-gradient(135deg,#060e12,#0a1a20); border-top:4px solid #4a9ab8; }
+.ch3  .chapter-header { background:linear-gradient(135deg,#120800,#200e00); border-top:4px solid #e04a10; }
+.ch4  .chapter-header { background:linear-gradient(135deg,#120e00,#201800); border-top:4px solid #c8a000; }
+.ch5  .chapter-header { background:linear-gradient(135deg,#0e0818,#1a1028); border-top:4px solid #9a5ab8; }
+.ch6  .chapter-header { background:linear-gradient(135deg,#060e0a,#0a1a10); border-top:4px solid #6aaa5e; }
+.ch7  .chapter-header { background:linear-gradient(135deg,#06100e,#0a1e18); border-top:4px solid #4a9ab8; }
+.ch8  .chapter-header { background:linear-gradient(135deg,#140400,#240800); border-top:4px solid #e04a10; }
+.ch9  .chapter-header { background:linear-gradient(135deg,#100c00,#1c1400); border-top:4px solid #c8a000; }
+.ch10 .chapter-header { background:linear-gradient(135deg,#0c0616,#160a28); border-top:4px solid #9a5ab8; }
+.ch11 .chapter-header { background:linear-gradient(135deg,#060e06,#0a1c0a); border-top:4px solid #6aaa5e; }
+.ch12 .chapter-header { background:linear-gradient(135deg,#080e12,#0e1a20); border-top:4px solid #4a9ab8; }
+
+.chapter-header::after {
+  content:attr(data-num); position:absolute; right:55px; top:50%; transform:translateY(-50%);
+  font-family:'Lexend',sans-serif; font-size:110px; font-weight:800; opacity:0.05; color:white; line-height:1;
+}
+.ch-label { font-family:'Fira Code',monospace; font-size:10px; letter-spacing:4px; color:rgba(255,255,255,0.3); text-transform:uppercase; margin-bottom:10px; }
+.ch-title { font-family:'Lexend',sans-serif; font-size:30px; color:#e0ecd0; font-weight:800; letter-spacing:-0.5px; line-height:1.2; }
+.ch-desc { font-size:13px; color:rgba(170,200,150,0.45); margin-top:8px; }
+.chapter-body { padding:45px 60px; }
+
+/* ══ HEADINGS ══ */
+h2.sec { font-family:'Lexend',sans-serif; font-size:19px; font-weight:800; color:var(--accent); margin:36px 0 14px; padding-left:14px; border-left:3px solid var(--accent); }
+.ch2 h2.sec  { color:var(--accent2); border-left-color:var(--accent2); }
+.ch3 h2.sec  { color:var(--accent3); border-left-color:var(--accent3); }
+.ch4 h2.sec  { color:var(--accent4); border-left-color:var(--accent4); }
+.ch5 h2.sec  { color:var(--accent5); border-left-color:var(--accent5); }
+.ch6 h2.sec  { color:var(--accent);  border-left-color:var(--accent); }
+.ch7 h2.sec  { color:var(--accent2); border-left-color:var(--accent2); }
+.ch8 h2.sec  { color:var(--accent3); border-left-color:var(--accent3); }
+.ch9 h2.sec  { color:var(--accent4); border-left-color:var(--accent4); }
+.ch10 h2.sec { color:var(--accent5); border-left-color:var(--accent5); }
+.ch11 h2.sec { color:var(--accent);  border-left-color:var(--accent); }
+.ch12 h2.sec { color:var(--accent2); border-left-color:var(--accent2); }
+
+h3.sub { font-family:'Lexend',sans-serif; font-size:15px; font-weight:700; color:var(--text-bright); margin:24px 0 10px; padding-bottom:5px; border-bottom:1px solid var(--border); }
+p { margin-bottom:14px; text-align:justify; }
+
+/* ══ CODE ══ */
+.code {
+  background:var(--code-bg); color:var(--code-text);
+  padding:18px 22px; border-radius:6px; font-family:'Fira Code',monospace;
+  font-size:12px; margin:15px 0; line-height:1.85;
+  overflow-x:auto; border:1px solid rgba(255,255,255,0.04);
+  border-left:3px solid var(--accent);
+}
+.ch2 .code { border-left-color:var(--accent2); }
+.ch3 .code { border-left-color:var(--accent3); }
+.ch4 .code { border-left-color:var(--accent4); }
+.ch5 .code { border-left-color:var(--accent5); }
+.ch7 .code { border-left-color:var(--accent2); }
+.ch8 .code { border-left-color:var(--accent3); }
+.ch9 .code { border-left-color:var(--accent4); }
+.ch10 .code{ border-left-color:var(--accent5); }
+.ch12 .code{ border-left-color:var(--accent2); }
+
+.code .c  { color:#4a5a3a; font-style:italic; }
+.code .k  { color:#c8e87a; }
+.code .s  { color:#a8d888; }
+.code .n  { color:#f0c878; }
+.code .f  { color:#78c8e8; }
+.code .g  { color:#6aaa5e; }
+.code .r  { color:#e87878; }
+.code .p  { color:#6aaa5e; }
+.code .b  { color:#78c8e8; }
+.code .v  { color:#d8a878; }
+
+code { background:rgba(0,0,0,0.08); color:var(--accent); padding:2px 7px; border-radius:3px; font-family:'Fira Code',monospace; font-size:12.5px; }
+body.dark-mode code { background:rgba(255,255,255,0.08); }
+
+/* ══ BOXES ══ */
+.box { padding:15px 20px; border-radius:6px; margin:16px 0; border-left:4px solid; }
+.info    { background:rgba(46,107,138,0.07);  border-color:var(--accent2); }
+.warn    { background:rgba(138,110,0,0.07);   border-color:var(--accent4); }
+.danger  { background:rgba(179,48,0,0.07);    border-color:var(--accent3); }
+.success { background:rgba(74,124,63,0.07);   border-color:var(--accent); }
+.purple-box{ background:rgba(107,58,138,0.07);border-color:var(--accent5); }
+.box-t { font-family:'Lexend',sans-serif; font-weight:700; font-size:13px; margin-bottom:7px; }
+.box p,.box li { color:var(--text); }
+
+/* ══ TABLES ══ */
+table { width:100%; border-collapse:collapse; margin:16px 0; font-size:13px; }
+thead tr { background:var(--code-bg); color:#d8e0c8; }
+th { padding:10px 14px; text-align:left; font-weight:700; color:#a8d888; border-bottom:1px solid var(--border); font-family:'Lexend',sans-serif; font-size:12px; }
+td { padding:9px 14px; border-bottom:1px solid var(--border); color:var(--text); }
+tr:nth-child(even) { background:rgba(0,0,0,0.02); }
+tr:hover { background:rgba(74,124,63,0.04); }
+
+/* ══ GRID ══ */
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:16px 0; }
+.grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin:14px 0; }
+.card { background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:16px; }
+.card h4 { font-family:'Lexend',sans-serif; font-size:13px; font-weight:700; margin-bottom:9px; padding-bottom:6px; border-bottom:1px solid var(--border); }
+.card.g-card  { border-color:rgba(74,124,63,0.3);   } .card.g-card h4  { color:var(--accent); }
+.card.b-card  { border-color:rgba(46,107,138,0.3);  } .card.b-card h4  { color:var(--accent2); }
+.card.r-card  { border-color:rgba(179,48,0,0.3);    } .card.r-card h4  { color:var(--accent3); }
+.card.y-card  { border-color:rgba(138,110,0,0.3);   } .card.y-card h4  { color:var(--accent4); }
+.card.p-card  { border-color:rgba(107,58,138,0.3);  } .card.p-card h4  { color:var(--accent5); }
+
+/* ══ BADGE ══ */
+.badge { display:inline-block; padding:2px 8px; border-radius:3px; font-size:11px; font-weight:700; margin:1px; font-family:'Lexend',sans-serif; border:1px solid; }
+.badge-g { background:rgba(74,124,63,0.1);  color:var(--accent);  border-color:rgba(74,124,63,0.25); }
+.badge-b { background:rgba(46,107,138,0.1); color:var(--accent2); border-color:rgba(46,107,138,0.25); }
+.badge-r { background:rgba(179,48,0,0.1);   color:var(--accent3); border-color:rgba(179,48,0,0.25); }
+.badge-y { background:rgba(138,110,0,0.1);  color:var(--accent4); border-color:rgba(138,110,0,0.25); }
+.badge-p { background:rgba(107,58,138,0.1); color:var(--accent5); border-color:rgba(107,58,138,0.25); }
+
+ul,ol { margin:10px 0 10px 22px; line-height:2; }
+li { margin-bottom:2px; }
+
+/* ══ CHEAT SHEET ══ */
+.cheat-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0; }
+.cheat-card { background:var(--surface2); border:1px solid var(--border); border-radius:6px; overflow:hidden; }
+.cheat-head { padding:8px 14px; font-family:'Lexend',sans-serif; font-size:12px; font-weight:800; color:#fff; }
+.cheat-row { display:flex; padding:5px 12px; border-bottom:1px solid var(--border); font-size:11.5px; gap:10px; }
+.cheat-row:last-child { border-bottom:none; }
+.cheat-cmd { font-family:'Fira Code',monospace; color:var(--accent2); min-width:185px; white-space:nowrap; font-size:11px; }
+.cheat-desc { color:var(--text-dim); }
+
+/* ══ SUMMARY ══ */
+.ch-summary { background:var(--code-bg); border-radius:6px; padding:22px 26px; margin-top:38px; border-top:3px solid var(--accent); }
+.ch2  .ch-summary { border-top-color:var(--accent2); }
+.ch3  .ch-summary { border-top-color:var(--accent3); }
+.ch4  .ch-summary { border-top-color:var(--accent4); }
+.ch5  .ch-summary { border-top-color:var(--accent5); }
+.ch-summary h3 { font-family:'Lexend',sans-serif; font-size:14px; font-weight:800; color:#e0ecd0; margin-bottom:12px; }
+.ch-summary li { color:#8aaa7a; }
+
+@media (max-width:768px) {
+  .grid2,.grid3,.cheat-grid { grid-template-columns:1fr; }
+  .chapter-body,.chapter-header { padding:25px 20px; }
+  .toc { padding:30px 20px; }
+}
+@media print {
+  .top-controls { display:none; }
+  .chapter-header { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .code { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+}
+</style>
+</head>
+<body>
+
+<div class="top-controls">
+  <button class="print-btn ctrl-btn" onclick="window.print()">🖨️ PDF</button>
+  <button class="theme-btn ctrl-btn" onclick="toggleTheme()" id="themeBtn">🌙 Dark</button>
+  <button class="lang-btn ctrl-btn" onclick="toggleLang()" id="langBtn">🇬🇧 English</button>
+</div>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-lines"></div>
+  <div class="cover-glow"></div>
+  <div class="cover-icon">🖥️</div>
+  <div class="cover-eyebrow">// Cyber Security Series — Scripting //</div>
+  <h1><span>Bash Scripting</span></h1>
+  <h1 style="font-size:30px;color:rgba(160,195,130,0.4);font-weight:500;margin-top:4px;">
+    <span class="bn-text">Cyber Security-র জন্য সম্পূর্ণ গাইড</span>
+    <span class="en-text">Complete Guide for Cyber Security</span>
+  </h1>
+  <h2><span class="bn-text">Basics থেকে Security Automation পর্যন্ত</span><span class="en-text">From Basics to Security Automation</span></h2>
+  <div class="cover-bar"></div>
+  <p class="cover-desc">
+    <span class="bn-text">Bash কী সেটা না জানলেও সমস্যা নেই — একদম শুরু থেকে variables, loops, functions শিখে নিজের Port Scanner, Log Analyzer, Network Monitor, Vulnerability Checker এবং Security Automation Scripts তৈরি করতে শেখো।</span>
+    <span class="en-text">No worries if you don't know Bash — learn from scratch with variables, loops, and functions, then build your own Port Scanner, Log Analyzer, Network Monitor, Vulnerability Checker, and Security Automation Scripts.</span>
+  </p>
+  <div class="cover-term">
+    <div class="t-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+    <div><span class="tp">root@kali</span>:~# <span class="tc">./network_scanner.sh 192.168.1.0/24</span></div>
+    <div class="to">[+] <span class="bn-text">Scanning network</span><span class="en-text">Scanning network</span>...</div>
+    <div class="to" style="color:#6aaa5e;">[✓] 192.168.1.1   - ALIVE  (Gateway)</div>
+    <div class="to" style="color:#6aaa5e;">[✓] 192.168.1.5   - ALIVE  (Open: 22,80,443)</div>
+    <div class="to" style="color:#e04a10;">[!] 192.168.1.10  - ALIVE  (Open: 23 - Telnet!)</div>
+  </div>
+  <div class="cover-pills">
+    <span class="cpill cp-g">📝 Bash Basics</span>
+    <span class="cpill cp-b">🔄 Loops & Conditions</span>
+    <span class="cpill cp-r">⚙️ Functions</span>
+    <span class="cpill cp-y">📁 File Operations</span>
+    <span class="cpill cp-p">🌐 Network Tools</span>
+    <span class="cpill cp-g">📡 Port Scanner</span>
+    <span class="cpill cp-b">📊 Log Analyzer</span>
+    <span class="cpill cp-r">🔒 Security Scripts</span>
+    <span class="cpill cp-y">🤖 Automation</span>
+    <span class="cpill cp-p">📋 Cheat Sheet</span>
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <div class="toc-h">// <span class="bn-text">বিষয়সূচি</span><span class="en-text">Table of Contents</span> //</div>
+  <div class="toc-sh">Bash Scripting for Cyber Security — Complete Guide</div>
+
+  <div class="toc-row"><span class="toc-n">01</span><div class="toc-info"><div class="toc-name"><span class="bn-text">Bash পরিচিতি ও প্রথম Script</span><span class="en-text">Introduction to Bash & First Script</span></div><div class="toc-sub"><span class="bn-text">Shell কী, Bash কেন, shebang, chmod, execution</span><span class="en-text">What is Shell, why Bash, shebang, chmod, execution</span></div></div><span class="toc-tag badge-g">BASICS</span></div>
+
+  <div class="toc-row"><span class="toc-n">02</span><div class="toc-info"><div class="toc-name"><span class="bn-text">Variables, Input ও String Operations</span><span class="en-text">Variables, Input & String Operations</span></div><div class="toc-sub"><span class="bn-text">Variable declaration, user input, string manipulation, arrays</span><span class="en-text">Variable declaration, user input, string manipulation, arrays</span></div></div><span class="toc-tag badge-b">VARS</span></div>
+
+  <div class="toc-row"><span class="toc-n">03</span><div class="toc-info"><div class="toc-name"><span class="bn-text">Conditions ও Comparisons</span><span class="en-text">Conditions & Comparisons</span></div><div class="toc-sub">if/elif/else, test operators, case statement, logical operators</div></div><span class="toc-tag badge-r">LOGIC</span></div>
+
+  <div class="toc-row"><span class="toc-n">04</span><div class="toc-info"><div class="toc-name"><span class="bn-text">Loops — for, while, until</span><span class="en-text">Loops — for, while, until</span></div><div class="toc-sub"><span class="bn-text">IP range loop, wordlist iteration, break/continue</span><span class="en-text">IP range loop, wordlist iteration, break/continue</span></div></div><span class="toc-tag badge-y">LOOPS</span></div>
+
+  <div class="toc-row"><span class="toc-n">05</span><div class="toc-info"><div class="toc-name"><span class="bn-text">Functions ও Script Structure</span><span class="en-text">Functions & Script Structure</span></div><div class="toc-sub"><span class="bn-text">Function তৈরি, arguments, return values, modular scripting</span><span class="en-text">Creating functions, arguments, return values, modular scripting</span></div></div><span class="toc-tag badge-p">FUNC</span></div>
+
+  <div class="toc-row"><span class="toc-n">06</span><div class="toc-info"><div class="toc-name"><span class="bn-text">File Operations ও Text Processing</span><span class="en-text">File Operations & Text Processing</span></div><div class="toc-sub">grep, awk, sed, cut, sort, uniq — <span class="bn-text">Security-তে অপরিহার্য</span><span class="en-text">essential for Security</span></div></div><span class="toc-tag badge-g">FILES</span></div>
+
+  <div class="toc-row"><span class="toc-n">07</span><div class="toc-info"><div class="toc-name"><span class="bn-text">Network Tools ও Scanning</span><span class="en-text">Network Tools & Scanning</span></div><div class="toc-sub">ping, nc, nmap, curl, wget — <span class="bn-text">Bash দিয়ে network operation</span><span class="en-text">network operations with Bash</span></div></div><span class="toc-tag badge-b">NET</span></div>
+
+  <div class="toc-row"><span class="toc-n">08</span><div class="toc-info"><div class="toc-name"><span class="bn-text">🔥 Port Scanner Script তৈরি</span><span class="en-text">🔥 Building a Port Scanner Script</span></div><div class="toc-sub"><span class="bn-text">নিজের পূর্ণাঙ্গ port scanner — Banner grabbing সহ</span><span class="en-text">Your own full port scanner — with banner grabbing</span></div></div><span class="toc-tag badge-r">PROJECT</span></div>
+
+  <div class="toc-row"><span class="toc-n">09</span><div class="toc-info"><div class="toc-name"><span class="bn-text">🔥 Log Analyzer Script</span><span class="en-text">🔥 Log Analyzer Script</span></div><div class="toc-sub"><span class="bn-text">auth.log থেকে brute force, suspicious IP detect করা</span><span class="en-text">Detecting brute force and suspicious IPs from auth.log</span></div></div><span class="toc-tag badge-y">PROJECT</span></div>
+
+  <div class="toc-row"><span class="toc-n">10</span><div class="toc-info"><div class="toc-name"><span class="bn-text">🔥 Security Automation Scripts</span><span class="en-text">🔥 Security Automation Scripts</span></div><div class="toc-sub"><span class="bn-text">System hardening checker, vulnerability scanner, backup script</span><span class="en-text">System hardening checker, vulnerability scanner, backup script</span></div></div><span class="toc-tag badge-p">PROJECT</span></div>
+
+  <div class="toc-row"><span class="toc-n">11</span><div class="toc-info"><div class="toc-name"><span class="bn-text">Advanced Bash — Tips ও Best Practices</span><span class="en-text">Advanced Bash — Tips & Best Practices</span></div><div class="toc-sub">Error handling, debugging, getopts, cron, parallel execution</div></div><span class="toc-tag badge-g">ADVANCED</span></div>
+
+  <div class="toc-row"><span class="toc-n">12</span><div class="toc-info"><div class="toc-name"><span class="bn-text">Cheat Sheet — সম্পূর্ণ রেফারেন্স</span><span class="en-text">Cheat Sheet — Complete Reference</span></div><div class="toc-sub"><span class="bn-text">Bash syntax, Security commands, One-liners — সব এক জায়গায়</span><span class="en-text">Bash syntax, Security commands, one-liners — all in one place</span></div></div><span class="toc-tag badge-b">CHEAT</span></div>
+</div>
+
+<!-- CH 1: BASH INTRO -->
+<div class="chapter ch1">
+  <div class="chapter-header" data-num="01">
+    <div class="ch-label">CHAPTER 01</div>
+    <div class="ch-title">🖥️ <span class="bn-text">Bash পরিচিতি ও প্রথম Script</span><span class="en-text">Introduction to Bash & First Script</span></div>
+    <div class="ch-desc"><span class="bn-text">Shell কী, Bash কেন শিখবে, script লেখা ও চালানো</span><span class="en-text">What is Shell, why learn Bash, writing and running scripts</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Bash কী এবং কেন?</span><span class="en-text">What is Bash and Why?</span></h2>
+    <p><span class="bn-text">Bash (Bourne Again Shell) হলো Linux-এর সবচেয়ে বেশি ব্যবহৃত command-line interpreter। Cyber Security-তে Bash অপরিহার্য কারণ এটি দিয়ে repetitive tasks automate করা যায়, tools একসাথে combine করা যায় এবং custom security tools তৈরি করা যায়।</span><span class="en-text">Bash (Bourne Again Shell) is the most widely used command-line interpreter in Linux. Bash is essential in Cyber Security because it automates repetitive tasks, combines tools together, and lets you build custom security tools.</span></p>
+
+    <div class="grid3">
+      <div class="card g-card">
+        <h4>✅ <span class="bn-text">কেন Bash শিখব?</span><span class="en-text">Why Learn Bash?</span></h4>
+        <ul style="font-size:12.5px;">
+          <li><span class="bn-text">Security tools automate করা</span><span class="en-text">Automate security tools</span></li>
+          <li><span class="bn-text">Log file analyze করা</span><span class="en-text">Analyze log files</span></li>
+          <li><span class="bn-text">Network scan script তৈরি</span><span class="en-text">Build network scan scripts</span></li>
+          <li>CTF challenges solve করা</li>
+          <li>OSCP-তে অপরিহার্য</li>
+        </ul>
+      </div>
+      <div class="card b-card">
+        <h4>📁 <span class="bn-text">Script File তৈরি করা</span><span class="en-text">Creating a Script File</span></h4>
+        <ul style="font-size:12.5px; font-family:'Fira Code',monospace;">
+          <li>Extension: .sh</li>
+          <li>Shebang: #!/bin/bash</li>
+          <li>chmod +x script.sh</li>
+          <li>./script.sh</li>
+          <li>bash script.sh</li>
+        </ul>
+      </div>
+      <div class="card r-card">
+        <h4>🔴 <span class="bn-text">যেকোনো Text Editor ব্যবহার করো</span><span class="en-text">Use Any Text Editor</span></h4>
+        <ul style="font-size:12.5px;">
+          <li>nano script.sh</li>
+          <li>vim script.sh</li>
+          <li>VS Code</li>
+          <li>gedit script.sh</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">প্রথম Bash Script</span><span class="en-text">Your First Bash Script</span></h2>
+    <div class="code">
+<span class="c">#!/bin/bash</span>
+<span class="c"># ↑ Shebang — এই line বলে কোন interpreter ব্যবহার করতে হবে</span>
+<span class="c"># hello.sh — প্রথম bash script</span>
+
+<span class="k">echo</span> <span class="s">"হ্যালো! আমার প্রথম Bash Script!"</span>
+<span class="k">echo</span> <span class="s">"আজকের তারিখ: $(date)"</span>
+<span class="k">echo</span> <span class="s">"আমি কে: $(whoami)"</span>
+<span class="k">echo</span> <span class="s">"আমি কোথায়: $(pwd)"</span>
+    </div>
+    <div class="code">
+<span class="c"># Script চালানো</span>
+<span class="p">$</span> chmod +x hello.sh    <span class="c"># Execute permission দাও</span>
+<span class="p">$</span> ./hello.sh            <span class="c"># চালাও</span>
+
+<span class="c"># অথবা সরাসরি</span>
+<span class="p">$</span> bash hello.sh
+    </div>
+
+    <h2 class="sec"><span class="bn-text">গুরুত্বপূর্ণ Special Variables</span><span class="en-text">Important Special Variables</span></h2>
+    <div class="code">
+<span class="c">#!/bin/bash</span>
+<span class="k">echo</span> <span class="s">"Script নাম: $0"</span>
+<span class="k">echo</span> <span class="s">"প্রথম argument: $1"</span>
+<span class="k">echo</span> <span class="s">"দ্বিতীয় argument: $2"</span>
+<span class="k">echo</span> <span class="s">"সব arguments: $@"</span>
+<span class="k">echo</span> <span class="s">"Argument সংখ্যা: $#"</span>
+<span class="k">echo</span> <span class="s">"শেষ command-এর exit code: $?"</span>
+<span class="k">echo</span> <span class="s">"Current process ID: $$"</span>
+
+<span class="c"># Argument সহ চালানো:</span>
+<span class="c"># ./script.sh 192.168.1.1 80</span>
+<span class="c"># $1 = 192.168.1.1, $2 = 80</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Comments ও Best Practices</span><span class="en-text">Comments & Best Practices</span></h2>
+    <div class="code">
+<span class="c">#!/bin/bash</span>
+<span class="c">##############################################</span>
+<span class="c"># Script: security_check.sh</span>
+<span class="c"># Author: তোমার নাম</span>
+<span class="c"># Date: 2026-04-05</span>
+<span class="c"># Description: Basic security check script</span>
+<span class="c">##############################################</span>
+
+<span class="c"># Color codes for output</span>
+<span class="v">RED</span>=<span class="s">'\033[0;31m'</span>
+<span class="v">GREEN</span>=<span class="s">'\033[0;32m'</span>
+<span class="v">YELLOW</span>=<span class="s">'\033[1;33m'</span>
+<span class="v">BLUE</span>=<span class="s">'\033[0;34m'</span>
+<span class="v">NC</span>=<span class="s">'\033[0m'</span>  <span class="c"># No Color</span>
+
+<span class="k">echo</span> -e <span class="s">"${GREEN}[+]${NC} Script শুরু হচ্ছে..."</span>
+<span class="k">echo</span> -e <span class="s">"${RED}[!]${NC} সতর্কতা!"</span>
+<span class="k">echo</span> -e <span class="s">"${YELLOW}[*]${NC} তথ্য"</span>
+    </div>
+
+    <div class="ch-summary">
+      <h3>// <span class="bn-text">মূল কথা</span><span class="en-text">Key Points</span> //</h3>
+      <ul>
+        <li>✅ <span class="bn-text">প্রতিটি script-এ #!/bin/bash দিয়ে শুরু করো</span><span class="en-text">Start every script with #!/bin/bash</span></li>
+        <li>✅ <span class="bn-text">chmod +x দিয়ে execute permission দাও</span><span class="en-text">Give execute permission with chmod +x</span></li>
+        <li>✅ <span class="bn-text">Comments লেখো — ভবিষ্যতে কাজে আসবে</span><span class="en-text">Write comments — they'll be useful later</span></li>
+        <li>✅ <span class="bn-text">Color codes ব্যবহার করো — output সুন্দর হয়</span><span class="en-text">Use color codes — makes output cleaner</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CH 2: VARIABLES -->
+<div class="chapter ch2">
+  <div class="chapter-header" data-num="02">
+    <div class="ch-label">CHAPTER 02</div>
+    <div class="ch-title">📦 <span class="bn-text">Variables, Input ও String Operations</span><span class="en-text">Variables, Input & String Operations</span></div>
+    <div class="ch-desc"><span class="bn-text">Data store করা, user থেকে input নেওয়া এবং string manipulate করা</span><span class="en-text">Storing data, taking user input, and manipulating strings</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Variables তৈরি করা</span><span class="en-text">Creating Variables</span></h2>
+    <div class="code">
+<span class="c">#!/bin/bash</span>
+
+<span class="c"># Variable তৈরি — = এর দুই পাশে কোনো space নেই!</span>
+<span class="v">target_ip</span>=<span class="s">"192.168.1.1"</span>
+<span class="v">target_port</span>=80
+<span class="v">scan_name</span>=<span class="s">"My Pentest"</span>
+
+<span class="c"># Variable ব্যবহার করা — $ দিয়ে</span>
+<span class="k">echo</span> <span class="s">"Target: $target_ip"</span>
+<span class="k">echo</span> <span class="s">"Port: ${target_port}"</span>   <span class="c"># {} দিয়ে স্পষ্ট করা</span>
+
+<span class="c"># Command output variable-এ রাখা</span>
+<span class="v">current_user</span>=$(whoami)
+<span class="v">current_date</span>=$(date +%Y-%m-%d)
+<span class="v">ip_address</span>=$(hostname -I | awk '{print $1}')
+
+<span class="k">echo</span> <span class="s">"User: $current_user | Date: $current_date | IP: $ip_address"</span>
+
+<span class="c"># Readonly variable (constant)</span>
+<span class="k">readonly</span> <span class="v">VERSION</span>=<span class="s">"1.0"</span>
+
+<span class="c"># Variable unset করা</span>
+<span class="k">unset</span> target_port
+    </div>
+
+    <h2 class="sec"><span class="bn-text">User Input নেওয়া</span><span class="en-text">Taking User Input</span></h2>
+    <div class="code">
+<span class="c">#!/bin/bash</span>
+
+<span class="c"># Basic input</span>
+<span class="k">read</span> -p <span class="s">"Target IP দাও: "</span> target
+<span class="k">echo</span> <span class="s">"Scanning: $target"</span>
+
+<span class="c"># Silent input (password)</span>
+<span class="k">read</span> -sp <span class="s">"Password: "</span> password
+<span class="k">echo</span> <span class="c"># newline</span>
+
+<span class="c"># Timeout সহ input</span>
+<span class="k">read</span> -t 10 -p <span class="s">"10 সেকেন্ডে উত্তর দাও: "</span> answer
+
+<span class="c"># Default value</span>
+<span class="k">read</span> -p <span class="s">"Port (default 80): "</span> port
+<span class="v">port</span>=<span class="s">${port:-80}</span>   <span class="c"># যদি খালি থাকে তাহলে 80</span>
+
+<span class="c"># Command line argument validation</span>
+<span class="k">if</span> [ <span class="s">"$#"</span> -lt 1 ]; <span class="k">then</span>
+    <span class="k">echo</span> <span class="s">"Usage: $0 &lt;target_ip&gt;"</span>
+    <span class="k">exit</span> 1
+<span class="k">fi</span>
+<span class="v">target</span>=<span class="s">"$1"</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">String Operations — Security-তে গুরুত্বপূর্ণ</span><span class="en-text">String Operations — Important for Security</span></h2>
+    <div class="code">
+<span class="c">#!/bin/bash</span>
+
+<span class="v">url</span>=<span class="s">"https://target.com/admin/login.php"</span>
+<span class="v">ip</span>=<span class="s">"192.168.1.100"</span>
+
+<span class="c"># String length</span>
+<span class="k">echo</span> <span class="s">"Length: ${#url}"</span>
+
+<span class="c"># Substring extraction</span>
+<span class="k">echo</span> <span class="s">"${url:0:5}"</span>     <span class="c"># https</span>
+<span class="k">echo</span> <span class="s">"${url: -8}"</span>     <span class="c"># শেষ 8 chars</span>
+
+<span class="c"># String replace</span>
+<span class="k">echo</span> <span class="s">"${url/https/http}"</span>    <span class="c"># প্রথমটি replace</span>
+<span class="k">echo</span> <span class="s">"${url//o/0}"</span>          <span class="c"># সব replace</span>
+
+<span class="c"># Contains check</span>
+<span class="k">if</span> [[ <span class="s">"$url"</span> == *<span class="s">"admin"</span>* ]]; <span class="k">then</span>
+    <span class="k">echo</span> <span class="s">"[!] Admin path found!"</span>
+<span class="k">fi</span>
+
+<span class="c"># IP থেকে octets বের করা</span>
+<span class="v">IFS</span>=<span class="s">'.'</span> <span class="k">read</span> -ra octets <<< <span class="s">"$ip"</span>
+<span class="k">echo</span> <span class="s">"Network: ${octets[0]}.${octets[1]}.${octets[2]}.0/24"</span>
+
+<span class="c"># Arrays</span>
+<span class="v">ports</span>=(21 22 23 80 443 8080 3306)
+<span class="k">echo</span> <span class="s">"First port: ${ports[0]}"</span>
+<span class="k">echo</span> <span class="s">"All ports: ${ports[@]}"</span>
+<span class="k">echo</span> <span class="s">"Count: ${#ports[@]}"</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- CH 3: CONDITIONS -->
+<div class="chapter ch3">
+  <div class="chapter-header" data-num="03">
+    <div class="ch-label">CHAPTER 03</div>
+    <div class="ch-title">🔀 <span class="bn-text">Conditions ও Comparisons</span><span class="en-text">Conditions & Comparisons</span></div>
+    <div class="ch-desc"><span class="bn-text">if/elif/else, test operators, case statement — সিদ্ধান্ত নেওয়ার কৌশল</span><span class="en-text">if/elif/else, test operators, case statement — decision-making techniques</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">if / elif / else</span><span class="en-text">if / elif / else</span></h2>
+    <div class="code">
+<span class="c">#!/bin/bash</span>
+
+<span class="v">port</span>=22
+
+<span class="k">if</span> [ <span class="s">"$port"</span> -eq 22 ]; <span class="k">then</span>
+    <span class="k">echo</span> <span class="s">"SSH port — check for weak auth"</span>
+<span class="k">elif</span> [ <span class="s">"$port"</span> -eq 80 ]; <span class="k">then</span>
+    <span class="k">echo</span> <span class="s">"HTTP — check for XSS, SQLi"</span>
+<span class="k">elif</span> [ <span class="s">"$port"</span> -eq 443 ]; <span class="k">then</span>
+    <span class="k">echo</span> <span class="s">"HTTPS — check SSL config"</span>
+<span class="k">elif</span> [ <span class="s">"$port"</span> -eq 23 ]; <span class="k">then</span>
+    <span class="k">echo</span> <span class="s">"TELNET — CRITICAL! Unencrypted!"</span>
+<span class="k">else</span>
+    <span class="k">echo</span> <span class="s">"Unknown service on port $port"</span>
+<span class="k">fi</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Comparison Operators</span><span class="en-text">Comparison Operators</span></h2>
+    <table>
+      <thead><tr><th>Operator</th><th><span class="bn-text">Numbers-এর জন্য</span><span class="en-text">For Numbers</span></th><th><span class="bn-text">Strings-এর জন্য</span><span class="en-text">For Strings</span></th></tr></thead>
+      <tbody>
+        <tr><td><span class="bn-text">সমান</span><span class="en-text">Equal</span></td><td><code>-eq</code></td><td><code>==</code></td></tr>
+        <tr><td><span class="bn-text">সমান নয়</span><span class="en-text">Not equal</span></td><td><code>-ne</code></td><td><code>!=</code></td></tr>
+        <tr><td><span class="bn-text">বড়</span><span class="en-text">Greater than</span></td><td><code>-gt</code></td><td><code>&gt;</code> (with [[]])</td></tr>
+        <tr><td><span class="bn-text">ছোট</span><span class="en-text">Less than</span></td><td><code>-lt</code></td><td><code>&lt;</code> (with [[]])</td></tr>
+        <tr><td><span class="bn-text">বড় বা সমান</span><span class="en-text">Greater or equal</span></td><td><code>-ge</code></td><td></td></tr>
+        <tr><td><span class="bn-text">ছোট বা সমান</span><span class="en-text">Less or equal</span></td><td><code>-le</code></td><td></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec"><span class="bn-text">File ও Directory Checks</span><span class="en-text">File & Directory Checks</span></h2>
+    <div class="code">
+<span class="c">#!/bin/bash</span>
+
+<span class="v">logfile</span>=<span class="s">"/var/log/auth.log"</span>
+<span class="v">target</span>=<span class="s">"$1"</span>
+
+<span class="c"># File exist করে কি না</span>
+<span class="k">if</span> [ ! -f <span class="s">"$logfile"</span> ]; <span class="k">then</span>
+    <span class="k">echo</span> <span class="s">"[-] Log file পাওয়া যাচ্ছে না!"</span>
+    <span class="k">exit</span> 1
+<span class="k">fi</span>
+
+<span class="c"># Directory exist check</span>
+<span class="k">if</span> [ ! -d <span class="s">"/output"</span> ]; <span class="k">then</span>
+    mkdir -p /output
+<span class="k">fi</span>
+
+<span class="c"># File operators</span>
+<span class="c"># -f  → regular file</span>
+<span class="c"># -d  → directory</span>
+<span class="c"># -e  → exists (যেকোনো)</span>
+<span class="c"># -r  → readable</span>
+<span class="c"># -w  → writable</span>
+<span class="c"># -x  → executable</span>
+<span class="c"># -s  → non-empty file</span>
+<span class="c"># -z  → empty string</span>
+<span class="c"># -n  → non-empty string</span>
+
+<span class="c"># Argument check</span>
+<span class="k">if</span> [ -z <span class="s">"$target"</span> ]; <span class="k">then</span>
+    <span class="k">echo</span> <span class="s">"Error: Target দাও!"</span>
+    <span class="k">exit</span> 1
+<span class="k">fi</span>
+
+<span class="c"># Logical operators</span>
+<span class="k">if</span> [ -f <span class="s">"$logfile"</span> ] && [ -r <span class="s">"$logfile"</span> ]; <span class="k">then</span>
+    <span class="k">echo</span> <span class="s">"Log file readable!"</span>
+<span class="k">fi</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Case Statement</span><span class="en-text">Case Statement</span></h2>
+    <div class="code">
+<span class="c">#!/bin/bash</span>
+
+<span class="v">service</span>=<span class="s">"$1"</span>
+
+<span class="k">case</span> <span class="s">"$service"</span> <span class="k">in</span>
+    <span class="s">"ssh"</span>|<span class="s">"22"</span>)
+        <span class="k">echo</span> <span class="s">"SSH: Check weak passwords, key-based auth"</span>
+        ;;
+    <span class="s">"http"</span>|<span class="s">"80"</span>)
+        <span class="k">echo</span> <span class="s">"HTTP: Check XSS, SQLi, directory listing"</span>
+        ;;
+    <span class="s">"ftp"</span>|<span class="s">"21"</span>)
+        <span class="k">echo</span> <span class="s">"FTP: Check anonymous login"</span>
+        ;;
+    <span class="s">"smb"</span>|<span class="s">"445"</span>)
+        <span class="k">echo</span> <span class="s">"SMB: Check EternalBlue, null session"</span>
+        ;;
+    *)
+        <span class="k">echo</span> <span class="s">"Unknown: $service"</span>
+        ;;
+<span class="k">esac</span>
+    </div>
+  </div>
+</div>
+
+<!-- CH 4: LOOPS -->
+<div class="chapter ch4">
+  <div class="chapter-header" data-num="04">
+    <div class="ch-label">CHAPTER 04</div>
+    <div class="ch-title">🔄 <span class="bn-text">Loops — for, while, until</span><span class="en-text">Loops — for, while, until</span></div>
+    <div class="ch-desc"><span class="bn-text">IP range loop, wordlist iterate, repetitive task automate করা</span><span class="en-text">IP range loops, wordlist iteration, automating repetitive tasks</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">for Loop</h2>
+    <div class="code">
+<span class="c">#!/bin/bash</span>
+
+<span class="c"># ১. List-এ loop</span>
+<span class="k">for</span> port <span class="k">in</span> 21 22 23 80 443 3306 8080; <span class="k">do</span>
+    <span class="k">echo</span> <span class="s">"Checking port: $port"</span>
+<span class="k">done</span>
+
+<span class="c"># ২. Range-এ loop</span>
+<span class="k">for</span> i <span class="k">in</span> {1..254}; <span class="k">do</span>
+    <span class="k">echo</span> <span class="s">"192.168.1.$i"</span>
+<span class="k">done</span>
+
+<span class="c"># ৩. C-style loop</span>
+<span class="k">for</span> (( i=1; i<=100; i++ )); <span class="k">do</span>
+    <span class="k">echo</span> <span class="s">"Port $i"</span>
+<span class="k">done</span>
+
+<span class="c"># ৪. File/wordlist iterate করা</span>
+<span class="k">while</span> <span class="f">read</span> -r ip; <span class="k">do</span>
+    <span class="k">echo</span> <span class="s">"Scanning: $ip"</span>
+    ping -c 1 -W 1 <span class="s">"$ip"</span> &>/dev/null && <span class="k">echo</span> <span class="s">"ALIVE: $ip"</span>
+<span class="k">done</span> < targets.txt
+
+<span class="c"># ৫. Glob pattern</span>
+<span class="k">for</span> file <span class="k">in</span> /var/log/*.log; <span class="k">do</span>
+    <span class="k">echo</span> <span class="s">"Analyzing: $file"</span>
+<span class="k">done</span>
+    </div>
+
+    <h2 class="sec">while ও until Loop</h2>
+    <div class="code">
+<span class="c">#!/bin/bash</span>
+
+<span class="c"># while loop — condition সত্য হওয়া পর্যন্ত</span>
+<span class="v">count</span>=1
+<span class="k">while</span> [ <span class="s">"$count"</span> -le 10 ]; <span class="k">do</span>
+    <span class="k">echo</span> <span class="s">"Attempt: $count"</span>
+    (( count++ ))
+<span class="k">done</span>
+
+<span class="c"># Ping monitor — host down না হওয়া পর্যন্ত</span>
+<span class="v">host</span>=<span class="s">"8.8.8.8"</span>
+<span class="k">while</span> ping -c 1 <span class="s">"$host"</span> &>/dev/null; <span class="k">do</span>
+    <span class="k">echo</span> <span class="s">"$(date): $host is UP"</span>
+    sleep 60
+<span class="k">done</span>
+<span class="k">echo</span> <span class="s">"ALERT: $host is DOWN!"</span>
+
+<span class="c"># until loop — condition মিথ্যা হওয়া পর্যন্ত</span>
+<span class="v">count</span>=0
+<span class="k">until</span> [ <span class="s">"$count"</span> -ge 5 ]; <span class="k">do</span>
+    <span class="k">echo</span> <span class="s">"Count: $count"</span>
+    (( count++ ))
+<span class="k">done</span>
+
+<span class="c"># break এবং continue</span>
+<span class="k">for</span> port <span class="k">in</span> {1..1000}; <span class="k">do</span>
+    <span class="k">if</span> [ <span class="s">"$port"</span> -eq 500 ]; <span class="k">then</span>
+        <span class="k">break</span>      <span class="c"># 500-এ থামো</span>
+    <span class="k">fi</span>
+    <span class="k">if</span> [ <span class="s">"$port"</span> -eq 100 ]; <span class="k">then</span>
+        <span class="k">continue</span>   <span class="c"># 100 skip করো</span>
+    <span class="k">fi</span>
+    <span class="k">echo</span> <span class="s">"Port: $port"</span>
+<span class="k">done</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- CH 5: FUNCTIONS -->
+<div class="chapter ch5">
+  <div class="chapter-header" data-num="05">
+    <div class="ch-label">CHAPTER 05</div>
+    <div class="ch-title">⚙️ <span class="bn-text">Functions ও Script Structure</span><span class="en-text">Functions & Script Structure</span></div>
+    <div class="ch-desc"><span class="bn-text">Reusable functions তৈরি করা — professional security script-এর ভিত্তি</span><span class="en-text">Creating reusable functions — the foundation of professional security scripts</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Function তৈরি ও ব্যবহার</span><span class="en-text">Creating & Using Functions</span></h2>
+    <div class="code">
+<span class="c">#!/bin/bash</span>
+
+<span class="c"># Color variables</span>
+<span class="v">RED</span>=<span class="s">'\033[0;31m'</span>; <span class="v">GREEN</span>=<span class="s">'\033[0;32m'</span>; <span class="v">YELLOW</span>=<span class="s">'\033[1;33m'</span>; <span class="v">NC</span>=<span class="s">'\033[0m'</span>
+
+<span class="c"># Basic function</span>
+<span class="k">function</span> <span class="f">print_banner</span>() {
+    <span class="k">echo</span> <span class="s">"================================"</span>
+    <span class="k">echo</span> <span class="s">"  Security Scanner v1.0"</span>
+    <span class="k">echo</span> <span class="s">"================================"</span>
+}
+
+<span class="c"># Function with arguments</span>
+<span class="k">function</span> <span class="f">log_result</span>() {
+    <span class="k">local</span> <span class="v">status</span>=<span class="s">"$1"</span>   <span class="c"># local = function-এর ভেতরেই সীমাবদ্ধ</span>
+    <span class="k">local</span> <span class="v">message</span>=<span class="s">"$2"</span>
+    <span class="k">local</span> <span class="v">timestamp</span>=$(date +<span class="s">"%H:%M:%S"</span>)
+
+    <span class="k">case</span> <span class="s">"$status"</span> <span class="k">in</span>
+        <span class="s">"success"</span>) <span class="k">echo</span> -e <span class="s">"${GREEN}[+]${NC} [$timestamp] $message"</span> ;;
+        <span class="s">"fail"</span>)    <span class="k">echo</span> -e <span class="s">"${RED}[-]${NC} [$timestamp] $message"</span>    ;;
+        <span class="s">"info"</span>)    <span class="k">echo</span> -e <span class="s">"${YELLOW}[*]${NC} [$timestamp] $message"</span>   ;;
+    <span class="k">esac</span>
+}
+
+<span class="c"># Return value সহ function</span>
+<span class="k">function</span> <span class="f">is_port_open</span>() {
+    <span class="k">local</span> <span class="v">host</span>=<span class="s">"$1"</span>
+    <span class="k">local</span> <span class="v">port</span>=<span class="s">"$2"</span>
+    timeout 1 bash -c <span class="s">"echo >/dev/tcp/$host/$port"</span> 2>/dev/null
+    <span class="k">return</span> $?   <span class="c"># 0 = open, 1 = closed</span>
+}
+
+<span class="c"># Function call করা</span>
+print_banner
+log_result <span class="s">"info"</span> <span class="s">"Scanning শুরু হচ্ছে..."</span>
+
+<span class="k">if</span> is_port_open <span class="s">"192.168.1.1"</span> 80; <span class="k">then</span>
+    log_result <span class="s">"success"</span> <span class="s">"Port 80 OPEN!"</span>
+<span class="k">else</span>
+    log_result <span class="s">"fail"</span> <span class="s">"Port 80 CLOSED"</span>
+<span class="k">fi</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Professional Script Structure</span><span class="en-text">Professional Script Structure</span></h2>
+    <div class="code">
+<span class="c">#!/bin/bash</span>
+<span class="c">##############################################</span>
+<span class="c"># Security Tool Template</span>
+<span class="c">##############################################</span>
+
+<span class="c"># ─── CONSTANTS ───────────────────────────</span>
+<span class="k">readonly</span> <span class="v">SCRIPT_NAME</span>=$(basename <span class="s">"$0"</span>)
+<span class="k">readonly</span> <span class="v">VERSION</span>=<span class="s">"1.0"</span>
+<span class="k">readonly</span> <span class="v">LOG_FILE</span>=<span class="s">"/tmp/scan_$(date +%Y%m%d).log"</span>
+
+<span class="v">RED</span>=<span class="s">'\033[0;31m'</span>; <span class="v">GREEN</span>=<span class="s">'\033[0;32m'</span>
+<span class="v">YELLOW</span>=<span class="s">'\033[1;33m'</span>; <span class="v">BLUE</span>=<span class="s">'\033[0;34m'</span>; <span class="v">NC</span>=<span class="s">'\033[0m'</span>
+
+<span class="c"># ─── FUNCTIONS ───────────────────────────</span>
+<span class="k">function</span> <span class="f">usage</span>() {
+    <span class="k">echo</span> <span class="s">"Usage: $SCRIPT_NAME [OPTIONS] &lt;target&gt;"</span>
+    <span class="k">echo</span> <span class="s">"  -p PORT   Port to scan"</span>
+    <span class="k">echo</span> <span class="s">"  -h        This help"</span>
+    <span class="k">exit</span> 0
+}
+
+<span class="k">function</span> <span class="f">check_dependencies</span>() {
+    <span class="k">local</span> <span class="v">deps</span>=(<span class="s">"nmap"</span> <span class="s">"curl"</span> <span class="s">"nc"</span>)
+    <span class="k">for</span> dep <span class="k">in</span> <span class="s">"${deps[@]}"</span>; <span class="k">do</span>
+        <span class="k">if</span> ! command -v <span class="s">"$dep"</span> &>/dev/null; <span class="k">then</span>
+            <span class="k">echo</span> -e <span class="s">"${RED}[-]${NC} $dep installed নেই!"</span>
+            <span class="k">exit</span> 1
+        <span class="k">fi</span>
+    <span class="k">done</span>
+    <span class="k">echo</span> -e <span class="s">"${GREEN}[+]${NC} সব dependencies OK"</span>
+}
+
+<span class="c"># ─── ARGUMENT PARSING ────────────────────</span>
+<span class="k">while</span> <span class="f">getopts</span> <span class="s">"p:h"</span> opt; <span class="k">do</span>
+    <span class="k">case</span> <span class="s">"$opt"</span> <span class="k">in</span>
+        p) <span class="v">PORT</span>=<span class="s">"$OPTARG"</span> ;;
+        h) usage ;;
+        *) usage ;;
+    <span class="k">esac</span>
+<span class="k">done</span>
+<span class="k">shift</span> $(( OPTIND - 1 ))
+<span class="v">TARGET</span>=<span class="s">"$1"</span>
+
+<span class="c"># ─── MAIN ─────────────────────────────</span>
+<span class="k">function</span> <span class="f">main</span>() {
+    check_dependencies
+    <span class="k">echo</span> -e <span class="s">"${BLUE}[*]${NC} Starting scan on $TARGET"</span>
+    <span class="c"># Main logic এখানে</span>
+}
+
+<span class="c"># Script-কে directly run করা হলেই main() call হবে</span>
+<span class="k">if</span> [[ <span class="s">"${BASH_SOURCE[0]}"</span> == <span class="s">"${0}"</span> ]]; <span class="k">then</span>
+    main
+<span class="k">fi</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- CH 6: FILE OPERATIONS & TEXT PROCESSING -->
+<div class="chapter ch6">
+  <div class="chapter-header" data-num="06">
+    <div class="ch-label">CHAPTER 06</div>
+    <div class="ch-title">📁 <span class="bn-text">File Operations ও Text Processing</span><span class="en-text">File Operations & Text Processing</span></div>
+    <div class="ch-desc">grep, awk, sed, cut, sort — <span class="bn-text">Security log analysis-এর অপরিহার্য tools</span><span class="en-text">essential tools for security log analysis</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">File Read ও Write</span><span class="en-text">File Read & Write</span></h2>
+    <div class="code">
+<span class="c">#!/bin/bash</span>
+
+<span class="c"># File লেখা</span>
+<span class="k">echo</span> <span class="s">"192.168.1.1"</span> > targets.txt      <span class="c"># overwrite</span>
+<span class="k">echo</span> <span class="s">"192.168.1.2"</span> >> targets.txt     <span class="c"># append</span>
+
+<span class="c"># Multi-line লেখা (heredoc)</span>
+cat > report.txt << EOF
+=== Security Scan Report ===
+Date: $(date)
+Target: $TARGET
+EOF
+
+<span class="c"># File পড়া line by line</span>
+<span class="k">while</span> <span class="f">IFS</span>= <span class="k">read</span> -r line; <span class="k">do</span>
+    <span class="k">echo</span> <span class="s">"Processing: $line"</span>
+<span class="k">done</span> < targets.txt
+
+<span class="c"># File-এর তথ্য</span>
+<span class="k">echo</span> <span class="s">"Lines: $(wc -l < file.txt)"</span>
+<span class="k">echo</span> <span class="s">"Words: $(wc -w < file.txt)"</span>
+<span class="k">echo</span> <span class="s">"Size:  $(du -sh file.txt)"</span>
+    </div>
+
+    <h2 class="sec">grep — Pattern খোঁজা</h2>
+    <div class="code">
+<span class="c"># Basic grep</span>
+grep <span class="s">"Failed password"</span> /var/log/auth.log
+grep -i <span class="s">"error"</span> /var/log/syslog         <span class="c"># case-insensitive</span>
+grep -v <span class="s">"#"</span> config.txt                   <span class="c"># নেই এমন line</span>
+grep -c <span class="s">"Failed"</span> /var/log/auth.log        <span class="c"># count</span>
+grep -n <span class="s">"root"</span> /etc/passwd                <span class="c"># line number সহ</span>
+grep -r <span class="s">"password"</span> /var/www/              <span class="c"># recursive</span>
+
+<span class="c"># Extended grep (regex)</span>
+grep -E <span class="s">"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}"</span> file.txt
+grep -E <span class="s">"Failed|Invalid|error"</span> /var/log/auth.log
+grep -oE <span class="s">"[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+"</span> log.txt   <span class="c"># শুধু IP extract</span>
+
+<span class="c"># Security use cases</span>
+grep <span class="s">"Failed password"</span> /var/log/auth.log | awk '{print $11}' | sort | uniq -c | sort -rn
+<span class="c"># → কোন IP সবচেয়ে বেশি fail করেছে</span>
+    </div>
+
+    <h2 class="sec">awk — Data Processing</h2>
+    <div class="code">
+<span class="c"># awk — column/field প্রক্রিয়া করা</span>
+<span class="c"># $1=first field, $2=second field, NF=last field</span>
+
+<span class="c"># /etc/passwd থেকে username বের করা</span>
+awk -F: '{print $1}' /etc/passwd
+
+<span class="c"># 5th column print করা</span>
+awk '{print $5}' /var/log/auth.log
+
+<span class="c"># Condition সহ</span>
+awk '$3 > 100 {print $1, $3}' data.txt
+
+<span class="c"># Auth log থেকে failed IP extract</span>
+awk '/Failed password/ {print $11}' /var/log/auth.log
+
+<span class="c"># Sum calculation</span>
+awk '{sum += $1} END {print "Total:", sum}' numbers.txt
+    </div>
+
+    <h2 class="sec">sed — Stream Editor</h2>
+    <div class="code">
+<span class="c"># sed — text replace, delete, insert</span>
+
+<span class="c"># Replace করা</span>
+sed <span class="s">'s/old/new/g'</span> file.txt            <span class="c"># সব replace</span>
+sed -i <span class="s">'s/password/****/g'</span> config.txt  <span class="c"># file-এ directly</span>
+
+<span class="c"># Line delete করা</span>
+sed <span class="s">'/^#/d'</span> config.txt                 <span class="c"># comment lines বাদ</span>
+sed <span class="s">'/^$/d'</span> file.txt                   <span class="c"># empty lines বাদ</span>
+
+<span class="c"># নির্দিষ্ট line print করা</span>
+sed -n <span class="s">'5,10p'</span> file.txt               <span class="c"># line 5-10</span>
+sed -n <span class="s">'/ERROR/p'</span> log.txt              <span class="c"># ERROR আছে এমন line</span>
+
+<span class="c"># Practical: IP list থেকে comments ও blanks বাদ</span>
+sed <span class="s">'/^#/d; /^$/d'</span> targets.txt
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Useful One-liners</span><span class="en-text">Useful One-liners</span></h2>
+    <div class="code">
+<span class="c"># sort ও uniq</span>
+sort -u file.txt                          <span class="c"># Unique, sorted</span>
+sort -rn file.txt                         <span class="c"># Numeric, descending</span>
+uniq -c file.txt | sort -rn | head -10   <span class="c"># Most frequent</span>
+
+<span class="c"># cut — delimiter দিয়ে column বের করা</span>
+cut -d: -f1 /etc/passwd                  <span class="c"># : delimiter, 1st field</span>
+cut -d',' -f2 data.csv                   <span class="c"># CSV 2nd column</span>
+
+<span class="c"># tr — character translate</span>
+<span class="k">echo</span> <span class="s">"hello"</span> | tr a-z A-Z               <span class="c"># uppercase</span>
+<span class="k">echo</span> <span class="s">"a:b:c"</span> | tr ':' '\n'              <span class="c"># : → newline</span>
+
+<span class="c"># Piping — tools combine করা</span>
+cat /var/log/auth.log | grep <span class="s">"Failed"</span> | awk '{print $11}' | sort | uniq -c | sort -rn | head -20
+    </div>
+  </div>
+</div>
+
+<!-- CH 7: NETWORK TOOLS -->
+<div class="chapter ch7">
+  <div class="chapter-header" data-num="07">
+    <div class="ch-label">CHAPTER 07</div>
+    <div class="ch-title">🌐 <span class="bn-text">Network Tools ও Scanning</span><span class="en-text">Network Tools & Scanning</span></div>
+    <div class="ch-desc"><span class="bn-text">ping, nc, curl, nmap — Bash দিয়ে network operation এবং reconnaissance</span><span class="en-text">ping, nc, curl, nmap — network operations and reconnaissance with Bash</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">ping — Host Discovery</span><span class="en-text">ping — Host Discovery</span></h2>
+    <div class="code">
+<span class="c">#!/bin/bash</span>
+
+<span class="c"># Single ping test</span>
+ping -c 1 -W 1 192.168.1.1 &>/dev/null && <span class="k">echo</span> <span class="s">"UP"</span> || <span class="k">echo</span> <span class="s">"DOWN"</span>
+
+<span class="c"># Subnet sweep</span>
+<span class="k">for</span> i <span class="k">in</span> {1..254}; <span class="k">do</span>
+    ping -c 1 -W 1 192.168.1.$i &>/dev/null && \
+    <span class="k">echo</span> <span class="s">"[+] ALIVE: 192.168.1.$i"</span> &   <span class="c"># & = background-এ চালাও</span>
+<span class="k">done</span>
+wait   <span class="c"># সব background job শেষ হওয়া পর্যন্ত অপেক্ষা</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">nc (Netcat) — Swiss Army Knife</span><span class="en-text">nc (Netcat) — Swiss Army Knife</span></h2>
+    <div class="code">
+<span class="c"># Port check</span>
+nc -zv 192.168.1.1 80 2>&1 | grep <span class="s">"succeeded"</span>
+
+<span class="c"># Bash দিয়ে port check (nc ছাড়া)</span>
+timeout 1 bash -c <span class="s">"echo >/dev/tcp/192.168.1.1/80"</span> 2>/dev/null && <span class="k">echo</span> <span class="s">"OPEN"</span>
+
+<span class="c"># Banner grabbing</span>
+<span class="k">echo</span> <span class="s">""</span> | nc -w 2 192.168.1.1 21    <span class="c"># FTP banner</span>
+<span class="k">echo</span> <span class="s">""</span> | nc -w 2 192.168.1.1 22    <span class="c"># SSH banner</span>
+<span class="k">echo</span> -e <span class="s">"HEAD / HTTP/1.0\r\n\r\n"</span> | nc -w 2 192.168.1.1 80
+
+<span class="c"># Listener (authorized testing only)</span>
+nc -lvnp 4444   <span class="c"># Listen on port 4444</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">curl ও wget — HTTP Requests</span><span class="en-text">curl & wget — HTTP Requests</span></h2>
+    <div class="code">
+<span class="c"># Basic curl</span>
+curl https://target.com
+curl -s -o /dev/null -w <span class="s">"%{http_code}"</span> https://target.com   <span class="c"># status code</span>
+curl -I https://target.com                                    <span class="c"># headers only</span>
+curl -L https://target.com                                    <span class="c"># follow redirects</span>
+
+<span class="c"># POST request</span>
+curl -X POST -d <span class="s">"user=admin&pass=test"</span> https://target.com/login
+
+<span class="c"># Custom headers</span>
+curl -H <span class="s">"Authorization: Bearer TOKEN"</span> https://api.target.com/data
+
+<span class="c"># Security headers check</span>
+<span class="k">function</span> <span class="f">check_headers</span>() {
+    <span class="k">local</span> <span class="v">url</span>=<span class="s">"$1"</span>
+    <span class="k">local</span> <span class="v">headers</span>=$(curl -s -I <span class="s">"$url"</span>)
+
+    <span class="k">echo</span> <span class="s">"=== Security Headers: $url ==="</span>
+    <span class="k">for</span> header <span class="k">in</span> <span class="s">"Strict-Transport-Security"</span> <span class="s">"Content-Security-Policy"</span> <span class="s">"X-Frame-Options"</span> <span class="s">"X-Content-Type-Options"</span>; <span class="k">do</span>
+        <span class="k">if</span> <span class="k">echo</span> <span class="s">"$headers"</span> | grep -qi <span class="s">"$header"</span>; <span class="k">then</span>
+            <span class="k">echo</span> -e <span class="s">"  ✓ $header"</span>
+        <span class="k">else</span>
+            <span class="k">echo</span> -e <span class="s">"  ✗ MISSING: $header"</span>
+        <span class="k">fi</span>
+    <span class="k">done</span>
+}
+
+check_headers <span class="s">"https://example.com"</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">nmap Integration</span><span class="en-text">nmap Integration</span></h2>
+    <div class="code">
+<span class="c">#!/bin/bash</span>
+
+<span class="k">function</span> <span class="f">nmap_scan</span>() {
+    <span class="k">local</span> <span class="v">target</span>=<span class="s">"$1"</span>
+    <span class="k">local</span> <span class="v">output_dir</span>=<span class="s">"./results"</span>
+    mkdir -p <span class="s">"$output_dir"</span>
+
+    <span class="k">echo</span> <span class="s">"[*] Quick scan শুরু..."</span>
+    nmap -sV --top-ports 1000 -T4 <span class="s">"$target"</span> \
+        -oN <span class="s">"$output_dir/${target}_quick.txt"</span> \
+        -oX <span class="s">"$output_dir/${target}_quick.xml"</span>
+
+    <span class="c"># Open ports extract করা</span>
+    <span class="k">echo</span> <span class="s">"[+] Open ports:"</span>
+    grep <span class="s">"/open/"</span> <span class="s">"$output_dir/${target}_quick.txt"</span> | awk '{print $1, $3}'
+
+    <span class="c"># Vulnerability scan</span>
+    <span class="k">echo</span> <span class="s">"[*] Vulnerability scan চালাচ্ছি..."</span>
+    nmap --script vuln <span class="s">"$target"</span> -oN <span class="s">"$output_dir/${target}_vuln.txt"</span>
+}
+
+nmap_scan <span class="s">"$1"</span>
+    </div>
+  </div>
+</div>
+
+<!-- CH 8: PORT SCANNER PROJECT -->
+<div class="chapter ch8">
+  <div class="chapter-header" data-num="08">
+    <div class="ch-label">CHAPTER 08 — PROJECT</div>
+    <div class="ch-title">🔥 <span class="bn-text">Port Scanner Script তৈরি</span><span class="en-text">Building a Port Scanner Script</span></div>
+    <div class="ch-desc"><span class="bn-text">নিজের পূর্ণাঙ্গ port scanner — banner grabbing, service detection সহ</span><span class="en-text">Your own full port scanner — with banner grabbing and service detection</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <div class="box danger">
+      <div class="box-t">⚠️ <span class="bn-text">শুধুমাত্র নিজের নেটওয়ার্কে বা authorized lab-এ ব্যবহার করো</span><span class="en-text">Use only on your own network or authorized lab</span></div>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">সম্পূর্ণ Port Scanner Script</span><span class="en-text">Complete Port Scanner Script</span></h2>
+    <div class="code">
+<span class="c">#!/bin/bash</span>
+<span class="c">##############################################</span>
+<span class="c"># BashScan — Simple Port Scanner</span>
+<span class="c"># Usage: ./bashscan.sh &lt;target&gt; [start_port] [end_port]</span>
+<span class="c">##############################################</span>
+
+<span class="c"># Colors</span>
+<span class="v">RED</span>=<span class="s">'\033[0;31m'</span>; <span class="v">GREEN</span>=<span class="s">'\033[0;32m'</span>
+<span class="v">YELLOW</span>=<span class="s">'\033[1;33m'</span>; <span class="v">BLUE</span>=<span class="s">'\033[0;34m'</span>; <span class="v">NC</span>=<span class="s">'\033[0m'</span>
+
+<span class="c"># Default values</span>
+<span class="v">TARGET</span>=<span class="s">"${1}"</span>
+<span class="v">START_PORT</span>=<span class="s">"${2:-1}"</span>
+<span class="v">END_PORT</span>=<span class="s">"${3:-1000}"</span>
+<span class="v">TIMEOUT</span>=1
+<span class="v">OPEN_PORTS</span>=()
+
+<span class="c"># Service name lookup</span>
+<span class="k">function</span> <span class="f">get_service</span>() {
+    <span class="k">case</span> <span class="s">"$1"</span> <span class="k">in</span>
+        21)   <span class="k">echo</span> <span class="s">"FTP"</span> ;;
+        22)   <span class="k">echo</span> <span class="s">"SSH"</span> ;;
+        23)   <span class="k">echo</span> <span class="s">"TELNET ⚠️"</span> ;;
+        25)   <span class="k">echo</span> <span class="s">"SMTP"</span> ;;
+        53)   <span class="k">echo</span> <span class="s">"DNS"</span> ;;
+        80)   <span class="k">echo</span> <span class="s">"HTTP"</span> ;;
+        110)  <span class="k">echo</span> <span class="s">"POP3"</span> ;;
+        143)  <span class="k">echo</span> <span class="s">"IMAP"</span> ;;
+        443)  <span class="k">echo</span> <span class="s">"HTTPS"</span> ;;
+        445)  <span class="k">echo</span> <span class="s">"SMB ⚠️"</span> ;;
+        3306) <span class="k">echo</span> <span class="s">"MySQL"</span> ;;
+        3389) <span class="k">echo</span> <span class="s">"RDP"</span> ;;
+        6379) <span class="k">echo</span> <span class="s">"Redis ⚠️"</span> ;;
+        8080) <span class="k">echo</span> <span class="s">"HTTP-Alt"</span> ;;
+        *)    <span class="k">echo</span> <span class="s">"Unknown"</span> ;;
+    <span class="k">esac</span>
+}
+
+<span class="c"># Banner grabbing</span>
+<span class="k">function</span> <span class="f">grab_banner</span>() {
+    <span class="k">local</span> <span class="v">host</span>=<span class="s">"$1"</span>
+    <span class="k">local</span> <span class="v">port</span>=<span class="s">"$2"</span>
+    <span class="k">local</span> <span class="v">banner</span>
+    <span class="v">banner</span>=$(timeout 2 bash -c <span class="s">"echo '' | nc -w2 $host $port 2>/dev/null | head -1"</span>)
+    <span class="k">echo</span> <span class="s">"${banner//[^[:print:]]/}"</span>   <span class="c"># non-printable chars বাদ</span>
+}
+
+<span class="c"># Port scan function</span>
+<span class="k">function</span> <span class="f">scan_port</span>() {
+    <span class="k">local</span> <span class="v">port</span>=<span class="s">"$1"</span>
+    timeout <span class="s">"$TIMEOUT"</span> bash -c <span class="s">"echo >/dev/tcp/$TARGET/$port"</span> 2>/dev/null
+    <span class="k">if</span> [ <span class="s">"$?"</span> -eq 0 ]; <span class="k">then</span>
+        <span class="k">local</span> <span class="v">service</span>=$(get_service <span class="s">"$port"</span>)
+        <span class="k">local</span> <span class="v">banner</span>=$(grab_banner <span class="s">"$TARGET"</span> <span class="s">"$port"</span>)
+        printf <span class="s">"  ${GREEN}[OPEN]${NC} %-6s %-12s %s\n"</span> <span class="s">"$port"</span> <span class="s">"$service"</span> <span class="s">"$banner"</span>
+        <span class="v">OPEN_PORTS</span>+=(<span class="s">"$port"</span>)
+    <span class="k">fi</span>
+}
+
+<span class="c"># Validation</span>
+<span class="k">if</span> [ -z <span class="s">"$TARGET"</span> ]; <span class="k">then</span>
+    <span class="k">echo</span> <span class="s">"Usage: $0 &lt;target&gt; [start] [end]"</span>
+    <span class="k">exit</span> 1
+<span class="k">fi</span>
+
+<span class="c"># Banner</span>
+<span class="k">echo</span> -e <span class="s">"${BLUE}"</span>
+<span class="k">echo</span> <span class="s">" ╔══════════════════════════╗"</span>
+<span class="k">echo</span> <span class="s">" ║  BashScan Port Scanner   ║"</span>
+<span class="k">echo</span> <span class="s">" ╚══════════════════════════╝"</span>
+<span class="k">echo</span> -e <span class="s">"${NC}"</span>
+<span class="k">echo</span> -e <span class="s">" Target : ${GREEN}$TARGET${NC}"</span>
+<span class="k">echo</span> -e <span class="s">" Range  : ${YELLOW}$START_PORT - $END_PORT${NC}"</span>
+<span class="k">echo</span> -e <span class="s">" Started: $(date)\n"</span>
+<span class="k">echo</span> <span class="s">" PORT   SERVICE      BANNER"</span>
+<span class="k">echo</span> <span class="s">" ─────────────────────────────────"</span>
+
+<span class="c"># Main scan loop</span>
+<span class="k">for</span> (( port=START_PORT; port<=END_PORT; port++ )); <span class="k">do</span>
+    scan_port <span class="s">"$port"</span> &   <span class="c"># Background-এ চালাও</span>
+    <span class="c"># Thread limit — একসাথে বেশি হলে system overload</span>
+    <span class="k">if</span> (( port % 100 == 0 )); <span class="k">then</span>
+        wait
+    <span class="k">fi</span>
+<span class="k">done</span>
+wait   <span class="c"># সব background job শেষ হওয়া পর্যন্ত</span>
+
+<span class="c"># Summary</span>
+<span class="k">echo</span> <span class="s">""</span>
+<span class="k">echo</span> <span class="s">" ─────────────────────────────────"</span>
+<span class="k">echo</span> -e <span class="s">" ${GREEN}[+]${NC} Scan complete!"</span>
+<span class="k">echo</span> -e <span class="s">" [+] Open ports: ${#OPEN_PORTS[@]}"</span>
+<span class="k">echo</span> -e <span class="s">" [+] Time: $(date)"</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- CH 9: LOG ANALYZER -->
+<div class="chapter ch9">
+  <div class="chapter-header" data-num="09">
+    <div class="ch-label">CHAPTER 09 — PROJECT</div>
+    <div class="ch-title">📊 <span class="bn-text">Log Analyzer Script</span><span class="en-text">Log Analyzer Script</span></div>
+    <div class="ch-desc"><span class="bn-text">auth.log বিশ্লেষণ করে brute force attack, suspicious IP ও anomaly detect করা</span><span class="en-text">Analyzing auth.log to detect brute force attacks, suspicious IPs and anomalies</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">সম্পূর্ণ Log Analyzer Script</span><span class="en-text">Complete Log Analyzer Script</span></h2>
+    <div class="code">
+<span class="c">#!/bin/bash</span>
+<span class="c">##############################################</span>
+<span class="c"># LogHunter — Security Log Analyzer</span>
+<span class="c"># Usage: ./loghunter.sh [logfile]</span>
+<span class="c">##############################################</span>
+
+<span class="v">RED</span>=<span class="s">'\033[0;31m'</span>; <span class="v">GREEN</span>=<span class="s">'\033[0;32m'</span>
+<span class="v">YELLOW</span>=<span class="s">'\033[1;33m'</span>; <span class="v">BLUE</span>=<span class="s">'\033[0;34m'</span>; <span class="v">NC</span>=<span class="s">'\033[0m'</span>
+
+<span class="v">LOGFILE</span>=<span class="s">"${1:-/var/log/auth.log}"</span>
+<span class="v">THRESHOLD</span>=10   <span class="c"># এই সংখ্যার বেশি fail = suspicious</span>
+<span class="v">REPORT</span>=<span class="s">"/tmp/security_report_$(date +%Y%m%d_%H%M%S).txt"</span>
+
+<span class="c"># Check file</span>
+<span class="k">if</span> [ ! -f <span class="s">"$LOGFILE"</span> ]; <span class="k">then</span>
+    <span class="k">echo</span> -e <span class="s">"${RED}[-]${NC} Log file পাওয়া যায়নি: $LOGFILE"</span>
+    <span class="k">exit</span> 1
+<span class="k">fi</span>
+
+<span class="k">function</span> <span class="f">print_section</span>() {
+    <span class="k">echo</span> -e <span class="s">"\n${BLUE}══ $1 ══${NC}"</span>
+}
+
+<span class="k">function</span> <span class="f">analyze_auth_log</span>() {
+    print_section <span class="s">"Failed SSH Login Attempts"</span>
+    <span class="k">echo</span> <span class="s">"  Top attacking IPs:"</span>
+    grep <span class="s">"Failed password"</span> <span class="s">"$LOGFILE"</span> 2>/dev/null | \
+        awk '{print $11}' | \
+        sort | uniq -c | sort -rn | head -10 | \
+        <span class="k">while</span> read count ip; <span class="k">do</span>
+            <span class="k">if</span> [ <span class="s">"$count"</span> -ge <span class="s">"$THRESHOLD"</span> ]; <span class="k">then</span>
+                <span class="k">echo</span> -e <span class="s">"  ${RED}[!]${NC} $ip → $count attempts (SUSPICIOUS)"</span>
+            <span class="k">else</span>
+                <span class="k">echo</span> -e <span class="s">"  ${YELLOW}[*]${NC} $ip → $count attempts"</span>
+            <span class="k">fi</span>
+        <span class="k">done</span>
+
+    print_section <span class="s">"Invalid Users"</span>
+    <span class="k">echo</span> <span class="s">"  Top non-existent usernames tried:"</span>
+    grep <span class="s">"Invalid user"</span> <span class="s">"$LOGFILE"</span> 2>/dev/null | \
+        awk '{print $8}' | \
+        sort | uniq -c | sort -rn | head -10 | \
+        <span class="k">while</span> read count user; <span class="k">do</span>
+            <span class="k">echo</span> -e <span class="s">"  ${YELLOW}[*]${NC} '$user' → $count times"</span>
+        <span class="k">done</span>
+
+    print_section <span class="s">"Successful Logins"</span>
+    <span class="k">echo</span> <span class="s">"  Recent successful SSH logins:"</span>
+    grep <span class="s">"Accepted password\|Accepted publickey"</span> <span class="s">"$LOGFILE"</span> 2>/dev/null | \
+        tail -10 | awk '{print $1,$2,$3,"User:",$9,"From:",$11}' | \
+        <span class="k">while</span> read line; <span class="k">do</span>
+            <span class="k">echo</span> -e <span class="s">"  ${GREEN}[+]${NC} $line"</span>
+        <span class="k">done</span>
+
+    print_section <span class="s">"Root Login Attempts"</span>
+    <span class="v">root_fails</span>=$(grep <span class="s">"Failed password for root"</span> <span class="s">"$LOGFILE"</span> 2>/dev/null | wc -l)
+    <span class="k">if</span> [ <span class="s">"$root_fails"</span> -gt 0 ]; <span class="k">then</span>
+        <span class="k">echo</span> -e <span class="s">"  ${RED}[!!!] Root login failed $root_fails times!"</span>
+    <span class="k">else</span>
+        <span class="k">echo</span> -e <span class="s">"  ${GREEN}[+]${NC} No root login failures"</span>
+    <span class="k">fi</span>
+
+    print_section <span class="s">"Summary Statistics"</span>
+    <span class="k">echo</span> -e <span class="s">"  Total failed logins : $(grep -c 'Failed' "$LOGFILE" 2>/dev/null)"</span>
+    <span class="k">echo</span> -e <span class="s">"  Unique attacking IPs: $(grep 'Failed password' "$LOGFILE" 2>/dev/null | awk '{print $11}' | sort -u | wc -l)"</span>
+    <span class="k">echo</span> -e <span class="s">"  Log file size       : $(du -sh "$LOGFILE" | cut -f1)"</span>
+    <span class="k">echo</span> -e <span class="s">"  Log date range      : $(head -1 "$LOGFILE" | cut -d' ' -f1-3) → $(tail -1 "$LOGFILE" | cut -d' ' -f1-3)"</span>
+}
+
+<span class="c"># Header</span>
+<span class="k">echo</span> -e <span class="s">"${GREEN}"</span>
+<span class="k">echo</span> <span class="s">" ╔══════════════════════════════╗"</span>
+<span class="k">echo</span> <span class="s">" ║   LogHunter - Log Analyzer  ║"</span>
+<span class="k">echo</span> <span class="s">" ╚══════════════════════════════╝"</span>
+<span class="k">echo</span> -e <span class="s">"${NC}"</span>
+<span class="k">echo</span> -e <span class="s">" File: ${YELLOW}$LOGFILE${NC}"</span>
+<span class="k">echo</span> -e <span class="s">" Time: $(date)\n"</span>
+
+analyze_auth_log
+<span class="k">echo</span> -e <span class="s">"\n${GREEN}[+]${NC} Analysis complete!"</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- CH 10: SECURITY AUTOMATION -->
+<div class="chapter ch10">
+  <div class="chapter-header" data-num="10">
+    <div class="ch-label">CHAPTER 10 — PROJECT</div>
+    <div class="ch-title">🤖 <span class="bn-text">Security Automation Scripts</span><span class="en-text">Security Automation Scripts</span></div>
+    <div class="ch-desc"><span class="bn-text">System hardening checker, web security tester, backup automation</span><span class="en-text">System hardening checker, web security tester, backup automation</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">System Hardening Checker</span><span class="en-text">System Hardening Checker</span></h2>
+    <div class="code">
+<span class="c">#!/bin/bash</span>
+<span class="c"># system_hardening_check.sh — নিজের Linux system check করো</span>
+
+<span class="v">PASS</span>=0; <span class="v">FAIL</span>=0; <span class="v">WARN</span>=0
+<span class="v">GREEN</span>=<span class="s">'\033[0;32m'</span>; <span class="v">RED</span>=<span class="s">'\033[0;31m'</span>; <span class="v">YELLOW</span>=<span class="s">'\033[1;33m'</span>; <span class="v">NC</span>=<span class="s">'\033[0m'</span>
+
+<span class="k">function</span> <span class="f">check_pass</span>() { <span class="k">echo</span> -e <span class="s">" ${GREEN}[PASS]${NC} $1"</span>; (( PASS++ )); }
+<span class="k">function</span> <span class="f">check_fail</span>() { <span class="k">echo</span> -e <span class="s">" ${RED}[FAIL]${NC} $1"</span>; (( FAIL++ )); }
+<span class="k">function</span> <span class="f">check_warn</span>() { <span class="k">echo</span> -e <span class="s">" ${YELLOW}[WARN]${NC} $1"</span>; (( WARN++ )); }
+
+<span class="k">echo</span> <span class="s">"═══ System Security Check ═══"</span>
+<span class="k">echo</span> <span class="s">"Target: $(hostname) | $(date)"</span>
+<span class="k">echo</span> <span class="s">""</span>
+
+<span class="c"># ── SSH SECURITY ──</span>
+<span class="k">echo</span> <span class="s">"── SSH Configuration ──"</span>
+<span class="v">sshd_config</span>=<span class="s">"/etc/ssh/sshd_config"</span>
+
+<span class="k">if</span> grep -q <span class="s">"PermitRootLogin no"</span> <span class="s">"$sshd_config"</span> 2>/dev/null; <span class="k">then</span>
+    check_pass <span class="s">"Root SSH login disabled"</span>
+<span class="k">else</span>
+    check_fail <span class="s">"Root SSH login ENABLED — disable করো!"</span>
+<span class="k">fi</span>
+
+<span class="k">if</span> grep -q <span class="s">"PasswordAuthentication no"</span> <span class="s">"$sshd_config"</span> 2>/dev/null; <span class="k">then</span>
+    check_pass <span class="s">"Password auth disabled (key-only)"</span>
+<span class="k">else</span>
+    check_warn <span class="s">"Password auth enabled — key-based-এ switch করো"</span>
+<span class="k">fi</span>
+
+<span class="c"># ── FIREWALL ──</span>
+<span class="k">echo</span> <span class="s">""</span>; <span class="k">echo</span> <span class="s">"── Firewall ──"</span>
+<span class="k">if</span> systemctl is-active --quiet ufw 2>/dev/null || \
+   systemctl is-active --quiet firewalld 2>/dev/null; <span class="k">then</span>
+    check_pass <span class="s">"Firewall active"</span>
+<span class="k">else</span>
+    check_fail <span class="s">"Firewall inactive — ufw enable করো!"</span>
+<span class="k">fi</span>
+
+<span class="c"># ── UPDATES ──</span>
+<span class="k">echo</span> <span class="s">""</span>; <span class="k">echo</span> <span class="s">"── System Updates ──"</span>
+<span class="v">updates</span>=$(apt list --upgradable 2>/dev/null | grep -c upgradable)
+<span class="k">if</span> [ <span class="s">"$updates"</span> -le 5 ]; <span class="k">then</span>
+    check_pass <span class="s">"System up to date ($updates pending)"</span>
+<span class="k">else</span>
+    check_warn <span class="s">"$updates updates pending — apt upgrade করো"</span>
+<span class="k">fi</span>
+
+<span class="c"># ── DANGEROUS SERVICES ──</span>
+<span class="k">echo</span> <span class="s">""</span>; <span class="k">echo</span> <span class="s">"── Dangerous Services ──"</span>
+<span class="k">for</span> service <span class="k">in</span> telnet ftp rsh rexec; <span class="k">do</span>
+    <span class="k">if</span> systemctl is-active --quiet <span class="s">"$service"</span> 2>/dev/null; <span class="k">then</span>
+        check_fail <span class="s">"$service is RUNNING — disable করো!"</span>
+    <span class="k">else</span>
+        check_pass <span class="s">"$service not running"</span>
+    <span class="k">fi</span>
+<span class="k">done</span>
+
+<span class="c"># ── EMPTY PASSWORDS ──</span>
+<span class="k">echo</span> <span class="s">""</span>; <span class="k">echo</span> <span class="s">"── User Security ──"</span>
+<span class="v">empty_pass</span>=$(awk -F: '($2 == "" ) {print $1}' /etc/shadow 2>/dev/null)
+<span class="k">if</span> [ -z <span class="s">"$empty_pass"</span> ]; <span class="k">then</span>
+    check_pass <span class="s">"No empty passwords"</span>
+<span class="k">else</span>
+    check_fail <span class="s">"Empty password users: $empty_pass"</span>
+<span class="k">fi</span>
+
+<span class="c"># ── SUMMARY ──</span>
+<span class="k">echo</span> <span class="s">""</span>
+<span class="k">echo</span> <span class="s">"═══════════════════════════════"</span>
+<span class="k">echo</span> -e <span class="s">" ${GREEN}PASS: $PASS${NC} | ${YELLOW}WARN: $WARN${NC} | ${RED}FAIL: $FAIL${NC}"</span>
+<span class="k">echo</span> <span class="s">"═══════════════════════════════"</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Automated Backup Script</span><span class="en-text">Automated Backup Script</span></h2>
+    <div class="code">
+<span class="c">#!/bin/bash</span>
+<span class="c"># secure_backup.sh — গুরুত্বপূর্ণ file backup</span>
+
+<span class="v">BACKUP_DIR</span>=<span class="s">"/backup/$(date +%Y-%m-%d)"</span>
+<span class="v">IMPORTANT_DIRS</span>=(<span class="s">"/etc"</span> <span class="s">"/home"</span> <span class="s">"/var/www"</span>)
+<span class="v">LOG</span>=<span class="s">"/var/log/backup.log"</span>
+
+mkdir -p <span class="s">"$BACKUP_DIR"</span>
+
+<span class="k">function</span> <span class="f">log</span>() {
+    <span class="k">echo</span> <span class="s">"[$(date '+%H:%M:%S')] $*"</span> | tee -a <span class="s">"$LOG"</span>
+}
+
+log <span class="s">"Backup শুরু হচ্ছে..."</span>
+
+<span class="k">for</span> dir <span class="k">in</span> <span class="s">"${IMPORTANT_DIRS[@]}"</span>; <span class="k">do</span>
+    <span class="k">if</span> [ -d <span class="s">"$dir"</span> ]; <span class="k">then</span>
+        <span class="v">name</span>=$(basename <span class="s">"$dir"</span>)
+        tar -czf <span class="s">"$BACKUP_DIR/${name}_$(date +%Y%m%d).tar.gz"</span> \
+            --exclude=<span class="s">"*.tmp"</span> <span class="s">"$dir"</span> 2>/dev/null
+        log <span class="s">"[OK] $dir backup complete"</span>
+    <span class="k">fi</span>
+<span class="k">done</span>
+
+<span class="c"># 7 দিনের পুরনো backup মুছে ফেলা</span>
+find /backup -type d -mtime +7 -exec rm -rf {} + 2>/dev/null
+log <span class="s">"Backup complete! Location: $BACKUP_DIR"</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- CH 11: ADVANCED BASH -->
+<div class="chapter ch11">
+  <div class="chapter-header" data-num="11">
+    <div class="ch-label">CHAPTER 11</div>
+    <div class="ch-title">🚀 <span class="bn-text">Advanced Bash — Tips ও Best Practices</span><span class="en-text">Advanced Bash — Tips & Best Practices</span></div>
+    <div class="ch-desc"><span class="bn-text">Error handling, debugging, parallel execution, cron job — professional level scripting</span><span class="en-text">Error handling, debugging, parallel execution, cron jobs — professional level scripting</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec"><span class="bn-text">Error Handling</span><span class="en-text">Error Handling</span></h2>
+    <div class="code">
+<span class="c">#!/bin/bash</span>
+<span class="c"># Best practices — script শুরুতেই এগুলো রাখো</span>
+
+set -e       <span class="c"># error হলে script বন্ধ হয়ে যাবে</span>
+set -u       <span class="c"># undefined variable = error</span>
+set -o pipefail  <span class="c"># pipe-এ error হলে catch করবে</span>
+set -x       <span class="c"># Debug mode (development-এ)</span>
+
+<span class="c"># Trap — script বন্ধ হওয়ার আগে cleanup</span>
+<span class="k">function</span> <span class="f">cleanup</span>() {
+    <span class="k">echo</span> <span class="s">"Cleaning up..."</span>
+    rm -f /tmp/temp_scan_$$
+}
+trap cleanup EXIT SIGINT SIGTERM
+
+<span class="c"># Error handling with custom message</span>
+<span class="k">function</span> <span class="f">die</span>() {
+    <span class="k">echo</span> -e <span class="s">"\033[0;31m[ERROR]${NC} $1"</span> >&2
+    <span class="k">exit</span> 1
+}
+
+nmap -sV 192.168.1.1 || die <span class="s">"Nmap scan failed!"</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Debugging</span><span class="en-text">Debugging</span></h2>
+    <div class="code">
+<span class="c"># Debug mode চালানো</span>
+bash -x script.sh         <span class="c"># প্রতিটা command দেখাবে</span>
+bash -v script.sh         <span class="c"># input lines দেখাবে</span>
+bash -n script.sh         <span class="c"># syntax check (run করবে না)</span>
+
+<span class="c"># Script-এর ভেতরে debug on/off</span>
+set -x   <span class="c"># debug শুরু</span>
+<span class="c"># ... debug করার code ...</span>
+set +x   <span class="c"># debug বন্ধ</span>
+
+<span class="c"># Variable value check</span>
+<span class="k">echo</span> <span class="s">"DEBUG: target=$target, port=$port"</span> >&2
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Parallel Execution — দ্রুত Scanner</span><span class="en-text">Parallel Execution — Faster Scanner</span></h2>
+    <div class="code">
+<span class="c"># ১. Background processes</span>
+<span class="k">for</span> ip <span class="k">in</span> {1..254}; <span class="k">do</span>
+    ping -c 1 192.168.1.$ip &>/dev/null && <span class="k">echo</span> "ALIVE: 192.168.1.$ip" &
+<span class="k">done</span>
+wait
+
+<span class="c"># ২. xargs দিয়ে parallel</span>
+seq 1 254 | xargs -P 50 -I{} ping -c 1 -W 1 192.168.1.{} \
+    | grep <span class="s">"bytes from"</span> | awk '{print $4}'
+
+<span class="c"># ৩. Semaphore — thread limit</span>
+<span class="v">MAX_JOBS</span>=20
+<span class="v">current_jobs</span>=0
+<span class="k">for</span> port <span class="k">in</span> {1..1000}; <span class="k">do</span>
+    scan_port <span class="s">"$port"</span> &
+    (( current_jobs++ ))
+    <span class="k">if</span> (( current_jobs >= MAX_JOBS )); <span class="k">then</span>
+        wait -n  <span class="c"># যেকোনো একটা শেষ হওয়া পর্যন্ত</span>
+        (( current_jobs-- ))
+    <span class="k">fi</span>
+<span class="k">done</span>
+wait
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Cron Job — Automated Scheduling</span><span class="en-text">Cron Job — Automated Scheduling</span></h2>
+    <div class="code">
+<span class="c"># Cron job edit করা</span>
+crontab -e
+
+<span class="c"># Cron syntax: মিনিট ঘন্টা দিন মাস বার</span>
+<span class="c"># প্রতি ঘন্টায় log check</span>
+0 * * * * /home/user/loghunter.sh >> /var/log/security.log 2>&1
+
+<span class="c"># প্রতিদিন রাত ২টায় backup</span>
+0 2 * * * /home/user/secure_backup.sh
+
+<span class="c"># প্রতি ৫ মিনিটে network monitor</span>
+*/5 * * * * /home/user/network_monitor.sh
+
+<span class="c"># প্রতি সোমবার system check</span>
+0 9 * * 1 /home/user/system_hardening_check.sh | mail -s "Security Report" admin@example.com
+
+<span class="c"># Cron job দেখা</span>
+crontab -l
+    </div>
+
+  </div>
+</div>
+
+<!-- CH 12: CHEAT SHEET -->
+<div class="chapter ch12">
+  <div class="chapter-header" data-num="12">
+    <div class="ch-label">CHAPTER 12</div>
+    <div class="ch-title">📋 <span class="bn-text">Cheat Sheet — সম্পূর্ণ রেফারেন্স</span><span class="en-text">Cheat Sheet — Complete Reference</span></div>
+    <div class="ch-desc"><span class="bn-text">Bash syntax, Security one-liners, Network commands — সব এক জায়গায়</span><span class="en-text">Bash syntax, Security one-liners, Network commands — all in one place</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <h2 class="sec">Bash Syntax Quick Reference</h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#2a5a1e;">Variables & Strings</div>
+        <div class="cheat-row"><span class="cheat-cmd">var="value"</span><span class="cheat-desc">Variable set</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">echo "$var"</span><span class="cheat-desc">Print variable</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">var=$(command)</span><span class="cheat-desc">Command output</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">${#var}</span><span class="cheat-desc">String length</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">${var:-default}</span><span class="cheat-desc">Default value</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">${var/old/new}</span><span class="cheat-desc">Replace</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">arr=(a b c)</span><span class="cheat-desc">Array create</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">${arr[@]}</span><span class="cheat-desc">All array items</span></div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#1a2a5a;">Control Flow</div>
+        <div class="cheat-row"><span class="cheat-cmd">if [ cond ]; then</span><span class="cheat-desc">Condition</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">[ -f file ]</span><span class="cheat-desc">File exists</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">[ -z "$var" ]</span><span class="cheat-desc">Empty string</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">[ "$a" -eq "$b" ]</span><span class="cheat-desc">Numbers equal</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">for i in {1..10}</span><span class="cheat-desc">Range loop</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">while read line</span><span class="cheat-desc">Read file</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">case "$var" in</span><span class="cheat-desc">Case statement</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">function fn() {}</span><span class="cheat-desc">Function</span></div>
+      </div>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Security One-liners</span><span class="en-text">Security One-liners</span></h2>
+    <div class="code">
+<span class="c"># ── NETWORK DISCOVERY ──</span>
+<span class="c"># Live hosts find করা</span>
+<span class="k">for</span> i <span class="k">in</span> {1..254}; <span class="k">do</span> ping -c1 -W1 192.168.1.$i &>/dev/null && <span class="k">echo</span> <span class="s">"192.168.1.$i"</span>; <span class="k">done</span>
+
+<span class="c"># Port check (nc ছাড়া)</span>
+timeout 1 bash -c <span class="s">"echo >/dev/tcp/192.168.1.1/22"</span> && <span class="k">echo</span> <span class="s">"Port 22 OPEN"</span>
+
+<span class="c"># ── LOG ANALYSIS ──</span>
+<span class="c"># Top attacking IPs</span>
+grep <span class="s">"Failed password"</span> /var/log/auth.log | awk '{print $11}' | sort | uniq -c | sort -rn | head -20
+
+<span class="c"># Successful logins</span>
+grep <span class="s">"Accepted"</span> /var/log/auth.log | awk '{print $9,$11,$3}' | sort -u
+
+<span class="c"># Error analysis</span>
+grep -i <span class="s">"error\|fail\|warn"</span> /var/log/syslog | awk '{print $5}' | sort | uniq -c | sort -rn
+
+<span class="c"># ── FILE SEARCH ──</span>
+<span class="c"># Sensitive files খোঁজা</span>
+find / -name <span class="s">"*.conf"</span> -o -name <span class="s">"*.cfg"</span> 2>/dev/null | xargs grep -l <span class="s">"password"</span> 2>/dev/null
+
+<span class="c"># SUID files খোঁজা</span>
+find / -perm -u=s -type f 2>/dev/null
+
+<span class="c"># World-writable files খোঁজা</span>
+find / -perm -o+w -type f 2>/dev/null | grep -v <span class="s">"/proc\|/sys"</span>
+
+<span class="c"># ── SYSTEM INFO ──</span>
+<span class="c"># Listening ports</span>
+ss -tulpn | grep LISTEN
+
+<span class="c"># Running processes</span>
+ps aux | grep -v <span class="s">"^root"</span> | awk '{print $1,$11}' | sort -u
+
+<span class="c"># Open connections</span>
+ss -tn | grep ESTABLISHED | awk '{print $5}' | sort | uniq -c | sort -rn
+
+<span class="c"># ── WEB SECURITY ──</span>
+<span class="c"># Security headers check</span>
+curl -sI https://example.com | grep -i <span class="s">"strict\|content-security\|x-frame\|x-content"</span>
+
+<span class="c"># Response code check</span>
+<span class="k">while</span> read url; <span class="k">do</span>
+    code=$(curl -s -o /dev/null -w <span class="s">"%{http_code}"</span> <span class="s">"$url"</span>)
+    <span class="k">echo</span> <span class="s">"$code $url"</span>
+<span class="k">done</span> < urls.txt
+    </div>
+
+    <h2 class="sec"><span class="bn-text">গুরুত্বপূর্ণ Commands Quick Ref</span><span class="en-text">Important Commands Quick Ref</span></h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#5a2a00;">Text Processing</div>
+        <div class="cheat-row"><span class="cheat-cmd">grep -E "pattern" file</span><span class="cheat-desc">Regex search</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">awk '{print $1}' file</span><span class="cheat-desc">First column</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">sed 's/old/new/g'</span><span class="cheat-desc">Replace</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">cut -d: -f1 file</span><span class="cheat-desc">Cut field</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">sort | uniq -c</span><span class="cheat-desc">Count unique</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">sort -rn</span><span class="cheat-desc">Numeric descending</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">wc -l file</span><span class="cheat-desc">Line count</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">head -20 / tail -20</span><span class="cheat-desc">First/last lines</span></div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-head" style="background:#1a3a5a;">Network Commands</div>
+        <div class="cheat-row"><span class="cheat-cmd">nc -zv HOST PORT</span><span class="cheat-desc">Port check</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">curl -I URL</span><span class="cheat-desc">HTTP headers</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">curl -s -o /dev/null -w "%{http_code}"</span><span class="cheat-desc">Status code</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">ss -tulpn</span><span class="cheat-desc">Open ports</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">dig domain ANY</span><span class="cheat-desc">DNS lookup</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">whois domain</span><span class="cheat-desc">Domain info</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">tcpdump -i eth0 port 80</span><span class="cheat-desc">Capture traffic</span></div>
+        <div class="cheat-row"><span class="cheat-cmd">nmap -sV --top-ports 1000</span><span class="cheat-desc">Port scan</span></div>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:50px; padding:30px; background:var(--code-bg); border-radius:8px; border-top:3px solid var(--accent);">
+      <div style="font-family:'Fira Code',monospace; font-size:14px; color:#d8e0c8; margin-bottom:10px;">
+        <span style="color:#6aaa5e;">$</span> chmod +x security.sh && ./security.sh
+      </div>
+      <div style="font-family:'Fira Code',monospace; font-size:12px; color:#6aaa5e;">
+        [+] <span class="bn-text">Bash basics শেখা হলো</span><span class="en-text">Bash basics learned</span> ✓<br>
+        [+] <span class="bn-text">Security scripts তৈরি করা শেখা হলো</span><span class="en-text">Security script building learned</span> ✓<br>
+        [+] <span class="bn-text">Automation master হয়ে গেলে</span><span class="en-text">Automation mastered</span> ✓
+      </div>
+      <p style="color:rgba(130,160,110,0.4); font-size:12px; margin-top:14px; max-width:580px; margin-left:auto; margin-right:auto;">
+        <span class="bn-text">সম্পূর্ণ শিক্ষামূলক উদ্দেশ্যে। শুধুমাত্র authorized environment ও নিজের system-এ ব্যবহার করো।</span>
+        <span class="en-text">Entirely educational. Use only in authorized environments and on your own systems.</span>
+      </p>
+      <p style="margin-top:10px; font-size:10px; color:rgba(74,124,63,0.3); font-family:'Fira Code',monospace;">
+        v1.0 — Bash Scripting for Cyber Security | Bilingual | 12 Chapters + Projects + Cheat Sheet
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const body = document.body;
+body.classList.add('light-mode');
+
+function toggleTheme() {
+  const btn = document.getElementById('themeBtn');
+  if (body.classList.contains('light-mode')) {
+    body.classList.replace('light-mode', 'dark-mode');
+    btn.textContent = '☀️ Light';
+    localStorage.setItem('bash_theme', 'dark');
+  } else {
+    body.classList.replace('dark-mode', 'light-mode');
+    btn.textContent = '🌙 Dark';
+    localStorage.setItem('bash_theme', 'light');
+  }
+}
+
+function toggleLang() {
+  const btn = document.getElementById('langBtn');
+  if (body.classList.contains('lang-en')) {
+    body.classList.remove('lang-en');
+    btn.textContent = '🇬🇧 English';
+    localStorage.setItem('bash_lang', 'bn');
+  } else {
+    body.classList.add('lang-en');
+    btn.textContent = '🇧🇩 বাংলা';
+    localStorage.setItem('bash_lang', 'en');
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const t = localStorage.getItem('bash_theme');
+  const l = localStorage.getItem('bash_lang');
+  if (t === 'dark') {
+    body.classList.replace('light-mode', 'dark-mode');
+    const btn = document.getElementById('themeBtn');
+    if (btn) btn.textContent = '☀️ Light';
+  }
+  if (l === 'en') {
+    body.classList.add('lang-en');
+    const btn = document.getElementById('langBtn');
+    if (btn) btn.textContent = '🇧🇩 বাংলা';
+  }
+});
+</script>
+</body>
+</html>
