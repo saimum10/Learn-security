@@ -12,7 +12,7 @@
 
 - [🚀 Start Here](#-start-here)
 - [🐧 Linux & Kali Linux](#-linux--kali-linux)
-- [🐍 Python For Security](#-python-for-security)
+- [🐍 Programming For Security](#-python-for-security)
 - [🌐 Web Hacking & Bug Bounty](#-web-hacking--bug-bounty)
 - [📡 Network Hacking](#-network-hacking)
 - [🔑 Password Attacks & Cryptography](#-password-attacks--cryptography)
@@ -46,13 +46,14 @@
 
 ---
 
-## 🐍 Python For Security
+## 🐍 Programming For Security
 
 > **Prerequisites:** Linux basics, Ethical Hacking Roadmap
 
 - [Python Bangla Guide](https://saimum10.github.io/Learn-security/python_bangla_guide/python_bangla_guide.html) — Python from scratch — variables, loops, functions, OOP
 - [Python For Security V2](https://saimum10.github.io/Learn-security/python_for_security%20v2/python_for_security%20v2.html) — Writing scanners, exploits and automation scripts in Python
 - [Python Hacking Bangla](https://saimum10.github.io/Learn-security/python_hacking_bangla/python_hacking_bangla.html) — Keyloggers, port scanners, brute force tools with Python
+- [Bash scripting ](https://saimum10.github.io/Learn-security/bash_scripting_cybersecurity/bash_scripting_cybersecurity.html) - bash ,
 
 ---
 
