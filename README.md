@@ -68,17 +68,18 @@
 - [Web Pentest Bangla](https://saimum10.github.io/Learn-security/web_pentest_bangla/web_pentest_bangla.html) — Full web penetration testing methodology, recon to report
 - [Bug Bounty V2](https://saimum10.github.io/Learn-security/bug_bounty_v2/bug_bounty_v2.html) — Finding vulnerabilities on real platforms and getting paid
 - [Webhacking Bugbounty Bangla](https://saimum10.github.io/Learn-security/webhacking_bugbounty_bangla/webhacking_bugbounty_bangla.html) — Advanced web hacking techniques for real-world bug bounty
-
+- - [Website security](https://saimum10.github.io/Learn-security/website_security_bangla/website_security_bangla.html) — Secure website
 ---
 
 ## 📡 Network Hacking
 
 > **Prerequisites:** Networking Fundamentals, Kali Part 1
 
-- [Network Scanning Wifi Security](https://saimum10.github.io/Learn-security/network_scanning_wifi_security/network_scanning_wifi_security.html) — Nmap, ARP scan, WEP/WPA attacks
-- [Network Hacking Bangla](https://saimum10.github.io/Learn-security/network_hacking_bangla/network_hacking_bangla.html) — MitM attacks, sniffing, spoofing, pivoting
-- [FIREWALL,VPN,PROXY](https://saimum10.github.io/Learn-security/firewall_vpn_proxy_guide/firewall_vpn_proxy_guide.html)-- vpn , firewall, proxy..
-
+- [Network Scanning Wifi Security](https://saimum10.github.io/Learn-security/network_scanning_wifi_security/network_scanning_wifi_security.html) — Nmap · ARP scan, WEP/WPA attacks
+- [Network Hacking Bangla](https://saimum10.github.io/Learn-security/network_hacking_bangla/network_hacking_bangla.html) — MitM attacks · sniffing · spoofing, pivoting
+- [FIREWALL,VPN,PROXY](https://saimum10.github.io/Learn-security/firewall_vpn_proxy_guide/firewall_vpn_proxy_guide.html)-- vpn · firewall · proxy..
+  
+- [NETWORK guide ](https://saimum10.github.io/Learn-security/network_hacking_guide/network_hacking_guide.html)-- MitM · WiFi · Wireshark
 ---
 
 ## 🔑 Password Attacks & Cryptography
