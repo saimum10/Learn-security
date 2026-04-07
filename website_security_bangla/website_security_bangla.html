@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Website ও System রক্ষা করো — সম্পূর্ণ বাংলা গাইড</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #0d1b2a;
+    --accent: #0077b6;
+    --green: #2dc653;
+    --red: #e63946;
+    --yellow: #ffd60a;
+    --orange: #f4831f;
+    --purple: #7b2d8b;
+    --code-bg: #0d1117;
+    --code-border: #30363d;
+    --text: #1a1a2e;
+    --bg: #f0f8ff;
+    --card: #ffffff;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Hind Siliguri','Noto Sans Bengali',sans-serif; background:var(--bg); color:var(--text); font-size:14px; line-height:1.9; transition:background 0.3s,color 0.3s; }
+
+  /* BILINGUAL */
+  .en-text { display:none; } .bn-text { display:inline; }
+  body.lang-en .bn-text { display:none; } body.lang-en .en-text { display:inline; }
+  .en-block { display:none; } .bn-block { display:block; }
+  body.lang-en .bn-block { display:none; } body.lang-en .en-block { display:block; }
+
+  /* DARK MODE */
+  body.dark-mode { --bg:#030d1a; --card:#071525; --text:#c8d8e8; }
+  body.dark-mode .toc { background:#071525; }
+  body.dark-mode .chapter { background:#071525; }
+  body.dark-mode .chapter-body { background:#071525; }
+  body.dark-mode h2.sec { color:#63b3ed; }
+  body.dark-mode h3.sub { color:#4fc3f7; border-color:#1a3050; }
+  body.dark-mode .toc-main { color:#c8d8e8; border-color:#1a3050; }
+  body.dark-mode .toc-header { color:#c8d8e8; }
+  body.dark-mode .toc-sub { color:#6090b0; }
+  body.dark-mode td { border-color:#1a3050; color:#c8d8e8; }
+  body.dark-mode tr:nth-child(even) { background:#0a1f35; }
+  body.dark-mode tr:hover { background:#0d2840; }
+  body.dark-mode .card { background:#0a1f35; border-color:#1a3050; color:#c8d8e8; }
+  body.dark-mode .card h4 { color:#63b3ed; }
+  body.dark-mode .info { background:#051a30; color:#90cdf4; }
+  body.dark-mode .warn { background:#1a1000; color:#fbbf24; }
+  body.dark-mode .danger { background:#1a0505; color:#fc8181; }
+  body.dark-mode .success { background:#051a10; color:#6ee7b7; }
+  body.dark-mode .purple-box { background:#0a051a; color:#d8b4fe; }
+  body.dark-mode code { background:#051525; color:#63b3ed; }
+  body.dark-mode .diagram { background:#020a10; }
+  body.dark-mode .cheat-card { border-color:#1a3050; }
+  body.dark-mode .cheat-row { border-color:#0f2030; }
+  body.dark-mode .cheat-desc { color:#6090b0; }
+  body.dark-mode .cheat-cmd { color:#63b3ed; }
+  body.dark-mode .checklist-item { background:#0a1f35; border-color:#1a3050; }
+  body.dark-mode .checklist-item label { color:#c8d8e8; }
+  body.dark-mode .emergency-step { background:#1a0505; border-color:#e63946; }
+  body.dark-mode .emergency-step .step-num { background:#e63946; }
+
+  /* CONTROLS */
+  .top-controls { position:fixed; top:20px; right:20px; display:flex; gap:10px; z-index:9999; flex-wrap:wrap; justify-content:flex-end; }
+  .ctrl-btn { border:none; padding:10px 18px; border-radius:8px; font-size:13px; font-family:inherit; cursor:pointer; transition:all 0.3s; font-weight:700; box-shadow:0 4px 12px rgba(0,0,0,0.3); }
+  .lang-btn { background:#0077b6; color:white; }
+  .lang-btn:hover { background:#005f8e; transform:translateY(-2px); }
+  .theme-btn { background:#2dc653; color:#0d1b2a; }
+  .theme-btn:hover { background:#25a344; transform:translateY(-2px); }
+  .print-btn { background:#e63946; color:white; }
+  .print-btn:hover { background:#c1121f; transform:translateY(-2px); }
+
+  /* COVER */
+  .cover {
+    background:linear-gradient(135deg,#020c1a 0%,#051a35 50%,#0a1b2a 100%);
+    color:white; min-height:100vh; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center;
+    padding:60px 40px; position:relative; overflow:hidden;
+  }
+  .cover::before {
+    content:''; position:absolute; inset:0;
+    background:repeating-linear-gradient(45deg,transparent,transparent 50px,rgba(0,119,182,0.03) 50px,rgba(0,119,182,0.03) 51px);
+  }
+  .cover-icon { font-size:90px; margin-bottom:20px; animation:shield-pulse 2s ease-in-out infinite; }
+  @keyframes shield-pulse { 0%,100%{transform:scale(1);filter:drop-shadow(0 0 10px rgba(0,180,216,0.5))} 50%{transform:scale(1.08);filter:drop-shadow(0 0 25px rgba(0,180,216,0.8))} }
+  .cover h1 { font-size:36px; font-weight:700; color:#00b4d8; text-shadow:0 0 30px rgba(0,180,216,0.6); }
+  .cover h2 { font-size:19px; font-weight:400; opacity:0.8; margin:10px 0 25px; }
+  .cover .divider { width:120px; height:3px; background:var(--green); margin:20px auto; border-radius:2px; }
+  .cover .desc { font-size:15px; opacity:0.7; max-width:650px; line-height:2; }
+  .cover .badges { margin-top:30px; }
+  .cover .badge { display:inline-block; background:rgba(0,119,182,0.2); border:1px solid rgba(0,180,216,0.4); padding:6px 18px; border-radius:20px; margin:5px; font-size:13px; color:#90e0ef; }
+  .cover .emergency-banner {
+    background:linear-gradient(135deg,#7f0000,#c1121f);
+    border-radius:12px; padding:18px 30px; margin-top:30px;
+    max-width:500px; border:2px solid #ff6b6b;
+  }
+  .cover .emergency-banner p { font-size:15px; font-weight:700; color:white; }
+  .cover .emergency-banner small { font-size:12px; color:rgba(255,255,255,0.7); }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* TOC */
+  .toc { background:white; padding:50px 60px; }
+  .toc-header { font-size:30px; color:var(--primary); border-bottom:4px solid var(--accent); padding-bottom:15px; margin-bottom:35px; }
+  .toc-chapter { margin-bottom:5px; }
+  .toc-main { display:flex; justify-content:space-between; padding:10px 0; font-weight:700; font-size:16px; color:var(--primary); border-bottom:1px solid #e0ecff; margin-top:15px; }
+  .toc-main .num { color:var(--accent); margin-right:10px; }
+  .toc-sub { padding:5px 0 5px 30px; color:#555; font-size:13.5px; border-bottom:1px dotted #e0ecff; }
+
+  /* CHAPTERS */
+  .chapter { background:white; margin:0; page-break-before:always; }
+  .chapter-header { padding:40px 55px; position:relative; overflow:hidden; }
+  .ch1 .chapter-header { background:linear-gradient(135deg,#020c1a,#051a35); }
+  .ch2 .chapter-header { background:linear-gradient(135deg,#051a35,#0a2a4a); }
+  .ch3 .chapter-header { background:linear-gradient(135deg,#0a1b35,#0f3460); }
+  .ch4 .chapter-header { background:linear-gradient(135deg,#0d2818,#1a4731); }
+  .ch5 .chapter-header { background:linear-gradient(135deg,#1a0a00,#3d1500); }
+  .ch6 .chapter-header { background:linear-gradient(135deg,#0d0020,#2d1b69); }
+  .ch7 .chapter-header { background:linear-gradient(135deg,#1a0000,#4a0000); }
+  .ch8 .chapter-header { background:linear-gradient(135deg,#1a1000,#3d2800); }
+  .ch9 .chapter-header { background:linear-gradient(135deg,#020c1a,#0a2a4a); }
+  .chapter-label { font-size:11px; letter-spacing:4px; color:#00b4d8; text-transform:uppercase; margin-bottom:10px; }
+  .chapter-title { font-size:28px; color:white; font-weight:700; }
+  .chapter-desc { font-size:14px; color:rgba(255,255,255,0.6); margin-top:8px; }
+  .chapter-body { padding:40px 55px; }
+
+  h2.sec { font-size:22px; color:var(--primary); margin:35px 0 15px; padding-left:18px; border-left:5px solid var(--accent); }
+  h3.sub { font-size:17px; color:#0a2a4a; margin:25px 0 12px; padding-bottom:6px; border-bottom:2px dashed #d0e8ff; }
+  p { margin-bottom:14px; text-align:justify; }
+  ul,ol { margin:12px 0 12px 25px; line-height:2; } li { margin-bottom:4px; }
+
+  /* CODE */
+  .code { background:var(--code-bg); color:#c9d1d9; padding:20px 25px; border-radius:10px; font-family:'Courier New',monospace; font-size:13px; margin:18px 0; line-height:1.8; overflow-x:auto; border:1px solid var(--code-border); border-left:4px solid var(--accent); }
+  .code .c { color:#6e7681; } .code .g { color:#2dc653; } .code .y { color:#e3b341; }
+  .code .r { color:#ff7b72; } .code .p { color:#90e0ef; } .code .bl { color:#79c0ff; }
+  code { background:#051525; color:#63b3ed; padding:2px 8px; border-radius:4px; font-family:'Courier New',monospace; font-size:13px; }
+
+  /* BOXES */
+  .box { padding:18px 22px; border-radius:10px; margin:20px 0; border-left:5px solid; }
+  .info { background:#e8f4fd; border-color:#0077b6; color:#023e8a; }
+  .warn { background:#fff8e6; border-color:#f4831f; color:#7b3f00; }
+  .danger { background:#fde8ea; border-color:#e63946; color:#9b1d20; }
+  .success { background:#e8f8ed; border-color:#2dc653; color:#1a4731; }
+  .purple-box { background:#f3e8ff; border-color:#7b2d8b; color:#4a0072; }
+  .box-t { font-weight:700; margin-bottom:8px; font-size:15px; }
+
+  /* TABLES */
+  table { width:100%; border-collapse:collapse; margin:20px 0; font-size:13.5px; }
+  thead tr { background:var(--primary); color:white; }
+  th { padding:12px 15px; text-align:left; font-weight:600; }
+  td { padding:10px 15px; border-bottom:1px solid #e0ecff; }
+  tr:nth-child(even) { background:#f0f8ff; }
+  tr:hover { background:#dbeeff; }
+
+  /* DIAGRAM */
+  .diagram { background:#0d1117; border:1px solid #30363d; border-radius:10px; padding:22px; font-family:'Courier New',monospace; font-size:13px; line-height:1.9; margin:20px 0; color:#c9d1d9; overflow-x:auto; }
+  .diagram .dg { color:#2dc653; } .diagram .dy { color:#e3b341; }
+  .diagram .db { color:#79c0ff; } .diagram .dr { color:#ff7b72; } .diagram .dp { color:#90e0ef; }
+
+  /* GRID */
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:18px; margin:20px 0; }
+  .grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:15px; margin:20px 0; }
+  .card { background:#f0f8ff; border:1px solid #c0d8f0; border-radius:10px; padding:18px; }
+  .card h4 { color:var(--primary); margin-bottom:10px; font-size:15px; border-bottom:2px solid var(--accent); padding-bottom:6px; }
+  .card.danger-card { border-color:var(--red); } .card.danger-card h4 { color:var(--red); border-color:var(--red); }
+  .card.success-card { border-color:var(--green); } .card.success-card h4 { color:#1a4731; border-color:var(--green); }
+  .card.warn-card { border-color:var(--orange); } .card.warn-card h4 { color:var(--orange); border-color:var(--orange); }
+
+  /* BADGE */
+  .badge { display:inline-block; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:600; margin:2px; }
+  .badge-g { background:#d1e7dd; color:#0f5132; } .badge-r { background:#fde8ea; color:#c1121f; }
+  .badge-y { background:#fff3cd; color:#856404; } .badge-b { background:#cfe2ff; color:#084298; }
+  .badge-p { background:#f3e8ff; color:#4a0072; }
+
+  /* SEVERITY */
+  .sev-critical { background:#7f0000; color:white; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:700; }
+  .sev-high { background:#c1121f; color:white; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:700; }
+  .sev-medium { background:#f4831f; color:white; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:700; }
+  .sev-low { background:#2dc653; color:white; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:700; }
+
+  /* INTERACTIVE CHECKLIST */
+  .checklist-section { margin:20px 0; }
+  .checklist-category { font-size:16px; font-weight:700; color:var(--primary); margin:20px 0 10px; padding:8px 16px; background:#e8f4fd; border-radius:8px; border-left:4px solid var(--accent); }
+  body.dark-mode .checklist-category { background:#051a30; color:#90cdf4; }
+  .checklist-item {
+    display:flex; align-items:flex-start; gap:12px;
+    background:white; border:1px solid #e0ecff; border-radius:8px;
+    padding:12px 16px; margin-bottom:8px; transition:all 0.2s;
+  }
+  .checklist-item:hover { border-color:var(--accent); box-shadow:0 2px 8px rgba(0,119,182,0.1); }
+  .checklist-item input[type="checkbox"] { width:18px; height:18px; cursor:pointer; accent-color:var(--accent); flex-shrink:0; margin-top:3px; }
+  .checklist-item label { cursor:pointer; font-size:14px; line-height:1.6; }
+  .checklist-item.checked { background:#e8f8ed; border-color:#2dc653; }
+  .checklist-item.checked label { text-decoration:line-through; color:#666; }
+  .progress-bar-container { background:#e0ecff; border-radius:20px; height:12px; margin:15px 0; overflow:hidden; }
+  .progress-bar { height:100%; border-radius:20px; background:linear-gradient(90deg,#0077b6,#2dc653); transition:width 0.5s ease; }
+  .progress-text { text-align:center; font-size:13px; font-weight:600; color:var(--accent); margin-bottom:5px; }
+
+  /* EMERGENCY STEPS */
+  .emergency-steps { margin:20px 0; }
+  .emergency-step {
+    display:flex; gap:16px; align-items:flex-start;
+    background:white; border:1px solid #fde8ea; border-radius:10px;
+    padding:16px 20px; margin-bottom:12px;
+  }
+  .step-num {
+    min-width:36px; height:36px; border-radius:50%;
+    background:#e63946; color:white; display:flex;
+    align-items:center; justify-content:center;
+    font-weight:800; font-size:16px; flex-shrink:0;
+  }
+  .step-content { flex:1; }
+  .step-title { font-weight:700; font-size:15px; color:#9b1d20; margin-bottom:4px; }
+  .step-desc { font-size:13.5px; color:#555; }
+  body.dark-mode .step-title { color:#fc8181; }
+
+  /* THREAT CARDS */
+  .threat-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:20px 0; }
+  .threat-card { background:white; border:1px solid #e0ecff; border-radius:12px; overflow:hidden; }
+  .threat-card-header { padding:12px 16px; display:flex; align-items:center; gap:10px; }
+  .threat-icon { font-size:24px; }
+  .threat-title { font-weight:700; font-size:14px; color:white; }
+  .threat-card-body { padding:12px 16px; }
+  .threat-card p { font-size:12.5px; color:#444; margin-bottom:8px; text-align:left; }
+  body.dark-mode .threat-card { background:#0a1f35; border-color:#1a3050; }
+  body.dark-mode .threat-card p { color:#6090b0; }
+
+  /* CHEAT SHEET */
+  .cheat-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:20px 0; }
+  .cheat-card { background:var(--card); border:1px solid #c0d8f0; border-radius:10px; overflow:hidden; }
+  .cheat-card-header { padding:10px 16px; font-weight:700; font-size:14px; color:white; }
+  .cheat-row { display:flex; padding:7px 14px; border-bottom:1px solid #e8f0ff; font-size:12.5px; gap:10px; align-items:flex-start; }
+  .cheat-row:last-child { border-bottom:none; }
+  .cheat-cmd { font-family:'Courier New',monospace; color:#0077b6; font-weight:600; min-width:160px; font-size:12px; }
+  .cheat-desc { color:#555; font-size:12.5px; }
+
+  /* ROADMAP */
+  .roadmap-phase { display:flex; gap:20px; margin-bottom:28px; align-items:flex-start; }
+  .phase-number { min-width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:800; color:white; flex-shrink:0; box-shadow:0 4px 15px rgba(0,0,0,0.3); }
+  .phase-content { flex:1; }
+  .phase-title { font-size:17px; font-weight:700; margin-bottom:6px; }
+  .phase-desc { font-size:13px; color:#555; margin-bottom:8px; }
+  body.dark-mode .phase-desc { color:#6090b0; }
+  .phase-items { display:flex; flex-wrap:wrap; gap:7px; }
+  .phase-item { padding:4px 13px; border-radius:20px; font-size:12px; font-weight:600; border:1.5px solid currentColor; }
+  .roadmap-arrow { text-align:center; font-size:26px; color:var(--accent); margin:-12px 0 8px 25px; }
+
+  .hl { background:linear-gradient(135deg,#e8f4ff,#d0eaff); border:1px solid #0077b6; padding:15px 20px; border-radius:8px; margin:18px 0; }
+  .chapter-summary { background:linear-gradient(135deg,#020c1a,#0a2a4a); color:white; border-radius:12px; padding:25px 30px; margin-top:40px; }
+  .chapter-summary h3 { color:#00b4d8; margin-bottom:15px; font-size:18px; }
+  .chapter-summary li { color:rgba(255,255,255,0.85); margin-bottom:6px; }
+
+  /* TOOL CARDS */
+  .tool-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin:20px 0; }
+  .tool-card { background:white; border:1px solid #c0d8f0; border-radius:10px; padding:16px; text-align:center; }
+  .tool-card .tool-icon { font-size:30px; margin-bottom:8px; }
+  .tool-card .tool-name { font-weight:700; font-size:14px; color:var(--primary); margin-bottom:4px; }
+  .tool-card .tool-desc { font-size:12px; color:#666; }
+  .tool-card .tool-link { font-size:11.5px; color:var(--accent); font-weight:600; }
+  body.dark-mode .tool-card { background:#0a1f35; border-color:#1a3050; }
+  body.dark-mode .tool-card .tool-name { color:#63b3ed; }
+  body.dark-mode .tool-card .tool-desc { color:#6090b0; }
+
+  @media (max-width:768px) { .cheat-grid,.grid2,.grid3,.threat-grid,.tool-grid { grid-template-columns:1fr; } .chapter-body,.toc { padding:25px 20px; } }
+  @media print { .top-controls { display:none; } }
+</style>
+</head>
+<body class="light-mode">
+
+<div class="top-controls">
+  <button class="lang-btn ctrl-btn" onclick="toggleLang()" id="langBtn">🇬🇧 English</button>
+  <button class="theme-btn ctrl-btn" onclick="toggleTheme()" id="themeBtn">🌙 Dark Mode</button>
+  <button class="print-btn ctrl-btn" onclick="window.print()">🖨️ PDF</button>
+</div>
+
+<!-- ══ COVER ══ -->
+<div class="cover">
+  <div class="cover-icon">🛡️</div>
+  <h1><span class="bn-text">আমার Website ও System রক্ষা করো</span><span class="en-text">Protect My Website & System</span></h1>
+  <h2><span class="bn-text">Hack থেকে বাঁচো — Hack হলে Recover করো</span><span class="en-text">Prevent Hacking — Recover if Hacked</span></h2>
+  <div class="divider"></div>
+  <p class="desc"><span class="bn-text">সাধারণ মানুষ থেকে ছোট ব্যবসা — সবার জন্য সহজ ভাষায় সাইবার নিরাপত্তার সম্পূর্ণ গাইড। Technical জ্ঞান না থাকলেও বুঝবে।</span><span class="en-text">From ordinary people to small businesses — a complete cybersecurity guide in plain language for everyone. You'll understand even without technical knowledge.</span></p>
+  <div class="emergency-banner">
+    <p>🚨 <span class="bn-text">এখনই Hack হয়েছে? → Chapter 7 দেখো!</span><span class="en-text">Hacked Right Now? → See Chapter 7!</span></p>
+    <small><span class="bn-text">Step-by-step emergency recovery guide</span><span class="en-text">Step-by-step emergency recovery guide</span></small>
+  </div>
+  <div class="badges">
+    <span class="badge">🌐 Website Security</span>
+    <span class="badge">🖥️ Server Hardening</span>
+    <span class="badge">🔐 Account Security</span>
+    <span class="badge">📧 Phishing থেকে বাঁচো</span>
+    <span class="badge">🔍 Security Audit</span>
+    <span class="badge">🚨 Hack Recovery</span>
+    <span class="badge">💾 Backup Strategy</span>
+    <span class="badge">✅ Interactive Checklist</span>
+  </div>
+</div>
+
+<!-- ══ TOC ══ -->
+<div class="toc">
+  <div class="toc-header">📋 <span class="bn-text">বিষয়সূচি</span><span class="en-text">Table of Contents</span></div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০১</span> <span class="bn-text">Threat Landscape — কে Attack করে ও কেন?</span><span class="en-text">Threat Landscape — Who Attacks & Why?</span></span></div>
+    <div class="toc-sub"><span class="bn-text">Hacker-দের ধরন, Common attacks, তোমার risk কতটুকু</span><span class="en-text">Types of hackers, Common attacks, Your level of risk</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০২</span> <span class="bn-text">Website Security</span><span class="en-text">Website Security</span></span></div>
+    <div class="toc-sub">WordPress hardening, HTTPS, WAF, Security headers, Plugin security</div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৩</span> VPS/Server Security</span></div>
+    <div class="toc-sub">SSH hardening, Firewall, Fail2Ban, Auto-update, Non-root user</div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৪</span> <span class="bn-text">Account ও Password Security</span><span class="en-text">Account & Password Security</span></span></div>
+    <div class="toc-sub"><span class="bn-text">Strong password, 2FA, Password manager, GitHub/cPanel সুরক্ষা</span><span class="en-text">Strong passwords, 2FA, Password manager, GitHub/cPanel protection</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৫</span> <span class="bn-text">Phishing ও Social Engineering থেকে বাঁচো</span><span class="en-text">Protect Yourself from Phishing & Social Engineering</span></span></div>
+    <div class="toc-sub"><span class="bn-text">Fake email চেনা, Malicious link, Domain spoofing</span><span class="en-text">Identifying fake emails, Malicious links, Domain spoofing</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৬</span> <span class="bn-text">নিজেই Security Audit করো</span><span class="en-text">Do Your Own Security Audit</span></span></div>
+    <div class="toc-sub"><span class="bn-text">Free tools দিয়ে vulnerability scan, Security score দেখো</span><span class="en-text">Vulnerability scan with free tools, Check your security score</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৭</span> 🚨 <span class="bn-text">Hack হয়ে গেলে কী করবে?</span><span class="en-text">What to Do If You've Been Hacked?</span></span></div>
+    <div class="toc-sub"><span class="bn-text">Hack-এর Signs, Emergency Response, Malware Remove, Recovery</span><span class="en-text">Signs of hacking, Emergency Response, Malware Removal, Recovery</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৮</span> <span class="bn-text">Backup Strategy — সেরা বিমা</span><span class="en-text">Backup Strategy — Best Insurance</span></span></div>
+    <div class="toc-sub"><span class="bn-text">3-2-1 Rule, Automated backup, Restore test, Offsite backup</span><span class="en-text">3-2-1 Rule, Automated backup, Restore testing, Offsite backup</span></div>
+  </div>
+  <div class="toc-chapter">
+    <div class="toc-main"><span><span class="num">০৯</span> ✅ <span class="bn-text">Interactive Security Checklist + Roadmap</span><span class="en-text">Interactive Security Checklist + Roadmap</span></span></div>
+    <div class="toc-sub"><span class="bn-text">Tick করো, progress দেখো, শেখার পথ</span><span class="en-text">Tick off items, track progress, learning path</span></div>
+  </div>
+</div>
+
+<!-- ══ CH 01: THREAT LANDSCAPE ══ -->
+<div class="chapter ch1">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 01</div>
+    <div class="chapter-title">🎯 <span class="bn-text">Threat Landscape — কে Attack করে ও কেন?</span><span class="en-text">Threat Landscape — Who Attacks & Why?</span></div>
+    <div class="chapter-desc"><span class="bn-text">শত্রু চিনলে আত্মরক্ষা সহজ হয়</span><span class="en-text">Knowing your enemy makes self-defense easier</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec"><span class="bn-text">কে তোমাকে Attack করে?</span><span class="en-text">Who Attacks You?</span></h2>
+    <div class="threat-grid">
+      <div class="threat-card">
+        <div class="threat-card-header" style="background:linear-gradient(135deg,#7f0000,#c1121f);">
+          <span class="threat-icon">🤖</span>
+          <span class="threat-title"><span class="bn-text">Automated Bots (৯০%)</span><span class="en-text">Automated Bots (90%)</span></span>
+        </div>
+        <div class="threat-card-body">
+          <p><span class="bn-text">বেশিরভাগ attack automated। Bot internet-এ সব website scan করে দুর্বলতা খোঁজে। তুমি "ছোট" হলেও exempt নও।</span><span class="en-text">Most attacks are automated. Bots scan all websites on the internet looking for vulnerabilities. Being "small" doesn't make you exempt.</span></p>
+          <span class="badge badge-r"><span class="bn-text">সবার জন্য ঝুঁকি</span><span class="en-text">Risk for everyone</span></span>
+        </div>
+      </div>
+      <div class="threat-card">
+        <div class="threat-card-header" style="background:linear-gradient(135deg,#1a3000,#2d5200);">
+          <span class="threat-icon">💰</span>
+          <span class="threat-title"><span class="bn-text">Opportunistic Hackers</span><span class="en-text">Opportunistic Hackers</span></span>
+        </div>
+        <div class="threat-card-body">
+          <p><span class="bn-text">সুযোগ পেলেই attack করে — Spam পাঠানো, Crypto mining, Data চুরি করে বেচা। Target তুমি নও, target হলো সুযোগ।</span><span class="en-text">They attack when they find an opportunity — sending spam, crypto mining, selling stolen data. You're not the target, the opportunity is.</span></p>
+          <span class="badge badge-y"><span class="bn-text">সবচেয়ে সাধারণ</span><span class="en-text">Most common</span></span>
+        </div>
+      </div>
+      <div class="threat-card">
+        <div class="threat-card-header" style="background:linear-gradient(135deg,#0d1b2a,#0f3460);">
+          <span class="threat-icon">🏭</span>
+          <span class="threat-title">Ransomware Groups</span>
+        </div>
+        <div class="threat-card-body">
+          <p><span class="bn-text">ফাইল encrypt করে মুক্তিপণ চায়। ছোট ব্যবসা বড় target কারণ security কম থাকে।</span><span class="en-text">Encrypts files and demands ransom. Small businesses are big targets because security is weaker.</span></p>
+          <span class="badge badge-r"><span class="bn-text">আর্থিক ক্ষতি</span><span class="en-text">Financial damage</span></span>
+        </div>
+      </div>
+      <div class="threat-card">
+        <div class="threat-card-header" style="background:linear-gradient(135deg,#2d1b00,#5a3500);">
+          <span class="threat-icon">👤</span>
+          <span class="threat-title"><span class="bn-text">Targeted Attack</span><span class="en-text">Targeted Attack</span></span>
+        </div>
+        <div class="threat-card-body">
+          <p><span class="bn-text">প্রতিযোগী, প্রতিহিংসামূলক ব্যক্তি, বা APT group-এর নির্দিষ্ট attack। কম সাধারণ কিন্তু বেশি বিপজ্জনক।</span><span class="en-text">Specific attacks from competitors, vengeful individuals, or APT groups. Less common but more dangerous.</span></p>
+          <span class="badge badge-p"><span class="bn-text">নির্দিষ্ট লক্ষ্য</span><span class="en-text">Specific target</span></span>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">সবচেয়ে সাধারণ Attack পদ্ধতি</span><span class="en-text">Most Common Attack Methods</span></h2>
+    <table>
+      <thead><tr><th><span class="bn-text">Attack</span><span class="en-text">Attack</span></th><th><span class="bn-text">কীভাবে ঘটে</span><span class="en-text">How It Happens</span></th><th><span class="bn-text">পরিণতি</span><span class="en-text">Consequence</span></th><th><span class="bn-text">মাত্রা</span><span class="en-text">Severity</span></th></tr></thead>
+      <tbody>
+        <tr><td>Brute Force</td><td><span class="bn-text">Password guess করা</span><span class="en-text">Guessing passwords</span></td><td><span class="bn-text">Account takeover</span><span class="en-text">Account takeover</span></td><td><span class="sev-high">HIGH</span></td></tr>
+        <tr><td>Phishing</td><td><span class="bn-text">Fake email/link</span><span class="en-text">Fake email/link</span></td><td><span class="bn-text">Credential চুরি</span><span class="en-text">Credential theft</span></td><td><span class="sev-critical">CRITICAL</span></td></tr>
+        <tr><td>Outdated Software</td><td><span class="bn-text">Unpatched vulnerability</span><span class="en-text">Unpatched vulnerability</span></td><td><span class="bn-text">Server compromise</span><span class="en-text">Server compromise</span></td><td><span class="sev-critical">CRITICAL</span></td></tr>
+        <tr><td>SQL Injection</td><td><span class="bn-text">Form-এ malicious input</span><span class="en-text">Malicious input in forms</span></td><td><span class="bn-text">Database চুরি</span><span class="en-text">Database theft</span></td><td><span class="sev-critical">CRITICAL</span></td></tr>
+        <tr><td>Malicious Plugin</td><td><span class="bn-text">Fake/infected plugin install</span><span class="en-text">Installing fake/infected plugin</span></td><td><span class="bn-text">Backdoor, malware</span><span class="en-text">Backdoor, malware</span></td><td><span class="sev-high">HIGH</span></td></tr>
+        <tr><td>Weak Password</td><td><span class="bn-text">Common password ব্যবহার</span><span class="en-text">Using common passwords</span></td><td><span class="bn-text">Full account access</span><span class="en-text">Full account access</span></td><td><span class="sev-critical">CRITICAL</span></td></tr>
+        <tr><td>DDoS</td><td><span class="bn-text">Traffic flood করা</span><span class="en-text">Flooding with traffic</span></td><td><span class="bn-text">Website down</span><span class="en-text">Website down</span></td><td><span class="sev-medium">MEDIUM</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="box info">
+      <div class="box-t">💡 <span class="bn-text">মূল কথা</span><span class="en-text">Key Point</span></div>
+      <span class="bn-text">৯০%+ attack prevent করা যায় শুধু basic security practices follow করে — Strong password, 2FA, Update রাখা, ভালো Backup। Advanced security-র দরকার নেই।</span>
+      <span class="en-text">90%+ of attacks can be prevented by just following basic security practices — strong passwords, 2FA, keeping things updated, and good backups. You don't need advanced security.</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🎯 <span class="bn-text">মনে রাখো</span><span class="en-text">Remember</span></h3>
+      <ul>
+        <li>✅ <span class="bn-text">"আমি ছোট, আমাকে কে attack করবে?" — এই ভুল ধারণা সবচেয়ে বিপজ্জনক</span><span class="en-text">"I'm small, who would attack me?" — This misconception is the most dangerous</span></li>
+        <li>✅ <span class="bn-text">বেশিরভাগ attack automated bot করে — তুমি target নও, তোমার vulnerability target</span><span class="en-text">Most attacks are done by automated bots — you're not the target, your vulnerability is</span></li>
+        <li>✅ <span class="bn-text">Basic security = ৯০% সুরক্ষা</span><span class="en-text">Basic security = 90% protection</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CH 02: WEBSITE SECURITY ══ -->
+<div class="chapter ch2">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 02</div>
+    <div class="chapter-title">🌐 Website Security</div>
+    <div class="chapter-desc"><span class="bn-text">WordPress, cPanel, Shared Hosting — সব ধরনের website secure করো</span><span class="en-text">WordPress, cPanel, Shared Hosting — Secure all types of websites</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec">WordPress Security — <span class="bn-text">সবচেয়ে বেশি attacked platform</span><span class="en-text">Most Attacked Platform</span></h2>
+    <div class="box warn">
+      <div class="box-t">⚠️ <span class="bn-text">জানো কি?</span><span class="en-text">Did You Know?</span></div>
+      <span class="bn-text">সব website-এর ৪৩% WordPress দিয়ে তৈরি। তাই WordPress সবচেয়ে বেশি attack-এর target। কিন্তু সঠিকভাবে setup করলে অনেক নিরাপদ।</span>
+      <span class="en-text">43% of all websites are built with WordPress. That's why WordPress is the most attacked target. But set up correctly, it can be very secure.</span>
+    </div>
+
+    <h3 class="sub">WordPress <span class="bn-text">Hardening — ধাপে ধাপে</span><span class="en-text">Hardening — Step by Step</span></h3>
+    <div class="code">
+<span class="c"># ১. Default Admin Username বদলাও</span>
+<span class="c"># "admin" username কখনো রাখবে না!</span>
+<span class="c"># WP Admin → Users → নতুন user তৈরি করো → Administrator → পুরনো "admin" delete</span>
+
+<span class="c"># ২. wp-config.php hardening</span>
+<span class="c"># wp-config.php-তে যোগ করো:</span>
+define('DISALLOW_FILE_EDIT', true);      <span class="c"># Theme/Plugin editor বন্ধ</span>
+define('DISALLOW_FILE_MODS', true);      <span class="c"># Plugin/Theme install বন্ধ (optional)</span>
+define('WP_DEBUG', false);               <span class="c"># Production-এ debug বন্ধ</span>
+define('FORCE_SSL_ADMIN', true);         <span class="c"># Admin panel HTTPS-এ</span>
+
+<span class="c"># ৩. .htaccess-এ protect করো:</span>
+<span class="g">&lt;Files wp-config.php&gt;
+order allow,deny
+deny from all
+&lt;/Files&gt;
+
+&lt;Files .htaccess&gt;
+order allow,deny
+deny from all
+&lt;/Files&gt;</span>
+
+<span class="c"># wp-login.php-তে IP restriction (optional):</span>
+<span class="g">&lt;Files wp-login.php&gt;
+order deny,allow
+allow from YOUR.IP.ADDRESS
+deny from all
+&lt;/Files&gt;</span>
+    </div>
+
+    <h3 class="sub"><span class="bn-text">Essential Security Plugins</span><span class="en-text">Essential Security Plugins</span></h3>
+    <div class="grid3">
+      <div class="card success-card">
+        <h4>🛡️ Wordfence</h4>
+        <ul>
+          <li>Free WAF</li>
+          <li>Malware scanner</li>
+          <li>Brute force protection</li>
+          <li>Login attempt block</li>
+          <li><span class="badge badge-g">Free</span></li>
+        </ul>
+      </div>
+      <div class="card success-card">
+        <h4>🔐 Solid Security</h4>
+        <ul>
+          <li>Two-factor auth</li>
+          <li>Security hardening</li>
+          <li>File change detection</li>
+          <li>Database backup</li>
+          <li><span class="badge badge-g">Free</span></li>
+        </ul>
+      </div>
+      <div class="card success-card">
+        <h4>💾 UpdraftPlus</h4>
+        <ul>
+          <li>Automated backup</li>
+          <li>Cloud storage (Drive, S3)</li>
+          <li>One-click restore</li>
+          <li><span class="badge badge-g">Free</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="sub">HTTPS / SSL — <span class="bn-text">অবশ্যই চালু করো</span><span class="en-text">Must Enable</span></h3>
+    <div class="code">
+<span class="c"># Free SSL: Let's Encrypt (cPanel → SSL/TLS → Let's Encrypt)</span>
+<span class="c"># অথবা Cloudflare Free SSL</span>
+
+<span class="c"># .htaccess-এ HTTP → HTTPS redirect:</span>
+<span class="g">RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]</span>
+
+<span class="c"># Nginx-এ:</span>
+<span class="g">server {
+    listen 80;
+    server_name yourdomain.com;
+    return 301 https://$server_name$request_uri;
+}</span>
+    </div>
+
+    <h2 class="sec">Security Headers — <span class="bn-text">সহজ কিন্তু শক্তিশালী</span><span class="en-text">Simple but Powerful</span></h2>
+    <div class="code">
+<span class="c"># .htaccess-এ যোগ করো (Apache):</span>
+<span class="g">Header always set X-Frame-Options "SAMEORIGIN"
+Header always set X-XSS-Protection "1; mode=block"
+Header always set X-Content-Type-Options "nosniff"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+Header always set Content-Security-Policy "default-src 'self'"
+Header unset Server
+Header unset X-Powered-By</span>
+
+<span class="c"># Check করো: securityheaders.com</span>
+    </div>
+
+    <h2 class="sec">Cloudflare — <span class="bn-text">Free Protection Layer</span><span class="en-text">Free Protection Layer</span></h2>
+    <div class="box success">
+      <div class="box-t">✅ <span class="bn-text">Cloudflare Free Plan-এ কী পাবে?</span><span class="en-text">What Do You Get with Cloudflare Free Plan?</span></div>
+      <ul>
+        <li>🛡️ DDoS protection (<span class="bn-text">unlimited</span><span class="en-text">unlimited</span>)</li>
+        <li>🔥 Web Application Firewall (WAF)</li>
+        <li>🚀 CDN (<span class="bn-text">website দ্রুত হবে</span><span class="en-text">makes website faster</span>)</li>
+        <li>🔒 Free SSL certificate</li>
+        <li>🤖 Bot protection</li>
+        <li>🌐 Real IP hide (<span class="bn-text">server IP attacker জানবে না</span><span class="en-text">attackers won't know your server IP</span>)</li>
+      </ul>
+      <p style="margin-top:10px;"><strong><span class="bn-text">Setup: cloudflare.com → Add site → DNS Nameserver change করো</span><span class="en-text">Setup: cloudflare.com → Add site → Change DNS Nameservers</span></strong></p>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🌐 Website Security <span class="bn-text">মনে রাখো</span><span class="en-text">Remember</span></h3>
+      <ul>
+        <li>✅ <span class="bn-text">WordPress + Plugin + Theme সবসময় update রাখো</span><span class="en-text">Always keep WordPress + Plugins + Themes updated</span></li>
+        <li>✅ HTTPS <span class="bn-text">চালু করো — Let's Encrypt free</span><span class="en-text">Enable HTTPS — Let's Encrypt is free</span></li>
+        <li>✅ Cloudflare → <span class="bn-text">Free, সহজ, অনেক সুরক্ষা</span><span class="en-text">Free, easy, great protection</span></li>
+        <li>✅ <span class="bn-text">Plugin কম রাখো — যা দরকার না, delete করো</span><span class="en-text">Keep plugins minimal — delete what you don't need</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CH 03: SERVER SECURITY ══ -->
+<div class="chapter ch3">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 03</div>
+    <div class="chapter-title">🖥️ VPS/Server Security</div>
+    <div class="chapter-desc"><span class="bn-text">Linux server hardening — SSH থেকে Firewall পর্যন্ত</span><span class="en-text">Linux server hardening — from SSH to Firewall</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec">SSH Hardening — <span class="bn-text">Remote Access নিরাপদ করো</span><span class="en-text">Secure Remote Access</span></h2>
+    <div class="code">
+<span class="c"># /etc/ssh/sshd_config পরিবর্তন করো:</span>
+<span class="g">Port 2222                    </span><span class="c"># Default 22 বদলাও (bot কম আসবে)</span>
+<span class="g">PermitRootLogin no           </span><span class="c"># Root login বন্ধ!</span>
+<span class="g">PasswordAuthentication no    </span><span class="c"># Password login বন্ধ → Key only</span>
+<span class="g">PubkeyAuthentication yes     </span><span class="c"># SSH Key ব্যবহার করো</span>
+<span class="g">MaxAuthTries 3               </span><span class="c"># ৩ বারের বেশি try করতে পারবে না</span>
+<span class="g">LoginGraceTime 20            </span><span class="c"># ২০ সেকেন্ডের মধ্যে login করতে হবে</span>
+<span class="g">AllowUsers youruser          </span><span class="c"># শুধু নির্দিষ্ট user</span>
+<span class="g">Protocol 2                   </span><span class="c"># SSH v2 only</span>
+<span class="g">X11Forwarding no</span>
+<span class="g">AllowTcpForwarding no</span>
+
+<span class="c"># Restart করো:</span>
+sudo systemctl restart sshd
+
+<span class="c"># SSH Key তৈরি (তোমার local machine-এ):</span>
+ssh-keygen -t ed25519 -C "yourname@server"
+<span class="c"># Server-এ public key upload:</span>
+ssh-copy-id -i ~/.ssh/id_ed25519.pub user@server
+    </div>
+
+    <h2 class="sec">Firewall Setup — UFW (<span class="bn-text">Ubuntu/Debian</span><span class="en-text">Ubuntu/Debian</span>)</h2>
+    <div class="code">
+<span class="c"># UFW install ও enable:</span>
+sudo apt install ufw
+sudo ufw default deny incoming     <span class="c"># সব incoming block</span>
+sudo ufw default allow outgoing    <span class="c"># সব outgoing allow</span>
+
+<span class="c"># প্রয়োজনীয় port খুলো:</span>
+sudo ufw allow 2222/tcp            <span class="c"># SSH (তোমার custom port)</span>
+sudo ufw allow 80/tcp              <span class="c"># HTTP</span>
+sudo ufw allow 443/tcp             <span class="c"># HTTPS</span>
+
+<span class="c"># Enable করো:</span>
+sudo ufw enable
+sudo ufw status verbose
+
+<span class="c"># নির্দিষ্ট IP থেকে SSH allow (সবচেয়ে নিরাপদ):</span>
+sudo ufw allow from YOUR.IP.ADDRESS to any port 2222
+
+<span class="c"># Rate limiting (Brute force রোধ):</span>
+sudo ufw limit ssh                 <span class="c"># ৩০ সেকেন্ডে ৬ বারের বেশি try করলে block</span>
+    </div>
+
+    <h2 class="sec">Fail2Ban — <span class="bn-text">Brute Force Auto-Block</span><span class="en-text">Brute Force Auto-Block</span></h2>
+    <div class="code">
+<span class="c"># Install:</span>
+sudo apt install fail2ban
+
+<span class="c"># /etc/fail2ban/jail.local তৈরি করো:</span>
+<span class="g">[DEFAULT]
+bantime = 3600           # ১ ঘণ্টা ban
+findtime = 600           # ১০ মিনিটে
+maxretry = 3             # ৩ বারের বেশি fail → ban
+banaction = ufw
+
+[sshd]
+enabled = true
+port = 2222              # তোমার SSH port
+
+[wordpress]
+enabled = true
+port = http,https
+filter = wordpress
+logpath = /var/log/auth.log
+maxretry = 5</span>
+
+<span class="c"># Start করো:</span>
+sudo systemctl enable fail2ban
+sudo systemctl start fail2ban
+sudo fail2ban-client status          <span class="c"># Status দেখো</span>
+sudo fail2ban-client status sshd     <span class="c"># Banned IP দেখো</span>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Auto Security Update</span><span class="en-text">Auto Security Update</span></h2>
+    <div class="code">
+<span class="c"># Unattended Upgrades — Security patch auto install:</span>
+sudo apt install unattended-upgrades
+sudo dpkg-reconfigure --priority=low unattended-upgrades
+
+<span class="c"># /etc/apt/apt.conf.d/50unattended-upgrades:</span>
+<span class="g">Unattended-Upgrade::Allowed-Origins {
+    "${distro_id}:${distro_codename}-security";
+};
+Unattended-Upgrade::AutoFixInterruptedDpkg "true";
+Unattended-Upgrade::Remove-Unused-Dependencies "true";
+Unattended-Upgrade::Automatic-Reboot "false";</span>
+
+<span class="c"># Manual update (নিয়মিত করো):</span>
+sudo apt update && sudo apt upgrade -y
+    </div>
+
+    <h2 class="sec">Non-Root User ও Sudo</h2>
+    <div class="code">
+<span class="c"># নতুন user তৈরি করো:</span>
+sudo adduser yourname
+sudo usermod -aG sudo yourname     <span class="c"># Sudo access দাও</span>
+
+<span class="c"># Root login সম্পূর্ণ disable:</span>
+sudo passwd -l root                <span class="c"># Root password lock</span>
+
+<span class="c"># Sudo log:</span>
+sudo cat /var/log/auth.log | grep sudo  <span class="c"># কে sudo ব্যবহার করেছে</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🖥️ Server Security <span class="bn-text">মনে রাখো</span><span class="en-text">Remember</span></h3>
+      <ul>
+        <li>✅ SSH Port বদলাও + Key authentication + Root login বন্ধ</li>
+        <li>✅ UFW → <span class="bn-text">শুধু দরকারি port খোলো</span><span class="en-text">Open only necessary ports</span></li>
+        <li>✅ Fail2Ban → <span class="bn-text">Auto brute force protection</span><span class="en-text">Auto brute force protection</span></li>
+        <li>✅ <span class="bn-text">Auto security update চালু রাখো</span><span class="en-text">Keep auto security updates enabled</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CH 04: ACCOUNT SECURITY ══ -->
+<div class="chapter ch4">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 04</div>
+    <div class="chapter-title">🔐 <span class="bn-text">Account ও Password Security</span><span class="en-text">Account & Password Security</span></div>
+    <div class="chapter-desc"><span class="bn-text">Strong password, 2FA, Password Manager — সবচেয়ে সহজ ও কার্যকর সুরক্ষা</span><span class="en-text">Strong password, 2FA, Password Manager — easiest and most effective protection</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec"><span class="bn-text">Strong Password — সঠিক নিয়ম</span><span class="en-text">Strong Password — The Right Rules</span></h2>
+    <div class="grid2">
+      <div class="card danger-card">
+        <h4>❌ <span class="bn-text">এই ধরনের Password কখনো না</span><span class="en-text">Never Use These Types</span></h4>
+        <ul>
+          <li>123456, password, admin</li>
+          <li><span class="bn-text">নিজের নাম, জন্ম তারিখ</span><span class="en-text">Your name, date of birth</span></li>
+          <li><span class="bn-text">Company নাম + সংখ্যা</span><span class="en-text">Company name + number</span></li>
+          <li><span class="bn-text">সব জায়গায় একই password</span><span class="en-text">Same password everywhere</span></li>
+          <li><span class="bn-text">৮ অক্ষরের কম</span><span class="en-text">Less than 8 characters</span></li>
+        </ul>
+      </div>
+      <div class="card success-card">
+        <h4>✅ <span class="bn-text">এই নিয়ম follow করো</span><span class="en-text">Follow These Rules</span></h4>
+        <ul>
+          <li><span class="bn-text">কমপক্ষে ১৬ অক্ষর</span><span class="en-text">At least 16 characters</span></li>
+          <li><span class="bn-text">Uppercase + lowercase + number + symbol</span><span class="en-text">Uppercase + lowercase + number + symbol</span></li>
+          <li><span class="bn-text">প্রতিটি account-এ আলাদা password</span><span class="en-text">Different password for every account</span></li>
+          <li>Password Manager <span class="bn-text">ব্যবহার করো</span><span class="en-text">Use a Password Manager</span></li>
+          <li>Passphrase: <code>coffee-table-runs-42!</code></li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec">Two-Factor Authentication (2FA) — <span class="bn-text">সবচেয়ে গুরুত্বপূর্ণ</span><span class="en-text">Most Important</span></h2>
+    <div class="box danger">
+      <div class="box-t">🔥 <span class="bn-text">2FA চালু করলে ৯৯.৯% Account Takeover বন্ধ হয়!</span><span class="en-text">Enabling 2FA Stops 99.9% of Account Takeovers!</span></div>
+      <span class="bn-text">Microsoft-এর গবেষণা: 2FA চালু থাকলে ৯৯.৯% automated attack কাজ করে না। এটা সবচেয়ে সহজ ও কার্যকর সুরক্ষা।</span>
+      <span class="en-text">Microsoft research: With 2FA enabled, 99.9% of automated attacks don't work. It's the easiest and most effective protection.</span>
+    </div>
+    <table>
+      <thead><tr><th>Platform</th><th><span class="bn-text">কীভাবে চালু করবে</span><span class="en-text">How to Enable</span></th><th><span class="bn-text">Recommended App</span><span class="en-text">Recommended App</span></th></tr></thead>
+      <tbody>
+        <tr><td>Google/Gmail</td><td>myaccount.google.com → Security → 2FA</td><td>Google Authenticator</td></tr>
+        <tr><td>GitHub</td><td>Settings → Password & Auth → 2FA</td><td>Authy</td></tr>
+        <tr><td>cPanel/Hosting</td><td>Security → Two-Factor Auth</td><td>Google Authenticator</td></tr>
+        <tr><td>WordPress</td><td>Wordfence / Solid Security plugin</td><td>Authy</td></tr>
+        <tr><td>Facebook</td><td>Settings → Security → 2FA</td><td>Google Authenticator</td></tr>
+        <tr><td>Cloudflare</td><td>My Profile → Authentication → 2FA</td><td>Authy</td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec">Password Manager — <span class="bn-text">Free ও Secure</span><span class="en-text">Free & Secure</span></h2>
+    <div class="grid3">
+      <div class="card blue-card">
+        <h4>🔑 Bitwarden</h4>
+        <ul>
+          <li>Open source</li>
+          <li>Cross-platform</li>
+          <li>Free (unlimited)</li>
+          <li>Self-host করা যায়</li>
+        </ul>
+        <span class="badge badge-g"><span class="bn-text">সেরা পছন্দ</span><span class="en-text">Best choice</span></span>
+      </div>
+      <div class="card blue-card">
+        <h4>🔑 KeePass</h4>
+        <ul>
+          <li>Offline (local)</li>
+          <li>Open source</li>
+          <li>Windows, Linux</li>
+          <li>Free</li>
+        </ul>
+        <span class="badge badge-b"><span class="bn-text">Offline পছন্দ</span><span class="en-text">Offline choice</span></span>
+      </div>
+      <div class="card blue-card">
+        <h4>🔑 Proton Pass</h4>
+        <ul>
+          <li>E2E encrypted</li>
+          <li>Privacy-focused</li>
+          <li>Free plan আছে</li>
+          <li>Mobile app</li>
+        </ul>
+        <span class="badge badge-p"><span class="bn-text">Privacy</span><span class="en-text">Privacy</span></span>
+      </div>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🔐 Account Security <span class="bn-text">মনে রাখো</span><span class="en-text">Remember</span></h3>
+      <ul>
+        <li>✅ 2FA → <span class="bn-text">আজই চালু করো — সবচেয়ে গুরুত্বপূর্ণ পদক্ষেপ</span><span class="en-text">Enable today — the most important step</span></li>
+        <li>✅ Bitwarden → <span class="bn-text">সব password manage করো</span><span class="en-text">Manage all passwords</span></li>
+        <li>✅ <span class="bn-text">প্রতিটি account-এ আলাদা password — এটা না মানলে সব ঝুঁকিতে</span><span class="en-text">Different password for every account — ignoring this puts everything at risk</span></li>
+        <li>✅ <span class="bn-text">Recovery code/backup code সেভ করো — Print করে রাখো</span><span class="en-text">Save recovery codes — print and store them</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CH 05: PHISHING ══ -->
+<div class="chapter ch5">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 05</div>
+    <div class="chapter-title">📧 <span class="bn-text">Phishing ও Social Engineering থেকে বাঁচো</span><span class="en-text">Protect Yourself from Phishing & Social Engineering</span></div>
+    <div class="chapter-desc"><span class="bn-text">Fake email, SMS, Link চেনার উপায়</span><span class="en-text">How to identify fake emails, SMS, and links</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec"><span class="bn-text">Phishing Email চেনার উপায়</span><span class="en-text">How to Identify a Phishing Email</span></h2>
+    <div class="diagram">
+<pre>
+<span class="dr">⚠️  Suspicious Email Analysis:</span>
+
+From: "Google Security" &lt;<span class="dr">security@g00gle-alerts.com</span>&gt;   ← <span class="dr">Domain ভুল!</span>
+To: you@email.com
+Subject: <span class="dr">URGENT: Your account will be suspended in 24 hours!</span>  ← <span class="dr">Urgency!</span>
+
+Dear Customer,                 <span class="c">← নাম নেই → Suspicious</span>
+Your Google account has been <span class="dr">compromised.</span>
+Click here to verify: <span class="dr">http://google-verify-now.xyz/login</span>  ← <span class="dr">Fake URL!</span>
+
+                                <span class="dg">✓ Real Google email হবে @google.com থেকে</span>
+                                <span class="dg">✓ Real URL হবে accounts.google.com</span>
+                                <span class="dg">✓ তোমার নাম থাকবে</span>
+</pre>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Red Flags — এগুলো দেখলে সতর্ক হও</span><span class="en-text">Red Flags — Be Careful When You See These</span></h2>
+    <table>
+      <thead><tr><th><span class="bn-text">লক্ষণ</span><span class="en-text">Sign</span></th><th><span class="bn-text">উদাহরণ</span><span class="en-text">Example</span></th><th><span class="bn-text">কী করবে</span><span class="en-text">What to Do</span></th></tr></thead>
+      <tbody>
+        <tr><td><span class="bn-text">Urgent/Emergency ভাষা</span><span class="en-text">Urgent/Emergency language</span></td><td>"24 hours to act!", "Account suspended"</td><td><span class="bn-text">থামো, যাচাই করো</span><span class="en-text">Stop, verify</span></td></tr>
+        <tr><td><span class="bn-text">Suspicious Sender</span><span class="en-text">Suspicious Sender</span></td><td>paypa1.com, g00gle.com</td><td><span class="bn-text">Domain দেখো সতর্কভাবে</span><span class="en-text">Check domain carefully</span></td></tr>
+        <tr><td><span class="bn-text">Generic Greeting</span><span class="en-text">Generic Greeting</span></td><td>"Dear Customer", "Dear User"</td><td><span class="bn-text">Legit company নাম জানে</span><span class="en-text">Legit companies know your name</span></td></tr>
+        <tr><td><span class="bn-text">Suspicious Link</span><span class="en-text">Suspicious Link</span></td><td>bit.ly/xyz, random-domain.com</td><td><span class="bn-text">Hover করে URL দেখো</span><span class="en-text">Hover to see URL</span></td></tr>
+        <tr><td><span class="bn-text">Unexpected Attachment</span><span class="en-text">Unexpected Attachment</span></td><td>.exe, .zip, .docm, invoice.pdf.exe</td><td><span class="bn-text">খুলবে না!</span><span class="en-text">Don't open!</span></td></tr>
+        <tr><td><span class="bn-text">Password চাওয়া</span><span class="en-text">Asking for password</span></td><td>"Enter your password to verify"</td><td><span class="bn-text">কোনো company password চায় না</span><span class="en-text">No company asks for your password</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 class="sec"><span class="bn-text">Link Check করার পদ্ধতি</span><span class="en-text">How to Check Links</span></h2>
+    <div class="code">
+<span class="c"># Click করার আগে এই tools দিয়ে check করো:</span>
+
+<span class="c"># VirusTotal — URL/File scan:</span>
+<span class="g">https://www.virustotal.com/gui/home/url</span>
+
+<span class="c"># URLVoid — Reputation check:</span>
+<span class="g">https://www.urlvoid.com</span>
+
+<span class="c"># Google Safe Browsing:</span>
+<span class="g">https://transparencyreport.google.com/safe-browsing/search</span>
+
+<span class="c"># Shortened URL expand করো:</span>
+<span class="g">https://unshorten.it</span>
+<span class="g">https://expandurl.net</span>
+
+<span class="c"># বা Browser-এ hover করো → Bottom-এ URL দেখাবে</span>
+<span class="c"># Mobile-এ Long press → URL preview দেখো</span>
+    </div>
+
+    <h2 class="sec">Email Security Setup</h2>
+    <div class="code">
+<span class="c"># তোমার domain-এ SPF, DKIM, DMARC set করো</span>
+<span class="c"># এগুলো না থাকলে তোমার domain থেকে fake email পাঠানো সহজ</span>
+
+<span class="c"># DNS Records যোগ করো (cPanel → DNS Zone Editor):</span>
+
+<span class="c"># SPF Record (কে email পাঠাতে পারবে):</span>
+<span class="g">TXT  @  "v=spf1 include:_spf.google.com ~all"</span>
+
+<span class="c"># DMARC Record (Fake email কী করবে):</span>
+<span class="g">TXT  _dmarc  "v=DMARC1; p=quarantine; rua=mailto:dmarc@yourdomain.com"</span>
+
+<span class="c"># Check করো:</span>
+<span class="g">https://mxtoolbox.com/spf.aspx</span>
+<span class="g">https://dmarcian.com/dmarc-inspector/</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>📧 Phishing <span class="bn-text">মনে রাখো</span><span class="en-text">Remember</span></h3>
+      <ul>
+        <li>✅ <span class="bn-text">Urgent email এলে → থামো, সরাসরি website-এ গিয়ে check করো</span><span class="en-text">When an urgent email arrives → stop, go directly to the website to check</span></li>
+        <li>✅ <span class="bn-text">Sender domain সতর্কভাবে দেখো — g00gle.com ≠ google.com</span><span class="en-text">Check sender domain carefully — g00gle.com ≠ google.com</span></li>
+        <li>✅ Link click-এর আগে → VirusTotal-এ check করো</li>
+        <li>✅ SPF + DMARC → <span class="bn-text">তোমার domain থেকে fake email বন্ধ</span><span class="en-text">Stops fake emails from your domain</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CH 06: SECURITY AUDIT ══ -->
+<div class="chapter ch6">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 06</div>
+    <div class="chapter-title">🔍 <span class="bn-text">নিজেই Security Audit করো</span><span class="en-text">Do Your Own Security Audit</span></div>
+    <div class="chapter-desc"><span class="bn-text">Free tools দিয়ে নিজের website ও server-এর দুর্বলতা খুঁজে বের করো</span><span class="en-text">Find your website and server vulnerabilities using free tools</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec"><span class="bn-text">Free Online Tools</span><span class="en-text">Free Online Tools</span></h2>
+    <div class="tool-grid">
+      <div class="tool-card">
+        <div class="tool-icon">🔒</div>
+        <div class="tool-name">SSL Labs</div>
+        <div class="tool-desc"><span class="bn-text">SSL/TLS configuration grade দেখো</span><span class="en-text">Check SSL/TLS configuration grade</span></div>
+        <div class="tool-link">ssllabs.com/ssltest</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">🛡️</div>
+        <div class="tool-name">Security Headers</div>
+        <div class="tool-desc"><span class="bn-text">HTTP security header check</span><span class="en-text">HTTP security header check</span></div>
+        <div class="tool-link">securityheaders.com</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">🔍</div>
+        <div class="tool-name">Mozilla Observatory</div>
+        <div class="tool-desc"><span class="bn-text">Website security score A-F</span><span class="en-text">Website security score A-F</span></div>
+        <div class="tool-link">observatory.mozilla.org</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">🦠</div>
+        <div class="tool-name">VirusTotal</div>
+        <div class="tool-desc"><span class="bn-text">URL ও File scan করো</span><span class="en-text">Scan URLs and files</span></div>
+        <div class="tool-link">virustotal.com</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">📧</div>
+        <div class="tool-name">MXToolbox</div>
+        <div class="tool-desc">SPF, DKIM, DMARC check</div>
+        <div class="tool-link">mxtoolbox.com</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">💧</div>
+        <div class="tool-name">HaveIBeenPwned</div>
+        <div class="tool-desc"><span class="bn-text">Email data breach-এ আছে কিনা</span><span class="en-text">Check if email is in a data breach</span></div>
+        <div class="tool-link">haveibeenpwned.com</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">🌐</div>
+        <div class="tool-name">Shodan</div>
+        <div class="tool-desc"><span class="bn-text">তোমার server কী expose করছে</span><span class="en-text">What your server is exposing</span></div>
+        <div class="tool-link">shodan.io</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">🔏</div>
+        <div class="tool-name">WPScan</div>
+        <div class="tool-desc"><span class="bn-text">WordPress vulnerability check</span><span class="en-text">WordPress vulnerability check</span></div>
+        <div class="tool-link">wpscan.com (free API)</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon">🕵️</div>
+        <div class="tool-name">Qualys FreeScan</div>
+        <div class="tool-desc"><span class="bn-text">Full vulnerability scan</span><span class="en-text">Full vulnerability scan</span></div>
+        <div class="tool-link">freescan.qualys.com</div>
+      </div>
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Server-এ Command দিয়ে Audit</span><span class="en-text">Audit via Server Commands</span></h2>
+    <div class="code">
+<span class="c"># Open ports দেখো:</span>
+sudo ss -tulnp                  <span class="c"># কোন port open?</span>
+sudo netstat -tulnp              <span class="c"># Alternative</span>
+<span class="c"># শুধু দরকারি port খোলা থাকা উচিত (22/2222, 80, 443)</span>
+
+<span class="c"># Failed login attempt:</span>
+sudo grep "Failed password" /var/log/auth.log | tail -20
+sudo grep "Invalid user" /var/log/auth.log | tail -20
+sudo lastb | head -20           <span class="c"># Failed login list</span>
+
+<span class="c"># Running services:</span>
+sudo systemctl list-units --type=service --state=running
+
+<span class="c"># SUID files (Privilege escalation risk):</span>
+find / -perm -4000 -type f 2>/dev/null | head -20
+
+<span class="c"># World-writable files:</span>
+find / -xdev -perm -0002 -type f 2>/dev/null | grep -v proc
+
+<span class="c"># Lynis — Comprehensive security audit:</span>
+sudo apt install lynis
+sudo lynis audit system         <span class="c"># Score ও recommendations দেখাবে</span>
+    </div>
+
+    <h2 class="sec">Data Breach Check</h2>
+    <div class="code">
+<span class="c"># HaveIBeenPwned API দিয়ে email check:</span>
+curl "https://haveibeenpwned.com/api/v3/breachedaccount/your@email.com" \
+  -H "hibp-api-key: YOUR_KEY"
+
+<span class="c"># CLI Tool:</span>
+pip3 install h8mail
+h8mail -t your@email.com        <span class="c"># Email breach check</span>
+
+<span class="c"># Password কোনো breach-এ আছে কিনা (SHA1 hash দিয়ে, password safe):</span>
+<span class="c"># https://haveibeenpwned.com/Passwords</span>
+<span class="c"># k-anonymity model ব্যবহার করে — password কখনো পাঠায় না</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🔍 Security Audit <span class="bn-text">মনে রাখো</span><span class="en-text">Remember</span></h3>
+      <ul>
+        <li>✅ <span class="bn-text">মাসে একবার: SSL Labs + SecurityHeaders + Observatory check করো</span><span class="en-text">Monthly: Check SSL Labs + SecurityHeaders + Observatory</span></li>
+        <li>✅ HaveIBeenPwned → <span class="bn-text">তোমার email breach-এ গেছে কিনা দেখো</span><span class="en-text">Check if your email has been in a breach</span></li>
+        <li>✅ Lynis → <span class="bn-text">Server-এ comprehensive audit</span><span class="en-text">Comprehensive audit on server</span></li>
+        <li>✅ <span class="bn-text">Failed login check → নিয়মিত auth.log দেখো</span><span class="en-text">Check failed logins → regularly review auth.log</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CH 07: HACK RECOVERY ══ -->
+<div class="chapter ch7">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 07</div>
+    <div class="chapter-title">🚨 <span class="bn-text">Hack হয়ে গেলে কী করবে?</span><span class="en-text">What to Do If You've Been Hacked?</span></div>
+    <div class="chapter-desc"><span class="bn-text">Emergency Response — ধীরে না, দ্রুত action নাও</span><span class="en-text">Emergency Response — Don't be slow, act fast</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec"><span class="bn-text">Hack-এর Signs — কীভাবে বুঝবে?</span><span class="en-text">Signs of Hacking — How Do You Know?</span></h2>
+    <div class="grid2">
+      <div class="card danger-card">
+        <h4>🚨 Website Hacked Signs</h4>
+        <ul>
+          <li><span class="bn-text">Website অন্য site-এ redirect হচ্ছে</span><span class="en-text">Website is redirecting to another site</span></li>
+          <li><span class="bn-text">Unknown page/content দেখাচ্ছে</span><span class="en-text">Unknown pages/content appearing</span></li>
+          <li><span class="bn-text">Google "This site may harm your computer" দেখাচ্ছে</span><span class="en-text">Google showing "This site may harm your computer"</span></li>
+          <li>Google Search Console-<span class="bn-text">এ Security issue</span><span class="en-text">Security issue in Google Search Console</span></li>
+          <li><span class="bn-text">Hosting থেকে suspension notice</span><span class="en-text">Suspension notice from hosting</span></li>
+          <li><span class="bn-text">Admin panel-এ অচেনা user</span><span class="en-text">Unknown users in admin panel</span></li>
+          <li><span class="bn-text">অস্বাভাবিক traffic spike</span><span class="en-text">Abnormal traffic spike</span></li>
+        </ul>
+      </div>
+      <div class="card danger-card">
+        <h4>🚨 Account/Server Hacked Signs</h4>
+        <ul>
+          <li><span class="bn-text">Login করতে পারছো না</span><span class="en-text">Can't log in anymore</span></li>
+          <li><span class="bn-text">অচেনা email/message পাঠানো হয়েছে</span><span class="en-text">Unknown emails/messages were sent</span></li>
+          <li><span class="bn-text">Password change notification</span><span class="en-text">Password change notification</span></li>
+          <li><span class="bn-text">Account-এ অচেনা activity</span><span class="en-text">Unknown activity in account</span></li>
+          <li><span class="bn-text">Server-এ unknown process চলছে</span><span class="en-text">Unknown processes running on server</span></li>
+          <li><span class="bn-text">CPU/Memory অস্বাভাবিক বেশি</span><span class="en-text">Abnormally high CPU/Memory</span></li>
+          <li><span class="bn-text">অচেনা cron job আছে</span><span class="en-text">Unknown cron jobs present</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 class="sec">🚨 <span class="bn-text">Emergency Response — এই ক্রমে করো!</span><span class="en-text">Emergency Response — Do This in Order!</span></h2>
+    <div class="emergency-steps">
+
+      <div class="emergency-step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">🔌 <span class="bn-text">সাথে সাথে Isolate করো</span><span class="en-text">Isolate Immediately</span></div>
+          <div class="step-desc"><span class="bn-text">Server-এর network connection বন্ধ করো অথবা Maintenance Mode চালু করো। Website offline করো যাতে visitor-রা ক্ষতিগ্রস্ত না হয়।</span><span class="en-text">Disconnect the server's network connection or enable Maintenance Mode. Take the website offline so visitors aren't harmed.</span>
+          <div class="code" style="margin-top:10px; font-size:12px;">
+<span class="c"># WordPress Maintenance Mode:</span>
+echo '&lt;?php $upgrading = time(); ?&gt;' > .maintenance
+<span class="c"># অথবা Cloudflare → Under Attack Mode চালু করো</span>
+          </div></div>
+        </div>
+      </div>
+
+      <div class="emergency-step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">🔑 <span class="bn-text">সব Password পরিবর্তন করো</span><span class="en-text">Change All Passwords</span></div>
+          <div class="step-desc"><span class="bn-text">cPanel, WordPress Admin, Database, FTP, Email, Hosting account — সব কিছুর password বদলাও। অন্য device থেকে করো।</span><span class="en-text">Change passwords for everything — cPanel, WordPress Admin, Database, FTP, Email, Hosting account. Do it from a different device.</span></div>
+        </div>
+      </div>
+
+      <div class="emergency-step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">📸 <span class="bn-text">Evidence সংরক্ষণ করো</span><span class="en-text">Preserve Evidence</span></div>
+          <div class="step-desc"><span class="bn-text">Log file, screenshot সেভ করো। কী হয়েছে তা বোঝার জন্য ও Legal প্রয়োজনে কাজে লাগবে।</span><span class="en-text">Save log files and screenshots. You'll need these to understand what happened and for any legal purposes.</span>
+          <div class="code" style="margin-top:10px; font-size:12px;">
+sudo cp /var/log/auth.log /backup/auth_$(date +%Y%m%d).log
+sudo cp /var/log/apache2/access.log /backup/access_$(date +%Y%m%d).log
+          </div></div>
+        </div>
+      </div>
+
+      <div class="emergency-step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-title">🔍 <span class="bn-text">Malware Scan করো</span><span class="en-text">Malware Scan</span></div>
+          <div class="step-desc">
+          <div class="code" style="margin-top:5px; font-size:12px;">
+<span class="c"># WordPress Malware Scanner (Wordfence):</span>
+<span class="c"># Wordfence → Scan → Start New Scan</span>
+
+<span class="c"># Server-এ ClamAV দিয়ে:</span>
+sudo apt install clamav
+sudo freshclam          <span class="c"># Update definitions</span>
+sudo clamscan -r /var/www/ --infected --log=scan_result.txt
+
+<span class="c"># Malicious file খোঁজো:</span>
+find /var/www -name "*.php" -newer /var/www/index.php -ls
+find /var/www -name "*.php" | xargs grep -l "eval(base64_decode"
+find /var/www -name "*.php" | xargs grep -l "system\|exec\|passthru"
+          </div></div>
+        </div>
+      </div>
+
+      <div class="emergency-step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <div class="step-title">🧹 <span class="bn-text">Malware Remove করো</span><span class="en-text">Remove Malware</span></div>
+          <div class="step-desc"><span class="bn-text">Infected file delete বা clean করো। WordPress-এর ক্ষেত্রে core files reinstall করা সবচেয়ে নিরাপদ।</span><span class="en-text">Delete or clean infected files. For WordPress, reinstalling core files is safest.</span>
+          <div class="code" style="margin-top:10px; font-size:12px;">
+<span class="c"># WordPress core reinstall:</span>
+wp core download --force     <span class="c"># WP-CLI দিয়ে</span>
+wp plugin update --all
+wp theme update --all
+
+<span class="c"># Backdoor চেক করো:</span>
+grep -r "eval(" /var/www/ --include="*.php" -l
+grep -r "base64_decode" /var/www/ --include="*.php" -l
+grep -r "shell_exec\|system\|passthru" /var/www/ --include="*.php" -l
+          </div></div>
+        </div>
+      </div>
+
+      <div class="emergency-step">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <div class="step-title">🔄 <span class="bn-text">Clean Backup থেকে Restore করো</span><span class="en-text">Restore from a Clean Backup</span></div>
+          <div class="step-desc"><span class="bn-text">Hack-এর আগের clean backup থেকে restore করা সবচেয়ে নিরাপদ। কিন্তু নিশ্চিত হও সেই backup-ও clean।</span><span class="en-text">Restoring from a clean backup before the hack is safest. But make sure that backup is also clean.</span></div>
+        </div>
+      </div>
+
+      <div class="emergency-step">
+        <div class="step-num">7</div>
+        <div class="step-content">
+          <div class="step-title">🔒 <span class="bn-text">দুর্বলতা Fix করো</span><span class="en-text">Fix the Vulnerability</span></div>
+          <div class="step-desc"><span class="bn-text">কীভাবে hack হলো সেটা বুঝে সেই দুর্বলতা ঠিক করো। না হলে আবার hack হবে!</span><span class="en-text">Understand how the hack happened and fix that vulnerability. Otherwise, you'll get hacked again!</span></div>
+        </div>
+      </div>
+
+      <div class="emergency-step">
+        <div class="step-num">8</div>
+        <div class="step-content">
+          <div class="step-title">✅ <span class="bn-text">Google Blacklist থেকে বের হও</span><span class="en-text">Remove from Google Blacklist</span></div>
+          <div class="step-desc"><span class="bn-text">Google-এ flag হলে: Search Console → Security Issues → Review requested। Malware clean করার পরে request করো।</span><span class="en-text">If flagged by Google: Search Console → Security Issues → Request review. Do this after cleaning malware.</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="chapter-summary">
+      <h3>🚨 Hack Recovery <span class="bn-text">মনে রাখো</span><span class="en-text">Remember</span></h3>
+      <ul>
+        <li>✅ <span class="bn-text">Hack হলে panic নয় — systematically এগোও</span><span class="en-text">If hacked, don't panic — proceed systematically</span></li>
+        <li>✅ <span class="bn-text">অন্য device থেকে password change করো</span><span class="en-text">Change passwords from a different device</span></li>
+        <li>✅ <span class="bn-text">Backup না থাকলে অনেক কঠিন হয় → এখনই backup setup করো</span><span class="en-text">Without a backup it's much harder → Set up backup now</span></li>
+        <li>✅ <span class="bn-text">শুধু malware মুছলেই হবে না — vulnerability ঠিক করতে হবে</span><span class="en-text">Just removing malware isn't enough — fix the vulnerability</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CH 08: BACKUP ══ -->
+<div class="chapter ch8">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 08</div>
+    <div class="chapter-title">💾 <span class="bn-text">Backup Strategy — সেরা বিমা</span><span class="en-text">Backup Strategy — Best Insurance</span></div>
+    <div class="chapter-desc"><span class="bn-text">Backup না থাকলে সব হারানোর ঝুঁকি — 3-2-1 Rule follow করো</span><span class="en-text">Without backup you risk losing everything — follow the 3-2-1 Rule</span></div>
+  </div>
+  <div class="chapter-body">
+    <h2 class="sec">3-2-1 Backup Rule</h2>
+    <div class="diagram">
+<pre>
+<span class="dp">3-2-1 Backup Rule:</span>
+
+<span class="dg">3</span> copies of data    → <span class="dg">Original + 2 backups</span>
+<span class="dy">2</span> different media   → <span class="dy">Server + External drive বা Cloud</span>
+<span class="db">1</span> offsite location  → <span class="db">Google Drive / S3 / Different datacenter</span>
+
+<span class="dp">Example:</span>
+Production Server  →  Local Backup (same server)  →  Google Drive
+     (live)              (daily)                     (weekly, offsite)
+                                                         ↑
+                                              <span class="dg">এটা সবচেয়ে গুরুত্বপূর্ণ!</span>
+<span class="dr">⚠️  Server-এ শুধু backup রাখলে → Server নষ্ট হলে backup-ও যাবে!</span>
+</pre>
+    </div>
+
+    <h2 class="sec">WordPress Automated Backup</h2>
+    <div class="code">
+<span class="c"># UpdraftPlus Plugin (Free):</span>
+<span class="c"># Install করো → Settings → Backup Schedule:</span>
+<span class="c"># Files: Daily backup → Google Drive-এ</span>
+<span class="c"># Database: Daily backup → Google Drive-এ</span>
+<span class="c"># Retain: 14 days</span>
+
+<span class="c"># Manual backup (cPanel):</span>
+<span class="c"># cPanel → Backup Wizard → Full Backup → Download</span>
+
+<span class="c"># WP-CLI দিয়ে automated backup:</span>
+<span class="c"># Cron job: প্রতিদিন রাত ২টায়:</span>
+0 2 * * * cd /var/www/html && wp db export /backup/db_$(date +\%Y\%m\%d).sql
+0 3 * * * tar -czf /backup/files_$(date +\%Y\%m\%d).tar.gz /var/www/html/wp-content/
+    </div>
+
+    <h2 class="sec">Server Automated Backup — rsync + cron</h2>
+    <div class="code">
+<span class="c"># Daily backup script: /usr/local/bin/backup.sh</span>
+<span class="g">#!/bin/bash
+DATE=$(date +%Y%m%d)
+BACKUP_DIR="/backup/$DATE"
+mkdir -p $BACKUP_DIR
+
+# Database backup
+mysqldump -u root -p'password' --all-databases > $BACKUP_DIR/databases.sql
+
+# Website files
+tar -czf $BACKUP_DIR/www_files.tar.gz /var/www/html/
+
+# Config files
+cp -r /etc/nginx/ $BACKUP_DIR/nginx_config/
+cp /etc/crontab $BACKUP_DIR/crontab_backup
+
+# 30 দিনের বেশি পুরনো backup মুছো:
+find /backup/ -mtime +30 -delete
+
+echo "Backup completed: $DATE"</span>
+
+<span class="c"># Cron job (sudo crontab -e):</span>
+0 2 * * * /usr/local/bin/backup.sh >> /var/log/backup.log 2>&1
+
+<span class="c"># Offsite backup (Google Drive) — rclone:</span>
+sudo apt install rclone
+rclone config                           <span class="c"># Google Drive configure করো</span>
+rclone sync /backup gdrive:backup/      <span class="c"># Sync করো</span>
+
+<span class="c"># Cron-এ যোগ করো:</span>
+30 3 * * * rclone sync /backup gdrive:backup/ --log-file=/var/log/rclone.log
+    </div>
+
+    <h2 class="sec"><span class="bn-text">Backup Test — সবচেয়ে গুরুত্বপূর্ণ ধাপ</span><span class="en-text">Backup Testing — The Most Important Step</span></h2>
+    <div class="box danger">
+      <div class="box-t">⚠️ <span class="bn-text">Untested Backup = No Backup!</span><span class="en-text">Untested Backup = No Backup!</span></div>
+      <span class="bn-text">প্রতি মাসে একবার backup restore করে দেখো এটা কাজ করছে কিনা। অনেকে মনে করে backup আছে, কিন্তু জরুরি সময়ে দেখা যায় backup corrupt বা incomplete।</span>
+      <span class="en-text">Once a month, try restoring your backup to verify it works. Many people think they have a backup, but in an emergency discover it's corrupt or incomplete.</span>
+    </div>
+    <div class="code">
+<span class="c"># WordPress backup test (Staging site-এ):</span>
+<span class="c"># UpdraftPlus → Existing Backups → Restore (staging-এ করো, live-এ না)</span>
+
+<span class="c"># Database restore test:</span>
+mysql -u root -p test_database &lt; backup_database.sql
+
+<span class="c"># File restore test:</span>
+tar -xzf backup_files.tar.gz -C /tmp/restore_test/
+ls /tmp/restore_test/          <span class="c"># File আছে কিনা দেখো</span>
+    </div>
+
+    <div class="chapter-summary">
+      <h3>💾 Backup <span class="bn-text">মনে রাখো</span><span class="en-text">Remember</span></h3>
+      <ul>
+        <li>✅ 3-2-1 Rule: <span class="bn-text">৩ কপি, ২ media, ১ offsite</span><span class="en-text">3 copies, 2 media, 1 offsite</span></li>
+        <li>✅ <span class="bn-text">Daily automated backup + Cloud storage</span><span class="en-text">Daily automated backup + Cloud storage</span></li>
+        <li>✅ <span class="bn-text">মাসে একবার restore test করো</span><span class="en-text">Test restore once a month</span></li>
+        <li>✅ <span class="bn-text">আজই শুরু করো — hack-এর পরে দেরি হয়ে যাবে</span><span class="en-text">Start today — after a hack, it'll be too late</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CH 09: CHECKLIST + ROADMAP ══ -->
+<div class="chapter ch9">
+  <div class="chapter-header">
+    <div class="chapter-label">CHAPTER 09</div>
+    <div class="chapter-title">✅ Interactive Security Checklist</div>
+    <div class="chapter-desc"><span class="bn-text">Tick করো, progress দেখো — তোমার security কতটুকু শক্তিশালী?</span><span class="en-text">Tick off items, track your progress — how strong is your security?</span></div>
+  </div>
+  <div class="chapter-body">
+
+    <div class="progress-text" id="progressText">0 / 40 <span class="bn-text">সম্পন্ন</span><span class="en-text">completed</span></div>
+    <div class="progress-bar-container">
+      <div class="progress-bar" id="progressBar" style="width:0%"></div>
+    </div>
+
+    <!-- Account Security -->
+    <div class="checklist-section">
+      <div class="checklist-category">🔐 <span class="bn-text">Account ও Password Security</span><span class="en-text">Account & Password Security</span></div>
+
+      <div class="checklist-item" id="ci-1">
+        <input type="checkbox" id="c1" onchange="updateProgress()">
+        <label for="c1"><strong>2FA চালু করো</strong> — <span class="bn-text">Google, GitHub, cPanel, hosting সব account-এ</span><span class="en-text">Enable 2FA on Google, GitHub, cPanel, and all hosting accounts</span></label>
+      </div>
+      <div class="checklist-item" id="ci-2">
+        <input type="checkbox" id="c2" onchange="updateProgress()">
+        <label for="c2"><strong>Password Manager</strong> — <span class="bn-text">Bitwarden install করো</span><span class="en-text">Install Bitwarden</span></label>
+      </div>
+      <div class="checklist-item" id="ci-3">
+        <input type="checkbox" id="c3" onchange="updateProgress()">
+        <label for="c3"><span class="bn-text">সব গুরুত্বপূর্ণ account-এ আলাদা strong password দাও (১৬+ অক্ষর)</span><span class="en-text">Use a different strong password for each important account (16+ characters)</span></label>
+      </div>
+      <div class="checklist-item" id="ci-4">
+        <input type="checkbox" id="c4" onchange="updateProgress()">
+        <label for="c4"><span class="bn-text">HaveIBeenPwned-এ email check করো</span><span class="en-text">Check your email on HaveIBeenPwned</span></label>
+      </div>
+      <div class="checklist-item" id="ci-5">
+        <input type="checkbox" id="c5" onchange="updateProgress()">
+        <label for="c5"><span class="bn-text">2FA Recovery code print করে নিরাপদ জায়গায় রাখো</span><span class="en-text">Print 2FA recovery codes and store them safely</span></label>
+      </div>
+    </div>
+
+    <!-- Website Security -->
+    <div class="checklist-section">
+      <div class="checklist-category">🌐 <span class="bn-text">Website Security</span><span class="en-text">Website Security</span></div>
+
+      <div class="checklist-item" id="ci-6">
+        <input type="checkbox" id="c6" onchange="updateProgress()">
+        <label for="c6"><strong>HTTPS চালু করো</strong> — <span class="bn-text">Let's Encrypt (Free SSL)</span><span class="en-text">Let's Encrypt (Free SSL)</span></label>
+      </div>
+      <div class="checklist-item" id="ci-7">
+        <input type="checkbox" id="c7" onchange="updateProgress()">
+        <label for="c7"><strong>Cloudflare</strong> — <span class="bn-text">Free plan setup করো</span><span class="en-text">Set up the Free plan</span></label>
+      </div>
+      <div class="checklist-item" id="ci-8">
+        <input type="checkbox" id="c8" onchange="updateProgress()">
+        <label for="c8"><span class="bn-text">WordPress + সব Plugin + Theme update করো</span><span class="en-text">Update WordPress + all Plugins + Themes</span></label>
+      </div>
+      <div class="checklist-item" id="ci-9">
+        <input type="checkbox" id="c9" onchange="updateProgress()">
+        <label for="c9"><span class="bn-text">WordPress Admin username "admin" বদলাও</span><span class="en-text">Change WordPress Admin username from "admin"</span></label>
+      </div>
+      <div class="checklist-item" id="ci-10">
+        <input type="checkbox" id="c10" onchange="updateProgress()">
+        <label for="c10">Wordfence <span class="bn-text">install ও configure করো</span><span class="en-text">Install and configure Wordfence</span></label>
+      </div>
+      <div class="checklist-item" id="ci-11">
+        <input type="checkbox" id="c11" onchange="updateProgress()">
+        <label for="c11"><span class="bn-text">Security Headers যোগ করো (.htaccess)</span><span class="en-text">Add Security Headers (.htaccess)</span></label>
+      </div>
+      <div class="checklist-item" id="ci-12">
+        <input type="checkbox" id="c12" onchange="updateProgress()">
+        <label for="c12"><span class="bn-text">Unused plugin ও theme delete করো</span><span class="en-text">Delete unused plugins and themes</span></label>
+      </div>
+      <div class="checklist-item" id="ci-13">
+        <input type="checkbox" id="c13" onchange="updateProgress()">
+        <label for="c13">securityheaders.com — <span class="bn-text">grade A বা B পাচ্ছো?</span><span class="en-text">Are you getting grade A or B?</span></label>
+      </div>
+    </div>
+
+    <!-- Server Security -->
+    <div class="checklist-section">
+      <div class="checklist-category">🖥️ <span class="bn-text">Server Security (VPS থাকলে)</span><span class="en-text">Server Security (If You Have a VPS)</span></div>
+
+      <div class="checklist-item" id="ci-14">
+        <input type="checkbox" id="c14" onchange="updateProgress()">
+        <label for="c14"><span class="bn-text">SSH Port বদলাও (22 থেকে অন্য port)</span><span class="en-text">Change SSH Port (from 22 to another port)</span></label>
+      </div>
+      <div class="checklist-item" id="ci-15">
+        <input type="checkbox" id="c15" onchange="updateProgress()">
+        <label for="c15"><span class="bn-text">SSH Key authentication + Password login বন্ধ</span><span class="en-text">SSH Key authentication + disable password login</span></label>
+      </div>
+      <div class="checklist-item" id="ci-16">
+        <input type="checkbox" id="c16" onchange="updateProgress()">
+        <label for="c16">Root login বন্ধ করো (<code>PermitRootLogin no</code>)</label>
+      </div>
+      <div class="checklist-item" id="ci-17">
+        <input type="checkbox" id="c17" onchange="updateProgress()">
+        <label for="c17">UFW Firewall চালু করো — <span class="bn-text">শুধু দরকারি port খোলো</span><span class="en-text">Only open necessary ports</span></label>
+      </div>
+      <div class="checklist-item" id="ci-18">
+        <input type="checkbox" id="c18" onchange="updateProgress()">
+        <label for="c18">Fail2Ban install ও configure করো</label>
+      </div>
+      <div class="checklist-item" id="ci-19">
+        <input type="checkbox" id="c19" onchange="updateProgress()">
+        <label for="c19"><span class="bn-text">Auto security update চালু করো</span><span class="en-text">Enable auto security updates</span></label>
+      </div>
+      <div class="checklist-item" id="ci-20">
+        <input type="checkbox" id="c20" onchange="updateProgress()">
+        <label for="c20">Non-root user তৈরি করো ও sudo দাও</label>
+      </div>
+    </div>
+
+    <!-- Email Security -->
+    <div class="checklist-section">
+      <div class="checklist-category">📧 <span class="bn-text">Email ও Phishing Security</span><span class="en-text">Email & Phishing Security</span></div>
+
+      <div class="checklist-item" id="ci-21">
+        <input type="checkbox" id="c21" onchange="updateProgress()">
+        <label for="c21">SPF Record <span class="bn-text">DNS-এ যোগ করো</span><span class="en-text">Add SPF Record to DNS</span></label>
+      </div>
+      <div class="checklist-item" id="ci-22">
+        <input type="checkbox" id="c22" onchange="updateProgress()">
+        <label for="c22">DMARC Record <span class="bn-text">DNS-এ যোগ করো</span><span class="en-text">Add DMARC Record to DNS</span></label>
+      </div>
+      <div class="checklist-item" id="ci-23">
+        <input type="checkbox" id="c23" onchange="updateProgress()">
+        <label for="c23"><span class="bn-text">Suspicious link → VirusTotal-এ check করার অভ্যাস করো</span><span class="en-text">Get in the habit of checking suspicious links on VirusTotal</span></label>
+      </div>
+      <div class="checklist-item" id="ci-24">
+        <input type="checkbox" id="c24" onchange="updateProgress()">
+        <label for="c24"><span class="bn-text">Team/Staff-কে Phishing চেনার training দাও</span><span class="en-text">Train your team/staff to recognize phishing</span></label>
+      </div>
+    </div>
+
+    <!-- Backup -->
+    <div class="checklist-section">
+      <div class="checklist-category">💾 <span class="bn-text">Backup Strategy</span><span class="en-text">Backup Strategy</span></div>
+
+      <div class="checklist-item" id="ci-25">
+        <input type="checkbox" id="c25" onchange="updateProgress()">
+        <label for="c25"><span class="bn-text">Daily automated backup চালু করো (UpdraftPlus বা cron)</span><span class="en-text">Enable daily automated backup (UpdraftPlus or cron)</span></label>
+      </div>
+      <div class="checklist-item" id="ci-26">
+        <input type="checkbox" id="c26" onchange="updateProgress()">
+        <label for="c26"><span class="bn-text">Cloud-এ backup যাচ্ছে? (Google Drive / S3)</span><span class="en-text">Is backup going to the cloud? (Google Drive / S3)</span></label>
+      </div>
+      <div class="checklist-item" id="ci-27">
+        <input type="checkbox" id="c27" onchange="updateProgress()">
+        <label for="c27"><span class="bn-text">Backup restore test করো — আসলেই কাজ করছে?</span><span class="en-text">Test backup restore — does it actually work?</span></label>
+      </div>
+      <div class="checklist-item" id="ci-28">
+        <input type="checkbox" id="c28" onchange="updateProgress()">
+        <label for="c28"><span class="bn-text">কমপক্ষে ১৪ দিনের backup retention রাখো</span><span class="en-text">Keep at least 14 days of backup retention</span></label>
+      </div>
+    </div>
+
+    <!-- Monitoring -->
+    <div class="checklist-section">
+      <div class="checklist-category">👁️ <span class="bn-text">Monitoring ও Audit</span><span class="en-text">Monitoring & Audit</span></div>
+
+      <div class="checklist-item" id="ci-29">
+        <input type="checkbox" id="c29" onchange="updateProgress()">
+        <label for="c29">Google Search Console-<span class="bn-text">এ website add করো (Security alerts পাবে)</span><span class="en-text">Add website to Google Search Console (for Security alerts)</span></label>
+      </div>
+      <div class="checklist-item" id="ci-30">
+        <input type="checkbox" id="c30" onchange="updateProgress()">
+        <label for="c30">SSL Labs — <span class="bn-text">grade A+ পাওয়ার চেষ্টা করো</span><span class="en-text">Aim for grade A+ on SSL Labs</span></label>
+      </div>
+      <div class="checklist-item" id="ci-31">
+        <input type="checkbox" id="c31" onchange="updateProgress()">
+        <label for="c31">Uptime monitor চালু করো — <span class="bn-text">uptime.kuma.pet (Self-hosted) বা uptimerobot.com (Free)</span><span class="en-text">Enable uptime monitor — uptime.kuma.pet (Self-hosted) or uptimerobot.com (Free)</span></label>
+      </div>
+      <div class="checklist-item" id="ci-32">
+        <input type="checkbox" id="c32" onchange="updateProgress()">
+        <label for="c32"><span class="bn-text">মাসে একবার failed login ও server log দেখো</span><span class="en-text">Check failed logins and server logs monthly</span></label>
+      </div>
+    </div>
+
+    <!-- Incident Response -->
+    <div class="checklist-section">
+      <div class="checklist-category">🚨 <span class="bn-text">Incident Response Prep</span><span class="en-text">Incident Response Prep</span></div>
+
+      <div class="checklist-item" id="ci-33">
+        <input type="checkbox" id="c33" onchange="updateProgress()">
+        <label for="c33"><span class="bn-text">Hosting support contact number/chat জানো</span><span class="en-text">Know the hosting support contact number/chat</span></label>
+      </div>
+      <div class="checklist-item" id="ci-34">
+        <input type="checkbox" id="c34" onchange="updateProgress()">
+        <label for="c34"><span class="bn-text">Domain registrar login credentials ready রাখো</span><span class="en-text">Keep domain registrar login credentials ready</span></label>
+      </div>
+      <div class="checklist-item" id="ci-35">
+        <input type="checkbox" id="c35" onchange="updateProgress()">
+        <label for="c35"><span class="bn-text">Hack হলে কী করবে তার plan তৈরি করো (Chapter 7 print করো)</span><span class="en-text">Make a plan for what to do if hacked (Print Chapter 7)</span></label>
+      </div>
+    </div>
+
+    <!-- Advanced -->
+    <div class="checklist-section">
+      <div class="checklist-category">⚡ <span class="bn-text">Advanced (Optional কিন্তু ভালো)</span><span class="en-text">Advanced (Optional but Good)</span></div>
+
+      <div class="checklist-item" id="ci-36">
+        <input type="checkbox" id="c36" onchange="updateProgress()">
+        <label for="c36">Lynis — <span class="bn-text">Server-এ security audit চালাও</span><span class="en-text">Run a security audit on the server</span></label>
+      </div>
+      <div class="checklist-item" id="ci-37">
+        <input type="checkbox" id="c37" onchange="updateProgress()">
+        <label for="c37">WPScan — <span class="bn-text">WordPress vulnerability check করো</span><span class="en-text">Check WordPress vulnerabilities</span></label>
+      </div>
+      <div class="checklist-item" id="ci-38">
+        <input type="checkbox" id="c38" onchange="updateProgress()">
+        <label for="c38">Shodan — <span class="bn-text">তোমার server কী publicly expose করছে দেখো</span><span class="en-text">See what your server is publicly exposing</span></label>
+      </div>
+      <div class="checklist-item" id="ci-39">
+        <input type="checkbox" id="c39" onchange="updateProgress()">
+        <label for="c39"><span class="bn-text">File integrity monitoring চালু করো (Tripwire বা AIDE)</span><span class="en-text">Enable file integrity monitoring (Tripwire or AIDE)</span></label>
+      </div>
+      <div class="checklist-item" id="ci-40">
+        <input type="checkbox" id="c40" onchange="updateProgress()">
+        <label for="c40"><span class="bn-text">নিজে বা team একটি Phishing simulation করো</span><span class="en-text">Run a phishing simulation yourself or with your team</span></label>
+      </div>
+    </div>
+
+    <div id="completionMsg" style="display:none; text-align:center; margin:30px 0; padding:25px; background:linear-gradient(135deg,#0d2818,#1a4731); border-radius:12px; color:white;">
+      <p style="font-size:24px;">🎉</p>
+      <p style="font-size:18px; color:#56d364; font-weight:700;"><span class="bn-text">অভিনন্দন! তোমার Security এখন অনেক শক্তিশালী!</span><span class="en-text">Congratulations! Your security is now much stronger!</span></p>
+      <p style="opacity:0.8; margin-top:8px;"><span class="bn-text">মাসে একবার এই checklist review করো।</span><span class="en-text">Review this checklist once a month.</span></p>
+    </div>
+
+    <!-- Quick Reference -->
+    <h2 class="sec">⚡ Quick Reference Cheat Sheet</h2>
+    <div class="cheat-grid">
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#020c1a;">🔍 <span class="bn-text">Security Check Tools</span><span class="en-text">Security Check Tools</span></div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><span class="cheat-cmd">ssllabs.com/ssltest</span><span class="cheat-desc">SSL grade</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">securityheaders.com</span><span class="cheat-desc">Headers check</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">observatory.mozilla.org</span><span class="cheat-desc">Security score</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">haveibeenpwned.com</span><span class="cheat-desc">Breach check</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">virustotal.com</span><span class="cheat-desc">URL/file scan</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">mxtoolbox.com</span><span class="cheat-desc">SPF/DMARC</span></div>
+        </div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#1a0000;">🚨 <span class="bn-text">Hack হলে তাৎক্ষণিক</span><span class="en-text">If Hacked Immediately</span></div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><span class="cheat-cmd">1. Isolate</span><span class="cheat-desc"><span class="bn-text">Site offline করো</span><span class="en-text">Take site offline</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">2. Change passwords</span><span class="cheat-desc"><span class="bn-text">সব password বদলাও</span><span class="en-text">Change all passwords</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">3. Save logs</span><span class="cheat-desc"><span class="bn-text">Evidence রাখো</span><span class="en-text">Preserve evidence</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">4. Scan + Clean</span><span class="cheat-desc">Malware remove</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">5. Restore backup</span><span class="cheat-desc"><span class="bn-text">Clean backup থেকে</span><span class="en-text">From clean backup</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">6. Fix vulnerability</span><span class="cheat-desc"><span class="bn-text">দুর্বলতা ঠিক করো</span><span class="en-text">Fix the vulnerability</span></span></div>
+        </div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#051a0d;">🖥️ Server Commands</div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><span class="cheat-cmd">sudo ufw status</span><span class="cheat-desc">Firewall status</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">sudo fail2ban-client status</span><span class="cheat-desc">Banned IPs</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">sudo lastb | head -20</span><span class="cheat-desc"><span class="bn-text">Failed logins</span><span class="en-text">Failed logins</span></span></div>
+          <div class="cheat-row"><span class="cheat-cmd">sudo lynis audit system</span><span class="cheat-desc">Security audit</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">sudo clamscan -r /var/www/</span><span class="cheat-desc">Malware scan</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">sudo ss -tulnp</span><span class="cheat-desc"><span class="bn-text">Open ports</span><span class="en-text">Open ports</span></span></div>
+        </div>
+      </div>
+      <div class="cheat-card">
+        <div class="cheat-card-header" style="background:#1a1000;">💾 Backup Commands</div>
+        <div class="cheat-card-body">
+          <div class="cheat-row"><span class="cheat-cmd">mysqldump -u root -p db > backup.sql</span><span class="cheat-desc">DB backup</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">tar -czf backup.tar.gz /var/www/</span><span class="cheat-desc">Files backup</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">rclone sync /backup gdrive:backup/</span><span class="cheat-desc">Cloud sync</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">wp db export backup.sql</span><span class="cheat-desc">WP-CLI DB</span></div>
+          <div class="cheat-row"><span class="cheat-cmd">mysql -u root -p db < backup.sql</span><span class="cheat-desc">Restore DB</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Roadmap -->
+    <h2 class="sec">🗺️ <span class="bn-text">Security Improvement Roadmap</span><span class="en-text">Security Improvement Roadmap</span></h2>
+    <div class="roadmap-phase">
+      <div class="phase-number" style="background:linear-gradient(135deg,#e63946,#c1121f);">1</div>
+      <div class="phase-content">
+        <div class="phase-title" style="color:#c1121f;">🔥 <span class="bn-text">Phase 1 — আজই করো (১ ঘণ্টা)</span><span class="en-text">Phase 1 — Do Today (1 hour)</span></div>
+        <div class="phase-desc"><span class="bn-text">এগুলো না করলে সবচেয়ে বেশি ঝুঁকিতে আছো।</span><span class="en-text">Without these, you're at the highest risk.</span></div>
+        <div class="phase-items">
+          <span class="phase-item" style="color:#c1121f;">2FA চালু</span>
+          <span class="phase-item" style="color:#c1121f;">Password update</span>
+          <span class="phase-item" style="color:#c1121f;">Backup setup</span>
+          <span class="phase-item" style="color:#c1121f;">WP Update</span>
+        </div>
+      </div>
+    </div>
+    <div class="roadmap-arrow">↓</div>
+    <div class="roadmap-phase">
+      <div class="phase-number" style="background:linear-gradient(135deg,#f4831f,#ffd60a);">2</div>
+      <div class="phase-content">
+        <div class="phase-title" style="color:#f4831f;">⚡ <span class="bn-text">Phase 2 — এই সপ্তাহে (৪-৫ ঘণ্টা)</span><span class="en-text">Phase 2 — This Week (4-5 hours)</span></div>
+        <div class="phase-desc"><span class="bn-text">Core security setup সম্পন্ন করো।</span><span class="en-text">Complete the core security setup.</span></div>
+        <div class="phase-items">
+          <span class="phase-item" style="color:#f4831f;">Cloudflare setup</span>
+          <span class="phase-item" style="color:#f4831f;">HTTPS/SSL</span>
+          <span class="phase-item" style="color:#f4831f;">Wordfence</span>
+          <span class="phase-item" style="color:#f4831f;">SSH hardening</span>
+          <span class="phase-item" style="color:#f4831f;">UFW + Fail2Ban</span>
+        </div>
+      </div>
+    </div>
+    <div class="roadmap-arrow">↓</div>
+    <div class="roadmap-phase">
+      <div class="phase-number" style="background:linear-gradient(135deg,#0077b6,#00b4d8);">3</div>
+      <div class="phase-content">
+        <div class="phase-title" style="color:#0077b6;">🛡️ <span class="bn-text">Phase 3 — এই মাসে</span><span class="en-text">Phase 3 — This Month</span></div>
+        <div class="phase-desc"><span class="bn-text">Advanced protection যোগ করো।</span><span class="en-text">Add advanced protection.</span></div>
+        <div class="phase-items">
+          <span class="phase-item" style="color:#0077b6;">Security Headers</span>
+          <span class="phase-item" style="color:#0077b6;">SPF/DMARC</span>
+          <span class="phase-item" style="color:#0077b6;">Security Audit</span>
+          <span class="phase-item" style="color:#0077b6;">Uptime Monitor</span>
+          <span class="phase-item" style="color:#0077b6;">Backup test</span>
+        </div>
+      </div>
+    </div>
+    <div class="roadmap-arrow">↓</div>
+    <div class="roadmap-phase">
+      <div class="phase-number" style="background:linear-gradient(135deg,#2dc653,#06a94d);">4</div>
+      <div class="phase-content">
+        <div class="phase-title" style="color:#06a94d;">✅ <span class="bn-text">Phase 4 — নিয়মিত Maintenance</span><span class="en-text">Phase 4 — Regular Maintenance</span></div>
+        <div class="phase-desc"><span class="bn-text">Security একবার করে ছেড়ে দেওয়ার জিনিস নয় — নিয়মিত রক্ষণাবেক্ষণ দরকার।</span><span class="en-text">Security isn't something you do once — it requires regular maintenance.</span></div>
+        <div class="phase-items">
+          <span class="phase-item" style="color:#06a94d;"><span class="bn-text">সাপ্তাহিক: Update</span><span class="en-text">Weekly: Update</span></span>
+          <span class="phase-item" style="color:#06a94d;"><span class="bn-text">মাসিক: Audit</span><span class="en-text">Monthly: Audit</span></span>
+          <span class="phase-item" style="color:#06a94d;"><span class="bn-text">মাসিক: Backup test</span><span class="en-text">Monthly: Backup test</span></span>
+          <span class="phase-item" style="color:#06a94d;"><span class="bn-text">মাসিক: Log review</span><span class="en-text">Monthly: Log review</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="text-align:center; margin-top:50px; padding:30px; background:linear-gradient(135deg,#020c1a,#0a2a4a); border-radius:12px; color:rgba(255,255,255,0.8);">
+      <p style="font-size:20px; color:#00b4d8; margin-bottom:10px;">🛡️ "<span class="bn-text">Security একটি journey, destination নয় — প্রতিদিন একটু উন্নত করো।</span><span class="en-text">Security is a journey, not a destination — improve a little every day.</span>"</p>
+      <p><span class="bn-text">এই গাইড সম্পূর্ণ শিক্ষামূলক উদ্দেশ্যে। নিজের ও authorized system-এ apply করো।</span>
+         <span class="en-text">This guide is entirely for educational purposes. Apply only to your own and authorized systems.</span></p>
+      <p style="margin-top:12px; font-size:12px; color:#00b4d8;">v1.0 — Website & System Security Guide | Interactive Checklist | Bilingual | Dark/Light Mode</p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  document.body.classList.add('light-mode');
+  const TOTAL = 40;
+
+  function updateProgress() {
+    const checked = document.querySelectorAll('input[type="checkbox"]:checked').length;
+    const pct = Math.round((checked / TOTAL) * 100);
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressText').innerHTML =
+      checked + ' / ' + TOTAL + ' <span class="bn-text">সম্পন্ন</span><span class="en-text">completed</span> (' + pct + '%)';
+
+    // Mark parent as checked
+    for (let i = 1; i <= TOTAL; i++) {
+      const cb = document.getElementById('c' + i);
+      const item = document.getElementById('ci-' + i);
+      if (cb && item) {
+        item.classList.toggle('checked', cb.checked);
+      }
+    }
+
+    // Completion message
+    document.getElementById('completionMsg').style.display = checked === TOTAL ? 'block' : 'none';
+
+    // Save to localStorage
+    const state = {};
+    for (let i = 1; i <= TOTAL; i++) {
+      const cb = document.getElementById('c' + i);
+      if (cb) state['c' + i] = cb.checked;
+    }
+    localStorage.setItem('sec_checklist', JSON.stringify(state));
+  }
+
+  function toggleTheme() {
+    const btn = document.getElementById('themeBtn'), b = document.body;
+    if (b.classList.contains('light-mode')) {
+      b.classList.replace('light-mode','dark-mode');
+      btn.textContent = '☀️ Light Mode'; btn.style.background = '#ffd60a'; btn.style.color = '#020c1a';
+      localStorage.setItem('sec_theme','dark');
+    } else {
+      b.classList.replace('dark-mode','light-mode');
+      btn.textContent = '🌙 Dark Mode'; btn.style.background = '#2dc653'; btn.style.color = '#0d1b2a';
+      localStorage.setItem('sec_theme','light');
+    }
+  }
+
+  function toggleLang() {
+    const btn = document.getElementById('langBtn'), b = document.body;
+    if (b.classList.contains('lang-en')) {
+      b.classList.remove('lang-en');
+      btn.textContent = '🇬🇧 English'; btn.style.background = '#0077b6';
+      localStorage.setItem('sec_lang','bn');
+    } else {
+      b.classList.add('lang-en');
+      btn.textContent = '🇧🇩 বাংলা'; btn.style.background = '#e63946';
+      localStorage.setItem('sec_lang','en');
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    // Restore theme
+    const t = localStorage.getItem('sec_theme');
+    const l = localStorage.getItem('sec_lang');
+    if (t === 'dark') {
+      document.body.classList.replace('light-mode','dark-mode');
+      const b = document.getElementById('themeBtn');
+      if (b) { b.textContent = '☀️ Light Mode'; b.style.background = '#ffd60a'; b.style.color = '#020c1a'; }
+    }
+    if (l === 'en') {
+      document.body.classList.add('lang-en');
+      const b = document.getElementById('langBtn');
+      if (b) { b.textContent = '🇧🇩 বাংলা'; b.style.background = '#e63946'; }
+    }
+
+    // Restore checklist
+    const saved = localStorage.getItem('sec_checklist');
+    if (saved) {
+      const state = JSON.parse(saved);
+      for (let i = 1; i <= TOTAL; i++) {
+        const cb = document.getElementById('c' + i);
+        if (cb && state['c' + i]) { cb.checked = true; }
+      }
+      updateProgress();
+    }
+  });
+</script>
+</body>
+</html>
